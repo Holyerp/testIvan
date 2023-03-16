@@ -4,7 +4,7 @@
 # Recommended approach is to use as is or add a script (freddyk-devenv.ps1), which calls this script with the user specific parameters
 #
 Param(
-    [string] $environmentName = "",
+    [string] $environmentName = "PRODUCTION",
     [bool] $reuseExistingEnvironment,
     [switch] $fromVSCode
 )
