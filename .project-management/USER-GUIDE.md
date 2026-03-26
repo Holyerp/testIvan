@@ -240,9 +240,9 @@ Before you begin, ensure you have:
 cd /path/to/your/project
 
 # Copy the entire .project-management system
-cp -r /path/to/claude-start/.project-management .
-cp -r /path/to/claude-start/.claude .
-cp /path/to/claude-start/.CLAUDE.MD .
+cp -r /path/to/claude_repo/.project-management .
+cp -r /path/to/claude_repo/.claude .
+cp /path/to/claude_repo/.CLAUDE.MD .
 ```
 
 #### Step 2: Verify File Structure
@@ -2649,7 +2649,7 @@ Start
 ls .claude/commands/
 
 # If missing, copy from template
-cp -r /path/to/claude-start/.claude .
+cp -r /path/to/claude_repo/.claude .
 ```
 
 ---
