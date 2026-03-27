@@ -30,9 +30,9 @@ Execute implementation of a phase, epic, or individual story with full automatio
 
 2. **Ask user for execution mode:**
    ```
-   "Režim rada:"
-   [1] Kontinuirano (bez pauza između stories)
-   [2] Sa pauzom (čekaj odobrenje posle svakog story-ja)
+   "Execution Mode:"
+   [1] Continuous (no pauses between stories)
+   [2] Paused (wait for approval after each story)
    ```
 
    Store user's choice for later use.
@@ -214,7 +214,7 @@ US-XXX: [Title] (P0, 5 points)
 🚀 [EXITING PLAN MODE - ENTERING IMPLEMENTATION MODE]
 
 Starting implementation...
-Execution Mode: [Kontinuirano / Sa pauzom]
+Execution Mode: [Continuous / Paused]
 ```
 
 ---
@@ -523,7 +523,7 @@ Duration: {{duration}}
 
 #### 3.11 Check Execution Mode
 
-**IF execution mode is "Sa pauzom":**
+**IF execution mode is "Paused":**
 ```
 ⏸️  Pause before next story
 
@@ -535,7 +535,7 @@ Continue with next story?
 
 **Wait for user response.**
 
-**IF execution mode is "Kontinuirano":**
+**IF execution mode is "Continuous":**
 ```
 ▶️  Continuing with next story: US-YYY
 ```
@@ -648,9 +648,9 @@ Phase {{N}}: {{completed_points}}/{{total_points}} points ({{percentage}}%)
 /execute-work phase 1
 
 # Claude asks:
-"Režim rada?"
-[1] Kontinuirano
-[2] Sa pauzom
+"Execution Mode?"
+[1] Continuous
+[2] Paused
 
 # User selects: 1
 
