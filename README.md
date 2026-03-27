@@ -2,15 +2,21 @@
 
 **Reusable project management framework for Claude-assisted development.**
 
-A comprehensive system that provides structured planning, sprint management, documentation standards, and progress tracking for AI-assisted software projects.
+A comprehensive system that provides structured planning, phase management, automated execution, documentation standards, and progress tracking for AI-assisted software projects with a single developer + AI tools workflow.
 
 ## 🎯 What This Provides
 
-- **Sprint Planning** - Structured sprint workflow with capacity estimation
+- **Phase-Based Planning** - Organize work into 1-4 month phases with epics and stories
+- **Automated Execution** - `/execute-work` command handles implementation, testing, commits, and progress
+- **Default Tech Stack** - Production-tested HolyEstate stack (React 19 + RR7 + Prisma + Railway)
+- **Plan Mode** - Mandatory planning phase before implementation with user approval
+- **Auto Testing** - Vitest + Playwright tests run automatically before marking stories complete
+- **Auto Git Commits** - Professional commits (NO AI credits) created automatically
+- **i18n Support** - Multi-language configuration during project initialization
 - **Documentation Standards** - PRD, technical specs, architecture docs
 - **Client Doc Processing** - Extract requirements from client documents
-- **Progress Tracking** - Real-time task and sprint status updates
-- **Code Quality Standards** - SOLID/DRY principles, testing requirements
+- **Progress Tracking** - Real-time phase and story status updates
+- **Code Quality Standards** - SOLID/DRY principles, testing requirements (80%+ coverage)
 - **Git Workflow** - Conventional commits and best practices
 
 ## 🚀 Quick Start
@@ -52,16 +58,36 @@ This generates:
 
 ## 📋 Available Commands
 
-### Project Management
-- `/init-project` - Initialize project documentation
-- `/plan-sprint N` - Plan sprint N with user stories
-- `/update-progress` - Update task and sprint progress
+### Project Initialization
+- `/init-project` - Initialize project with tech stack selection, i18n configuration, and phase structure
+
+### Automated Execution
+- `/execute-work phase N` - Execute entire Phase N (all epics and stories)
+- `/execute-work epic EPIC-X` - Execute specific Epic X (all stories)
+- `/execute-work story US-XXX` - Execute single story US-XXX
+  - Automatically enters **plan mode** before implementation
+  - Runs tests automatically (Vitest + Playwright)
+  - Creates git commits automatically (NO AI credits)
+  - Updates progress tracking automatically
+  - Supports continuous or pause-after-story modes
+
+### Testing
+- `/run-tests all` - Run all tests (unit, integration, E2E)
+- `/run-tests unit` - Unit tests only
+- `/run-tests integration` - Integration tests only
+- `/run-tests e2e` - E2E tests only
+- `/run-tests coverage` - Run with coverage report
+- `/run-tests story US-XXX` - Tests for specific story
+- `/run-tests file <path>` - Tests for specific file
+
+### Progress & Status
+- `/update-progress` - Update phase and story progress
 - `/project-status` - Generate comprehensive status report
 - `/process-client-docs` - Extract requirements from client documents
 - `/generate-docs` - Generate or update project documentation
 
-### During Development
-Use `TodoWrite` tool to break down user stories into tasks and track implementation progress.
+### Manual Development
+Use `TodoWrite` tool to break down user stories into tasks and track implementation progress when not using `/execute-work`.
 
 ## 📁 Directory Structure
 
@@ -99,22 +125,48 @@ Use `TodoWrite` tool to break down user stories into tasks and track implementat
 
 ## 🔄 Workflow
 
+### Automated Workflow (Recommended)
 ```
 1. SETUP
    └─> Customize input files → /init-project
+       → Select tech stack (Default/AI/Custom)
+       → Configure i18n (optional)
 
-2. SPRINT PLANNING
-   └─> /plan-sprint N → Review sprint plan
+2. EXECUTION
+   └─> /execute-work phase 1
+       → [PLAN MODE] Creates plan, waits for approval
+       → [AUTO] Implements stories following standards
+       → [AUTO] Runs tests (must pass before continuing)
+       → [AUTO] Creates git commits (NO AI credits)
+       → [AUTO] Updates progress tracking
+       → Repeats for all stories in phase
+
+3. TRACKING
+   └─> /project-status → Review progress
+       → /run-tests coverage → Check test coverage
+
+4. REPEAT
+   └─> /execute-work phase 2 → Continue with next phase
+```
+
+### Manual Workflow (Alternative)
+```
+1. SETUP
+   └─> Same as automated
+
+2. PLANNING
+   └─> Review phase plan manually
 
 3. DEVELOPMENT
-   └─> Read sprint plan → Break down stories (TodoWrite)
-       → Implement → Test → Update progress
+   └─> Read phase plan → Break down stories (TodoWrite)
+       → Implement → Test manually (/run-tests)
+       → Commit manually → Update progress
 
 4. TRACKING
    └─> /update-progress → /project-status
 
 5. REPEAT
-   └─> Next sprint
+   └─> Next phase
 ```
 
 ## 📖 Key Documents
@@ -181,5 +233,22 @@ This is a personal project management system. Feel free to fork and adapt to you
 
 ---
 
-**Version:** 2.0 (Modular)
-**Updated:** 2026-03-26
+**Version:** 3.0 (Phase-Based with Automation)
+**Updated:** 2026-03-27
+
+---
+
+## 🆕 What's New in v3.0
+
+**Major Changes:**
+- ✅ **Phase-based system** replaces sprint-based system
+- ✅ **Automated execution** with `/execute-work` command
+- ✅ **Plan mode** mandatory before implementation
+- ✅ **Auto-testing** with Vitest + Playwright
+- ✅ **Auto-commits** following git rules (NO AI credits)
+- ✅ **Auto-progress** tracking updates
+- ✅ **Default tech stack** system (3 options)
+- ✅ **i18n configuration** during initialization
+- ✅ **Manual testing** with `/run-tests` command
+
+**Migration:** See [MIGRATION-GUIDE.md](.project-management/docs/MIGRATION-GUIDE.md) for upgrading from v2.0
