@@ -1161,23 +1161,23 @@ Lessons Learned: Add vendor status checks to daily routine
 
 ## Commands Reference
 
-> **Note:** Commands in this system are called "**Skills**" in Claude Code. When you see `/command-name`, you're actually invoking a Skill.
+> **Note:** Commands in this system are **slash commands** in Claude Code. When you see `/command-name`, you're invoking a command.
 
-### How Skills Work
+### How Commands Work
 
-**Skills are auto-discovered from:**
-- **Project-level:** `.claude/skills/<skill-name>/SKILL.md` (this project only)
-- **Personal-level:** `~/.claude/skills/<skill-name>/SKILL.md` (all projects)
+**Commands are auto-discovered from:**
+- **Project-level:** `.claude/commands/<command-name>.md` (this project only)
+- **Personal-level:** `~/.claude/commands/<command-name>.md` (all projects)
 
-**No registration needed!** Claude Code automatically discovers and registers any `SKILL.md` files when it starts.
+**No registration needed!** Claude Code automatically discovers and registers any `.md` files in the commands directory when it starts.
 
 ---
 
 ### ⚠️ IMPORTANT: System Requirement
 
-**Skills require `ripgrep` to be installed!**
+**Commands require `ripgrep` to be installed!**
 
-Claude Code uses `ripgrep` for skill discovery. Without it, skills won't be found even if correctly configured.
+Claude Code uses `ripgrep` for command discovery. Without it, commands won't be found even if correctly configured.
 
 **Installation:**
 ```bash
@@ -1197,54 +1197,52 @@ echo 'export USE_BUILTIN_RIPGREP=0' >> ~/.bashrc
 which rg   # Should show path to ripgrep binary
 ```
 
-If skills still don't work after installing ripgrep, restart your Claude Code session.
+If commands still don't work after installing ripgrep, restart your Claude Code session.
 
 ---
 
-### Skill File Structure
+### Command File Structure
 
-Each skill MUST follow this exact structure:
+Each command is a single markdown file:
 
 ```
-.claude/skills/
-└── process-client-docs/          ← Directory named after skill
-    └── SKILL.md                   ← MUST be named "SKILL.md"
+.claude/commands/
+├── process-client-docs.md          ← Command file
+├── init-project.md                 ← Creates /init-project
+└── plan-sprint.md                  ← Creates /plan-sprint
 ```
 
-**SKILL.md contents:**
+**Command file contents (e.g., `process-client-docs.md`):**
 ```markdown
 ---
 name: process-client-docs           ← Creates /process-client-docs command
 description: Short description      ← Helps Claude decide when to use it
 ---
 
-# Skill Title
+# Command Title
 
-Your skill instructions and markdown content here...
+Your command instructions and markdown content here...
 ```
 
 **YAML frontmatter fields:**
 - `name` (required): Creates the `/slash-command`
-- `description` (required): Guides Claude on when to use the skill
+- `description` (required): Guides Claude on when to use the command
 - `disable-model-invocation` (optional): Restrict to manual invocation only
-- `user-invocable` (optional): Whether skill appears in menu
-- `context: fork` (optional): Run skill in isolated subagent
+- `user-invocable` (optional): Whether command appears in menu
+- `context: fork` (optional): Run command in isolated subagent
 
 ---
 
-### Verifying Your Skills
+### Verifying Your Commands
 
-To see all registered skills:
+To see all registered commands:
 ```bash
-# List all available skills
-/skills
-
-# Or just type / in Claude Code to see autocomplete menu
+# Just type / in Claude Code to see autocomplete menu
 /
 ```
 
-If your skill doesn't appear:
-1. Check file is at `.claude/skills/<skill-name>/SKILL.md`
+If your command doesn't appear:
+1. Check file is at `.claude/commands/<command-name>.md`
 2. Verify YAML frontmatter has `name:` and `description:`
 3. Restart Claude Code session (or start a new conversation)
 

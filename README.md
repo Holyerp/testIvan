@@ -92,7 +92,7 @@ Use `TodoWrite` tool to break down user stories into tasks and track implementat
 │   ├── git.md
 │   ├── database.md
 │   └── stack-specific.md
-└── skills/             # Claude Code skills
+└── commands/           # Claude Code slash commands
 
 .CLAUDE.MD              # Main AI developer guidelines
 ```
