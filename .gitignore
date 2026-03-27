@@ -12,10 +12,10 @@
 
 # Generated output files (can be regenerated)
 .project-management/output/docs/*
-.project-management/output/sprints/*
+.project-management/output/phases/*
 .project-management/output/progress/*
 # Keep folders
 !.project-management/output/docs/.gitkeep
-!.project-management/output/sprints/.gitkeep
+!.project-management/output/phases/.gitkeep
 !.project-management/output/progress/.gitkeep
 ###< project management ###
