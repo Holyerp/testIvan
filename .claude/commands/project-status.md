@@ -5,421 +5,286 @@ description: Generate comprehensive project status report showing progress, comp
 
 # Project Status
 
-You are providing a comprehensive overview of the current project status.
+Generate a comprehensive overview of the current project status.
 
-## Your Task
+---
 
-1. **Read all relevant files**:
-   - `.project-management/input/scope.md` - Project scope
-   - `.project-management/output/progress/current-status.md` - Current status
-   - `.project-management/output/progress/completed.md` - Completed work
-   - `.project-management/output/progress/blockers.md` - Blockers
-   - `.project-management/output/sprints/sprint-*.md` - All sprint files
-   - `.project-management/input/backlog.md` - Remaining work
+## Usage
 
-2. **Analyze the current state**:
-   - Calculate overall project completion
-   - Assess current sprint status
-   - Identify trends (velocity, quality, etc.)
-   - Evaluate risks and blockers
-   - Check timeline adherence
+```bash
+/project-status
+```
 
-3. **Generate comprehensive status report**:
-   - Executive summary with key metrics
-   - Sprint status
-   - Overall project health
-   - Risks and blockers
-   - Quality metrics
-   - Timeline status
-   - Recommendations
+Generates detailed status report with metrics, progress, blockers, and recommendations.
 
-4. **Present in clear, visual format**:
-   - Use status indicators (🟢🟡🔴)
-   - Include progress bars conceptually
-   - Show trends (↑↓→)
-   - Highlight critical items
+---
 
-## Status Report Structure
+## 📋 YOUR TASK
 
-### 1. Executive Summary
+### STEP 1: Read Project Files
 
-```markdown
-# Project Status Report
+**📖 See:** `modules/project-status-data-collection.md` for detailed data collection
+
+**Read all relevant files:**
+- `.project-management/input/scope.md` - Project scope
+- `.project-management/output/phases/phase-*.md` - All phase files
+- `.project-management/output/progress/current-status.md` - Current status
+- `.project-management/output/progress/completed.md` - Completed work
+- `.project-management/output/progress/blockers.md` - Blockers
+- `.project-management/input/backlog.md` - Remaining work
+
+---
+
+### STEP 2: Calculate Metrics
+
+**📖 See:** `modules/project-status-calculation.md` for detailed calculations
+
+**Calculate key metrics:**
+- Overall completion percentage
+- Phase progress (current + overall)
+- Story points (completed / total)
+- Velocity (points per week)
+- Test coverage
+- Quality metrics (bugs, tech debt)
+- Timeline adherence (on track / delayed)
+
+---
+
+### STEP 3: Generate Status Report
+
+**Display comprehensive report:**
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 PROJECT STATUS REPORT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **Generated:** {{DATE}}
 **Project:** {{PROJECT_NAME}}
-**Overall Status:** 🟢 On Track / 🟡 At Risk / 🔴 Off Track
+**Current Phase:** Phase {{N}} - {{PHASE_NAME}}
 
-## Quick Overview
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-| Metric | Status | Value |
-|--------|--------|-------|
-| Overall Progress | {{INDICATOR}} | {{PERCENTAGE}}% |
-| Current Sprint | {{INDICATOR}} | Sprint {{N}} - {{STATUS}} |
-| Timeline | {{INDICATOR}} | {{AHEAD/ON TIME/DELAYED}} |
-| Budget | {{INDICATOR}} | {{PERCENTAGE}}% used |
-| Quality | {{INDICATOR}} | {{METRICS}} |
-| Team Velocity | {{TREND}} | {{VELOCITY}} points/sprint |
+## 🎯 EXECUTIVE SUMMARY
 
-**Critical Items Requiring Attention:** {{COUNT}}
+**Overall Status:** {{🟢 On Track | 🟡 At Risk | 🔴 Delayed}}
+
+**Key Metrics:**
+- Overall Completion: {{XX}}%
+- Phase {{N}} Progress: {{YY}}%
+- Velocity: {{Z}} points/week
+- Test Coverage: {{CC}}%
+- Quality: {{🟢🟡🔴}} {{bug_count}} bugs
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 📅 CURRENT PHASE STATUS
+
+**Phase {{N}}: {{PHASE_NAME}}**
+
+Progress: [████████████░░░░░░░░] {{percentage}}%
+
+- Started: {{START_DATE}}
+- Expected End: {{END_DATE}}
+- Status: {{🟢 On Track | 🟡 At Risk | 🔴 Delayed}}
+
+**Completed:** {{completed_stories}} / {{total_stories}} stories
+**Story Points:** {{completed_points}} / {{total_points}} points
+
+**Current Sprint/Week:**
+- Working on: {{CURRENT_STORIES}}
+- Completed this week: {{WEEKLY_COMPLETED}}
+- Blocked: {{BLOCKED_COUNT}} stories
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 📈 OVERALL PROJECT PROGRESS
+
+**All Phases:**
+{{For each phase:}}
+- Phase {{N}}: [███░░░░░] {{percentage}}% ({{status}})
+
+**Timeline:**
+- Project Start: {{START_DATE}}
+- Target Launch: {{LAUNCH_DATE}}
+- Days Elapsed: {{ELAPSED_DAYS}}
+- Days Remaining: {{REMAINING_DAYS}}
+- On Schedule: {{✅ Yes | ⚠️ At Risk | ❌ Delayed}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## ✅ COMPLETED WORK (Recent)
+
+**Last 7 Days:**
+{{List completed stories:}}
+- ✅ US-XXX: {{story_title}} ({{points}} points)
+- ✅ US-YYY: {{story_title}} ({{points}} points)
+
+**Key Achievements:**
+- {{achievement_1}}
+- {{achievement_2}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🔴 BLOCKERS & RISKS
+
+**Active Blockers:** {{blocker_count}}
+{{If blockers exist:}}
+- 🔴 {{blocker_1}} (Impact: High/Medium/Low)
+- 🔴 {{blocker_2}} (Impact: High/Medium/Low)
+
+**Risks:**
+- ⚠️  {{risk_1}} (Probability: High/Medium/Low)
+- ⚠️  {{risk_2}} (Probability: High/Medium/Low)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🧪 QUALITY METRICS
+
+**Testing:**
+- Total Tests: {{test_count}} ({{passing}} passing, {{failing}} failing)
+- Coverage: {{coverage}}% (Target: 80%+)
+- API Status Codes: {{✅ All tested | ⚠️ Missing}}
+
+**Code Quality:**
+- SOLID & DRY: {{✅ Compliant | ⚠️ Issues}}
+- Linting Errors: {{error_count}}
+- Tech Debt Items: {{debt_count}}
+
+**Bugs:**
+- Open: {{open_bugs}} (Critical: {{critical}}, High: {{high}})
+- Fixed This Week: {{fixed_bugs}}
+- Bug Rate: {{rate}} bugs/story
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 📊 VELOCITY & TRENDS
+
+**Velocity (Story Points per Week):**
+- Current: {{current_velocity}}
+- Average: {{avg_velocity}}
+- Trend: {{↑ Increasing | → Stable | ↓ Decreasing}}
+
+**Completion Rate:**
+- Stories/Week: {{stories_per_week}}
+- Estimated Completion: {{estimated_date}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🎯 NEXT STEPS
+
+**Immediate (This Week):**
+1. {{next_task_1}}
+2. {{next_task_2}}
+3. {{next_task_3}}
+
+**Upcoming (Next Week):**
+1. {{upcoming_task_1}}
+2. {{upcoming_task_2}}
+
+**Phase {{N+1}} Preview:**
+- Start Date: {{next_phase_start}}
+- Focus: {{next_phase_focus}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 💡 RECOMMENDATIONS
+
+{{Based on analysis:}}
+- ✅ {{recommendation_1}}
+- ⚠️  {{recommendation_2}}
+- 🔴 {{critical_action_needed}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-### 2. Current Sprint Status
+---
 
-```markdown
-## Current Sprint: Sprint {{N}}
+## 📚 Module References
 
-**Sprint Goal:** {{GOAL}}
-**Duration:** {{START}} to {{END}} ({{DAYS_ELAPSED}}/{{TOTAL_DAYS}} days)
-**Status:** {{STATUS}}
+**Detailed workflows available in:**
+- `modules/project-status-data-collection.md` - Data collection strategies
+- `modules/project-status-calculation.md` - Metrics calculation formulas
 
-### Progress
+---
 
-**Story Points:**
-- Planned: {{PLANNED}}
-- Completed: {{COMPLETED}}
-- In Progress: {{IN_PROGRESS}}
-- Remaining: {{REMAINING}}
-- Completion: {{PERCENTAGE}}%
+## ⚠️ IMPORTANT NOTES
 
-**Task Breakdown:**
-- ✅ Done: {{DONE_COUNT}} tasks ({{DONE_POINTS}} points)
-- 🔄 In Progress: {{PROGRESS_COUNT}} tasks ({{PROGRESS_POINTS}} points)
-- ⏸️ Blocked: {{BLOCKED_COUNT}} tasks ({{BLOCKED_POINTS}} points)
-- 📋 Todo: {{TODO_COUNT}} tasks ({{TODO_POINTS}} points)
+### Status Indicators
 
-### Sprint Health
-{{HEALTH_ASSESSMENT}}
+**Overall Status:**
+- 🟢 **On Track** - Meeting deadlines, good velocity, no major blockers
+- 🟡 **At Risk** - Some delays, velocity decreasing, blockers present
+- 🔴 **Delayed** - Behind schedule, multiple blockers, needs intervention
 
-**Will Sprint Goal Be Met?** {{YES/LIKELY/AT_RISK/NO}}
-**Confidence Level:** {{HIGH/MEDIUM/LOW}}
+### Metric Calculations
+
+**Completion Percentage:**
+```
+(Completed Story Points / Total Story Points) × 100
 ```
 
-### 3. Overall Project Status
-
-```markdown
-## Overall Project Health
-
-### Completion Status
-
-**Features:**
-- Total Features: {{TOTAL}}
-- Completed: {{COMPLETED}} ({{PERCENTAGE}}%)
-- In Progress: {{IN_PROGRESS}}
-- Not Started: {{NOT_STARTED}}
-
-**By Priority:**
-- P0 (Critical): {{COMPLETED}}/{{TOTAL}} ({{PERCENTAGE}}%)
-- P1 (High): {{COMPLETED}}/{{TOTAL}} ({{PERCENTAGE}}%)
-- P2 (Medium): {{COMPLETED}}/{{TOTAL}} ({{PERCENTAGE}}%)
-
-**Story Points:**
-- Total Estimated: {{TOTAL_POINTS}}
-- Completed: {{COMPLETED_POINTS}} ({{PERCENTAGE}}%)
-- Remaining: {{REMAINING_POINTS}}
-
-### Progress Trend
-{{TREND_ANALYSIS}}
-
-**Visual Representation:**
-Progress: [████████░░] {{PERCENTAGE}}%
+**Velocity:**
+```
+Story Points Completed / Weeks Elapsed
 ```
 
-### 4. Timeline Status
-
-```markdown
-## Timeline & Milestones
-
-**Project Timeline:**
-- Start Date: {{START_DATE}}
-- Target Completion: {{TARGET_DATE}}
-- Current Date: {{CURRENT_DATE}}
-- Time Elapsed: {{ELAPSED}} / {{TOTAL}} days ({{PERCENTAGE}}%)
-- Time Remaining: {{REMAINING}} days
-
-**Status:** {{ON_TIME/AHEAD/DELAYED}}
-
-### Milestones
-
-| Milestone | Target Date | Status | Completion |
-|-----------|-------------|--------|------------|
-| {{MILESTONE_1}} | {{DATE}} | {{STATUS}} | {{PCT}}% |
-| {{MILESTONE_2}} | {{DATE}} | {{STATUS}} | {{PCT}}% |
-| {{MILESTONE_3}} | {{DATE}} | {{STATUS}} | {{PCT}}% |
-
-**Timeline Risk:** {{LOW/MEDIUM/HIGH}}
-**Projected Completion:** {{DATE}} ({{AHEAD/ON_TIME/DELAYED}})
+**Timeline Status:**
+```
+If (Days Remaining > Estimated Days Needed) → On Track
+Else If (Days Remaining > 80% of Estimated) → At Risk
+Else → Delayed
 ```
 
-### 5. Blockers & Risks
+### Quality Checks
 
-```markdown
-## Blockers & Risks
+**Before generating report:**
+- [ ] All phase files read
+- [ ] Progress files analyzed
+- [ ] Metrics calculated correctly
+- [ ] Trends identified
+- [ ] Recommendations based on data
 
-### 🔴 Critical Blockers ({{COUNT}})
+---
 
-{{#each critical_blockers}}
-#### BLOCKER-{{ID}}: {{TITLE}}
-- **Impact:** {{IMPACT}}
-- **Affected Work:** {{AFFECTED}}
-- **Status:** {{STATUS}}
-- **Owner:** {{OWNER}}
-- **Target Resolution:** {{DATE}}
-{{/each}}
+## 📝 Example Execution
 
-### ⚠️ Active Risks ({{COUNT}})
+```bash
+# User runs:
+/project-status
 
-{{#each risks}}
-#### RISK-{{ID}}: {{TITLE}}
-- **Probability:** {{PROBABILITY}}
-- **Impact:** {{IMPACT}}
-- **Mitigation:** {{MITIGATION}}
-- **Status:** {{STATUS}}
-{{/each}}
-
-**Risk Level:** {{LOW/MEDIUM/HIGH}}
-```
-
-### 6. Quality Metrics
-
-```markdown
-## Quality & Technical Health
-
-### Code Quality
-- **Test Coverage:** {{PERCENTAGE}}% (Target: 80%)
-- **Passing Tests:** {{PASSING}}/{{TOTAL}}
-- **Linting Issues:** {{COUNT}}
-- **Type Coverage:** {{PERCENTAGE}}%
-
-### Bugs
-- **Open Bugs:** {{OPEN}}
-  - Critical (P0): {{P0}}
-  - High (P1): {{P1}}
-  - Medium (P2): {{P2}}
-  - Low (P3): {{P3}}
-- **Fixed This Sprint:** {{FIXED}}
-- **Bug Trend:** {{TREND}}
-
-### Performance
-- **API Response Time (p95):** {{TIME}}ms (Target: <500ms)
-- **Page Load Time:** {{TIME}}s (Target: <2s)
-- **Lighthouse Score:** {{SCORE}}/100
-- **Uptime:** {{PERCENTAGE}}%
-
-**Quality Status:** {{GOOD/NEEDS_ATTENTION/CRITICAL}}
-```
-
-### 7. Team Velocity & Productivity
-
-```markdown
-## Team Performance
-
-### Velocity Trend
-
-| Sprint | Planned | Completed | Velocity | Trend |
-|--------|---------|-----------|----------|-------|
-| Sprint {{N-2}} | {{PTS}} | {{PTS}} | {{VEL}} | - |
-| Sprint {{N-1}} | {{PTS}} | {{PTS}} | {{VEL}} | {{TREND}} |
-| Sprint {{N}} | {{PTS}} | {{PTS}}* | {{VEL}}* | {{TREND}} |
-
-*Current sprint in progress
-
-**Average Velocity:** {{AVG}} points/sprint
-**Velocity Trend:** {{IMPROVING/STABLE/DECLINING}}
-
-### Team Capacity
-- **Available Capacity:** {{CAPACITY}} points/sprint
-- **Current Utilization:** {{PERCENTAGE}}%
-- **Status:** {{OPTIMAL/OVERCOMMITTED/UNDERUTILIZED}}
-```
-
-### 8. Recommendations & Next Steps
-
-```markdown
-## Recommendations
-
-### Immediate Actions Required
-{{#if critical_items}}
-1. {{ACTION_1}}
-2. {{ACTION_2}}
-3. {{ACTION_3}}
-{{else}}
-✅ No immediate actions required
-{{/if}}
-
-### Short-term Recommendations (This Sprint)
-1. {{RECOMMENDATION_1}}
-2. {{RECOMMENDATION_2}}
-3. {{RECOMMENDATION_3}}
-
-### Medium-term Recommendations (Next 2 Sprints)
-1. {{RECOMMENDATION_1}}
-2. {{RECOMMENDATION_2}}
-
-### Strategic Recommendations
-{{STRATEGIC_RECOMMENDATIONS}}
-
-## Next Steps
-
-**For Development Team:**
-- {{STEP_1}}
-- {{STEP_2}}
-
-**For Stakeholders:**
-- {{STEP_1}}
-- {{STEP_2}}
-
-**For Next Sprint:**
-- {{STEP_1}}
-- {{STEP_2}}
-```
-
-## Analysis Guidelines
-
-### Determine Overall Status
-
-**🟢 On Track:**
-- Sprint completion >70%
-- No critical blockers
-- Timeline on target
-- Velocity stable or improving
-- Quality metrics meeting targets
-
-**🟡 At Risk:**
-- Sprint completion 40-70%
-- 1-2 significant blockers
-- Timeline slightly delayed (<1 week)
-- Velocity declining
-- Some quality concerns
-
-**🔴 Off Track:**
-- Sprint completion <40%
-- Multiple critical blockers
-- Timeline delayed >1 week
-- Velocity significantly down
-- Quality metrics below target
-
-### Calculate Projected Completion
-
-```
-Remaining Story Points = Total Points - Completed Points
-Average Velocity = Sum of Last 3 Sprints / 3
-Remaining Sprints = Remaining Points / Average Velocity
-Projected Completion = Current Date + (Remaining Sprints × Sprint Length)
-```
-
-### Identify Trends
-
-- **Velocity:** Compare last 3 sprints
-- **Quality:** Track test coverage, bug trends over time
-- **Progress:** Compare planned vs actual completion rates
-- **Blockers:** Frequency and resolution time
-
-### Generate Recommendations
-
-Base recommendations on:
-- Identified risks and blockers
-- Trend analysis
-- Deviations from plan
-- Resource utilization
-- Quality metrics
-
-## Output Format
-
-Present the status report in a clear, scannable format:
-
-```
+# Claude generates:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📊 PROJECT STATUS REPORT
-Generated: {{DATE}}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-═══════════════════════════════════════════════════
+**Generated:** 2026-03-27
+**Project:** E-Commerce Platform
+**Current Phase:** Phase 2 - Core Features
 
-🎯 EXECUTIVE SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Overall Status: 🟢 ON TRACK
-Project Progress: ████████░░ 75% Complete
-Current Sprint: Sprint 4 - 🟡 At Risk (80% complete, 2 days left)
-Timeline: On schedule for {{DATE}} completion
+## 🎯 EXECUTIVE SUMMARY
 
-Critical Alerts: 1 ⚠️
-- BLOCKER-003: API integration delayed
+**Overall Status:** 🟢 On Track
 
-═══════════════════════════════════════════════════
+**Key Metrics:**
+- Overall Completion: 45%
+- Phase 2 Progress: 60%
+- Velocity: 25 points/week
+- Test Coverage: 87%
+- Quality: 🟢 3 bugs
 
-📈 KEY METRICS
+[... detailed report ...]
 
-Sprint Progress:     [████████░░] 80% (24/30 points)
-Overall Progress:    [███████░░░] 75% (180/240 points)
-Team Velocity:       28 points/sprint (↑ improving)
-Test Coverage:       82% (✅ above target)
-Open Bugs:           8 (3 P0, 5 P1)
-Budget Used:         65% (🟢 on track)
-
-═══════════════════════════════════════════════════
-
-✅ RECENT WINS
-
-• Completed payment integration (13 points)
-• Shipped order management dashboard
-• Achieved 82% test coverage milestone
-• Fixed all P0 bugs from last sprint
-
-═══════════════════════════════════════════════════
-
-⚠️ ATTENTION NEEDED
-
-🔴 BLOCKER-003: Third-party API integration delayed
-   Impact: Cannot complete order tracking feature
-   Action: Switch to alternative provider (in progress)
-   Target: Resolved by {{DATE}}
-
-═══════════════════════════════════════════════════
-
-📅 UPCOMING
-
-Next Sprint: Sprint 5 starts {{DATE}}
-Focus: Order fulfillment and notifications
-Planned: 30 story points, 8 features
-
-═══════════════════════════════════════════════════
-
-💡 RECOMMENDATIONS
-
-1. Address BLOCKER-003 urgently (blocks 2 features)
-2. Allocate time for P0 bug fixes in Sprint 5
-3. Consider adding QA resource (bug rate increasing)
-4. Schedule performance optimization sprint soon
-
-═══════════════════════════════════════════════════
-
-🔍 DETAILED REPORTS
-
-For more details, see:
-- Current Status: .project-management/output/progress/current-status.md
-- Sprint 4 Plan: .project-management/output/sprints/sprint-4.md
-- Blockers: .project-management/output/progress/blockers.md
-
-═══════════════════════════════════════════════════
+🎯 NEXT STEPS:
+1. Complete US-045 (user profile)
+2. Start US-046 (payment integration)
+3. Review Phase 3 backlog
 ```
 
-## When to Use This Command
+---
 
-Run `/project-status`:
-- **Regularly:** Weekly or bi-weekly for ongoing monitoring
-- **Before Meetings:** Stakeholder updates, sprint reviews
-- **When Uncertain:** To get current snapshot
-- **After Major Events:** Completing features, discovering blockers
-- **On Request:** When someone asks "how's the project going?"
-
-## Quality Checklist
-
-Before presenting status, verify:
-- [ ] All data is current
-- [ ] Metrics are accurately calculated
-- [ ] Status indicators are appropriate
-- [ ] Trends are correctly identified
-- [ ] Recommendations are actionable
-- [ ] Critical items are highlighted
-- [ ] Report is easy to scan/read
-
-Remember: A good status report provides clarity, identifies issues early, and guides decision-making. Be honest and accurate - don't sugarcoat problems.
+**Version:** 3.0.0
+**Created:** 2026-03-27
+**Command Type:** Reporting & Analytics
