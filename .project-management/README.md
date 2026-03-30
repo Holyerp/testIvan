@@ -1,6 +1,6 @@
 # Claude Project Management System
 
-**Version:** 1.0
+**Version:** 3.0.0
 **Created:** 2026-03-24
 **Purpose:** Autonomous project planning, documentation, and progress tracking system for Claude Code
 
@@ -30,14 +30,14 @@
 This guide explains:
 - ✅ What Claude should read and when
 - ✅ How `.CLAUDE.MD` and project management system work together
-- ✅ When to use TodoWrite vs /plan-sprint
+- ✅ When to use TodoWrite vs /execute-work
 - ✅ Document hierarchy and conflict resolution
 - ✅ No conflicts, no confusion!
 
 **TL;DR:**
-- **Planning?** → Use project management commands
+- **Planning?** → Use automated phase planning with `/execute-work phase N`
 - **Coding?** → Follow `.CLAUDE.MD` standards
-- **Tracking?** → Use `/update-progress`
+- **Tracking?** → Automatic progress tracking during execution
 
 [📖 Read Full Integration Guide](INTEGRATION-GUIDE.md)
 
@@ -49,7 +49,7 @@ The **Claude Project Management System** is a complete project management framew
 
 - ✅ **Autonomously read** project scope, backlog, and constraints
 - ✅ **Generate comprehensive documentation** (PRD, Technical Spec, Architecture)
-- ✅ **Plan sprints** based on priorities and team capacity
+- ✅ **Plan phases** based on priorities and project scope
 - ✅ **Track progress** throughout development
 - ✅ **Provide status reports** on-demand
 - ✅ **Identify risks and blockers** proactively
@@ -136,17 +136,17 @@ Run the initialization command:
 Claude will:
 - Read all your input files
 - Generate complete documentation
-- Create Sprint 1 plan
+- Create Phase 1 plan
 - Set up progress tracking
 
 #### Step 3: Start Development
 
-Follow the sprint plan and update progress:
+Execute work using automated phase workflow:
 
 ```bash
-/project-status       # Check current status
-/update-progress      # Log completed work
-/plan-sprint 2        # Plan next sprint when ready
+/execute-work phase 1    # Start Phase 1 with automated execution
+/project-status          # Check current status anytime
+# Progress tracked automatically during execution
 ```
 
 That's it! Claude now manages your project autonomously.
@@ -173,9 +173,9 @@ That's it! Claude now manages your project autonomously.
 │   │   ├── architecture.md   # Architecture Document
 │   │   └── api-spec.md       # API Specification (optional)
 │   │
-│   ├── sprints/               # Sprint plans
-│   │   ├── sprint-1.md       # Sprint 1 plan
-│   │   ├── sprint-2.md       # Sprint 2 plan
+│   ├── phases/                # Phase plans
+│   │   ├── phase-1.md        # Phase 1: Foundation (1-4 months)
+│   │   ├── phase-2.md        # Phase 2: Core Features
 │   │   └── ...
 │   │
 │   └── progress/              # Progress tracking
@@ -197,7 +197,7 @@ That's it! Claude now manages your project autonomously.
 └── commands/                   # Slash commands
     ├── init-project.md        # Initialize project
     ├── generate-docs.md       # Generate/update docs
-    ├── plan-sprint.md         # Plan next sprint
+    ├── execute-work.md        # Execute work with automated planning
     ├── update-progress.md     # Update progress
     └── project-status.md      # Show project status
 ```
@@ -233,21 +233,21 @@ That's it! Claude now manages your project autonomously.
 3. Initialization
    └─ Run: /init-project
        ├─ Generates all documentation
-       ├─ Creates Sprint 1 plan
+       ├─ Creates Phase 1 plan (1-4 months)
        └─ Initializes progress tracking
 
-4. Sprint Cycle (Repeat)
-   ├─ Development
-   │  ├─ Work on sprint tasks
-   │  ├─ Run: /update-progress (regularly)
-   │  └─ Run: /project-status (check status)
+4. Phase Execution (4 Phases Total)
+   ├─ Phase 1: Foundation
+   │  └─ Run: /execute-work phase 1 (automated execution)
    │
-   ├─ Sprint Review
-   │  ├─ Mark completed work
-   │  └─ Document learnings
+   ├─ Phase 2: Core Features
+   │  └─ Run: /execute-work phase 2
    │
-   └─ Sprint Planning
-       └─ Run: /plan-sprint N (plan next sprint)
+   ├─ Phase 3: Advanced Features
+   │  └─ Run: /execute-work phase 3
+   │
+   └─ Phase 4: Polish & Launch
+       └─ Run: /execute-work phase 4
 
 5. Ongoing Maintenance
    ├─ Add new client documents as they arrive
@@ -267,26 +267,26 @@ That's it! Claude now manages your project autonomously.
 2. Initialization
    └─ Run: /init-project
        ├─ Generates all documentation
-       ├─ Creates Sprint 1 plan
+       ├─ Creates Phase 1 plan (1-4 months)
        └─ Initializes progress tracking
 
-3. Sprint Cycle (Repeat)
-   ├─ Development
-   │  ├─ Work on sprint tasks
-   │  ├─ Run: /update-progress (regularly)
-   │  └─ Run: /project-status (check status)
+3. Phase Execution Cycle (4 Standard Phases)
+   ├─ Phase 1: Foundation
+   │  └─ Run: /execute-work phase 1 (automated execution)
    │
-   ├─ Sprint Review
-   │  ├─ Mark completed work
-   │  └─ Document learnings
+   ├─ Phase 2: Core Features
+   │  └─ Run: /execute-work phase 2
    │
-   └─ Sprint Planning
-       └─ Run: /plan-sprint N (plan next sprint)
+   ├─ Phase 3: Advanced Features
+   │  └─ Run: /execute-work phase 3
+   │
+   └─ Phase 4: Polish & Launch
+       └─ Run: /execute-work phase 4
 
 4. Ongoing Maintenance
    ├─ Update input files as scope changes
    ├─ Run: /generate-docs (regenerate docs)
-   └─ Track blockers in progress/blockers.md
+   └─ Progress tracked automatically during execution
 ```
 
 ---
@@ -336,7 +336,7 @@ cp mockups.png .project-management/client-input/
 ---
 
 ### `/init-project`
-**Purpose:** Initialize a new project with all documentation and first sprint
+**Purpose:** Initialize a new project with all documentation and first phase
 
 **When to use:**
 - Starting a new project
@@ -357,7 +357,7 @@ cp mockups.png .project-management/client-input/
 - `.project-management/output/docs/prd.md`
 - `.project-management/output/docs/technical-spec.md`
 - `.project-management/output/docs/architecture.md`
-- `.project-management/output/sprints/sprint-1.md`
+- `.project-management/output/phases/phase-1.md`
 - `.project-management/output/progress/*.md`
 
 ---
@@ -385,39 +385,44 @@ cp mockups.png .project-management/client-input/
 
 ---
 
-### `/plan-sprint [number]`
-**Purpose:** Plan the next sprint
+### `/execute-work phase [number]`
+**Purpose:** Execute work in a phase with automated planning and implementation
 
 **When to use:**
-- End of current sprint
-- Starting a new sprint
-- Need to adjust sprint scope
+- Starting Phase 1, 2, 3, or 4
+- After completing previous phase
+- Ready to begin development work
 
 **What it does:**
-- Analyzes remaining backlog
-- Considers team velocity
-- Selects appropriate work items
-- Creates detailed sprint plan
+- Automatically plans the phase (1-4 months duration)
+- Analyzes remaining backlog for the phase
+- Selects appropriate work items based on phase milestone
+- Executes work with continuous or paused mode
+- Tracks progress automatically
 
 **Example:**
 ```bash
-/plan-sprint 2
+/execute-work phase 1    # Start Foundation phase
+/execute-work phase 2    # Start Core Features phase
 ```
 
 **Output:**
-- `.project-management/output/sprints/sprint-2.md`
-- Updated `current-status.md` with new sprint info
+- `.project-management/output/phases/phase-N.md`
+- Automatic progress tracking during execution
+- Updated `current-status.md` with phase progress
 
 ---
 
 ### `/update-progress`
-**Purpose:** Update project progress tracking
+**Purpose:** Update project progress tracking (used mainly for manual updates)
 
 **When to use:**
-- Daily or every few days
-- After completing stories/tasks
+- Manual progress updates if not using automated execution
+- After completing stories/tasks outside of /execute-work
 - When blockers arise
 - Before stakeholder meetings
+
+**Note:** With v3.0 automated execution via `/execute-work phase N`, progress is tracked automatically during work. This command is now primarily for manual adjustments.
 
 **What it does:**
 - Asks about recent completions
@@ -439,7 +444,7 @@ Claude will ask you:
 - Updated `current-status.md`
 - Updated `completed.md`
 - Updated `blockers.md`
-- Updated current sprint file
+- Updated current phase file
 
 ---
 
@@ -466,7 +471,7 @@ Claude will ask you:
 **Output:**
 - Comprehensive status report showing:
   - Overall progress
-  - Sprint status
+  - Current phase status
   - Blockers and risks
   - Quality metrics
   - Timeline adherence
@@ -485,7 +490,7 @@ Claude will ask you:
 - **Core Objectives:** What must be achieved?
 - **Success Criteria:** How do we measure success?
 - **Out of Scope:** What we're NOT building
-- **Phases:** How to break down the project
+- **Phases:** Standard 4-phase structure (Foundation, Core Features, Advanced Features, Polish & Launch)
 
 **Tips:**
 - Be specific and clear
@@ -521,6 +526,8 @@ Claude will ask you:
 - 13 points: 1 week
 - 21+ points: Break it down further
 
+Note: In v3.0 phase-based system, story points help estimate phase duration (1-4 months per phase)
+
 ---
 
 ### 3. technologies.md
@@ -546,7 +553,7 @@ Claude will ask you:
 **Purpose:** Define limitations and boundaries
 
 **Key Sections:**
-- **Timeline:** Deadlines, milestones
+- **Timeline:** Deadlines, phase milestones (1-4 months per phase)
 - **Budget:** Development and operational costs
 - **Team:** Size, availability, skills
 - **Technical:** Infrastructure, technology restrictions
@@ -573,7 +580,7 @@ Claude will ask you:
 - Feature requirements
 - User stories
 - Success metrics
-- Timeline and phases
+- Timeline and phase structure (4 standard phases)
 
 **Use for:**
 - Alignment on what to build
@@ -636,41 +643,50 @@ Claude will ask you:
 
 # Claude generates:
 # ✅ Complete documentation
-# ✅ Sprint 1 plan (2 weeks)
+# ✅ Phase 1 plan (1-4 months: Foundation)
 # ✅ Progress tracking setup
 
-# Step 3: Start development
-# Work on Sprint 1 tasks...
+# Step 3: Start automated phase execution
+/execute-work phase 1
 
-# Step 4: Track progress (weekly)
-/update-progress
+# Claude automatically:
+# ✅ Plans Phase 1 work
+# ✅ Executes implementation
+# ✅ Tracks progress continuously
 
-# Step 5: Check status anytime
+# Step 4: Check status anytime
 /project-status
+
+# Step 5: Continue to next phases
+/execute-work phase 2    # Core Features
+/execute-work phase 3    # Advanced Features
+/execute-work phase 4    # Polish & Launch
 ```
 
 ---
 
-### Example 2: Planning Next Sprint
+### Example 2: Executing Next Phase
 
 ```bash
-# Current sprint ending soon
+# Phase 1 (Foundation) completed
 
-# Step 1: Update progress with sprint completion
-/update-progress
-# Claude asks: What was completed? Any issues?
+# Step 1: Start next phase with automated execution
+/execute-work phase 2
 
-# Step 2: Plan next sprint
-/plan-sprint 2
-
-# Claude:
+# Claude automatically:
+# ✅ Plans Phase 2 (Core Features, 1-4 months)
 # ✅ Analyzes remaining backlog
-# ✅ Considers team velocity from Sprint 1
-# ✅ Selects appropriate work (P0/P1 items)
-# ✅ Creates Sprint 2 plan
+# ✅ Selects appropriate work for Core Features milestone
+# ✅ Executes implementation
+# ✅ Tracks progress continuously
 
-# Step 3: Review and start Sprint 2
-# Review sprint-2.md, adjust if needed, begin work
+# Step 2: Monitor progress
+/project-status
+# Shows Phase 2 progress and overall project status
+
+# Step 3: Continue through all phases
+/execute-work phase 3    # Advanced Features
+/execute-work phase 4    # Polish & Launch
 ```
 
 ---
@@ -694,14 +710,14 @@ Claude will ask you:
 # ✅ Technical spec with new requirements
 # ✅ Architecture if needed
 
-# Step 4: Replan if necessary
-# If current sprint affected:
-/plan-sprint 3
-# Incorporate new high-priority work
+# Step 4: Continue execution if needed
+# Continue current phase or start next phase:
+/execute-work phase 2
+# New features automatically incorporated into phase planning
 
 # Step 5: Update status
 /project-status
-# See impact on timeline and scope
+# See impact on timeline and phase milestones
 ```
 
 ---
@@ -719,7 +735,7 @@ Claude will ask you:
 
 # Claude:
 # ✅ Logs blocker in blockers.md
-# ✅ Updates current sprint status
+# ✅ Updates current phase status
 # ✅ Marks affected tasks as blocked
 # ✅ Suggests mitigation
 
@@ -728,7 +744,7 @@ Claude will ask you:
 
 # Shows:
 # 🔴 1 Critical Blocker
-# ⚠️ Sprint goal at risk
+# ⚠️ Phase milestone at risk
 # 💡 Recommendations: work on unblocked items
 
 # Step 3: When resolved
@@ -747,19 +763,20 @@ Claude will ask you:
 4. **Prioritize ruthlessly** - Not everything can be P0
 5. **Document constraints** - Better to over-communicate limitations
 
-### Sprint Planning
-1. **Don't overcommit** - Better to under-promise and over-deliver
-2. **Respect velocity** - Use past sprint data to plan realistically
+### Phase Planning
+1. **Plan realistic milestones** - Phases last 1-4 months, not 2 weeks
+2. **Respect overall velocity** - Use past phase data to plan realistically
 3. **Balance risk** - Mix high-risk and low-risk items
 4. **Check dependencies** - Don't pick work that can't be completed
-5. **Set clear goals** - Each sprint should have a clear objective
+5. **Set clear milestones** - Each phase should have a clear milestone goal
+6. **Use automated planning** - Let `/execute-work phase N` handle planning automatically
 
 ### Progress Tracking
-1. **Update frequently** - Daily or every 2-3 days is ideal
+1. **Automated tracking** - With v3.0, progress tracked automatically during `/execute-work`
 2. **Be honest** - Don't hide problems or delays
 3. **Document blockers** - Report issues as soon as they arise
-4. **Celebrate wins** - Log completed work immediately
-5. **Learn continuously** - Use retrospectives to improve
+4. **Celebrate wins** - Completed work logged automatically
+5. **Monitor phases** - Track progress across 1-4 month phases, not weekly
 
 ### Documentation
 1. **Keep in sync** - Regenerate docs when inputs change
@@ -792,13 +809,13 @@ Claude will ask you:
 
 ---
 
-### Issue: Sprint plan seems unrealistic
+### Issue: Phase plan seems unrealistic
 
 **Solution:**
-- Check `constraints.md` - is team capacity accurate?
-- Review velocity from previous sprints
+- Check `constraints.md` - is timeline realistic for 1-4 month phases?
+- Review velocity from previous phases
 - Adjust story point estimates in `backlog.md`
-- Run `/plan-sprint N` again with updated data
+- Phase planning is automated via `/execute-work phase N`
 
 ---
 
@@ -838,7 +855,7 @@ cd /path/to/new-project
 
 # Clear old data
 rm .project-management/output/docs/*
-rm .project-management/output/sprints/*
+rm .project-management/output/phases/*
 rm .project-management/output/progress/*
 
 # Fill new input files
@@ -866,7 +883,7 @@ cp .CLAUDE.MD ~/project-management-template/
 
 # Clear output files in template
 rm ~/project-management-template/.project-management/output/docs/*
-rm ~/project-management-template/.project-management/output/sprints/*
+rm ~/project-management-template/.project-management/output/phases/*
 rm ~/project-management-template/.project-management/output/progress/*
 
 # For each new project:
@@ -896,15 +913,17 @@ cp -r ~/project-management-template/* /path/to/new-project/
 
 ### For Developers
 - ✅ Clear requirements and specifications
-- ✅ Structured sprint plans
+- ✅ Structured phase plans (1-4 months)
 - ✅ Consistent documentation
 - ✅ Defined coding standards
+- ✅ Automated execution workflow
 
 ### For Project Managers
-- ✅ Automated planning and tracking
+- ✅ Automated phase planning and execution
 - ✅ Real-time progress visibility
 - ✅ Risk identification
 - ✅ Status reports on-demand
+- ✅ Long-term phase tracking (not 2-week cycles)
 
 ### For Stakeholders
 - ✅ Clear project vision
@@ -925,8 +944,8 @@ cp -r ~/project-management-template/* /path/to/new-project/
 Track these to measure system effectiveness:
 
 **Planning Accuracy:**
-- Sprint completion rate (target: >80%)
-- Velocity predictability (variance <15%)
+- Phase completion rate (target: >80%)
+- Overall velocity predictability (variance <15%)
 
 **Documentation Quality:**
 - Docs up-to-date (checked weekly)
@@ -952,11 +971,11 @@ This system is designed to evolve with your needs.
 3. Share learnings with team
 
 **Common customizations:**
-- Sprint length (change from 2 weeks)
+- Phase duration (adjust 1-4 month range)
 - Story point scale (use t-shirt sizes instead)
 - Additional documentation types
 - Custom progress metrics
-- Team-specific workflows
+- Execution mode (continuous vs paused)
 
 ---
 
@@ -977,6 +996,18 @@ This system is designed to evolve with your needs.
 ---
 
 ## 📜 Version History
+
+**v3.0.0 (Current)**
+- Phase-based system (1-4 months per phase)
+- 4 standard phases: Foundation, Core Features, Advanced Features, Polish & Launch
+- Automated execution with `/execute-work phase N`
+- Continuous and paused execution modes
+- Automatic progress tracking
+- Plan mode mandatory
+
+**v2.0 (Historical)**
+- Sprint-based system (2-week cycles)
+- Manual sprint planning with `/plan-sprint`
 
 **v1.0 (2026-03-24)**
 - Initial release
@@ -999,8 +1030,8 @@ Before starting your project:
 - [ ] Customized `rules/project-rules.md` if needed
 - [ ] Ran `/init-project` successfully
 - [ ] Reviewed generated documentation
-- [ ] Reviewed Sprint 1 plan
-- [ ] Ready to start development!
+- [ ] Reviewed Phase 1 plan (Foundation)
+- [ ] Ready to run `/execute-work phase 1`!
 
 ---
 
