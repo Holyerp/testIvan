@@ -253,5 +253,5 @@ Phase 4: Polish & Launch ({{points_4}} points, {{weeks_4}} weeks)
 
 ---
 
-**Version:** 2.0 (Modular)
+**Version:** 3.0.0
 **Updated:** 2026-03-27
