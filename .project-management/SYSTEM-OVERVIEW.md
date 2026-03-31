@@ -15,10 +15,10 @@ testProject/
 ├── 📂 .claude/
 │   └── 📂 commands/                               # Slash commands for automation
 │       ├── process-client-docs.md                 # 🆕 Extract requirements from client docs
-│       ├── init-project.md                        # Initialize project with docs & Sprint 1
+│       ├── init-project.md                        # Initialize project with docs & Phase 1
 │       ├── generate-docs.md                       # Generate/update all documentation
-│       ├── plan-sprint.md                         # Plan next sprint (2-week cycle)
-│       ├── update-progress.md                     # Update progress tracking
+│       ├── execute-work.md                        # Execute work with automated phase planning
+│       ├── update-progress.md                     # Update progress tracking (mostly automated)
 │       └── project-status.md                      # Get comprehensive status report
 │
 └── 📂 .project-management/
@@ -44,10 +44,10 @@ testProject/
     │   │   ├── architecture.md                    # System Architecture Document
     │   │   └── api-spec.md                        # API Specification (optional)
     │   │
-    │   ├── 📂 sprints/                            # Sprint plans
-    │   │   ├── sprint-1.md                        # Sprint 1 plan (2 weeks)
-    │   │   ├── sprint-2.md                        # Sprint 2 plan
-    │   │   └── ...                                # Additional sprints
+    │   ├── 📂 phases/                             # Phase plans
+    │   │   ├── phase-1.md                         # Phase 1: Foundation (1-4 months)
+    │   │   ├── phase-2.md                         # Phase 2: Core Features
+    │   │   └── ...                                # Additional phases (3 & 4)
     │   │
     │   └── 📂 progress/                           # Progress tracking
     │       ├── current-status.md                  # Current project status & metrics
@@ -58,7 +58,7 @@ testProject/
     │   ├── prd-template.md                        # PRD template with placeholders
     │   ├── technical-spec-template.md             # Tech spec template
     │   ├── architecture-template.md               # Architecture doc template
-    │   ├── sprint-template.md                     # Sprint plan template
+    │   ├── phase-template.md                      # Phase plan template
     │   └── progress-template.md                   # Progress report template
     │
     └── 📂 rules/                                  # Project-specific rules
@@ -95,7 +95,7 @@ testProject/
 | `output/docs/prd.md` | Product requirements | `/init-project`, `/generate-docs` | Planning features |
 | `output/docs/technical-spec.md` | Technical details | `/init-project`, `/generate-docs` | **While implementing** |
 | `output/docs/architecture.md` | System design | `/init-project`, `/generate-docs` | Planning architecture |
-| `output/sprints/sprint-N.md` | Sprint plan | `/plan-sprint N` | **Daily during sprint** |
+| `output/phases/phase-N.md` | Phase plan | `/execute-work phase N` | **During phase (1-4 months)** |
 | `output/progress/current-status.md` | Project status | `/update-progress`, `/project-status` | Checking progress |
 | `output/progress/completed.md` | Work log | `/update-progress` | Retrospectives |
 | `output/progress/blockers.md` | Issues log | `/update-progress` | Identifying blockers |
@@ -107,8 +107,8 @@ testProject/
 | `.claude/commands/process-client-docs.md` | 🆕 Extract from client docs | Before init, when client sends docs |
 | `.claude/commands/init-project.md` | Initialize project | Once at start (after inputs ready) |
 | `.claude/commands/generate-docs.md` | Update docs | When inputs change |
-| `.claude/commands/plan-sprint.md` | Plan next sprint | Every 2 weeks |
-| `.claude/commands/update-progress.md` | Log progress | Daily/every few days |
+| `.claude/commands/execute-work.md` | Execute phase work | Start Phase 1, 2, 3, or 4 (1-4 months each) |
+| `.claude/commands/update-progress.md` | Manual progress updates | As needed (automated in execute-work) |
 | `.claude/commands/project-status.md` | Check status | Anytime |
 
 ### Template Files
@@ -118,7 +118,7 @@ testProject/
 | `templates/prd-template.md` | PRD structure | `/generate-docs` |
 | `templates/technical-spec-template.md` | Tech spec structure | `/generate-docs` |
 | `templates/architecture-template.md` | Architecture structure | `/generate-docs` |
-| `templates/sprint-template.md` | Sprint plan structure | `/plan-sprint` |
+| `templates/phase-template.md` | Phase plan structure | `/execute-work` |
 | `templates/progress-template.md` | Progress report structure | `/update-progress` |
 
 ---
@@ -137,8 +137,8 @@ testProject/
 **Know how to build it**
 → Read: `output/docs/technical-spec.md`
 
-**See current sprint tasks**
-→ Read: `output/sprints/sprint-N.md` (latest)
+**See current phase tasks**
+→ Read: `output/phases/phase-N.md` (latest)
 
 **Follow coding standards**
 → Read: `.CLAUDE.MD`
@@ -149,11 +149,11 @@ testProject/
 **Check project status**
 → Run: `/project-status`
 
-**Log completed work**
-→ Run: `/update-progress`
+**Execute phase work**
+→ Run: `/execute-work phase N`
 
-**Plan next sprint**
-→ Run: `/plan-sprint N`
+**Check progress**
+→ Run: `/project-status` (progress tracked automatically)
 
 **Update documentation**
 → Edit: `input/*.md` files
@@ -179,13 +179,13 @@ output/docs/prd.md
 output/docs/technical-spec.md
 output/docs/architecture.md
     ↓
-    ↓ /plan-sprint N
+    ↓ /execute-work phase N
     ↓
-SPRINT PLANS
+PHASE PLANS (Automated)
     ↓
-output/sprints/sprint-N.md
+output/phases/phase-N.md
     ↓
-    ↓ Development work
+    ↓ Automated execution
     ↓
 CODE (following .CLAUDE.MD)
     ↓
@@ -222,14 +222,16 @@ output/progress/blockers.md
    (input files already generated from Phase 0)
 ```
 
-### Phase 2: Development (Repeat every 2 weeks)
+### Phase 2: Execution (4 Standard Phases, 1-4 months each)
 ```
-Sprint Cycle:
-1. Read output/sprints/sprint-N.md     ← Know what to build
-2. Read output/docs/technical-spec.md  ← Know how to build
-3. Implement features (follow .CLAUDE.MD)
-4. Run /update-progress (every 2-3 days)
-5. Run /plan-sprint N+1 (when sprint ends)
+Phase Execution:
+1. Run /execute-work phase 1    ← Foundation (automated planning + execution)
+2. Run /execute-work phase 2    ← Core Features
+3. Run /execute-work phase 3    ← Advanced Features
+4. Run /execute-work phase 4    ← Polish & Launch
+
+Progress tracked automatically during execution
+Check status: /project-status
 ```
 
 ### Phase 3: Maintenance (Ongoing)
@@ -240,7 +242,6 @@ As needed:
 - Run /process-client-docs      ← Merge new requirements
 - Run /generate-docs            ← Update docs (if inputs change)
 - Edit input/backlog.md         ← Add new features manually
-- Run /update-progress          ← Log blockers
 ```
 
 ---
@@ -256,7 +257,15 @@ As needed:
 5. Run /init-project                      ← Generate everything
 ```
 
-### Phase 2: Development (Repeat every 2 weeks)
+### Phase 2: Execution (4 Standard Phases)
+```
+1. Run /execute-work phase 1    ← Foundation (1-4 months)
+2. Run /execute-work phase 2    ← Core Features (1-4 months)
+3. Run /execute-work phase 3    ← Advanced Features (1-4 months)
+4. Run /execute-work phase 4    ← Polish & Launch (1-4 months)
+
+Automated planning, execution, and progress tracking
+```
 
 ---
 
@@ -267,7 +276,7 @@ As needed:
 │                        USER LAYER                            │
 │  You interact with:                                          │
 │  - input/*.md files (define project)                         │
-│  - Slash commands (/init-project, /plan-sprint, etc.)       │
+│  - Slash commands (/init-project, /execute-work, etc.)      │
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -282,7 +291,7 @@ As needed:
 │                     OUTPUT LAYER                             │
 │  Claude generates:                                           │
 │  - output/docs/*.md (documentation)                          │
-│  - output/sprints/*.md (sprint plans)                        │
+│  - output/phases/*.md (phase plans)                          │
 │  - output/progress/*.md (progress tracking)                  │
 └─────────────────────────────────────────────────────────────┘
                             ↓
@@ -291,7 +300,7 @@ As needed:
 │  You code following:                                         │
 │  - .CLAUDE.MD (coding standards)                             │
 │  - output/docs/technical-spec.md (architecture)              │
-│  - output/sprints/sprint-N.md (current tasks)                │
+│  - output/phases/phase-N.md (current phase)                  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -308,7 +317,7 @@ Before using the system, verify:
 - [ ] All 4 input files exist (scope, backlog, technologies, constraints)
 - [ ] All 5 command files exist in `.claude/commands/`
 - [ ] All 5 template files exist in `templates/`
-- [ ] Output directories exist (docs, sprints, progress)
+- [ ] Output directories exist (docs, phases, progress)
 
 **Documentation is Linked:**
 - [ ] Root README links to INTEGRATION-GUIDE.md
@@ -317,7 +326,7 @@ Before using the system, verify:
 
 **Clear Hierarchy:**
 - [ ] Priority order is documented (scope → tech spec → .CLAUDE.MD)
-- [ ] TodoWrite vs /plan-sprint distinction is clear
+- [ ] TodoWrite vs /execute-work distinction is clear
 - [ ] Conflict resolution rules are defined
 
 ---
@@ -333,9 +342,9 @@ Before using the system, verify:
 - [ ] Start Sprint 1
 
 **For Ongoing Projects:**
-- [ ] Read current sprint: `output/sprints/sprint-N.md`
+- [ ] Read current phase: `output/phases/phase-N.md`
 - [ ] Check status: `/project-status`
-- [ ] Update progress: `/update-progress`
+- [ ] Execute phase work: `/execute-work phase N`
 - [ ] Follow standards: `.CLAUDE.MD`
 
 ---
@@ -375,5 +384,5 @@ Before using the system, verify:
 ---
 
 **Last Updated:** 2026-03-24
-**System Version:** 1.0
+**System Version:** 3.0.0
 **Status:** Production Ready ✅

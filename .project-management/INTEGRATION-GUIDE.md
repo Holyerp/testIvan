@@ -12,7 +12,7 @@ Claude automatically reads files **in this priority order:**
 ```
 .project-management/input/scope.md          ← What are we building?
 .project-management/input/backlog.md        ← What features do we need?
-.project-management/output/sprints/sprint-N.md  ← What's in current sprint?
+.project-management/output/phases/phase-N.md  ← What's in current phase?
 ```
 
 ### 2️⃣ Technical Decisions (if implementing)
@@ -40,17 +40,17 @@ Claude automatically reads files **in this priority order:**
 │    ├─ technologies.md   ← WHAT: Tech stack decisions           │
 │    └─ constraints.md    ← WHAT: Deadlines, budget, team        │
 │                                                                  │
-│  Commands: /init-project, /generate-docs, /plan-sprint          │
+│  Commands: /init-project, /generate-docs, /execute-work         │
 └────────────────────────────────────────────────────────────────┘
                               ↓
 ┌────────────────────────────────────────────────────────────────┐
-│                    SPRINT LEVEL                                 │
-│  .project-management/output/sprints/sprint-N.md                │
+│                    PHASE LEVEL                                  │
+│  .project-management/output/phases/phase-N.md                  │
 │    ├─ User Story US-001: Login Feature                         │
 │    ├─ User Story US-002: Registration                          │
-│    └─ Tasks for 2-week sprint                                  │
+│    └─ Tasks for 1-4 month phase                                │
 │                                                                  │
-│  Commands: /plan-sprint N, /update-progress, /project-status   │
+│  Commands: /execute-work phase N, /project-status              │
 └────────────────────────────────────────────────────────────────┘
                               ↓
 ┌────────────────────────────────────────────────────────────────┐
@@ -104,7 +104,7 @@ Claude automatically reads files **in this priority order:**
    - output/docs/prd.md
    - output/docs/technical-spec.md
    - output/docs/architecture.md
-   - output/sprints/sprint-1.md
+   - output/phases/phase-1.md (through phase-4.md)
 5. Claude initializes: output/progress/*.md
 ```
 
@@ -115,13 +115,13 @@ Claude automatically reads files **in this priority order:**
 
 ---
 
-### Scenario 2: Implementing a Feature from Sprint
+### Scenario 2: Implementing a Feature from Phase
 
-**User:** "Implement US-005: Create Product Listing"
+**User:** "Implement US-005: Create Product Listing" or "/execute-work phase 1"
 
 **Claude's Process:**
 ```
-1. Claude reads: output/sprints/sprint-N.md (find US-005)
+1. Claude reads: output/phases/phase-N.md (find US-005)
 2. Claude reads: output/docs/technical-spec.md (API specs, DB schema)
 3. Claude reads: .CLAUDE.MD (coding standards)
 4. Claude uses: TodoWrite to break down US-005
@@ -131,72 +131,76 @@ Claude automatically reads files **in this priority order:**
    ├─ Write unit tests
    └─ Write integration tests
 5. Claude implements: Following .CLAUDE.MD standards
-6. Claude runs: /update-progress (mark US-005 complete)
+6. Progress tracked: Automatically during /execute-work
 ```
 
 **What Claude reads:**
-- ✅ Current sprint file (for user story details)
+- ✅ Current phase file (for user story details)
 - ✅ Technical spec (for implementation details)
 - ✅ .CLAUDE.MD (for coding standards)
 - ✅ Backlog (for acceptance criteria)
-- ❌ NOT scope.md (already translated to sprint)
+- ❌ NOT scope.md (already translated to phase)
 
 ---
 
-### Scenario 3: Planning Next Sprint
+### Scenario 3: Executing Next Phase
 
-**User:** "Let's plan Sprint 2"
+**User:** "Let's start Phase 2" or "/execute-work phase 2"
 
 **Claude's Process:**
 ```
-1. User runs: /plan-sprint 2
-2. Claude reads:
-   - input/backlog.md (available features)
+1. User runs: /execute-work phase 2
+2. Claude automatically plans Phase 2:
+   - input/backlog.md (available features for Core Features)
    - output/progress/current-status.md (what's done)
-   - input/constraints.md (team capacity)
-   - output/sprints/sprint-1.md (previous velocity)
+   - input/constraints.md (project timeline)
+   - output/phases/phase-1.md (previous phase velocity)
 3. Claude analyzes:
-   - Remaining P0/P1 features
-   - Team velocity from Sprint 1
+   - Remaining P0/P1 features for Core Features milestone
+   - Overall velocity from Phase 1
    - Dependencies
-4. Claude generates: output/sprints/sprint-2.md
-5. Claude updates: output/progress/current-status.md
+4. Claude generates: output/phases/phase-2.md
+5. Claude executes: Work items in Phase 2
+6. Claude tracks: Progress automatically during execution
 ```
 
 **What Claude reads:**
 - ✅ Backlog (what's available)
-- ✅ Constraints (team capacity)
-- ✅ Previous sprint (velocity)
+- ✅ Constraints (timeline)
+- ✅ Previous phase (velocity)
 - ✅ Progress status
-- ❌ NOT .CLAUDE.MD (not coding, just planning)
+- ✅ .CLAUDE.MD (for implementation during execution)
 
 ---
 
 ### Scenario 4: Updating Progress
 
-**User:** "/update-progress"
+**User:** "/update-progress" (manual update, v3.0 tracks automatically)
 
 **Claude's Process:**
 ```
 1. Claude asks: "What did you complete?"
 2. User responds: "Completed US-005 and US-006"
 3. Claude reads:
-   - output/sprints/sprint-N.md (current sprint)
+   - output/phases/phase-N.md (current phase)
    - output/progress/current-status.md
    - output/progress/completed.md
 4. Claude updates:
-   - Marks US-005, US-006 as done in sprint file
+   - Marks US-005, US-006 as done in phase file
    - Adds entries to completed.md
    - Recalculates metrics in current-status.md
-   - Updates sprint completion percentage
+   - Updates phase completion percentage
 5. Claude reports: Progress summary
+
+Note: In v3.0, progress is tracked automatically during /execute-work.
+This command is mainly for manual adjustments.
 ```
 
 **What Claude reads:**
-- ✅ Current sprint file
+- ✅ Current phase file
 - ✅ Progress files
 - ❌ NOT .CLAUDE.MD (not coding, just tracking)
-- ❌ NOT backlog (sprint is already planned)
+- ❌ NOT backlog (phase is already planned)
 
 ---
 
@@ -237,22 +241,22 @@ Claude automatically reads files **in this priority order:**
 ```
 User request received
     ↓
-Is this project planning? (keywords: "plan sprint", "initialize", "status")
+Is this project planning? (keywords: "execute work", "initialize", "status")
     ↓ YES
-    Read: input files, output/sprints/, output/progress/
+    Read: input files, output/phases/, output/progress/
     Skip: .CLAUDE.MD (not coding yet)
     ↓ NO
     ↓
 Is this feature implementation? (keywords: "implement", "create", "add feature")
     ↓ YES
-    Read: current sprint, technical-spec.md, .CLAUDE.MD
+    Read: current phase, technical-spec.md, .CLAUDE.MD
     Use: TodoWrite for task breakdown
     ↓ NO
     ↓
 Is this code modification? (keywords: "fix", "refactor", "update code")
     ↓ YES
     Read: existing code, .CLAUDE.MD
-    Skip: sprint files (ad-hoc change)
+    Skip: phase files (ad-hoc change)
     ↓ NO
     ↓
 Is this documentation update? (keywords: "regenerate docs", "update docs")
@@ -272,17 +276,17 @@ Is this documentation update? (keywords: "regenerate docs", "update docs")
 **Planning the project?**
 → Read: `input/*.md`, run commands from `.claude/commands/`
 
-**Planning a sprint?**
-→ Read: `input/backlog.md`, `output/progress/`, `input/constraints.md`
+**Executing a phase?**
+→ Run: `/execute-work phase N` (automated planning + execution)
 
 **Implementing a feature?**
-→ Read: `output/sprints/sprint-N.md`, `output/docs/technical-spec.md`, `.CLAUDE.MD`
+→ Read: `output/phases/phase-N.md`, `output/docs/technical-spec.md`, `.CLAUDE.MD`
 
 **Writing code?**
 → Read: `.CLAUDE.MD`, `rules/project-rules.md`, existing code
 
 **Updating progress?**
-→ Read: `output/sprints/`, `output/progress/`
+→ Automatic during `/execute-work`, or manual via `/update-progress`
 
 **Generating docs?**
 → Read: `input/*.md`, `templates/*.md`
@@ -296,20 +300,21 @@ Is this documentation update? (keywords: "regenerate docs", "update docs")
 **Scope:** Task-level (hours to days)
 **Example:** Breaking down US-005 into 5 implementation tasks
 
-### /plan-sprint
-**When:** Planning a 2-week sprint
-**Scope:** Sprint-level (weeks)
-**Example:** Selecting 8-10 user stories for Sprint 2
+### /execute-work phase N
+**When:** Starting or continuing work in a phase
+**Scope:** Phase-level (1-4 months)
+**Example:** Automated planning and execution of Phase 1 (Foundation)
+**Note:** Replaces old /plan-sprint command with automated workflow
 
 ### /update-progress
-**When:** Logging completed work
+**When:** Manual progress updates (mostly automated in v3.0)
 **Scope:** Progress tracking
-**Example:** Marking US-005 as complete, adding to progress log
+**Example:** Manually marking US-005 as complete if not using /execute-work
 
 ### /project-status
 **When:** Need overall project health
 **Scope:** Project-level
-**Example:** Weekly status check for stakeholders
+**Example:** Status check across all phases for stakeholders
 
 ---
 
@@ -319,19 +324,21 @@ Before Claude acts, verify:
 
 **For Planning:**
 - [ ] Read all input files in `.project-management/input/`
-- [ ] Check current sprint in `output/sprints/`
-- [ ] Review constraints (team capacity, timeline)
+- [ ] Check current phase in `output/phases/`
+- [ ] Review constraints (timeline for 1-4 month phases)
 
-**For Implementation:**
-- [ ] Read current sprint plan
+**For Execution:**
+- [ ] Use `/execute-work phase N` for automated planning + execution
+- [ ] Read current phase plan
 - [ ] Read technical spec for API/architecture details
 - [ ] Read `.CLAUDE.MD` for coding standards
 - [ ] Use TodoWrite to track implementation tasks
+- [ ] Progress tracked automatically
 
 **For Progress Updates:**
-- [ ] Read current sprint file
+- [ ] Read current phase file
 - [ ] Read progress files
-- [ ] Update metrics accurately
+- [ ] Update metrics accurately (or use automated tracking)
 
 **For Documentation:**
 - [ ] Read all input files
@@ -344,16 +351,17 @@ Before Claude acts, verify:
 
 ### ❌ DON'T:
 - Don't read `.CLAUDE.MD` when planning (it's for coding)
-- Don't read `input/backlog.md` when coding (read sprint plan instead)
-- Don't use `/plan-sprint` for individual tasks (use TodoWrite)
-- Don't use TodoWrite for sprint planning (use `/plan-sprint`)
+- Don't read `input/backlog.md` when coding (read phase plan instead)
+- Don't use `/execute-work` for individual tasks (use TodoWrite)
+- Don't use TodoWrite for phase planning (use `/execute-work phase N`)
 - Don't skip reading technical-spec.md when implementing
+- Don't manually track progress when using /execute-work (it's automatic)
 
 ### ✅ DO:
 - Read context files BEFORE acting
-- Use appropriate tool for the scope (TodoWrite vs /plan-sprint)
-- Follow document hierarchy (inputs → sprints → implementation)
-- Update progress after completing sprint tasks
+- Use appropriate tool for the scope (TodoWrite vs /execute-work)
+- Follow document hierarchy (inputs → phases → implementation)
+- Use automated execution via /execute-work for phase-level work
 - Check for project-rules.md overrides
 
 ---
@@ -362,10 +370,11 @@ Before Claude acts, verify:
 
 **Simple Rule:**
 
-1. **Planning project/sprint?** → Use `.project-management/` system
-2. **Implementing feature?** → Use TodoWrite + `.CLAUDE.MD`
-3. **Writing code?** → Follow `.CLAUDE.MD` standards
-4. **Tracking progress?** → Use `/update-progress`
+1. **Planning project?** → Use `.project-management/` system with `/init-project`
+2. **Executing phase work?** → Use `/execute-work phase N` (automated planning + execution)
+3. **Implementing feature?** → Use TodoWrite + `.CLAUDE.MD`
+4. **Writing code?** → Follow `.CLAUDE.MD` standards
+5. **Tracking progress?** → Automatic in `/execute-work`, or manual via `/update-progress`
 
 **Everything has its place. No conflicts. No confusion.**
 
@@ -378,5 +387,5 @@ Before Claude acts, verify:
 
 ---
 
-**Last Updated:** 2026-03-24
-**Version:** 1.0
+**Last Updated:** 2026-03-30
+**Version:** 3.0.0
