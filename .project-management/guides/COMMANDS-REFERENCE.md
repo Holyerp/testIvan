@@ -12,11 +12,12 @@
 1. [Command Overview](#command-overview)
 2. [/init-project](#init-project)
 3. [/execute-work](#execute-work)
-4. [/run-tests](#run-tests)
-5. [/update-progress](#update-progress)
-6. [/project-status](#project-status)
-7. [/process-client-docs](#process-client-docs)
-8. [/generate-docs](#generate-docs)
+4. [/add-scope](#add-scope)
+5. [/run-tests](#run-tests)
+6. [/update-progress](#update-progress)
+7. [/project-status](#project-status)
+8. [/process-client-docs](#process-client-docs)
+9. [/generate-docs](#generate-docs)
 
 ---
 
@@ -31,6 +32,12 @@
 | `/run-tests` | Manual test execution | As needed |
 | `/update-progress` | Manual progress tracking | Daily |
 | `/project-status` | Generate status report | Weekly |
+
+### Scope Management
+
+| Command | Purpose | Frequency |
+|---------|---------|-----------|
+| `/add-scope` | Add or edit phases, epics, stories | When scope changes |
 
 ### Setup Commands
 
@@ -257,6 +264,118 @@ Story is NOT marked complete until:
 - Automated implementation
 - Enforcing quality gates
 - Consistent git commits
+
+---
+
+## /add-scope
+
+### Purpose
+Add or edit phases, epics, or stories with automatic renumbering and cross-reference updates.
+
+### Usage
+```bash
+# ADD new items
+/add-scope add phase [position] [--from path/to/file.md]
+/add-scope add epic [phase-number] [position] [--from path/to/file.md]
+/add-scope add story [phase-number] [epic-number] [--from path/to/file.md]
+
+# EDIT existing items
+/add-scope edit phase [phase-number] [--from path/to/file.md]
+/add-scope edit epic [phase-number] [epic-number] [--from path/to/file.md]
+/add-scope edit story [US-XXX] [--from path/to/file.md]
+```
+
+### Workflow
+
+**Step 1: Parse & Validate**
+```
+Claude:
+1. Parses action (add/edit) and scope (phase/epic/story)
+2. Validates project is initialized (phase files exist)
+3. Reads content from --from file or asks user to describe
+4. Reads current project state (all phases, backlog, max IDs)
+```
+
+**Step 2: Placement (add only)**
+```
+Claude shows existing items:
+  [1] Phase 1: Foundation (19 points)
+  [2] Phase 2: Core Features (42 points)
+  [3] Phase 3: Advanced Features (26 points)
+  [4] → Append at end
+
+You: Select position (or omit for append)
+```
+
+**Step 3: Preview & Confirmation (MANDATORY)**
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SCOPE CHANGE PREVIEW
+
+ACTION: Add
+TYPE: Phase
+TARGET: Position 2
+
+RENUMBERING:
+- Phase 2 "Core Features" → Phase 3
+- Phase 3 "Advanced Features" → Phase 4
+
+NEW STORY IDs: US-019, US-020
+
+Proceed? [Yes / No / Revise]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Step 4: Execute, Verify & Document**
+```
+Claude:
+1. Applies changes (renaming, inserting, updating)
+2. Runs 5 integrity checks (phase continuity, ID uniqueness, etc.)
+3. Asks: auto-update docs now or run /generate-docs later?
+4. Shows summary report
+```
+
+### What It Updates
+- Phase files (`phase-*.md`) — rename, content, cross-references
+- Backlog (`backlog.md`) — new/updated epics and stories
+- Progress (`current-status.md`) — metrics
+- Optionally: PRD, tech-spec, architecture (if auto-update chosen)
+
+### Key Rules
+- US-XXX story IDs are **never renumbered** (immutable identifiers)
+- Phase files renamed from **highest to lowest** (prevents collisions)
+- Story point changes **cascade**: story → epic total → phase total
+- Preview is **mandatory** — no changes without user approval
+
+### Examples
+
+**Add a new phase at position 2:**
+```bash
+/add-scope add phase 2
+# → Shifts Phase 2→3, Phase 3→4, Phase 4→5
+# → Creates new Phase 2 from your description
+# → Updates backlog with new epics/stories
+```
+
+**Add epic from a file:**
+```bash
+/add-scope add epic 1 --from docs/notification-epic.md
+# → Reads description from file
+# → Adds to Phase 1 with auto-assigned story IDs
+```
+
+**Edit story points (cascading update):**
+```bash
+/add-scope edit story US-005
+# → Shows current content, asks what to change
+# → If points change: updates epic total → phase total → backlog
+```
+
+### When to Use
+- Adding new features/phases to existing project
+- Modifying scope after client feedback
+- Restructuring phases or epics
+- Updating story details (points, criteria, priority)
 
 ---
 
