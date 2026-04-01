@@ -342,10 +342,13 @@ Claude:
 - Optionally: PRD, tech-spec, architecture (if auto-update chosen)
 
 ### Key Rules
-- US-XXX story IDs are **never renumbered** (immutable identifiers)
+- US-XXX story IDs are **never renumbered** (immutable identifiers, zero-padded: US-005)
 - Phase files renamed from **highest to lowest** (prevents collisions)
-- Story point changes **cascade**: story → epic total → phase total
+- Story point changes **cascade**: story → epic total → phase total (increases AND decreases)
 - Preview is **mandatory** — no changes without user approval
+- Epic numbering: **LOCAL** in phase files, **GLOBAL** in backlog
+- Story points: **Fibonacci scale only** (1, 2, 3, 5, 8, 13, 21)
+- STEP 5 is **atomic** — if any sub-step fails, entire step aborts
 
 ### Examples
 
@@ -731,5 +734,5 @@ Regenerate project documentation from input files.
 ---
 
 **Version:** 3.0.0
-**Last Updated:** 2026-03-27
+**Last Updated:** 2026-04-02
 **Part of:** Claude Project Management System v3.0

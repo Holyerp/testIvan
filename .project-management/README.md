@@ -365,7 +365,7 @@ cp mockups.png .project-management/client-input/
 ---
 
 ### `/add-scope`
-**Purpose:** Add or edit phases, epics, or stories with automatic renumbering
+**Purpose:** Add or edit phases, epics, or stories with automatic renumbering and cross-reference updates
 
 **When to use:**
 - Adding new features/phases to an existing project
@@ -377,10 +377,16 @@ cp mockups.png .project-management/client-input/
 - Adds new phases, epics, or stories to project documentation
 - Edits existing phases, epics, or stories
 - Automatically renumbers all affected items (phases, epics)
-- Updates cross-references across all project files
-- Updates backlog and progress metrics
-- Runs integrity checks after changes
-- Optionally updates PRD, tech-spec, architecture docs
+- Updates cross-references across all project files (phases, backlog, progress)
+- Runs 5 integrity checks after every change
+- Asks user whether to auto-update PRD/tech-spec/architecture or run `/generate-docs` later
+- Supports `--from` flag to read content from external files
+
+**Key rules:**
+- US-XXX story IDs are immutable (never renumbered)
+- Epic numbering: LOCAL in phase files, GLOBAL in backlog
+- Story points: Fibonacci scale only (1, 2, 3, 5, 8, 13, 21)
+- Preview is mandatory before any file changes
 
 **Example:**
 ```bash
@@ -401,11 +407,13 @@ cp mockups.png .project-management/client-input/
 ```
 
 **Output:**
-- New/updated phase files
-- Updated `backlog.md`
+- New/updated phase files (with automatic renumbering if inserting)
+- Updated `backlog.md` (new epics/stories with global numbering)
 - Updated progress metrics
-- Integrity check report
+- Integrity check report (5 checks)
 - Optional: updated PRD, tech-spec, architecture
+
+**Modules:** See `add-scope-input-parsing.md`, `add-scope-renumbering.md`, `add-scope-edit-mode.md` for detailed logic
 
 ---
 
