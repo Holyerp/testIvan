@@ -198,6 +198,7 @@ That's it! Claude now manages your project autonomously.
     ├── init-project.md        # Initialize project
     ├── generate-docs.md       # Generate/update docs
     ├── execute-work.md        # Execute work with automated planning
+    ├── add-scope.md           # Add/edit phases, epics, stories
     ├── update-progress.md     # Update progress
     └── project-status.md      # Show project status
 ```
@@ -252,6 +253,7 @@ That's it! Claude now manages your project autonomously.
 5. Ongoing Maintenance
    ├─ Add new client documents as they arrive
    ├─ Re-run: /process-client-docs (merges with existing)
+   ├─ Run: /add-scope (add/edit phases, epics, stories)
    ├─ Run: /generate-docs (regenerate docs)
    └─ Track blockers in progress/blockers.md
 ```
@@ -284,7 +286,7 @@ That's it! Claude now manages your project autonomously.
        └─ Run: /execute-work phase 4
 
 4. Ongoing Maintenance
-   ├─ Update input files as scope changes
+   ├─ Run: /add-scope (add/edit phases, epics, stories as scope changes)
    ├─ Run: /generate-docs (regenerate docs)
    └─ Progress tracked automatically during execution
 ```
@@ -359,6 +361,51 @@ cp mockups.png .project-management/client-input/
 - `.project-management/output/docs/architecture.md`
 - `.project-management/output/phases/phase-1.md`
 - `.project-management/output/progress/*.md`
+
+---
+
+### `/add-scope`
+**Purpose:** Add or edit phases, epics, or stories with automatic renumbering
+
+**When to use:**
+- Adding new features/phases to an existing project
+- Modifying scope after client feedback
+- Restructuring phases or epics
+- Updating story details (points, criteria, priority)
+
+**What it does:**
+- Adds new phases, epics, or stories to project documentation
+- Edits existing phases, epics, or stories
+- Automatically renumbers all affected items (phases, epics)
+- Updates cross-references across all project files
+- Updates backlog and progress metrics
+- Runs integrity checks after changes
+- Optionally updates PRD, tech-spec, architecture docs
+
+**Example:**
+```bash
+# Add new phase at position 2 (existing phases shift)
+/add-scope add phase 2
+
+# Add epic to Phase 1 from a file
+/add-scope add epic 1 --from docs/notification-epic.md
+
+# Add story to Epic 2 in Phase 1
+/add-scope add story 1 2
+
+# Edit an existing story
+/add-scope edit story US-005
+
+# Edit a phase
+/add-scope edit phase 3
+```
+
+**Output:**
+- New/updated phase files
+- Updated `backlog.md`
+- Updated progress metrics
+- Integrity check report
+- Optional: updated PRD, tech-spec, architecture
 
 ---
 
