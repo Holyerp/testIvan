@@ -64,6 +64,8 @@ You are initializing a new project with the Claude Project Management System.
 
 ### STEP 4: GENERATE DOCUMENTATION
 
+**🌍 CRITICAL: Generate ALL documentation in English only. No exceptions.**
+
 **Generate initial documentation in `.project-management/output/docs/`:**
 
 **1. `prd.md` - Product Requirements Document**

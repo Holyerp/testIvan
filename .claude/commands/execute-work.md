@@ -35,7 +35,25 @@ Execute implementation of a phase, epic, or individual story with full automatio
 [2] Paused (wait for approval after each story)
 ```
 
-Store user's choice for later use.
+**3. Ask user for progress tracking mode:**
+```
+"Progress Tracking Mode:"
+[1] Phase Only (faster - updates only phase file)
+[2] Complete (slower - updates all progress files)
+
+ℹ️  Recommendation: Use "Phase Only" for faster execution.
+   You can run /update-progress later for complete tracking.
+
+   Complete mode updates:
+   - Phase file (phase-N.md)
+   - Completed work log (completed.md)
+   - Current status (current-status.md)
+   - Overall metrics and velocity
+
+   Note: Complete mode may add 10-30 seconds per story.
+```
+
+Store both choices for later use.
 
 ---
 
@@ -104,6 +122,7 @@ Code Coverage:         {{coverage}}%
 Git Commits:           {{commit_count}}
 Duration:              {{duration}}
 Average Velocity:      {{velocity}} points/day
+Progress Tracking:     {{Phase Only / Complete}}
 
 ✅ QUALITY METRICS:
 
@@ -126,6 +145,10 @@ Epic {{X}} is complete! Continue with remaining epics in Phase {{N}}.
 {{If Story completed:}}
 Story US-XXX is complete! Continue with remaining stories.
 
+{{If Progress Tracking Mode was "Phase Only":}}
+ℹ️  Note: Only phase file was updated during execution.
+   Run /update-progress for complete tracking (completed.md, current-status.md, blockers.md)
+
 📊 PHASE PROGRESS:
 
 Phase {{N}}: {{completed_points}}/{{total_points}} points ({{percentage}}%)
@@ -145,6 +168,23 @@ Phase {{N}}: {{completed_points}}/{{total_points}} points ({{percentage}}%)
 ---
 
 ## ⚠️ IMPORTANT NOTES
+
+### Execution Modes
+
+**1. Execution Mode (Continuous vs Paused):**
+- **Continuous:** Auto-continues to next story without pausing
+- **Paused:** Waits for approval after each story
+
+**2. Progress Tracking Mode:**
+- **Phase Only (Recommended):** Faster execution, updates only `phase-N.md`
+  - Best for: Long phases with many stories
+  - Time saved: ~10-30 seconds per story
+  - Run `/update-progress` later for complete tracking
+
+- **Complete:** Slower execution, updates ALL progress files
+  - Updates: `phase-N.md`, `completed.md`, `current-status.md`
+  - Best for: Small phases, final phase completion, or when you need real-time comprehensive tracking
+  - Note: Does NOT update `blockers.md` (requires manual input)
 
 ### Mandatory Requirements
 

@@ -7,6 +7,8 @@ description: Generate or update project documentation (PRD, technical spec, arch
 
 You are generating or updating project documentation based on current input files.
 
+**🌍 CRITICAL: Generate ALL documentation in English only. No exceptions.**
+
 ## Your Task
 
 1. **Read ALL input files** from `.project-management/input/`:
@@ -19,7 +21,7 @@ You are generating or updating project documentation based on current input file
    - See what already exists
    - Identify what needs to be updated vs created
 
-3. **Generate or update documentation**:
+3. **Generate or update documentation** (ALL in English):
    - `prd.md` - Product Requirements Document
    - `technical-spec.md` - Technical Specification
    - `architecture.md` - Architecture Document

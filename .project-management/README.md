@@ -785,6 +785,35 @@ Note: In v3.0 phase-based system, story points help estimate phase duration (1-4
 4. **Version control** - Commit docs with code
 5. **Share widely** - Make sure team has access
 
+### Documentation Language Policy
+
+**MANDATORY: English Only**
+
+ALL project documentation MUST be written in **English**:
+
+✅ **What must be in English:**
+- Input files (scope.md, backlog.md, technologies.md, constraints.md)
+- Generated documentation (PRD, technical spec, architecture)
+- Progress tracking files (current-status.md, completed.md, blockers.md)
+- Phase plans (phase-1.md, phase-2.md, etc.)
+- README, CHANGELOG, and all guide documents
+- Code comments and docstrings
+- Commit messages and pull request descriptions
+- User stories and acceptance criteria
+- Issue descriptions and technical discussions
+
+❌ **NO exceptions** - English is mandatory for all documentation
+
+ℹ️ **Why English only:**
+- Universal language for software development
+- Enables team collaboration across regions
+- Facilitates open source contributions
+- Ensures documentation consistency
+- Optimizes AI/Claude compatibility and effectiveness
+- Industry standard for technical documentation
+
+**Note:** This policy applies to **documentation only**, not application content. If your app supports multiple languages for end users (i18n), that's separate and controlled by `I18N-RULES.md`.
+
 ---
 
 ## 🐛 Troubleshooting

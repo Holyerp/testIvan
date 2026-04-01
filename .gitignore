@@ -4,6 +4,11 @@
 .vscode
 ###< editors ###
 
+###> claude settings ###
+# User-specific Claude permissions (use settings.example.json as template)
+.claude/settings.local.json
+###< claude settings ###
+
 ###> project management ###
 # Client documents (privacy - don't commit client's sensitive docs)
 .project-management/client-input/*

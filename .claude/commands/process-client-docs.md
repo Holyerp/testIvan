@@ -7,6 +7,8 @@ description: Extract project requirements from client documents and generate str
 
 Extract project requirements from client-provided documents and generate structured input files.
 
+**🌍 CRITICAL: Generate ALL output files in English only, regardless of source document language.**
+
 ---
 
 ## Usage

@@ -1,5 +1,7 @@
 # System Architecture Document
 
+> **IMPORTANT:** This document must be written in **English only**. No exceptions.
+
 **Project Name:** {{PROJECT_NAME}}
 **Version:** 1.0
 **Date:** {{DATE}}
