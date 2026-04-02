@@ -314,22 +314,28 @@ Is this documentation update? (keywords: "regenerate docs", "update docs")
 3. **User wants to add/change scope (story, epic, phase)?**
    → Use `/add-scope add [type]` or `/add-scope edit [type]`
    → Read: [how-to-use/add-requirement.md](../.claude/commands/how-to-use/add-requirement.md) (~150 lines)
+   → For current phases (1-4) only
 
-4. **User wants to track a bug?**
+4. **User wants to add requirement for future version (2.0, 3.0)?**
+   → Use `/add-backlog-requirement story|epic`
+   → Read: [how-to-use/add-backlog-requirement.md](../.claude/commands/how-to-use/add-backlog-requirement.md) (~120 lines)
+   → For post-launch features, not current phases
+
+5. **User wants to track a bug?**
    → Use `/add-bug`
    → Read: [how-to-use/add-bug.md](../.claude/commands/how-to-use/add-bug.md) (~120 lines)
    → Bugs tracked separately from features
 
-5. **User wants to implement work (phase, epic, story)?**
+6. **User wants to implement work (phase, epic, story)?**
    → Use `/execute-work [scope]` (supports: phase N, epic X, story US-XXX, bug BUG-XXX)
    → Read: [how-to-use/execute-phase.md](../.claude/commands/how-to-use/execute-phase.md) (~150 lines)
 
-6. **User wants status update?**
+7. **User wants status update?**
    → Use `/project-status`
    → Read: [how-to-use/check-status.md](../.claude/commands/how-to-use/check-status.md) (~80 lines)
    → Now includes bug metrics
 
-7. **User wants to update docs?**
+8. **User wants to update docs?**
    → Use `/generate-docs`
    → Read: [how-to-use/generate-documentation.md](../.claude/commands/how-to-use/generate-documentation.md) (~100 lines)
 

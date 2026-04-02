@@ -302,10 +302,12 @@ That's it! Claude now manages your project autonomously.
 | I want to... | Use this command | Quick Guide |
 |--------------|------------------|-------------|
 | Add a requirement (story/epic/phase) | `/add-scope add [type]` | [How-to](../.claude/commands/how-to-use/add-requirement.md) |
+| Add future requirement (v2.0, v3.0) | `/add-backlog-requirement` | [How-to](../.claude/commands/how-to-use/add-backlog-requirement.md) |
 | Add a bug to roadmap | `/add-bug` | [How-to](../.claude/commands/how-to-use/add-bug.md) |
 | Start new project | `/init-project` | [How-to](../.claude/commands/how-to-use/start-project.md) |
 | Execute phase work | `/execute-work phase N` | [How-to](../.claude/commands/how-to-use/execute-phase.md) |
 | Fix a bug | `/execute-work bug BUG-XXX` | [How-to](../.claude/commands/how-to-use/execute-phase.md) |
+| Promote future requirement to active | `/promote-requirement US-XXX --to-phase N` | See command docs |
 | Check project status | `/project-status` | [How-to](../.claude/commands/how-to-use/check-status.md) |
 | Update documentation | `/generate-docs` | [How-to](../.claude/commands/how-to-use/generate-documentation.md) |
 | Process client docs | `/process-client-docs` | [How-to](../.claude/commands/how-to-use/process-client-docs.md) |
@@ -501,6 +503,74 @@ New → Triaged → In Progress → Fixed → Verified → Closed
 ```bash
 /execute-work bug BUG-001
 ```
+
+---
+
+### `/add-backlog-requirement`
+**Purpose:** Add requirements to future backlog (Version 2.0, 3.0, beyond) without assigning to current phases
+
+**When to use:**
+- Planning features for post-launch versions
+- Collecting ideas for "later" or "next version"
+- Client requests features not needed in Phase 1-4
+- Backlog grooming for future enhancements
+
+**What it does:**
+- Adds stories/epics to backlog-future.md (separate from active backlog)
+- Assigns sequential US-XXX ID (continues from active backlog)
+- Organizes by target version (2.0, 3.0, Unversioned)
+- Does NOT assign to any current phase
+- Status: "Future" (not in active development)
+
+**Example:**
+```bash
+# Interactive mode
+/add-backlog-requirement story
+
+# From file
+/add-backlog-requirement epic --from future-feature.md
+```
+
+**Output:**
+- Requirement added to `.project-management/input/backlog-future.md`
+- NOT added to active backlog.md or phase files
+- Can promote to active later with `/promote-requirement`
+
+**Target Versions:**
+- **2.0** - Post-launch enhancements (1-3 months after launch)
+- **3.0** - Major future features (6-12+ months)
+- **Unversioned** - Ideas and experiments (no timeline)
+
+**Promote to active when ready:**
+```bash
+/promote-requirement US-XXX --to-phase N
+```
+
+---
+
+### `/promote-requirement`
+**Purpose:** Move future requirement from backlog-future.md to active development
+
+**When to use:**
+- Ready to implement a future requirement
+- Moving Version 2.0 item into current development
+- Prioritizing backlog items for next phase
+
+**What it does:**
+- Removes requirement from backlog-future.md
+- Adds to active backlog.md
+- Adds to specified phase-N.md
+- Updates status: "Future" → "Todo"
+- Keeps same US-XXX ID (no renumbering)
+
+**Example:**
+```bash
+/promote-requirement US-051 --to-phase 2
+```
+
+**Output:**
+- Requirement moved from future to active
+- Ready for execution with `/execute-work story US-051`
 
 ---
 

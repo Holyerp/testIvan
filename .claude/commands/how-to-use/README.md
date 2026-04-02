@@ -23,6 +23,10 @@ START HERE
     │   └─→ Use /add-scope
     │       └─→ [See: add-requirement.md]
     │
+    ├─ Planning features for future version (2.0, 3.0)?
+    │   └─→ Use /add-backlog-requirement
+    │       └─→ [See: add-backlog-requirement.md]
+    │
     ├─ Found a bug that needs fixing?
     │   └─→ Use /add-bug
     │       └─→ [See: add-bug.md]
@@ -47,6 +51,7 @@ START HERE
 | Task | Command | Guide | Lines | Time |
 |------|---------|-------|-------|------|
 | Add requirement (story/epic/phase) | `/add-scope add [type]` | [add-requirement.md](./add-requirement.md) | ~150 | 2-5 min |
+| Add future requirement (v2.0, v3.0) | `/add-backlog-requirement` | [add-backlog-requirement.md](./add-backlog-requirement.md) | ~120 | 2-3 min |
 | Add bug to roadmap | `/add-bug` | [add-bug.md](./add-bug.md) | ~120 | 2-3 min |
 | Start new project | `/init-project` | [start-project.md](./start-project.md) | ~120 | 5-10 min |
 | Execute phase/epic/story | `/execute-work [scope]` | [execute-phase.md](./execute-phase.md) | ~150 | varies |
