@@ -295,6 +295,25 @@ That's it! Claude now manages your project autonomously.
 
 ## 🎮 Slash Commands
 
+### 🚀 Quick Command Reference
+
+**New to the system? Start here:**
+
+| I want to... | Use this command | Quick Guide |
+|--------------|------------------|-------------|
+| Add a requirement (story/epic/phase) | `/add-scope add [type]` | [How-to](../.claude/commands/how-to-use/add-requirement.md) |
+| Start new project | `/init-project` | [How-to](../.claude/commands/how-to-use/start-project.md) |
+| Execute phase work | `/execute-work phase N` | [How-to](../.claude/commands/how-to-use/execute-phase.md) |
+| Check project status | `/project-status` | [How-to](../.claude/commands/how-to-use/check-status.md) |
+| Update documentation | `/generate-docs` | [How-to](../.claude/commands/how-to-use/generate-documentation.md) |
+| Process client docs | `/process-client-docs` | [How-to](../.claude/commands/how-to-use/process-client-docs.md) |
+
+**📖 Full command documentation:** See [commands folder](../.claude/commands/)
+
+**🤖 For AI:** Quick guides are 80-150 lines (vs 200-450 lines full docs). Read quick guide first for 60-70% token savings on common tasks.
+
+---
+
 ### `/process-client-docs` 🆕
 **Purpose:** Extract requirements from client documents and generate input files
 

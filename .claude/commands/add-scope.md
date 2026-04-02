@@ -5,6 +5,8 @@ description: Add or edit a phase, epic, or story with automatic renumbering and 
 
 # Add/Edit Scope Command
 
+**📖 Quick Start:** See [how-to-use/add-requirement.md](./how-to-use/add-requirement.md) for quick guide (~150 lines)
+
 Add or edit phases, epics, or stories with automatic renumbering and cross-reference updates across all project files.
 
 **NOTE:** All documentation content must be in English per `.project-management/README.md` language policy. Non-English input will be translated to English before saving.
@@ -61,7 +63,38 @@ Add or edit phases, epics, or stories with automatic renumbering and cross-refer
 
 ## YOUR TASK — MANDATORY WORKFLOW
 
-### STEP 0: PARSE ARGUMENTS & VALIDATE
+### STEP 0: ENTER PLAN MODE (MANDATORY)
+
+**🎯 MANDATORY: Always enter plan mode before making scope changes**
+
+**Claude must:**
+
+1. **Parse command arguments** (action, type, position, --from flag)
+2. **Read required context:**
+   - All phase files (`.project-management/output/phases/phase-*.md`)
+   - Backlog (`.project-management/input/backlog.md`)
+   - Progress status (`.project-management/output/progress/current-status.md`)
+3. **Analyze scope change:**
+   - What will be added/edited
+   - Which files will be affected
+   - Renumbering impact (if adding phase at position)
+   - New story IDs to be assigned
+4. **Create detailed plan showing:**
+   - Action summary (add/edit phase/epic/story)
+   - Content preview
+   - Files to be modified
+   - Renumbering impact (if applicable)
+   - New IDs assigned (if applicable)
+5. **Present plan and wait for approval:**
+   - Show preview (see STEP 4 format)
+   - Ask: **Proceed? [Yes / No / Revise]**
+6. **Only proceed to STEP 1 after user approves**
+
+**If validation fails (no phase files):** Abort and suggest `/init-project`.
+
+---
+
+### STEP 1: PARSE ARGUMENTS & VALIDATE (Implementation Details)
 
 **See:** `modules/add-scope-input-parsing.md` Sections 0.1-0.3
 
@@ -80,7 +113,7 @@ Run /init-project first to initialize the project structure.
 
 ---
 
-### STEP 1: READ CURRENT PROJECT STATE
+### STEP 2: READ CURRENT PROJECT STATE
 
 **Claude reads these files and extracts key data:**
 

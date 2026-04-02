@@ -5,11 +5,70 @@ description: Generate or update project documentation (PRD, technical spec, arch
 
 # Generate Documentation
 
+**📖 Quick Start:** See [how-to-use/generate-documentation.md](./how-to-use/generate-documentation.md) for quick guide (~100 lines)
+
 You are generating or updating project documentation based on current input files.
 
 **🌍 CRITICAL: Generate ALL documentation in English only. No exceptions.**
 
-## Your Task
+---
+
+## YOUR TASK — MANDATORY WORKFLOW
+
+### STEP 0: ENTER PLAN MODE (MANDATORY)
+
+**🎯 MANDATORY: Always enter plan mode before generating/updating documentation**
+
+**Claude must:**
+
+1. **Read all input files:**
+   - `.project-management/input/scope.md`
+   - `.project-management/input/backlog.md`
+   - `.project-management/input/technologies.md`
+   - `.project-management/input/constraints.md`
+
+2. **Read existing documentation (if any):**
+   - `.project-management/output/docs/prd.md`
+   - `.project-management/output/docs/technical-spec.md`
+   - `.project-management/output/docs/architecture.md`
+   - `.project-management/output/docs/api-spec.md`
+
+3. **Analyze what changed:**
+   - Compare input files with last generation
+   - Identify new features, changed requirements
+   - Determine which docs need updates
+
+4. **Create generation plan:**
+   - Which docs will be created/updated
+   - What content will change
+   - Estimated size of each doc
+   - New sections to add
+
+5. **Present plan and wait for approval:**
+   ```
+   DOCUMENTATION GENERATION PLAN
+
+   INPUT CHANGES DETECTED:
+   - scope.md: Last modified 2 days ago
+   - backlog.md: Last modified 1 hour ago (5 stories added)
+
+   GENERATION PLAN:
+   1. Update PRD - add 5 new features
+   2. Update Technical Spec - add implementation details
+   3. Skip Architecture - no architectural changes
+
+   ESTIMATED OUTPUT:
+   - PRD: ~200 lines (+30 lines)
+   - Technical Spec: ~350 lines (+60 lines)
+
+   Proceed? [Yes / No / Revise]
+   ```
+
+6. **Only proceed to STEP 1 after user approves**
+
+---
+
+### STEP 1: READ INPUT FILES
 
 1. **Read ALL input files** from `.project-management/input/`:
    - `scope.md` - Project scope
