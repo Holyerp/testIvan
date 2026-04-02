@@ -2,11 +2,22 @@
   "permissions": {
     "allow": [
       "Bash(*)",
-      "SlashCommand(/generate-docs)"
+      "Read(**)",
+      "Edit(**)",
+      "Write(**)",
+      "Glob(**)",
+      "Grep(**)",
+      "SlashCommand(*)",
+      "Skill(*)",
+      "TodoWrite",
+      "AskUserQuestion",
+      "WebFetch(*)",
+      "WebSearch(*)"
     ],
     "deny": [
       "Bash(rm -rf *)",
-      "Bash(git push --force *)"
+      "Bash(git push --force *)",
+      "Bash(git reset --hard *)"
     ],
     "ask": []
   },

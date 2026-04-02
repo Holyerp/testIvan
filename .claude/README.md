@@ -59,33 +59,54 @@ cp .claude/settings.example.json .claude/settings.local.json
 
 This file serves as a template showing the recommended permissions for this project management system.
 
-**Recommended Permissions:**
+**Recommended Permissions (Full Automation):**
 ```json
 {
   "permissions": {
     "allow": [
-      "Bash(*)",                       // Allow all bash commands
-      "SlashCommand(/generate-docs)"   // Auto-generate documentation
+      "Bash(*)",              // All bash commands (git, npm, docker, etc.)
+      "Read(**)",             // Read any file
+      "Edit(**)",             // Edit any file
+      "Write(**)",            // Create any file
+      "Glob(**)",             // Search for files
+      "Grep(**)",             // Search in files
+      "SlashCommand(*)",      // All project commands
+      "Skill(*)",             // All skills
+      "TodoWrite",            // Task tracking
+      "AskUserQuestion",      // User prompts
+      "WebFetch(*)",          // Fetch web content
+      "WebSearch(*)"          // Search the web
     ],
     "deny": [
-      "Bash(rm -rf *)",                // Block destructive rm -rf
-      "Bash(git push --force *)"       // Block force push
+      "Bash(rm -rf *)",              // Block recursive deletion
+      "Bash(git push --force *)",    // Block force push
+      "Bash(git reset --hard *)"     // Block hard reset
     ],
     "ask": []
   },
-  "defaultMode": "acceptEdits"         // Auto-accept file edits
+  "defaultMode": "acceptEdits"
 }
 ```
 
 **Why these permissions?**
-- **`Bash(*)`**: Allows all bash commands for full automation (git, npm, composer, etc.)
-- **`deny` list**: Blocks dangerous commands that could destroy data
-  - `rm -rf *` - prevents accidental file deletion
-  - `git push --force *` - prevents force push to protected branches
-- **`SlashCommand(/generate-docs)`**: Auto-generates documentation without prompting
-- **`defaultMode: "acceptEdits"`**: Automatically accepts file edits, no manual approval needed
-- Enables full `/execute-work` automation (implementation → testing → commit → push)
-- Required for continuous execution mode without interruptions
+
+**Allow All Tools:**
+- **`Bash(*)`**: All bash commands for full automation
+- **`Read/Edit/Write(**)`**: File operations without prompts
+- **`SlashCommand(*)`**: All project commands auto-execute
+- **`Skill(*)`**: All skills available
+- **`WebFetch/WebSearch`**: Documentation lookup and research
+
+**Safety Blocks:**
+- **`Bash(rm -rf *)`**: Prevents accidental mass deletion
+- **`Bash(git push --force *)`**: Prevents force push disasters
+- **`Bash(git reset --hard *)`**: Prevents losing uncommitted work
+
+**Benefits:**
+- ✅ Full `/execute-work` automation (no interruptions)
+- ✅ No manual approvals needed
+- ✅ Continuous execution mode works perfectly
+- ✅ Safe operations (destructive commands blocked)
 
 ---
 
