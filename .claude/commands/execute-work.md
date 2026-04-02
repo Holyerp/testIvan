@@ -17,6 +17,7 @@ Execute implementation of a phase, epic, or individual story with full automatio
 /execute-work phase N          # Execute entire Phase N
 /execute-work epic EPIC-X      # Execute Epic X
 /execute-work story US-XXX     # Execute single story US-XXX
+/execute-work bug BUG-XXX      # Execute bug fix for BUG-XXX
 ```
 
 ---
@@ -29,6 +30,7 @@ Execute implementation of a phase, epic, or individual story with full automatio
 - `phase N` → Execute all epics and stories in Phase N
 - `epic EPIC-X` → Execute all stories in Epic X
 - `story US-XXX` → Execute single story US-XXX
+- `bug BUG-XXX` → Execute bug fix for BUG-XXX
 
 **2. Ask user for execution mode:**
 ```
@@ -64,10 +66,21 @@ Store both choices for later use.
 **📖 See:** `modules/execute-work-plan-mode.md` for complete plan mode workflow
 
 **Summary:**
-1. Read ALL required context files (technical-spec, backlog, rules)
-2. Analyze scope (phase/epic/story breakdown)
+1. Read ALL required context files:
+   - For phase/epic/story: technical-spec, backlog, phase files, rules
+   - For bug: bug-roadmap.md, affected component files, rules
+2. Analyze scope:
+   - Phase/epic/story: breakdown, dependencies, estimates
+   - Bug: reproduction steps, affected code, root cause analysis
 3. Create detailed plan with estimates, risks, success criteria
 4. Wait for user approval ([Yes/No/Revise])
+
+**Bug-Specific Plan Requirements:**
+- Read bug details from `.project-management/output/bugs/bug-roadmap.md`
+- Analyze affected component/file
+- Plan fix approach with root cause analysis
+- Include regression test requirements
+- Estimate fix complexity (story points)
 
 **Output:** Detailed plan approved by user
 
@@ -89,16 +102,23 @@ Execution Mode: [Continuous / Paused]
 
 **📖 See:** `modules/execute-work-implementation.md` for complete implementation workflow
 
-**Summary for each story:**
-1. Initialize story with TodoWrite breakdown
-2. Read story context from technical spec
+**Summary for each story/bug:**
+1. Initialize story/bug with TodoWrite breakdown
+2. Read context:
+   - Story: from technical spec
+   - Bug: from bug-roadmap.md + affected component
 3. Implement tasks following SOLID & DRY
-4. Write tests (unit, integration, E2E)
+4. Write tests:
+   - Story: unit, integration, E2E
+   - Bug: regression test + existing test updates
 5. Verify i18n (if I18N-RULES.md exists)
 6. Run tests → **PREDZADNJI STEP**
    - See `modules/execute-work-quality-gates.md` for validation
 7. Create git commit (NO AI credits) → **ZADNJI STEP**
-8. Update progress tracking
+   - Bug commits: reference BUG-XXX in message
+8. Update progress tracking:
+   - Story: update phase file
+   - Bug: update bug status (New → In Progress → Fixed), move to archive when complete
 9. Check execution mode (continue or pause)
 
 **Quality Gate:** Tests must pass, coverage > 80%, all API codes tested, i18n complete

@@ -315,15 +315,21 @@ Is this documentation update? (keywords: "regenerate docs", "update docs")
    → Use `/add-scope add [type]` or `/add-scope edit [type]`
    → Read: [how-to-use/add-requirement.md](../.claude/commands/how-to-use/add-requirement.md) (~150 lines)
 
-4. **User wants to implement work (phase, epic, story)?**
-   → Use `/execute-work [scope]`
+4. **User wants to track a bug?**
+   → Use `/add-bug`
+   → Read: [how-to-use/add-bug.md](../.claude/commands/how-to-use/add-bug.md) (~120 lines)
+   → Bugs tracked separately from features
+
+5. **User wants to implement work (phase, epic, story)?**
+   → Use `/execute-work [scope]` (supports: phase N, epic X, story US-XXX, bug BUG-XXX)
    → Read: [how-to-use/execute-phase.md](../.claude/commands/how-to-use/execute-phase.md) (~150 lines)
 
-5. **User wants status update?**
+6. **User wants status update?**
    → Use `/project-status`
    → Read: [how-to-use/check-status.md](../.claude/commands/how-to-use/check-status.md) (~80 lines)
+   → Now includes bug metrics
 
-6. **User wants to update docs?**
+7. **User wants to update docs?**
    → Use `/generate-docs`
    → Read: [how-to-use/generate-documentation.md](../.claude/commands/how-to-use/generate-documentation.md) (~100 lines)
 

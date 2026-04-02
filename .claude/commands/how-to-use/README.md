@@ -23,7 +23,11 @@ START HERE
     │   └─→ Use /add-scope
     │       └─→ [See: add-requirement.md]
     │
-    ├─ Ready to implement work?
+    ├─ Found a bug that needs fixing?
+    │   └─→ Use /add-bug
+    │       └─→ [See: add-bug.md]
+    │
+    ├─ Ready to implement work (feature or bug fix)?
     │   └─→ Use /execute-work
     │       └─→ [See: execute-phase.md]
     │
@@ -43,8 +47,10 @@ START HERE
 | Task | Command | Guide | Lines | Time |
 |------|---------|-------|-------|------|
 | Add requirement (story/epic/phase) | `/add-scope add [type]` | [add-requirement.md](./add-requirement.md) | ~150 | 2-5 min |
+| Add bug to roadmap | `/add-bug` | [add-bug.md](./add-bug.md) | ~120 | 2-3 min |
 | Start new project | `/init-project` | [start-project.md](./start-project.md) | ~120 | 5-10 min |
 | Execute phase/epic/story | `/execute-work [scope]` | [execute-phase.md](./execute-phase.md) | ~150 | varies |
+| Execute bug fix | `/execute-work bug BUG-XXX` | [execute-phase.md](./execute-phase.md) | ~150 | varies |
 | Check project status | `/project-status` | [check-status.md](./check-status.md) | ~80 | 1 min |
 | Generate/update docs | `/generate-docs` | [generate-documentation.md](./generate-documentation.md) | ~100 | 2-3 min |
 | Process client documents | `/process-client-docs` | [process-client-docs.md](./process-client-docs.md) | ~120 | 3-5 min |

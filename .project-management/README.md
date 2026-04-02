@@ -302,8 +302,10 @@ That's it! Claude now manages your project autonomously.
 | I want to... | Use this command | Quick Guide |
 |--------------|------------------|-------------|
 | Add a requirement (story/epic/phase) | `/add-scope add [type]` | [How-to](../.claude/commands/how-to-use/add-requirement.md) |
+| Add a bug to roadmap | `/add-bug` | [How-to](../.claude/commands/how-to-use/add-bug.md) |
 | Start new project | `/init-project` | [How-to](../.claude/commands/how-to-use/start-project.md) |
 | Execute phase work | `/execute-work phase N` | [How-to](../.claude/commands/how-to-use/execute-phase.md) |
+| Fix a bug | `/execute-work bug BUG-XXX` | [How-to](../.claude/commands/how-to-use/execute-phase.md) |
 | Check project status | `/project-status` | [How-to](../.claude/commands/how-to-use/check-status.md) |
 | Update documentation | `/generate-docs` | [How-to](../.claude/commands/how-to-use/generate-documentation.md) |
 | Process client docs | `/process-client-docs` | [How-to](../.claude/commands/how-to-use/process-client-docs.md) |
@@ -456,6 +458,49 @@ cp mockups.png .project-management/client-input/
 
 **Output:**
 - Updated documentation in `.project-management/output/docs/`
+
+---
+
+### `/add-bug`
+**Purpose:** Add bugs to the roadmap for tracking and execution
+
+**When to use:**
+- Found a bug during development or testing
+- Client reports an issue
+- Need to track bugs separately from features
+- Want to prioritize bug fixes
+
+**What it does:**
+- Adds bug to bug-roadmap.md with automatic BUG-XXX ID assignment
+- Organizes bugs by severity (Critical, High, Medium, Low)
+- Tracks reproduction steps, expected vs actual behavior
+- Estimates story points for fixing effort
+- Optionally assigns bug to phase for immediate fixing
+- Updates bug metrics in project status
+
+**Example:**
+```bash
+# Interactive mode
+/add-bug
+
+# From file
+/add-bug --from bug-report.md
+```
+
+**Output:**
+- Bug added to `.project-management/output/bugs/bug-roadmap.md`
+- Optionally added to phase file if assigned
+- Bug counts updated in project status
+
+**Bug Lifecycle:**
+```
+New → Triaged → In Progress → Fixed → Verified → Closed
+```
+
+**Execute bug fix:**
+```bash
+/execute-work bug BUG-001
+```
 
 ---
 
