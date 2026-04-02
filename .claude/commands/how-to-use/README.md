@@ -48,6 +48,8 @@ START HERE
 
 ## 📚 Quick Guides by Task
 
+**Core Workflow Commands (with quick guides):**
+
 | Task | Command | Guide | Lines | Time |
 |------|---------|-------|-------|------|
 | Add requirement (story/epic/phase) | `/add-scope add [type]` | [add-requirement.md](./add-requirement.md) | ~150 | 2-5 min |
@@ -60,15 +62,28 @@ START HERE
 | Generate/update docs | `/generate-docs` | [generate-documentation.md](./generate-documentation.md) | ~100 | 2-3 min |
 | Process client documents | `/process-client-docs` | [process-client-docs.md](./process-client-docs.md) | ~120 | 3-5 min |
 
+**Helper Commands (no quick guide - see full command docs):**
+
+| Task | Command | Full Docs | Why No Quick Guide |
+|------|---------|-----------|-------------------|
+| Promote future requirement | `/promote-requirement US-XXX --to-phase N` | [promote-requirement.md](../promote-requirement.md) | Helper command, rarely used standalone |
+| Run tests manually | `/run-tests [type]` | [run-tests.md](../run-tests.md) | Automated in `/execute-work`, manual use is straightforward |
+| Update progress manually | `/update-progress` | [update-progress.md](../update-progress.md) | Automated in `/execute-work` (v3.0+), legacy manual mode |
+
 ---
 
 ## 🤖 For AI: Reading Strategy
 
 **Token-efficient approach:**
 
-1. **Start here** - Read this index (100 lines)
-2. **Read relevant quick guide** - Only the guide needed for current task (80-150 lines)
-3. **Read full command docs** - Only if quick guide insufficient (200-450 lines)
+1. **Start here** - Read this index (~120 lines)
+2. **For core workflow commands** - Read quick guide (80-150 lines)
+3. **For helper commands** - Read full command docs directly (150-200 lines)
+4. **If details needed** - Read full command docs (200-450 lines)
+
+**Coverage:**
+- 9 core workflow commands = Quick guides available
+- 3 helper commands = Full docs only (simpler, rarely used)
 
 **Estimated token savings: 60-70% for common tasks**
 
