@@ -1,12 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "SlashCommand(/generate-docs)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(*)",
+      "SlashCommand(/generate-docs)"
     ],
-    "deny": [],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push --force *)"
+    ],
     "ask": []
-  }
+  },
+  "defaultMode": "acceptEdits"
 }

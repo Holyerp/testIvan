@@ -64,20 +64,28 @@ This file serves as a template showing the recommended permissions for this proj
 {
   "permissions": {
     "allow": [
-      "SlashCommand(/generate-docs)",  // Auto-generate documentation
-      "Bash(git add:*)",               // Auto-stage files
-      "Bash(git commit:*)",            // Auto-commit changes
-      "Bash(git push:*)"               // Auto-push to remote
-    ]
-  }
+      "Bash(*)",                       // Allow all bash commands
+      "SlashCommand(/generate-docs)"   // Auto-generate documentation
+    ],
+    "deny": [
+      "Bash(rm -rf *)",                // Block destructive rm -rf
+      "Bash(git push --force *)"       // Block force push
+    ],
+    "ask": []
+  },
+  "defaultMode": "acceptEdits"         // Auto-accept file edits
 }
 ```
 
 **Why these permissions?**
-- Enables `/execute-work` automation features
-- Allows automatic git commits (following git.md rules)
-- Enables automatic progress tracking
-- Required for continuous execution mode
+- **`Bash(*)`**: Allows all bash commands for full automation (git, npm, composer, etc.)
+- **`deny` list**: Blocks dangerous commands that could destroy data
+  - `rm -rf *` - prevents accidental file deletion
+  - `git push --force *` - prevents force push to protected branches
+- **`SlashCommand(/generate-docs)`**: Auto-generates documentation without prompting
+- **`defaultMode: "acceptEdits"`**: Automatically accepts file edits, no manual approval needed
+- Enables full `/execute-work` automation (implementation → testing → commit → push)
+- Required for continuous execution mode without interruptions
 
 ---
 
@@ -142,19 +150,31 @@ With recommended permissions enabled, you get:
 - `/generate-docs` runs without asking for permission
 - Updates technical specs, PRD, architecture docs
 
+✅ **Automatic Bash Commands**
+- All bash commands execute without prompting (git, npm, composer, tests, etc.)
+- Blocked: `rm -rf *` and `git push --force *` for safety
+- Full automation for development workflow
+
+✅ **Automatic File Edits**
+- `defaultMode: "acceptEdits"` eliminates manual approval for every file change
+- Speeds up implementation significantly
+- Claude can edit files continuously without pausing
+
 ✅ **Automatic Git Operations**
 - Auto-commit after completing stories
 - Follows `.claude/rules/git.md` conventions
 - NO AI credits in commit messages
+- Can auto-push to remote (optional)
 
 ✅ **Automatic Progress Tracking**
 - Updates progress files during `/execute-work`
 - Tracks completed work, blockers, phase status
 
 ✅ **Continuous Execution Mode**
-- `/execute-work phase N` can run continuously
-- Implements multiple stories without pausing
+- `/execute-work phase N` runs continuously without interruptions
+- Implements multiple stories end-to-end
 - Auto-commits and auto-tracks progress
+- True "hands-free" execution
 
 ---
 
@@ -181,6 +201,15 @@ A: Nothing breaks, but your personal preferences will be shared with the team. I
 
 **Q: Can I disable automation?**
 A: Yes! Simply don't create `settings.local.json`, or set fewer permissions in the `allow` array.
+
+**Q: What does `Bash(*)` allow?**
+A: It's a wildcard that allows ALL bash commands (git, npm, composer, tests, etc.). Specific dangerous commands are blocked in the `deny` list.
+
+**Q: Why block `rm -rf *` and `git push --force *`?**
+A: These commands can cause irreversible data loss. They're blocked for safety, but you can manually run them if truly needed.
+
+**Q: What does `defaultMode: "acceptEdits"` do?**
+A: It automatically accepts all file edit operations without prompting you for approval each time. This dramatically speeds up implementation.
 
 ---
 
