@@ -225,8 +225,8 @@ Key Decisions:
 
 Next Steps:
 1. Review generated docs in .project-management/output/docs/
-2. Run /plan-sprint to create sprint plans
-3. Start implementation following technical spec
+2. Start development with /execute-work phase 1
+3. Follow technical spec for implementation
 ```
 
 ## Special Instructions

@@ -7,6 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+
+#### Bug Tracking System (2026-04-02)
+- **`/add-bug` command** - Add bugs to roadmap with severity-based organization
+- **Bug roadmap** - `.project-management/output/bugs/bug-roadmap.md` (Critical/High/Medium/Low sections)
+- **Bug archive** - `.project-management/output/bugs/bug-archive.md` for fixed bugs history
+- **Bug template** - Standardized format for reporting bugs
+- **Bug execution** - `/execute-work bug BUG-XXX` integration
+- **Bug metrics** - Integrated into `/project-status` command
+
+#### Future Backlog System (2026-04-02)
+- **`/add-backlog-requirement` command** - Add requirements for Version 2.0, 3.0, or unversioned ideas
+- **`/promote-requirement` command** - Move future requirements to active development phases
+- **Future backlog file** - `.project-management/input/backlog-future.md` (organized by version)
+- **Sequential ID management** - US-XXX IDs span both active and future backlogs to prevent collisions
+- **Version targeting** - 2.0 (post-launch), 3.0 (major future), Unversioned (ideas)
+
+#### Documentation Enhancements (2026-04-02)
+- **AI-optimized how-to guides** - Quick guides (80-150 lines) for all commands in `.claude/commands/how-to-use/`
+- **Rules references** - All 10 command files now explicitly reference `.claude/rules/` files
+- **Command index** - Decision tree and quick reference table in `how-to-use/README.md`
+- **English-only enforcement** - All Serbian words translated, comprehensive policy
+
+### Changed
+
+#### Commands Enhanced
+- **All command files** - Added explicit references to code-quality.md, testing.md, git.md rules
+- **`/execute-work`** - Enhanced with rules guidance for SOLID & DRY, testing, git conventions
+- **`/project-status`** - Now includes bug metrics from bug-roadmap and bug-archive
+
+#### Documentation Improvements
+- **README.md** - Updated Quick Start (removed `/plan-sprint`, added new commands)
+- **Templates** - Updated progress-template.md to use "phase" terminology instead of "sprint"
+- **Input files** - Updated instructions to reference "phases" instead of "sprints"
+
+### Fixed
+- **Sprint terminology** - Replaced outdated "sprint" references with "phase" in templates
+- **Serbian translations** - "PREDZADNJI STEP" → "SECOND-TO-LAST STEP", "ZADNJI STEP" → "FINAL STEP"
+
+---
+
 ## [3.0.0] - 2026-03-27
 
 ### 🎉 Major Release: Phase-Based System with Automation

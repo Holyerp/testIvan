@@ -1,6 +1,6 @@
 # Project Constraints
 
-> **Instructions:** Define all constraints that will impact the project. Be realistic and specific. Claude will use this to plan sprints and make realistic estimates.
+> **Instructions:** Define all constraints that will impact the project. Be realistic and specific. Claude will use this to organize phases and make realistic estimates.
 
 ---
 

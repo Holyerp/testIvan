@@ -48,12 +48,12 @@ Run in Claude Code:
 This generates:
 - Product Requirements Document (PRD)
 - Technical Specification
-- Sprint structure
+- Phase structure (4 phases: Foundation → Core → Advanced → Polish)
 
-### 4. Plan Your First Sprint
+### 4. Start Development
 
 ```
-/plan-sprint 1
+/execute-work phase 1
 ```
 
 ## 📋 Available Commands
@@ -65,6 +65,7 @@ This generates:
 - `/execute-work phase N` - Execute entire Phase N (all epics and stories)
 - `/execute-work epic EPIC-X` - Execute specific Epic X (all stories)
 - `/execute-work story US-XXX` - Execute single story US-XXX
+- `/execute-work bug BUG-XXX` - Execute bug fix for BUG-XXX
   - Automatically enters **plan mode** before implementation
   - Runs tests automatically (Vitest + Playwright)
   - Creates git commits automatically (NO AI credits)
@@ -80,9 +81,15 @@ This generates:
 - `/run-tests story US-XXX` - Tests for specific story
 - `/run-tests file <path>` - Tests for specific file
 
+### Scope Management
+- `/add-scope add phase|epic|story` - Add or edit phases, epics, stories in active development
+- `/add-backlog-requirement story|epic` - Add requirements to future backlog (Version 2.0, 3.0)
+- `/promote-requirement US-XXX --to-phase N` - Move future requirement to active phase
+- `/add-bug` - Add bugs to roadmap for tracking and execution
+
 ### Progress & Status
 - `/update-progress` - Update phase and story progress
-- `/project-status` - Generate comprehensive status report
+- `/project-status` - Generate comprehensive status report (includes bug metrics)
 - `/process-client-docs` - Extract requirements from client documents
 - `/generate-docs` - Generate or update project documentation
 
@@ -96,17 +103,21 @@ Use `TodoWrite` tool to break down user stories into tasks and track implementat
 ├── input/              # Project definition (customize these)
 │   ├── scope.md
 │   ├── backlog.md
+│   ├── backlog-future.md  # Future requirements (v2.0, v3.0)
 │   ├── technologies.md
 │   └── constraints.md
 ├── output/
 │   ├── docs/           # Generated documentation
 │   │   ├── prd.md
 │   │   └── technical-spec.md
-│   ├── sprints/        # Sprint plans
-│   │   └── sprint-N.md
+│   ├── phases/         # Phase plans
+│   │   └── phase-N.md
+│   ├── bugs/           # Bug tracking
+│   │   ├── bug-roadmap.md
+│   │   └── bug-archive.md
 │   └── progress/       # Progress tracking
 │       ├── completed.md
-│       ├── in-progress.md
+│       ├── current-status.md
 │       └── blockers.md
 ├── client-input/       # Raw client documents
 └── templates/          # Document templates
