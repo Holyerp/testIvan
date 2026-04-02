@@ -21,6 +21,12 @@ Updates progress files with latest completed work, in-progress tasks, and blocke
 
 ## 📋 YOUR TASK
 
+**🔧 REFERENCE:**
+When updating progress:
+- **`.claude/rules/git.md`** - If committing progress updates (NO AI credits, conventional commits)
+
+---
+
 ### STEP 1: Gather Current State
 
 **Ask user about:**

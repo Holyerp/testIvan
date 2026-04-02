@@ -25,6 +25,13 @@ Reads all documents from `.project-management/client-input/` and generates/updat
 
 ## 📋 YOUR TASK
 
+**🔧 DOCUMENTATION RULES:**
+All extracted requirements and generated files must follow:
+- **`.CLAUDE.MD`** - All documentation in English only (translate non-English sources)
+- **`.claude/rules/git.md`** - If committing extracted requirements (NO AI credits, conventional commits)
+
+---
+
 ### STEP 0: ENTER PLAN MODE (MANDATORY)
 
 **🎯 MANDATORY: Always enter plan mode before processing client documents**

@@ -13,6 +13,13 @@ You are initializing a new project with the Claude Project Management System.
 
 ## Your Task
 
+**🔧 DOCUMENTATION RULES:**
+All documentation generated must follow:
+- **`.CLAUDE.MD`** - All documentation in English only, coding standards
+- **`.claude/rules/git.md`** - If committing initialization (NO AI credits, conventional commits)
+
+---
+
 ### STEP 1: TECH STACK SELECTION
 
 **📖 See:** `modules/init-project-stack-selection.md` for detailed stack configuration

@@ -63,6 +63,13 @@ Add or edit phases, epics, or stories with automatic renumbering and cross-refer
 
 ## YOUR TASK — MANDATORY WORKFLOW
 
+**🔧 DOCUMENTATION RULES:**
+When updating documentation (STEP 7), follow:
+- **`.CLAUDE.MD`** - All documentation in English only
+- **`.claude/rules/git.md`** - If committing changes (NO AI credits, conventional commits)
+
+---
+
 ### STEP 0: ENTER PLAN MODE (MANDATORY)
 
 **🎯 MANDATORY: Always enter plan mode before making scope changes**

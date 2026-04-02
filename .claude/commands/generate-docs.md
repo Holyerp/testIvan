@@ -15,6 +15,13 @@ You are generating or updating project documentation based on current input file
 
 ## YOUR TASK — MANDATORY WORKFLOW
 
+**🔧 DOCUMENTATION RULES:**
+All generated documentation must follow:
+- **`.CLAUDE.MD`** - All documentation in English only
+- **`.claude/rules/git.md`** - If committing documentation (NO AI credits, conventional commits: `docs:`)
+
+---
+
 ### STEP 0: ENTER PLAN MODE (MANDATORY)
 
 **🎯 MANDATORY: Always enter plan mode before generating/updating documentation**

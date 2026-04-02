@@ -24,6 +24,14 @@ Add bugs to the bug roadmap with automatic ID assignment and severity-based orga
 
 ## YOUR TASK — MANDATORY WORKFLOW
 
+**🔧 CRITICAL RULES:**
+When executing bug fixes via `/execute-work bug BUG-XXX`, follow:
+- **`.claude/rules/code-quality.md`** - SOLID & DRY principles for bug fixes
+- **`.claude/rules/testing.md`** - Regression tests, ALL API status codes
+- **`.claude/rules/git.md`** - Commit messages (NO AI credits), reference BUG-XXX
+
+---
+
 ### STEP 0: ENTER PLAN MODE (MANDATORY)
 
 **🎯 MANDATORY: Always enter plan mode before adding bugs**

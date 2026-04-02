@@ -23,6 +23,13 @@ Generates detailed status report with metrics, progress, blockers, and recommend
 
 ## 📋 YOUR TASK
 
+**🔧 REFERENCE:**
+Quality metrics calculated based on:
+- **`.claude/rules/testing.md`** - Test coverage targets, API status code requirements
+- **`.claude/rules/code-quality.md`** - SOLID & DRY compliance checks
+
+---
+
 ### STEP 1: Read Project Files
 
 **📖 See:** `modules/project-status-data-collection.md` for detailed data collection

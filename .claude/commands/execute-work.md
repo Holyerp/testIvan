@@ -24,6 +24,20 @@ Execute implementation of a phase, epic, or individual story with full automatio
 
 ## 📋 YOUR TASK - MANDATORY WORKFLOW
 
+**🔧 CRITICAL RULES TO FOLLOW:**
+Before ANY implementation, you MUST read and follow these rules:
+- **`.claude/rules/code-quality.md`** - SOLID & DRY principles (MANDATORY for ALL code)
+- **`.claude/rules/testing.md`** - Testing requirements, API status code matrix, coverage targets
+- **`.claude/rules/git.md`** - Commit message format (NO AI credits), conventional commits
+- **`.CLAUDE.MD`** - Core standards and workflow
+
+**When to read:**
+- Plan mode: Read ALL rules to create accurate plan
+- Implementation: Follow code-quality.md and testing.md during coding
+- Commit: Follow git.md for commit messages (NO AI credits)
+
+---
+
 ### STEP 0: PARSE ARGUMENTS & MODE SELECTION
 
 **1. Parse the command argument:**
@@ -107,14 +121,15 @@ Execution Mode: [Continuous / Paused]
 2. Read context:
    - Story: from technical spec
    - Bug: from bug-roadmap.md + affected component
-3. Implement tasks following SOLID & DRY
-4. Write tests:
+3. Implement tasks following `.claude/rules/code-quality.md` (SOLID & DRY principles)
+4. Write tests following `.claude/rules/testing.md`:
    - Story: unit, integration, E2E
    - Bug: regression test + existing test updates
+   - ALL API status codes: 200/400/401/403/404/500
 5. Verify i18n (if I18N-RULES.md exists)
 6. Run tests → **PREDZADNJI STEP**
    - See `modules/execute-work-quality-gates.md` for validation
-7. Create git commit (NO AI credits) → **ZADNJI STEP**
+7. Create git commit following `.claude/rules/git.md` (NO AI credits, conventional commits) → **ZADNJI STEP**
    - Bug commits: reference BUG-XXX in message
 8. Update progress tracking:
    - Story: update phase file
@@ -213,10 +228,10 @@ Phase {{N}}: {{completed_points}}/{{total_points}} points ({{percentage}}%)
 1. **Plan Mode is MANDATORY** - Never start implementation without plan approval
 2. **Tests are MANDATORY** - Story is NOT done until tests pass
 3. **Coverage Target: 80%+** - Must be met before marking story complete
-4. **API Status Codes** - ALL must be tested (200/400/401/403/404/500)
+4. **API Status Codes** - ALL must be tested (200/400/401/403/404/500) per `.claude/rules/testing.md`
 5. **i18n Compliance** - IF I18N-RULES.md exists, translations are MANDATORY
-6. **Git Conventions** - NO AI credits in commits (see git.md)
-7. **SOLID & DRY** - Must follow principles from code-quality.md
+6. **Git Conventions** - NO AI credits in commits, conventional format per `.claude/rules/git.md`
+7. **SOLID & DRY** - Must follow principles from `.claude/rules/code-quality.md`
 8. **TodoWrite Usage** - Use TodoWrite for task breakdown and tracking
 
 ### Quality Gates
