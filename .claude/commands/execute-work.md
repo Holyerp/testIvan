@@ -127,9 +127,9 @@ Execution Mode: [Continuous / Paused]
    - Bug: regression test + existing test updates
    - ALL API status codes: 200/400/401/403/404/500
 5. Verify i18n (if I18N-RULES.md exists)
-6. Run tests → **PREDZADNJI STEP**
+6. Run tests → **SECOND-TO-LAST STEP**
    - See `modules/execute-work-quality-gates.md` for validation
-7. Create git commit following `.claude/rules/git.md` (NO AI credits, conventional commits) → **ZADNJI STEP**
+7. Create git commit following `.claude/rules/git.md` (NO AI credits, conventional commits) → **FINAL STEP**
    - Bug commits: reference BUG-XXX in message
 8. Update progress tracking:
    - Story: update phase file

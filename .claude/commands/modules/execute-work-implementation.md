@@ -124,7 +124,7 @@ TodoWrite({
 
 ---
 
-### 3.6 Run Tests (MANDATORY - PREDZADNJI STEP)
+### 3.6 Run Tests (MANDATORY - SECOND-TO-LAST STEP)
 
 **Mark "Run all tests" todo as in_progress**
 
@@ -151,7 +151,7 @@ TodoWrite({
 
 ---
 
-### 3.7 Git Commit (AUTO - ZADNJI STEP)
+### 3.7 Git Commit (AUTO - FINAL STEP)
 
 **Mark "Create git commit" todo as in_progress**
 
