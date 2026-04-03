@@ -110,6 +110,7 @@ testProject/
 | `.claude/commands/execute-work.md` | Execute phase work | Start Phase 1, 2, 3, or 4 (1-4 months each) |
 | `.claude/commands/update-progress.md` | Manual progress updates | As needed (automated in execute-work) |
 | `.claude/commands/project-status.md` | Check status | Anytime |
+| `.claude/commands/add-scope.md` | Add/edit phases, epics, stories | When scope changes |
 
 ### Template Files
 
@@ -118,7 +119,7 @@ testProject/
 | `templates/prd-template.md` | PRD structure | `/generate-docs` |
 | `templates/technical-spec-template.md` | Tech spec structure | `/generate-docs` |
 | `templates/architecture-template.md` | Architecture structure | `/generate-docs` |
-| `templates/phase-template.md` | Phase plan structure | `/execute-work` |
+| `templates/phase-template.md` | Phase plan structure | `/execute-work`, `/add-scope` |
 | `templates/progress-template.md` | Progress report structure | `/update-progress` |
 
 ---

@@ -293,6 +293,60 @@ Is this documentation update? (keywords: "regenerate docs", "update docs")
 
 ---
 
+## 📘 Command Selection Guide
+
+### For AI: How to choose the right command
+
+**Quick reference guides available in:** `.claude/commands/how-to-use/`
+
+**Decision tree:**
+
+1. **User provides external documents (PDF, Word, images)?**
+   → Use `/process-client-docs` first
+   → Read: [how-to-use/process-client-docs.md](../.claude/commands/how-to-use/process-client-docs.md) (~120 lines)
+   → Then proceed to other commands
+
+2. **Project not initialized yet?**
+   → Use `/init-project`
+   → Read: [how-to-use/start-project.md](../.claude/commands/how-to-use/start-project.md) (~120 lines)
+   → This is a one-time setup
+
+3. **User wants to add/change scope (story, epic, phase)?**
+   → Use `/add-scope add [type]` or `/add-scope edit [type]`
+   → Read: [how-to-use/add-requirement.md](../.claude/commands/how-to-use/add-requirement.md) (~150 lines)
+   → For current phases (1-4) only
+
+4. **User wants to add requirement for future version (2.0, 3.0)?**
+   → Use `/add-backlog-requirement story|epic`
+   → Read: [how-to-use/add-backlog-requirement.md](../.claude/commands/how-to-use/add-backlog-requirement.md) (~120 lines)
+   → For post-launch features, not current phases
+
+5. **User wants to track a bug?**
+   → Use `/add-bug`
+   → Read: [how-to-use/add-bug.md](../.claude/commands/how-to-use/add-bug.md) (~120 lines)
+   → Bugs tracked separately from features
+
+6. **User wants to implement work (phase, epic, story)?**
+   → Use `/execute-work [scope]` (supports: phase N, epic X, story US-XXX, bug BUG-XXX)
+   → Read: [how-to-use/execute-phase.md](../.claude/commands/how-to-use/execute-phase.md) (~150 lines)
+
+7. **User wants status update?**
+   → Use `/project-status`
+   → Read: [how-to-use/check-status.md](../.claude/commands/how-to-use/check-status.md) (~80 lines)
+   → Now includes bug metrics
+
+8. **User wants to update docs?**
+   → Use `/generate-docs`
+   → Read: [how-to-use/generate-documentation.md](../.claude/commands/how-to-use/generate-documentation.md) (~100 lines)
+
+**Token efficiency:**
+- Quick guides: 80-150 lines
+- Full command docs: 200-450 lines
+- **Always read quick guide first** for 60-70% token savings
+- Read full docs only if quick guide insufficient
+
+---
+
 ## 🔧 Tools Usage Rules
 
 ### TodoWrite

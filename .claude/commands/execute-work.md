@@ -5,6 +5,8 @@ description: Execute a phase, epic, or story with automatic planning, implementa
 
 # Execute Work Command
 
+**📖 Quick Start:** See [how-to-use/execute-phase.md](./how-to-use/execute-phase.md) for quick guide (~150 lines)
+
 Execute implementation of a phase, epic, or individual story with full automation.
 
 ---
@@ -15,11 +17,26 @@ Execute implementation of a phase, epic, or individual story with full automatio
 /execute-work phase N          # Execute entire Phase N
 /execute-work epic EPIC-X      # Execute Epic X
 /execute-work story US-XXX     # Execute single story US-XXX
+/execute-work bug BUG-XXX      # Execute bug fix for BUG-XXX
 ```
 
 ---
 
 ## 📋 YOUR TASK - MANDATORY WORKFLOW
+
+**🔧 CRITICAL RULES TO FOLLOW:**
+Before ANY implementation, you MUST read and follow these rules:
+- **`.claude/rules/code-quality.md`** - SOLID & DRY principles (MANDATORY for ALL code)
+- **`.claude/rules/testing.md`** - Testing requirements, API status code matrix, coverage targets
+- **`.claude/rules/git.md`** - Commit message format (NO AI credits), conventional commits
+- **`.CLAUDE.MD`** - Core standards and workflow
+
+**When to read:**
+- Plan mode: Read ALL rules to create accurate plan
+- Implementation: Follow code-quality.md and testing.md during coding
+- Commit: Follow git.md for commit messages (NO AI credits)
+
+---
 
 ### STEP 0: PARSE ARGUMENTS & MODE SELECTION
 
@@ -27,6 +44,7 @@ Execute implementation of a phase, epic, or individual story with full automatio
 - `phase N` → Execute all epics and stories in Phase N
 - `epic EPIC-X` → Execute all stories in Epic X
 - `story US-XXX` → Execute single story US-XXX
+- `bug BUG-XXX` → Execute bug fix for BUG-XXX
 
 **2. Ask user for execution mode:**
 ```
@@ -35,7 +53,25 @@ Execute implementation of a phase, epic, or individual story with full automatio
 [2] Paused (wait for approval after each story)
 ```
 
-Store user's choice for later use.
+**3. Ask user for progress tracking mode:**
+```
+"Progress Tracking Mode:"
+[1] Phase Only (faster - updates only phase file)
+[2] Complete (slower - updates all progress files)
+
+ℹ️  Recommendation: Use "Phase Only" for faster execution.
+   You can run /update-progress later for complete tracking.
+
+   Complete mode updates:
+   - Phase file (phase-N.md)
+   - Completed work log (completed.md)
+   - Current status (current-status.md)
+   - Overall metrics and velocity
+
+   Note: Complete mode may add 10-30 seconds per story.
+```
+
+Store both choices for later use.
 
 ---
 
@@ -44,10 +80,21 @@ Store user's choice for later use.
 **📖 See:** `modules/execute-work-plan-mode.md` for complete plan mode workflow
 
 **Summary:**
-1. Read ALL required context files (technical-spec, backlog, rules)
-2. Analyze scope (phase/epic/story breakdown)
+1. Read ALL required context files:
+   - For phase/epic/story: technical-spec, backlog, phase files, rules
+   - For bug: bug-roadmap.md, affected component files, rules
+2. Analyze scope:
+   - Phase/epic/story: breakdown, dependencies, estimates
+   - Bug: reproduction steps, affected code, root cause analysis
 3. Create detailed plan with estimates, risks, success criteria
 4. Wait for user approval ([Yes/No/Revise])
+
+**Bug-Specific Plan Requirements:**
+- Read bug details from `.project-management/output/bugs/bug-roadmap.md`
+- Analyze affected component/file
+- Plan fix approach with root cause analysis
+- Include regression test requirements
+- Estimate fix complexity (story points)
 
 **Output:** Detailed plan approved by user
 
@@ -69,16 +116,24 @@ Execution Mode: [Continuous / Paused]
 
 **📖 See:** `modules/execute-work-implementation.md` for complete implementation workflow
 
-**Summary for each story:**
-1. Initialize story with TodoWrite breakdown
-2. Read story context from technical spec
-3. Implement tasks following SOLID & DRY
-4. Write tests (unit, integration, E2E)
+**Summary for each story/bug:**
+1. Initialize story/bug with TodoWrite breakdown
+2. Read context:
+   - Story: from technical spec
+   - Bug: from bug-roadmap.md + affected component
+3. Implement tasks following `.claude/rules/code-quality.md` (SOLID & DRY principles)
+4. Write tests following `.claude/rules/testing.md`:
+   - Story: unit, integration, E2E
+   - Bug: regression test + existing test updates
+   - ALL API status codes: 200/400/401/403/404/500
 5. Verify i18n (if I18N-RULES.md exists)
-6. Run tests → **PREDZADNJI STEP**
+6. Run tests → **SECOND-TO-LAST STEP**
    - See `modules/execute-work-quality-gates.md` for validation
-7. Create git commit (NO AI credits) → **ZADNJI STEP**
-8. Update progress tracking
+7. Create git commit following `.claude/rules/git.md` (NO AI credits, conventional commits) → **FINAL STEP**
+   - Bug commits: reference BUG-XXX in message
+8. Update progress tracking:
+   - Story: update phase file
+   - Bug: update bug status (New → In Progress → Fixed), move to archive when complete
 9. Check execution mode (continue or pause)
 
 **Quality Gate:** Tests must pass, coverage > 80%, all API codes tested, i18n complete
@@ -104,6 +159,7 @@ Code Coverage:         {{coverage}}%
 Git Commits:           {{commit_count}}
 Duration:              {{duration}}
 Average Velocity:      {{velocity}} points/day
+Progress Tracking:     {{Phase Only / Complete}}
 
 ✅ QUALITY METRICS:
 
@@ -126,6 +182,10 @@ Epic {{X}} is complete! Continue with remaining epics in Phase {{N}}.
 {{If Story completed:}}
 Story US-XXX is complete! Continue with remaining stories.
 
+{{If Progress Tracking Mode was "Phase Only":}}
+ℹ️  Note: Only phase file was updated during execution.
+   Run /update-progress for complete tracking (completed.md, current-status.md, blockers.md)
+
 📊 PHASE PROGRESS:
 
 Phase {{N}}: {{completed_points}}/{{total_points}} points ({{percentage}}%)
@@ -146,15 +206,32 @@ Phase {{N}}: {{completed_points}}/{{total_points}} points ({{percentage}}%)
 
 ## ⚠️ IMPORTANT NOTES
 
+### Execution Modes
+
+**1. Execution Mode (Continuous vs Paused):**
+- **Continuous:** Auto-continues to next story without pausing
+- **Paused:** Waits for approval after each story
+
+**2. Progress Tracking Mode:**
+- **Phase Only (Recommended):** Faster execution, updates only `phase-N.md`
+  - Best for: Long phases with many stories
+  - Time saved: ~10-30 seconds per story
+  - Run `/update-progress` later for complete tracking
+
+- **Complete:** Slower execution, updates ALL progress files
+  - Updates: `phase-N.md`, `completed.md`, `current-status.md`
+  - Best for: Small phases, final phase completion, or when you need real-time comprehensive tracking
+  - Note: Does NOT update `blockers.md` (requires manual input)
+
 ### Mandatory Requirements
 
 1. **Plan Mode is MANDATORY** - Never start implementation without plan approval
 2. **Tests are MANDATORY** - Story is NOT done until tests pass
 3. **Coverage Target: 80%+** - Must be met before marking story complete
-4. **API Status Codes** - ALL must be tested (200/400/401/403/404/500)
+4. **API Status Codes** - ALL must be tested (200/400/401/403/404/500) per `.claude/rules/testing.md`
 5. **i18n Compliance** - IF I18N-RULES.md exists, translations are MANDATORY
-6. **Git Conventions** - NO AI credits in commits (see git.md)
-7. **SOLID & DRY** - Must follow principles from code-quality.md
+6. **Git Conventions** - NO AI credits in commits, conventional format per `.claude/rules/git.md`
+7. **SOLID & DRY** - Must follow principles from `.claude/rules/code-quality.md`
 8. **TodoWrite Usage** - Use TodoWrite for task breakdown and tracking
 
 ### Quality Gates

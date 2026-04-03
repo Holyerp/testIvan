@@ -139,13 +139,13 @@
 
 ### Test Growth Over Time
 
-| Sprint | Unit | Integration | E2E | Total | Change |
-|--------|------|-------------|-----|-------|--------|
-| Sprint 1 | 31 | 12 | 5 | 48 | +48 |
-| Sprint 2 | 65 | 28 | 8 | 101 | +53 |
-| Sprint 3 | 120 | 45 | 12 | 177 | +76 |
+| Phase | Unit | Integration | E2E | Total | Change |
+|-------|------|-------------|-----|-------|--------|
+| Phase 1 | 31 | 12 | 5 | 48 | +48 |
+| Phase 2 | 65 | 28 | 8 | 101 | +53 |
+| Phase 3 | 120 | 45 | 12 | 177 | +76 |
 
-**Test Velocity:** {{TESTS_PER_SPRINT}} tests/sprint (average)
+**Test Velocity:** {{TESTS_PER_PHASE}} tests/phase (average)
 
 ---
 
@@ -154,7 +154,7 @@
 ### Timeline
 - **Project Start:** {{START_DATE}}
 - **Target Completion:** {{TARGET_DATE}}
-- **Current Sprint:** Sprint {{SPRINT_NUMBER}}
+- **Current Phase:** Phase {{PHASE_NUMBER}}
 - **Days Remaining:** {{DAYS}}
 
 ### Budget
@@ -165,21 +165,21 @@
 
 ---
 
-## Sprint Progress
+## Phase Progress
 
-### Current Sprint: Sprint {{SPRINT_NUMBER}}
-**Sprint Goal:** {{SPRINT_GOAL}}
-**Sprint Duration:** {{START_DATE}} to {{END_DATE}}
+### Current Phase: Phase {{PHASE_NUMBER}}
+**Phase Goal:** {{PHASE_GOAL}}
+**Phase Duration:** {{START_DATE}} to {{END_DATE}}
 
-#### Sprint Metrics
+#### Phase Metrics
 - **Planned Story Points:** {{PLANNED_POINTS}}
 - **Completed Story Points:** {{COMPLETED_POINTS}}
 - **In Progress:** {{IN_PROGRESS_POINTS}} points
 - **Remaining:** {{REMAINING_POINTS}} points
-- **Sprint Completion:** {{PERCENTAGE}}%
+- **Phase Completion:** {{PERCENTAGE}}%
 - **Projected Velocity:** {{VELOCITY}} points
 
-#### Sprint Status
+#### Phase Status
 | Status | Count | Story Points | Percentage |
 |--------|-------|--------------|-----------|
 | ✅ Done | {{DONE_COUNT}} | {{DONE_POINTS}} | {{DONE_PCT}}% |
@@ -228,8 +228,8 @@
 
 ## Upcoming Work
 
-### Next Sprint Preview
-**Sprint {{NEXT_SPRINT_NUMBER}}:** {{START_DATE}} to {{END_DATE}}
+### Next Phase Preview
+**Phase {{NEXT_PHASE_NUMBER}}:** {{START_DATE}} to {{END_DATE}}
 
 **Planned Items:**
 1. {{ITEM_1}}: {{DESCRIPTION}}
@@ -337,15 +337,15 @@
 ## Team Velocity
 
 ### Velocity Trend
-| Sprint | Planned | Completed | Velocity |
-|--------|---------|-----------|----------|
-| Sprint 1 | {{PTS}} | {{PTS}} | {{VEL}} |
-| Sprint 2 | {{PTS}} | {{PTS}} | {{VEL}} |
-| Sprint 3 | {{PTS}} | {{PTS}} | {{VEL}} |
+| Phase | Planned | Completed | Velocity |
+|-------|---------|-----------|----------|
+| Phase 1 | {{PTS}} | {{PTS}} | {{VEL}} |
+| Phase 2 | {{PTS}} | {{PTS}} | {{VEL}} |
+| Phase 3 | {{PTS}} | {{PTS}} | {{VEL}} |
 | **Average** | | | **{{AVG}}** |
 
 ### Team Capacity
-- **Available Capacity:** {{CAPACITY}} points/sprint
+- **Available Capacity:** {{CAPACITY}} points/phase
 - **Current Utilization:** {{PERCENTAGE}}%
 
 ---
@@ -465,7 +465,7 @@
 
 ### Links & Resources
 - [Backlog](../input/backlog.md)
-- [Current Sprint](../output/sprints/sprint-{{NUMBER}}.md)
+- [Current Phase](../output/phases/phase-{{NUMBER}}.md)
 - [Project Scope](../input/scope.md)
 - [Technical Spec](../output/docs/technical-spec.md)
 

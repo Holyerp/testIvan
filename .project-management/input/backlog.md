@@ -1,6 +1,6 @@
 # Product Backlog
 
-> **Instructions:** List all features, user stories, and requirements. Claude will use this to plan sprints and estimate work. Use priorities: P0 (Critical), P1 (High), P2 (Medium), P3 (Low)
+> **Instructions:** List all features, user stories, and requirements. Claude will use this to organize phases and estimate work. Use priorities: P0 (Critical), P1 (High), P2 (Medium), P3 (Low)
 
 ---
 

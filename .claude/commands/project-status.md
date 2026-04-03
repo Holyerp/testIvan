@@ -5,6 +5,8 @@ description: Generate comprehensive project status report showing progress, comp
 
 # Project Status
 
+**📖 Quick Start:** See [how-to-use/check-status.md](./how-to-use/check-status.md) for quick guide (~80 lines)
+
 Generate a comprehensive overview of the current project status.
 
 ---
@@ -21,6 +23,13 @@ Generates detailed status report with metrics, progress, blockers, and recommend
 
 ## 📋 YOUR TASK
 
+**🔧 REFERENCE:**
+Quality metrics calculated based on:
+- **`.claude/rules/testing.md`** - Test coverage targets, API status code requirements
+- **`.claude/rules/code-quality.md`** - SOLID & DRY compliance checks
+
+---
+
 ### STEP 1: Read Project Files
 
 **📖 See:** `modules/project-status-data-collection.md` for detailed data collection
@@ -32,6 +41,8 @@ Generates detailed status report with metrics, progress, blockers, and recommend
 - `.project-management/output/progress/completed.md` - Completed work
 - `.project-management/output/progress/blockers.md` - Blockers
 - `.project-management/input/backlog.md` - Remaining work
+- `.project-management/output/bugs/bug-roadmap.md` - Open bugs by severity
+- `.project-management/output/bugs/bug-archive.md` - Fixed bugs history
 
 ---
 
@@ -45,7 +56,11 @@ Generates detailed status report with metrics, progress, blockers, and recommend
 - Story points (completed / total)
 - Velocity (points per week)
 - Test coverage
-- Quality metrics (bugs, tech debt)
+- Quality metrics:
+  - Bug counts by severity (Critical, High, Medium, Low) from bug-roadmap.md
+  - Fixed bugs (last 7 days, last 30 days) from bug-archive.md
+  - Bug rate (bugs per story)
+  - Tech debt items
 - Timeline adherence (on track / delayed)
 
 ---
@@ -152,9 +167,11 @@ Progress: [████████████░░░░░░░░] {{perce
 - Tech Debt Items: {{debt_count}}
 
 **Bugs:**
-- Open: {{open_bugs}} (Critical: {{critical}}, High: {{high}})
+- Open: {{open_bugs}} (🔴 Critical: {{critical}}, 🟠 High: {{high}}, 🟡 Medium: {{medium}}, 🟢 Low: {{low}})
 - Fixed This Week: {{fixed_bugs}}
+- Fixed This Month: {{fixed_month}}
 - Bug Rate: {{rate}} bugs/story
+- Source: `.project-management/output/bugs/bug-roadmap.md`
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

@@ -124,7 +124,7 @@ TodoWrite({
 
 ---
 
-### 3.6 Run Tests (MANDATORY - PREDZADNJI STEP)
+### 3.6 Run Tests (MANDATORY - SECOND-TO-LAST STEP)
 
 **Mark "Run all tests" todo as in_progress**
 
@@ -151,7 +151,7 @@ TodoWrite({
 
 ---
 
-### 3.7 Git Commit (AUTO - ZADNJI STEP)
+### 3.7 Git Commit (AUTO - FINAL STEP)
 
 **Mark "Create git commit" todo as in_progress**
 
@@ -192,7 +192,13 @@ Mark "Create git commit" todo as completed
 
 **Mark "Update progress tracking" todo as in_progress**
 
-**Update `.project-management/output/phases/phase-N.md`:**
+**Progress tracking depends on mode selected in STEP 0:**
+
+---
+
+#### Mode 1: Phase Only (Faster)
+
+**Update ONLY `.project-management/output/phases/phase-N.md`:**
 1. Find the story section
 2. Update status to "Completed"
 3. Add completion timestamp
@@ -202,11 +208,70 @@ Mark "Create git commit" todo as completed
 
 **Display:**
 ```
-📊 Progress Updated:
+📊 Progress Updated (Phase Only):
 - Phase N: {{completed_points}}/{{total_points}} points ({{percentage}}%)
 - Tests: {{total_tests}} passing
 - Coverage: {{coverage}}%
+
+ℹ️  Run /update-progress later for complete tracking.
 ```
+
+---
+
+#### Mode 2: Complete (Slower - Full Update)
+
+**Update ALL progress files:**
+
+**1. Update Phase File (`.project-management/output/phases/phase-N.md`):**
+- Find the story section
+- Update status to "Completed"
+- Add completion timestamp, test metrics, commit hash
+- Update phase progress metrics
+
+**2. Update Completed Work (`.project-management/output/progress/completed.md`):**
+- Add to current week section (or create new week section)
+```markdown
+## Week {{WEEK_NUMBER}} ({{DATE_RANGE}})
+
+### Completed Stories
+- ✅ US-XXX: {{story_title}} ({{points}} points)
+  - Completed: {{DATE}}
+  - Tests: {{test_count}} passing
+  - Coverage: {{coverage}}%
+  - Commit: {{commit_hash}}
+```
+
+**3. Update Current Status (`.project-management/output/progress/current-status.md`):**
+- Recalculate overall completion percentage
+- Update phase progress
+- Recalculate velocity: `Story Points Completed / Weeks Elapsed`
+- Update test coverage metrics
+- Update timeline status
+
+**4. Skip Blockers File:**
+- **DO NOT** update `blockers.md` automatically
+- Blockers require manual input (use `/update-progress` for blockers)
+
+**Display:**
+```
+📊 Progress Updated (Complete):
+
+✅ PHASE FILE:
+- Phase N: {{completed_points}}/{{total_points}} points ({{percentage}}%)
+
+✅ COMPLETED WORK:
+- Added US-XXX to Week {{WEEK_NUMBER}}
+
+✅ CURRENT STATUS:
+- Overall Completion: {{old}}% → {{new}}% (+{{delta}}%)
+- Velocity: {{velocity}} points/week
+- Tests: {{total_tests}} passing
+- Coverage: {{coverage}}%
+
+ℹ️  Note: Blockers not updated (use /update-progress for blockers)
+```
+
+---
 
 Mark "Update progress tracking" todo as completed
 

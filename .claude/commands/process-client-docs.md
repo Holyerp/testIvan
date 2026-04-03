@@ -5,7 +5,11 @@ description: Extract project requirements from client documents and generate str
 
 # Process Client Documents
 
+**📖 Quick Start:** See [how-to-use/process-client-docs.md](./how-to-use/process-client-docs.md) for quick guide (~120 lines)
+
 Extract project requirements from client-provided documents and generate structured input files.
+
+**🌍 CRITICAL: Generate ALL output files in English only, regardless of source document language.**
 
 ---
 
@@ -20,6 +24,65 @@ Reads all documents from `.project-management/client-input/` and generates/updat
 ---
 
 ## 📋 YOUR TASK
+
+**🔧 DOCUMENTATION RULES:**
+All extracted requirements and generated files must follow:
+- **`.CLAUDE.MD`** - All documentation in English only (translate non-English sources)
+- **`.claude/rules/git.md`** - If committing extracted requirements (NO AI credits, conventional commits)
+
+---
+
+### STEP 0: ENTER PLAN MODE (MANDATORY)
+
+**🎯 MANDATORY: Always enter plan mode before processing client documents**
+
+**Claude must:**
+
+1. **Scan client-input folder:**
+   - List all files in `.project-management/client-input/`
+   - Identify file types (PDF, Word, images, text)
+   - Check file accessibility
+
+2. **Quick preview of each document:**
+   - Read first few pages/sections
+   - Identify document purpose (requirements, mockups, timeline, etc.)
+   - Note language (will translate to English if needed)
+
+3. **Analyze extraction strategy:**
+   - Which docs contain requirements
+   - Which docs contain technical specs
+   - Which docs contain constraints
+   - How to organize into input files
+
+4. **Create processing plan:**
+   ```
+   CLIENT DOCUMENT PROCESSING PLAN
+
+   DOCUMENTS FOUND:
+   - project-brief.pdf (5 pages, English)
+   - requirements.docx (15 pages, English)
+   - mockups.png (3 images)
+
+   EXTRACTION PLAN:
+   1. project-brief.pdf → scope.md (vision, goals)
+   2. requirements.docx → backlog.md (25 user stories)
+   3. mockups.png → reference in stories
+   4. Suggest tech stack → technologies.md
+   5. Extract timeline → constraints.md
+
+   ESTIMATED OUTPUT:
+   - scope.md: ~100 lines
+   - backlog.md: ~350 lines (25 stories)
+   - technologies.md: ~60 lines (suggested)
+   - constraints.md: ~50 lines
+
+   Proceed? [Yes / No / Revise]
+   ```
+
+5. **Wait for user approval**
+6. **Only proceed to STEP 1 after approval**
+
+---
 
 ### STEP 1: Find and Read Documents
 

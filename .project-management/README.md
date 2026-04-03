@@ -198,6 +198,7 @@ That's it! Claude now manages your project autonomously.
     ├── init-project.md        # Initialize project
     ├── generate-docs.md       # Generate/update docs
     ├── execute-work.md        # Execute work with automated planning
+    ├── add-scope.md           # Add/edit phases, epics, stories
     ├── update-progress.md     # Update progress
     └── project-status.md      # Show project status
 ```
@@ -252,6 +253,7 @@ That's it! Claude now manages your project autonomously.
 5. Ongoing Maintenance
    ├─ Add new client documents as they arrive
    ├─ Re-run: /process-client-docs (merges with existing)
+   ├─ Run: /add-scope (add/edit phases, epics, stories)
    ├─ Run: /generate-docs (regenerate docs)
    └─ Track blockers in progress/blockers.md
 ```
@@ -284,7 +286,7 @@ That's it! Claude now manages your project autonomously.
        └─ Run: /execute-work phase 4
 
 4. Ongoing Maintenance
-   ├─ Update input files as scope changes
+   ├─ Run: /add-scope (add/edit phases, epics, stories as scope changes)
    ├─ Run: /generate-docs (regenerate docs)
    └─ Progress tracked automatically during execution
 ```
@@ -292,6 +294,29 @@ That's it! Claude now manages your project autonomously.
 ---
 
 ## 🎮 Slash Commands
+
+### 🚀 Quick Command Reference
+
+**New to the system? Start here:**
+
+| I want to... | Use this command | Quick Guide |
+|--------------|------------------|-------------|
+| Add a requirement (story/epic/phase) | `/add-scope add [type]` | [How-to](../.claude/commands/how-to-use/add-requirement.md) |
+| Add future requirement (v2.0, v3.0) | `/add-backlog-requirement` | [How-to](../.claude/commands/how-to-use/add-backlog-requirement.md) |
+| Add a bug to roadmap | `/add-bug` | [How-to](../.claude/commands/how-to-use/add-bug.md) |
+| Start new project | `/init-project` | [How-to](../.claude/commands/how-to-use/start-project.md) |
+| Execute phase work | `/execute-work phase N` | [How-to](../.claude/commands/how-to-use/execute-phase.md) |
+| Fix a bug | `/execute-work bug BUG-XXX` | [How-to](../.claude/commands/how-to-use/execute-phase.md) |
+| Promote future requirement to active | `/promote-requirement US-XXX --to-phase N` | See command docs |
+| Check project status | `/project-status` | [How-to](../.claude/commands/how-to-use/check-status.md) |
+| Update documentation | `/generate-docs` | [How-to](../.claude/commands/how-to-use/generate-documentation.md) |
+| Process client docs | `/process-client-docs` | [How-to](../.claude/commands/how-to-use/process-client-docs.md) |
+
+**📖 Full command documentation:** See [commands folder](../.claude/commands/)
+
+**🤖 For AI:** Quick guides are 80-150 lines (vs 200-450 lines full docs). Read quick guide first for 60-70% token savings on common tasks.
+
+---
 
 ### `/process-client-docs` 🆕
 **Purpose:** Extract requirements from client documents and generate input files
@@ -362,6 +387,59 @@ cp mockups.png .project-management/client-input/
 
 ---
 
+### `/add-scope`
+**Purpose:** Add or edit phases, epics, or stories with automatic renumbering and cross-reference updates
+
+**When to use:**
+- Adding new features/phases to an existing project
+- Modifying scope after client feedback
+- Restructuring phases or epics
+- Updating story details (points, criteria, priority)
+
+**What it does:**
+- Adds new phases, epics, or stories to project documentation
+- Edits existing phases, epics, or stories
+- Automatically renumbers all affected items (phases, epics)
+- Updates cross-references across all project files (phases, backlog, progress)
+- Runs 5 integrity checks after every change
+- Asks user whether to auto-update PRD/tech-spec/architecture or run `/generate-docs` later
+- Supports `--from` flag to read content from external files
+
+**Key rules:**
+- US-XXX story IDs are immutable (never renumbered)
+- Epic numbering: LOCAL in phase files, GLOBAL in backlog
+- Story points: Fibonacci scale only (1, 2, 3, 5, 8, 13, 21)
+- Preview is mandatory before any file changes
+
+**Example:**
+```bash
+# Add new phase at position 2 (existing phases shift)
+/add-scope add phase 2
+
+# Add epic to Phase 1 from a file
+/add-scope add epic 1 --from docs/notification-epic.md
+
+# Add story to Epic 2 in Phase 1
+/add-scope add story 1 2
+
+# Edit an existing story
+/add-scope edit story US-005
+
+# Edit a phase
+/add-scope edit phase 3
+```
+
+**Output:**
+- New/updated phase files (with automatic renumbering if inserting)
+- Updated `backlog.md` (new epics/stories with global numbering)
+- Updated progress metrics
+- Integrity check report (5 checks)
+- Optional: updated PRD, tech-spec, architecture
+
+**Modules:** See `add-scope-input-parsing.md`, `add-scope-renumbering.md`, `add-scope-edit-mode.md` for detailed logic
+
+---
+
 ### `/generate-docs`
 **Purpose:** Generate or update project documentation
 
@@ -382,6 +460,117 @@ cp mockups.png .project-management/client-input/
 
 **Output:**
 - Updated documentation in `.project-management/output/docs/`
+
+---
+
+### `/add-bug`
+**Purpose:** Add bugs to the roadmap for tracking and execution
+
+**When to use:**
+- Found a bug during development or testing
+- Client reports an issue
+- Need to track bugs separately from features
+- Want to prioritize bug fixes
+
+**What it does:**
+- Adds bug to bug-roadmap.md with automatic BUG-XXX ID assignment
+- Organizes bugs by severity (Critical, High, Medium, Low)
+- Tracks reproduction steps, expected vs actual behavior
+- Estimates story points for fixing effort
+- Optionally assigns bug to phase for immediate fixing
+- Updates bug metrics in project status
+
+**Example:**
+```bash
+# Interactive mode
+/add-bug
+
+# From file
+/add-bug --from bug-report.md
+```
+
+**Output:**
+- Bug added to `.project-management/output/bugs/bug-roadmap.md`
+- Optionally added to phase file if assigned
+- Bug counts updated in project status
+
+**Bug Lifecycle:**
+```
+New → Triaged → In Progress → Fixed → Verified → Closed
+```
+
+**Execute bug fix:**
+```bash
+/execute-work bug BUG-001
+```
+
+---
+
+### `/add-backlog-requirement`
+**Purpose:** Add requirements to future backlog (Version 2.0, 3.0, beyond) without assigning to current phases
+
+**When to use:**
+- Planning features for post-launch versions
+- Collecting ideas for "later" or "next version"
+- Client requests features not needed in Phase 1-4
+- Backlog grooming for future enhancements
+
+**What it does:**
+- Adds stories/epics to backlog-future.md (separate from active backlog)
+- Assigns sequential US-XXX ID (continues from active backlog)
+- Organizes by target version (2.0, 3.0, Unversioned)
+- Does NOT assign to any current phase
+- Status: "Future" (not in active development)
+
+**Example:**
+```bash
+# Interactive mode
+/add-backlog-requirement story
+
+# From file
+/add-backlog-requirement epic --from future-feature.md
+```
+
+**Output:**
+- Requirement added to `.project-management/input/backlog-future.md`
+- NOT added to active backlog.md or phase files
+- Can promote to active later with `/promote-requirement`
+
+**Target Versions:**
+- **2.0** - Post-launch enhancements (1-3 months after launch)
+- **3.0** - Major future features (6-12+ months)
+- **Unversioned** - Ideas and experiments (no timeline)
+
+**Promote to active when ready:**
+```bash
+/promote-requirement US-XXX --to-phase N
+```
+
+---
+
+### `/promote-requirement`
+**Purpose:** Move future requirement from backlog-future.md to active development
+
+**When to use:**
+- Ready to implement a future requirement
+- Moving Version 2.0 item into current development
+- Prioritizing backlog items for next phase
+
+**What it does:**
+- Removes requirement from backlog-future.md
+- Adds to active backlog.md
+- Adds to specified phase-N.md
+- Updates status: "Future" → "Todo"
+- Keeps same US-XXX ID (no renumbering)
+
+**Example:**
+```bash
+/promote-requirement US-051 --to-phase 2
+```
+
+**Output:**
+- Requirement moved from future to active
+- Ready for execution with `/execute-work story US-051`
 
 ---
 
@@ -784,6 +973,35 @@ Note: In v3.0 phase-based system, story points help estimate phase duration (1-4
 3. **Update don't recreate** - Preserve manual additions
 4. **Version control** - Commit docs with code
 5. **Share widely** - Make sure team has access
+
+### Documentation Language Policy
+
+**MANDATORY: English Only**
+
+ALL project documentation MUST be written in **English**:
+
+✅ **What must be in English:**
+- Input files (scope.md, backlog.md, technologies.md, constraints.md)
+- Generated documentation (PRD, technical spec, architecture)
+- Progress tracking files (current-status.md, completed.md, blockers.md)
+- Phase plans (phase-1.md, phase-2.md, etc.)
+- README, CHANGELOG, and all guide documents
+- Code comments and docstrings
+- Commit messages and pull request descriptions
+- User stories and acceptance criteria
+- Issue descriptions and technical discussions
+
+❌ **NO exceptions** - English is mandatory for all documentation
+
+ℹ️ **Why English only:**
+- Universal language for software development
+- Enables team collaboration across regions
+- Facilitates open source contributions
+- Ensures documentation consistency
+- Optimizes AI/Claude compatibility and effectiveness
+- Industry standard for technical documentation
+
+**Note:** This policy applies to **documentation only**, not application content. If your app supports multiple languages for end users (i18n), that's separate and controlled by `I18N-RULES.md`.
 
 ---
 

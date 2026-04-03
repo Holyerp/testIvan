@@ -1,6 +1,6 @@
 # Project Scope
 
-> **Instructions:** Fill out each section below to define your project scope. Be specific and clear. Claude will use this to generate documentation and plan sprints.
+> **Instructions:** Fill out each section below to define your project scope. Be specific and clear. Claude will use this to generate documentation and organize phases.
 
 ---
 
