@@ -113,8 +113,8 @@ Complete overhaul from sprint-based to phase-based planning with full automation
 
 #### Workflow
 - **Plan mode is now mandatory** - Cannot skip planning phase
-- **Tests run automatically** - Before commits (predzadnji step)
-- **Commits created automatically** - After tests pass (zadnji step)
+- **Tests run automatically** - Before commits (second-to-last step)
+- **Commits created automatically** - After tests pass (final step)
 - **Progress updated automatically** - Real-time phase tracking
 
 #### Documentation
