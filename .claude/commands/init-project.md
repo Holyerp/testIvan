@@ -20,6 +20,28 @@ All documentation generated must follow:
 
 ---
 
+### STEP 0: PROJECT STRUCTURE SELECTION
+
+**📖 See:** `modules/init-project-structure-setup.md` for detailed structure configuration
+
+**Summary:**
+1. Ask user to choose project type:
+   - [1] Backend Only
+   - [2] Backend + Mobile App (Monorepo) ⭐ RECOMMENDED
+   - [3] Backend + Web + Mobile (Full Monorepo)
+   - [4] Web Only
+2. Based on selection, create appropriate folder structure
+3. For monorepo (options 2-3):
+   - Create `apps/` directory with backend/mobile/web
+   - Create `packages/` for shared code (types, utils, api-client)
+   - Setup pnpm workspace + Turborepo
+   - Create package.json files for each app/package
+4. Update `.gitignore` for monorepo structure
+
+**Output:** Project structure created, ready for tech stack configuration
+
+---
+
 ### STEP 1: TECH STACK SELECTION
 
 **📖 See:** `modules/init-project-stack-selection.md` for detailed stack configuration
@@ -223,6 +245,7 @@ Phase 4: Polish & Launch ({{points_4}} points, {{weeks_4}} weeks)
 ## 📚 Module References
 
 **Detailed workflows available in:**
+- `modules/init-project-structure-setup.md` - STEP 0 (Project structure: monorepo vs single app)
 - `modules/init-project-stack-selection.md` - STEP 1 (Tech stack selection)
 - `modules/init-project-i18n-setup.md` - STEP 2 (i18n configuration)
 
@@ -241,10 +264,22 @@ Phase 4: Polish & Launch ({{points_4}} points, {{weeks_4}} weeks)
 
 ## Files to Generate
 
+**Project Structure (if monorepo selected):**
+- `package.json` (root workspace config)
+- `pnpm-workspace.yaml`
+- `turbo.json`
+- `apps/backend/package.json`
+- `apps/mobile/package.json` (if option 2 or 3)
+- `apps/web/package.json` (if option 3)
+- `packages/shared-types/package.json`
+- `packages/api-client/package.json`
+- `packages/shared-utils/package.json`
+- `.gitignore` (updated for monorepo)
+
 **Configuration:**
 - `.project-management/input/technologies.md` (if not exists or update)
 - `.project-management/rules/I18N-RULES.md` (if i18n enabled)
-- `public/locales/{lang}/translation.json` (if i18n enabled)
+- `public/locales/{lang}/translation.json` (if i18n enabled, location varies by structure)
 
 **Documentation:**
 - `.project-management/output/docs/prd.md`
