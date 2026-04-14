@@ -1,410 +1,180 @@
 # Project Status - Data Collection Module
 
-**Purpose:** Strategies for collecting project data from all relevant files.
+**Purpose:** Methods for collecting project data for status reporting.
 
-**Parent Command:** `/project-status`
-
----
-
-## File Reading Strategy
-
-### Core Project Files
-
-**MUST read these files:**
-
-1. **`.project-management/input/scope.md`**
-   - Project name
-   - Project vision
-   - Core objectives
-   - Target launch date
-
-2. **`.project-management/output/phases/phase-*.md`**
-   - Read ALL phase files (phase-1.md, phase-2.md, etc.)
-   - Phase status (Planning, In Progress, Completed, On Hold)
-   - Story progress per phase
-   - Story points completed/total per phase
-   - Phase start and end dates
-
-3. **`.project-management/output/progress/current-status.md`**
-   - Current phase
-   - Current stories being worked on
-   - Recent velocity
-   - Weekly progress
-
-4. **`.project-management/output/progress/completed.md`**
-   - All completed stories with dates
-   - Completion velocity history
-   - Recent achievements
-
-5. **`.project-management/output/progress/blockers.md`**
-   - Active blockers
-   - Blocker severity
-   - Impact assessment
-   - Resolution timeline
-
-6. **`.project-management/input/backlog.md`**
-   - Total stories
-   - Remaining work
-   - Future phases
-
-7. **`.project-management/output/bugs/bug-roadmap.md`** (if exists)
-   - Open bugs by severity (Critical, High, Medium, Low)
-   - Bug descriptions and affected components
-   - Bug creation dates
-
-8. **`.project-management/output/bugs/bug-archive.md`** (if exists)
-   - Fixed bugs with resolution dates
-   - Bug fixing velocity
-   - Recent bug fixes
+**Parent:** `.claude/commands/project-status.md`
 
 ---
 
-## Data Extraction from Phase Files
+## Data Sources
 
-### Parse Phase Files
+### Phase Files
+- **Location:** `.project-management/output/phases/phase-*.md`
+- **Read:** All phase files (1, 2, 3, 4)
+- **Extract:**
+  - Phase metadata (title, goal, duration)
+  - Stories (US-XXX) with status (Todo/In Progress/Completed)
+  - Story points
+  - Dependencies
+  - Epics
 
-**For each phase-N.md file:**
+### Backlog
+- **Location:** `.project-management/input/backlog.md`
+- **Extract:**
+  - All user stories with IDs
+  - Story points
+  - Priorities (P0/P1/P2/P3)
+  - Epic groupings
 
-```markdown
-# Phase 1: Foundation
+### Progress Files
+- **Location:** `.project-management/output/progress/`
+- **Files:**
+  - `phase-1-progress.md` - Phase 1 tracking
+  - `phase-2-progress.md` - Phase 2 tracking (etc.)
+  - `completed.md` - Completed work log
+  - `blockers.md` - Active blockers
 
-**Duration:** 2026-01-15 to 2026-02-28 (6 weeks)
-**Status:** Completed
-**Story Points:** 45/45 (100%)
+- **Extract:**
+  - Completion dates
+  - Time spent per story
+  - Blocker details (severity, status, resolution)
 
-### Epic EPIC-1: Authentication (15 points)
-**Status:** Completed
+### Bug Files
+- **Location:** `.project-management/output/bugs/`
+- **Files:**
+  - `bug-roadmap.md` - Active bugs
+  - `bug-archive.md` - Fixed bugs
 
-#### US-001: User Registration
-- **Story Points:** 5
-- **Status:** Completed
-- **Completed:** 2026-01-18
+- **Extract:**
+  - Bug IDs (BUG-XXX)
+  - Severity (Critical/High/Medium/Low)
+  - Status (New/In Progress/Fixed/Verified)
+  - Created/Fixed dates
 
-#### US-002: User Login
-- **Story Points:** 5
-- **Status:** Completed
-- **Completed:** 2026-01-22
-```
-
-**Extract:**
-- Phase number and name
-- Phase status
-- Phase duration
-- Story points (completed/total)
-- Epic count
-- Story count per epic
-- Completion dates
-- Current active stories
-
----
-
-## Data Extraction from Progress Files
-
-### current-status.md
-
-**Extract:**
-```markdown
-# Current Status
-
-**Phase:** Phase 2 - Core Features
-**Week:** 2026-03-15 to 2026-03-22
-**Velocity:** 25 points/week
-
-**In Progress:**
-- US-045: User Profile (5 points) - 60% complete
-- US-046: Payment Integration (8 points) - 30% complete
-
-**Completed This Week:**
-- US-043: Product Search (5 points)
-- US-044: Shopping Cart (8 points)
-```
-
-**Data to collect:**
-- Current phase
-- Current week
-- Velocity (points/week)
-- In-progress stories
-- Weekly completions
+### Constraints
+- **Location:** `.project-management/input/constraints.md`
+- **Extract:**
+  - Project start date
+  - Target launch date
+  - Team size
+  - Budget
 
 ---
 
-### completed.md
+## Data Aggregation
 
-**Extract:**
-```markdown
-# Completed Work
-
-## Phase 1: Foundation (45 points)
-Completed: 2026-02-28
-
-- US-001: User Registration (5 points) - 2026-01-18
-- US-002: User Login (5 points) - 2026-01-22
-- US-003: Password Reset (3 points) - 2026-01-25
-...
-
-## Phase 2: Core Features (In Progress)
-
-- US-043: Product Search (5 points) - 2026-03-15
-- US-044: Shopping Cart (8 points) - 2026-03-18
-```
-
-**Data to collect:**
-- Total completed points
-- Completion dates
-- Stories completed per week
-- Completion velocity trend
-
----
-
-### blockers.md
-
-**Extract:**
-```markdown
-# Current Blockers
-
-## High Impact
-
-### BLOCKER-1: Payment Gateway API Access
-- **Story:** US-046
-- **Impact:** High
-- **Blocked Since:** 2026-03-10
-- **Description:** Waiting for production API credentials
-- **Resolution:** Expected 2026-03-20
-
-### BLOCKER-2: Database Performance
-- **Story:** US-048, US-049
-- **Impact:** Medium
-- **Blocked Since:** 2026-03-12
-- **Description:** Query optimization needed
-- **Resolution:** In progress
-```
-
-**Data to collect:**
-- Blocker count
-- Impact levels
-- Affected stories
-- Duration blocked
-- Resolution status
-
----
-
-## Data Extraction from Bug Files
-
-### bug-roadmap.md
-
-**Extract:**
-```markdown
-# Bug Roadmap
-
-## =4 Critical (Fix Immediately)
-
-### BUG-001: Payment Processing Failure
-- **Severity:** Critical
-- **Affected:** Checkout flow
-- **Created:** 2026-03-15
-- **Status:** New
-
-## =‡ High (Fix This Week)
-
-### BUG-002: User Session Timeout
-- **Severity:** High
-- **Affected:** Authentication
-- **Created:** 2026-03-14
-- **Status:** In Progress
-```
-
-**Data to collect:**
-- Bug count by severity (Critical, High, Medium, Low)
-- Bug statuses (New, In Progress, Fixed)
-- Affected components
-- Bug age (days since creation)
-
----
-
-### bug-archive.md
-
-**Extract:**
-```markdown
-# Bug Archive
-
-## Fixed Bugs (Last 30 Days)
-
-### BUG-003: Profile Image Upload
-- **Fixed:** 2026-03-18
-- **Time to Fix:** 2 days
-- **Severity:** Medium
-
-### BUG-004: Search Results Pagination
-- **Fixed:** 2026-03-16
-- **Time to Fix:** 1 day
-- **Severity:** Low
-```
-
-**Data to collect:**
-- Bugs fixed this week
-- Bugs fixed this month
-- Average time to fix
-- Bug velocity
-
----
-
-## Metric Aggregation
-
-### Aggregate Phase Data
-
-**Calculate for all phases:**
-```typescript
-const phaseData = {
-  totalPhases: 4,
-  completedPhases: 1,
-  currentPhase: 2,
-  phases: [
-    { number: 1, name: 'Foundation', status: 'Completed', points: 45, completed: 45 },
-    { number: 2, name: 'Core', status: 'In Progress', points: 65, completed: 38 },
-    { number: 3, name: 'Advanced', status: 'Planning', points: 50, completed: 0 },
-    { number: 4, name: 'Polish', status: 'Planning', points: 40, completed: 0 },
-  ],
-  totalPoints: 200,
-  completedPoints: 83,
-};
-```
-
----
-
-### Aggregate Story Data
-
-**Calculate story metrics:**
-```typescript
-const storyData = {
-  totalStories: 45,
-  completedStories: 18,
-  inProgressStories: 3,
-  todoStories: 24,
-  blockedStories: 2,
-};
-```
-
----
-
-### Aggregate Bug Data
-
-**Calculate bug metrics:**
-```typescript
-const bugData = {
-  openBugs: {
-    critical: 1,
-    high: 2,
-    medium: 3,
-    low: 1,
-    total: 7,
+### Story Statistics
+```javascript
+{
+  total: count of all stories,
+  completed: count where status="Completed",
+  in_progress: count where status="In Progress",
+  todo: count where status="Todo",
+  blocked: count where blocked=true,
+  by_priority: {
+    P0: { total, completed },
+    P1: { total, completed },
+    P2: { total, completed }
   },
-  fixedThisWeek: 3,
-  fixedThisMonth: 12,
-  avgTimeToFix: 2.5, // days
-  bugRate: 0.15, // bugs per story
-};
+  by_phase: {
+    1: { total, completed, in_progress },
+    2: { total, completed, in_progress },
+    ...
+  }
+}
+```
+
+### Story Points Summary
+```javascript
+{
+  total: sum of all story points,
+  completed: sum where status="Completed",
+  remaining: total - completed,
+  velocity: completed / days_elapsed
+}
+```
+
+### Bug Statistics
+```javascript
+{
+  active: {
+    critical: count,
+    high: count,
+    medium: count,
+    low: count
+  },
+  fixed: {
+    total: count,
+    by_week: array of weekly counts
+  },
+  avg_fix_time: average days to fix
+}
+```
+
+### Timeline Data
+```javascript
+{
+  start_date: from constraints.md,
+  target_date: from constraints.md,
+  days_elapsed: today - start_date,
+  days_remaining: target_date - today,
+  estimated_completion: calculated from velocity
+}
 ```
 
 ---
 
-## Timeline Calculation
+## Parsing Methods
 
-### Extract Timeline Data
+### Extract Story Status from Phase File
+```
+Pattern: ### US-XXX: [Title]
+Next line: **Status:** Todo/In Progress/Completed
+Extract: US-XXX, status
+```
 
-**From scope.md and phase files:**
-```typescript
-const timeline = {
-  projectStart: '2026-01-15',
-  targetLaunch: '2026-06-30',
-  currentDate: '2026-03-20',
-  daysElapsed: 64,
-  daysRemaining: 102,
-  totalDuration: 166,
-  onSchedule: true, // calculated
-};
+### Extract Bug Severity from Bug Roadmap
+```
+Sections: ## Critical, ## High, ## Medium, ## Low
+For each section: extract BUG-XXX IDs
+Map: BUG-XXX ‚Üí severity
+```
+
+### Extract Completion Dates from Progress Files
+```
+Pattern: - [x] US-XXX completed (YYYY-MM-DD)
+Extract: US-XXX ‚Üí completion_date
+```
+
+### Extract Blockers
+```
+From blockers.md:
+Pattern: ## [BLOCKER-XXX] Title
+Extract: blocker_id, severity, status, affected_stories
 ```
 
 ---
 
-## Velocity Calculation
+## Validation
 
-### Calculate Velocity
+**Ensure data integrity:**
+- All story IDs in phase files exist in backlog
+- Story points are Fibonacci numbers
+- Dates are valid (YYYY-MM-DD format)
+- Statuses are valid (Todo/In Progress/Completed)
+- Bug severities are valid (Critical/High/Medium/Low)
 
-**From completed.md:**
-```typescript
-// Stories completed per week (last 4 weeks)
-const weeklyCompletions = [
-  { week: '2026-02-19', points: 18 },
-  { week: '2026-02-26', points: 22 },
-  { week: '2026-03-04', points: 20 },
-  { week: '2026-03-11', points: 25 },
-];
-
-const velocity = {
-  current: 25, // this week
-  average: 21.25, // avg of last 4 weeks
-  trend: 'increasing', // comparing to average
-};
-```
+**If validation fails:** Report errors, skip invalid entries.
 
 ---
 
-## Test Coverage Data
+## Caching Strategy
 
-### Extract from Test Results
-
-**If test coverage report exists:**
-```typescript
-const coverage = {
-  overall: 87,
-  statements: 87.5,
-  branches: 82.3,
-  functions: 91.2,
-  lines: 87.5,
-  target: 80,
-  status: 'passing', // above target
-};
-```
+**For performance:**
+- Cache file reads (memoize within single /project-status run)
+- Don't cache across runs (data changes frequently)
+- Parse each file only once per run
 
 ---
 
-## Data Validation
-
-**Before using collected data:**
-
-- [ ] All phase files read successfully
-- [ ] Progress files parsed correctly
-- [ ] Bug files read (if exist)
-- [ ] Dates are valid and chronological
-- [ ] Story points are numbers
-- [ ] No missing required fields
-- [ ] Calculations are accurate
-
----
-
-## Error Handling
-
-**If files are missing:**
-```
-†  Warning: .project-management/output/progress/blockers.md not found
-   í Assuming no blockers
-```
-
-**If files are malformed:**
-```
-†  Warning: Could not parse phase-2.md
-   í Skipping Phase 2 data
-```
-
-**If data is inconsistent:**
-```
-†  Warning: Total points in phase-1.md (45) doesn't match sum of story points (42)
-   í Using phase-level data
-```
-
----
-
-**Related:**
-- Parent: `.claude/commands/project-status.md`
-- Sibling: `project-status-calculation.md`
-- Data sources: `.project-management/output/` and `.project-management/input/`
+[‚Üê Back to project-status.md](../project-status.md)

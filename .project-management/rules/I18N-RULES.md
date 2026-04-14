@@ -2,6 +2,8 @@
 
 > **Note:** This file contains i18n-specific rules. Include these rules ONLY if your project requires multiple languages. If not needed, this file can be ignored or deleted.
 
+**📖 Detailed Implementation:** See [modules/i18n-implementation.md](modules/i18n-implementation.md) for code examples, testing, and RTL support.
+
 ---
 
 ## When to Use This File
@@ -43,12 +45,9 @@
 - `zh` - Chinese (中文)
 
 **Regional variants:**
-- `en-US` - English (United States)
-- `en-GB` - English (United Kingdom)
-- `pt-BR` - Portuguese (Brazil)
-- `pt-PT` - Portuguese (Portugal)
-- `zh-CN` - Chinese (Simplified, China)
-- `zh-TW` - Chinese (Traditional, Taiwan)
+- `en-US` / `en-GB` (English variants)
+- `pt-BR` / `pt-PT` (Portuguese variants)
+- `zh-CN` / `zh-TW` (Chinese variants)
 
 ---
 
@@ -73,25 +72,6 @@ locales/
 └── common/
     ├── errors.json  # Common error messages
     └── forms.json   # Common form labels
-```
-
-**Alternative structures:**
-
-Next.js with next-intl:
-```
-messages/
-├── en.json
-├── de.json
-└── fr.json
-```
-
-Remix/React Router 7:
-```
-app/
-└── locales/
-    ├── en.json
-    ├── de.json
-    └── fr.json
 ```
 
 ---
@@ -178,6 +158,8 @@ t('title')
 }
 ```
 
+**For detailed examples:** See [modules/i18n-implementation.md](modules/i18n-implementation.md)
+
 ---
 
 ## Task Completion Criteria
@@ -194,192 +176,6 @@ Before marking task complete:
 
 ---
 
-## Example Implementation
-
-### React with react-i18next:
-
-```typescript
-import { useTranslation } from 'react-i18next';
-
-function LoginForm() {
-  const { t } = useTranslation();
-
-  return (
-    <form>
-      <label>{t('auth.login.emailLabel')}</label>
-      <input placeholder={t('auth.login.emailPlaceholder')} />
-      <button>{t('auth.login.submitButton')}</button>
-    </form>
-  );
-}
-```
-
-**Translation file (en.json):**
-```json
-{
-  "auth": {
-    "login": {
-      "emailLabel": "Email Address",
-      "emailPlaceholder": "Enter your email",
-      "submitButton": "Sign In",
-      "errors": {
-        "invalidCredentials": "Invalid email or password"
-      }
-    }
-  }
-}
-```
-
-### Vue with vue-i18n:
-
-```vue
-<template>
-  <form>
-    <label>{{ $t('auth.login.emailLabel') }}</label>
-    <input :placeholder="$t('auth.login.emailPlaceholder')" />
-    <button>{{ $t('auth.login.submitButton') }}</button>
-  </form>
-</template>
-```
-
----
-
-## Validation Errors
-
-**All validation errors MUST be translatable:**
-
-```typescript
-// ✅ GOOD: Translatable
-const schema = z.object({
-  email: z.string().email({ message: t('validation.email.invalid') }),
-  password: z.string().min(8, { message: t('validation.password.tooShort') }),
-});
-
-// ❌ BAD: Hardcoded
-const schema = z.object({
-  email: z.string().email({ message: 'Invalid email' }),
-});
-```
-
-**Common validation messages:**
-```json
-{
-  "validation": {
-    "required": "This field is required",
-    "email": {
-      "invalid": "Invalid email address",
-      "required": "Email is required"
-    },
-    "password": {
-      "tooShort": "Password must be at least 8 characters",
-      "required": "Password is required"
-    }
-  }
-}
-```
-
----
-
-## Language Switcher
-
-**If required, implement language switcher:**
-- Display current language flag/name
-- Allow user to select from available languages
-- Store preference in localStorage/cookies
-- Apply immediately without page reload
-
-**Example implementation:**
-```typescript
-import { useTranslation } from 'react-i18next';
-
-function LanguageSwitcher() {
-  const { i18n } = useTranslation();
-
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
-    localStorage.setItem('language', lng);
-  };
-
-  return (
-    <select value={i18n.language} onChange={(e) => changeLanguage(e.target.value)}>
-      <option value="en">English</option>
-      <option value="de">Deutsch</option>
-      <option value="fr">Français</option>
-    </select>
-  );
-}
-```
-
----
-
-## Testing i18n
-
-### Manual testing:
-1. Switch to each language
-2. Navigate through all pages
-3. Trigger all error messages
-4. Test form validation messages
-5. Check date/number formatting
-
-### Automated testing:
-```typescript
-describe('Translations', () => {
-  it('should have all required translation keys', () => {
-    const en = require('./locales/en.json');
-    const de = require('./locales/de.json');
-
-    expect(Object.keys(en)).toEqual(Object.keys(de));
-  });
-
-  it('should not have missing translations', () => {
-    const en = require('./locales/en.json');
-    const de = require('./locales/de.json');
-
-    function getAllKeys(obj: any, prefix = ''): string[] {
-      return Object.keys(obj).flatMap(key => {
-        const value = obj[key];
-        const newKey = prefix ? `${prefix}.${key}` : key;
-        return typeof value === 'object' ? getAllKeys(value, newKey) : [newKey];
-      });
-    }
-
-    const enKeys = getAllKeys(en);
-    const deKeys = getAllKeys(de);
-
-    expect(enKeys.sort()).toEqual(deKeys.sort());
-  });
-});
-```
-
----
-
-## RTL Support (Right-to-Left)
-
-**If supporting Arabic, Hebrew, or other RTL languages:**
-
-```css
-/* Add direction support */
-[dir="rtl"] {
-  direction: rtl;
-  text-align: right;
-}
-
-[dir="ltr"] {
-  direction: ltr;
-  text-align: left;
-}
-```
-
-```typescript
-// Set direction based on language
-useEffect(() => {
-  const dir = ['ar', 'he'].includes(i18n.language) ? 'rtl' : 'ltr';
-  document.documentElement.setAttribute('dir', dir);
-}, [i18n.language]);
-```
-
----
-
 ## Best Practices
 
 1. **Always use translation keys** - Never hardcode user-facing text
@@ -390,6 +186,18 @@ useEffect(() => {
 6. **Format dates/numbers** - Use library formatting for locale-specific formats
 7. **Keep translations in sync** - Ensure all languages have the same keys
 8. **Document custom keys** - If using custom translation patterns, document them
+
+---
+
+## Implementation Guides
+
+| Topic | Documentation |
+|-------|---------------|
+| **Detailed examples** | [modules/i18n-implementation.md](modules/i18n-implementation.md) |
+| **Validation errors** | [modules/i18n-implementation.md#validation-errors](modules/i18n-implementation.md) |
+| **Language switcher** | [modules/i18n-implementation.md#language-switcher](modules/i18n-implementation.md) |
+| **Testing i18n** | [modules/i18n-implementation.md#testing-i18n](modules/i18n-implementation.md) |
+| **RTL support** | [modules/i18n-implementation.md#rtl-support](modules/i18n-implementation.md) |
 
 ---
 

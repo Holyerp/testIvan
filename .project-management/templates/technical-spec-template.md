@@ -1,13 +1,21 @@
-# Technical Specification
+# Technical Specification - {{PROJECT_NAME}}
 
-> **IMPORTANT:** This document must be written in **English only**. No exceptions.
-
-**Project Name:** {{PROJECT_NAME}}
 **Version:** 1.0
 **Date:** {{DATE}}
-**Status:** Draft / In Review / Approved
+**Status:** {{STATUS}}
 **Author:** {{AUTHOR}}
-**Related Documents:** [PRD](../output/docs/prd.md), [Architecture](../output/docs/architecture.md)
+
+---
+
+## Template Modules
+
+This template references shared modules for common sections:
+- **[Tech Stack & Architecture](modules/tech-stack-architecture.md)** - Technology stack details, architecture diagrams
+- **[Database Schema](modules/database-schema.md)** - Database design, ERD, Prisma schema
+- **[Security & Auth](modules/security-auth-deployment.md)** - Authentication, security measures
+- **[Project Structure & API](modules/project-structure-api.md)** - Folder structure, API design
+
+**For AI:** Use modules for standard sections. Template-specific content below.
 
 ---
 
@@ -16,61 +24,26 @@
 ### 1.1 Purpose
 {{PURPOSE}}
 
+**Example:** This technical specification defines the implementation details for {{PROJECT_NAME}}, including architecture, technology stack, API design, and development standards.
+
 ### 1.2 Scope
 {{SCOPE}}
 
+**Example:** This document covers frontend architecture, backend services, database design, API specifications, authentication, and deployment procedures.
+
 ### 1.3 Definitions & Acronyms
+
 | Term | Definition |
 |------|------------|
-| {{TERM_1}} | {{DEFINITION_1}} |
-| {{TERM_2}} | {{DEFINITION_2}} |
+| {{TERM}} | {{DEFINITION}} |
 
 ---
 
-## 2. Technology Stack
+## 2-3. Technology Stack & Architecture
 
-### 2.1 Frontend
-- **Framework:** {{FRONTEND_FRAMEWORK}}
-- **Language:** {{FRONTEND_LANGUAGE}}
-- **State Management:** {{STATE_MANAGEMENT}}
-- **UI Library:** {{UI_LIBRARY}}
-- **Build Tool:** {{BUILD_TOOL}}
-
-### 2.2 Backend
-- **Runtime:** {{BACKEND_RUNTIME}}
-- **Framework:** {{BACKEND_FRAMEWORK}}
-- **Language:** {{BACKEND_LANGUAGE}}
-- **API Style:** {{API_STYLE}}
-
-### 2.3 Database
-- **Primary Database:** {{DATABASE}}
-- **ORM/ODM:** {{ORM}}
-- **Caching:** {{CACHE}}
-
-### 2.4 Infrastructure
-- **Hosting:** {{HOSTING}}
-- **CI/CD:** {{CICD}}
-- **Monitoring:** {{MONITORING}}
-
----
-
-## 3. System Architecture
-
-### 3.1 High-Level Architecture
-{{HIGH_LEVEL_ARCHITECTURE}}
-
-```
-[Frontend] <---> [API Gateway] <---> [Backend Services] <---> [Database]
-                                            |
-                                            v
-                                    [External Services]
-```
-
-### 3.2 Component Diagram
-{{COMPONENT_DIAGRAM}}
-
-### 3.3 Data Flow
-{{DATA_FLOW}}
+**See shared modules:**
+- [modules/tech-stack-architecture.md](modules/tech-stack-architecture.md) - Complete tech stack tables and architecture diagrams
+- Sections covered: 2.1-2.4 (Frontend, Backend, Database, Infrastructure), 3.1-3.3 (Architecture, Components, Data Flow)
 
 ---
 
@@ -78,369 +51,211 @@
 
 ### 4.1 Directory Structure
 ```
-frontend/
-├── src/
-│   ├── components/       # Reusable components
-│   │   ├── common/       # Generic components
-│   │   └── features/     # Feature-specific components
-│   ├── pages/            # Route pages
-│   ├── hooks/            # Custom React hooks
-│   ├── services/         # API calls
-│   ├── utils/            # Helper functions
-│   ├── types/            # TypeScript types
-│   ├── config/           # Configuration
-│   ├── routes/           # Route definitions
-│   ├── styles/           # Global styles
-│   └── App.tsx           # Root component
-├── public/               # Static assets
-└── tests/                # Test files
+{{FRONTEND_STRUCTURE}}
 ```
+
+**Example:** See [modules/project-structure-api.md](modules/project-structure-api.md) for complete project structure.
 
 ### 4.2 Routing Strategy
 {{ROUTING_STRATEGY}}
 
-**Route Table:**
-| Path | Component | Protected | Loader |
-|------|-----------|-----------|--------|
-| {{PATH_1}} | {{COMPONENT_1}} | {{YES/NO}} | {{LOADER_1}} |
-| {{PATH_2}} | {{COMPONENT_2}} | {{YES/NO}} | {{LOADER_2}} |
+**Example:**
+- React Router 7 (SSR mode)
+- File-based routing in `app/routes/`
+- Protected routes via middleware
+- Nested layouts for shared UI
 
 ### 4.3 State Management Strategy
-{{STATE_MANAGEMENT_STRATEGY}}
+{{STATE_MANAGEMENT}}
+
+**Example:**
+- Global state: Zustand
+- Server state: React Query / Remix loaders
+- Form state: react-hook-form
+- URL state: React Router
 
 ### 4.4 API Integration
 {{API_INTEGRATION}}
+
+**Example:**
+- Remix actions/loaders for data fetching
+- Type-safe API client (generated from Prisma)
+- Error handling with ErrorBoundary
+- Loading states with Suspense
 
 ---
 
 ## 5. Backend Architecture
 
 ### 5.1 Directory Structure
-```
-backend/
-├── src/
-│   ├── routes/           # Route definitions
-│   ├── controllers/      # Request handlers
-│   ├── services/         # Business logic
-│   ├── models/           # Data models
-│   ├── middleware/       # Express middleware
-│   ├── utils/            # Helper functions
-│   ├── types/            # TypeScript types
-│   ├── config/           # Configuration
-│   └── server.ts         # Entry point
-├── tests/                # Test files
-└── prisma/               # Database schema (if using Prisma)
-    ├── schema.prisma
-    └── migrations/
-```
+**See:** [modules/project-structure-api.md](modules/project-structure-api.md)
 
 ### 5.2 API Design
-
-#### 5.2.1 RESTful Endpoints
-{{API_ENDPOINTS}}
-
-#### 5.2.2 Request/Response Format
-```json
-// Standard Success Response
-{
-  "success": true,
-  "data": { ... }
-}
-
-// Standard Error Response
-{
-  "success": false,
-  "error": {
-    "code": "ERROR_CODE",
-    "message": "Human-readable message"
-  }
-}
-```
-
-#### 5.2.3 Authentication Flow
-{{AUTH_FLOW}}
+**See:** [modules/project-structure-api.md](modules/project-structure-api.md) - RESTful endpoints, request/response format, error codes
 
 ### 5.3 Middleware Stack
-1. {{MIDDLEWARE_1}}
-2. {{MIDDLEWARE_2}}
-3. {{MIDDLEWARE_3}}
+{{MIDDLEWARE}}
+
+**Example:**
+1. CORS
+2. Body parser
+3. Authentication (JWT verification)
+4. Rate limiting
+5. Error handler
+
+### 5.4 Business Logic Layer
+{{BUSINESS_LOGIC}}
+
+**Example:**
+- Services in `lib/services/*.server.ts`
+- Domain models
+- Validation with Zod
+- Error handling with custom exceptions
 
 ---
 
 ## 6. Database Design
 
-### 6.1 Entity Relationship Diagram (ERD)
-{{ERD}}
-
-### 6.2 Schema Design
-
-#### Table: users
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| id | UUID | PK | User ID |
-| email | VARCHAR(255) | UNIQUE, NOT NULL | User email |
-| password_hash | VARCHAR(255) | NOT NULL | Hashed password |
-| role | ENUM | NOT NULL | User role |
-| created_at | TIMESTAMP | NOT NULL | Creation timestamp |
-| updated_at | TIMESTAMP | NOT NULL | Last update timestamp |
-
-#### Table: {{TABLE_2}}
-{{TABLE_2_SCHEMA}}
-
-### 6.3 Indexes
-{{INDEXES}}
-
-### 6.4 Database Migrations Strategy
-{{MIGRATION_STRATEGY}}
+**See:** [modules/database-schema.md](modules/database-schema.md)
+- ERD, Prisma schema, indexes
 
 ---
 
-## 7. API Specification
+## 7. Authentication & Authorization
 
-### 7.1 Authentication Endpoints
+**See:** [modules/security-auth-deployment.md](modules/security-auth-deployment.md)
+- Auth strategy, auth flow, protected routes, security measures
 
-#### POST /api/auth/register
-**Description:** Register a new user
+---
 
-**Request:**
-```json
-{
-  "email": "user@example.com",
-  "password": "SecurePass123",
-  "name": "John Doe"
-}
+## 8. API Specification
+
+**See:** [modules/project-structure-api.md](modules/project-structure-api.md)
+- All endpoints, request/response formats, error codes
+
+---
+
+## 9. Testing Strategy
+
+**Testing approach:**
+{{TESTING_STRATEGY}}
+
+**Example:**
+- **Unit tests:** Vitest
+  - All services (`*.server.ts`)
+  - All utilities
+  - Target: 80%+ coverage
+
+- **Integration tests:** Vitest + MSW
+  - API routes
+  - Database operations
+  - Authentication flows
+
+- **E2E tests:** Playwright
+  - Critical user flows
+  - Cross-browser testing
+
+**Test structure:**
+```
+__tests__/
+├── unit/           # Service and util tests
+├── integration/    # API and DB tests
+└── e2e/            # Playwright tests
 ```
 
-**Response (200):**
-```json
-{
-  "success": true,
-  "data": {
-    "user": {
-      "id": "uuid",
-      "email": "user@example.com",
-      "name": "John Doe"
-    },
-    "token": "jwt-token"
-  }
-}
-```
-
-**Errors:**
-- 400: Invalid input
-- 409: Email already exists
+**See:** `.project-management/rules/TESTING-RULES.md` for complete testing standards.
 
 ---
 
-#### POST /api/auth/login
-{{LOGIN_ENDPOINT}}
+## 10. Deployment
+
+**See:** [modules/security-auth-deployment.md](modules/security-auth-deployment.md)
+- Hosting platform, environment variables, deployment process, health checks
 
 ---
 
-### 7.2 User Endpoints
-{{USER_ENDPOINTS}}
+## 11. Performance Requirements
 
-### 7.3 Product Endpoints
-{{PRODUCT_ENDPOINTS}}
+**Targets:**
+{{PERFORMANCE_TARGETS}}
 
----
+**Example:**
+| Metric | Target |
+|--------|--------|
+| First Contentful Paint (FCP) | < 1.5s |
+| Time to Interactive (TTI) | < 3.5s |
+| API Response (p95) | < 500ms |
+| Database Query (p95) | < 100ms |
 
-## 8. Security Implementation
-
-### 8.1 Authentication
-{{AUTH_IMPLEMENTATION}}
-
-### 8.2 Authorization
-{{AUTHZ_IMPLEMENTATION}}
-
-### 8.3 Data Protection
-- **Encryption at Rest:** {{ENCRYPTION_REST}}
-- **Encryption in Transit:** TLS 1.3
-- **Password Hashing:** {{PASSWORD_HASHING}}
-- **Sensitive Data:** {{SENSITIVE_DATA_HANDLING}}
-
-### 8.4 Input Validation
-{{INPUT_VALIDATION}}
-
-### 8.5 Rate Limiting
-{{RATE_LIMITING}}
-
-### 8.6 CORS Configuration
-{{CORS_CONFIG}}
-
----
-
-## 9. Error Handling
-
-### 9.1 Error Codes
-| Code | HTTP Status | Description |
-|------|-------------|-------------|
-| {{CODE_1}} | {{STATUS_1}} | {{DESC_1}} |
-| {{CODE_2}} | {{STATUS_2}} | {{DESC_2}} |
-
-### 9.2 Error Logging
-{{ERROR_LOGGING}}
-
----
-
-## 10. Testing Strategy
-
-### 10.1 Unit Testing
-{{UNIT_TESTING}}
-
-### 10.2 Integration Testing
-{{INTEGRATION_TESTING}}
-
-### 10.3 E2E Testing
-{{E2E_TESTING}}
-
-### 10.4 Performance Testing
-{{PERFORMANCE_TESTING}}
-
-### 10.5 Test Coverage Goals
-- **Backend:** 80%+
-- **Frontend:** 70%+
-- **Critical Paths:** 95%+
-
----
-
-## 11. Deployment Strategy
-
-### 11.1 Environments
-| Environment | Purpose | URL |
-|-------------|---------|-----|
-| Development | Local development | localhost |
-| Staging | Pre-production testing | {{STAGING_URL}} |
-| Production | Live environment | {{PRODUCTION_URL}} |
-
-### 11.2 CI/CD Pipeline
-{{CICD_PIPELINE}}
-
-### 11.3 Deployment Process
-{{DEPLOYMENT_PROCESS}}
-
-### 11.4 Rollback Strategy
-{{ROLLBACK_STRATEGY}}
+**Optimization strategies:**
+- Code splitting
+- Lazy loading
+- Image optimization
+- Database indexes
+- Caching (Redis)
 
 ---
 
 ## 12. Monitoring & Logging
 
-### 12.1 Application Monitoring
-{{APP_MONITORING}}
+{{MONITORING}}
 
-### 12.2 Error Tracking
-{{ERROR_TRACKING}}
-
-### 12.3 Performance Monitoring
-{{PERF_MONITORING}}
-
-### 12.4 Logging Strategy
-{{LOGGING}}
+**Example:**
+- **APM:** Sentry
+- **Logging:** Winston (structured logs)
+- **Metrics:** Custom dashboards
+- **Alerts:** Error rate > 1%, Response time > 1s
 
 ---
 
-## 13. Performance Optimization
+## 13. Development Workflow
 
-### 13.1 Frontend Optimization
-- {{FRONTEND_OPT_1}}
-- {{FRONTEND_OPT_2}}
-- {{FRONTEND_OPT_3}}
+**Standards:**
+- Code quality: See `.claude/rules/code-quality.md`
+- Git conventions: See `.claude/rules/git.md`
+- Testing: See `.project-management/rules/TESTING-RULES.md`
 
-### 13.2 Backend Optimization
-- {{BACKEND_OPT_1}}
-- {{BACKEND_OPT_2}}
-- {{BACKEND_OPT_3}}
-
-### 13.3 Database Optimization
-- {{DB_OPT_1}}
-- {{DB_OPT_2}}
-- {{DB_OPT_3}}
-
-### 13.4 Caching Strategy
-{{CACHING}}
-
----
-
-## 14. Third-Party Integrations
-
-### 14.1 Payment Processing
-{{PAYMENT_INTEGRATION}}
-
-### 14.2 Email Service
-{{EMAIL_INTEGRATION}}
-
-### 14.3 File Storage
-{{STORAGE_INTEGRATION}}
-
-### 14.4 Other Integrations
-{{OTHER_INTEGRATIONS}}
+**Workflow:**
+```
+1. Create branch (feat/*, fix/*, refactor/*)
+2. Implement feature
+3. Write tests (80%+ coverage)
+4. Run linter
+5. Create PR
+6. Code review
+7. Merge to main
+8. Auto-deploy
+```
 
 ---
 
-## 15. Data Management
+## 14. Appendices
 
-### 15.1 Backup Strategy
-{{BACKUP_STRATEGY}}
+### A. Environment Variables
+{{ENV_VARS}}
 
-### 15.2 Data Retention
-{{DATA_RETENTION}}
+**Example:** See [modules/security-auth-deployment.md](modules/security-auth-deployment.md)
 
-### 15.3 GDPR Compliance
-{{GDPR_COMPLIANCE}}
+### B. Third-Party Services
+{{THIRD_PARTY}}
 
----
-
-## 16. Development Guidelines
-
-### 16.1 Code Style
-{{CODE_STYLE}}
-
-### 16.2 Git Workflow
-{{GIT_WORKFLOW}}
-
-### 16.3 Code Review Process
-{{CODE_REVIEW}}
-
-### 16.4 Documentation Standards
-{{DOCUMENTATION}}
-
----
-
-## 17. Technical Debt & Future Improvements
-
-{{TECHNICAL_DEBT}}
-
----
-
-## 18. Open Technical Questions
-
-1. {{TECH_QUESTION_1}}
-2. {{TECH_QUESTION_2}}
-3. {{TECH_QUESTION_3}}
-
----
-
-## 19. Appendix
-
-### 19.1 References
-- {{REFERENCE_1}}
-- {{REFERENCE_2}}
-
-### 19.2 Related Documents
-- [PRD](../output/docs/prd.md)
-- [Architecture Diagram](../output/docs/architecture.md)
-- [API Documentation](../output/docs/api-spec.md)
-
----
-
-## Revision History
-
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | {{DATE}} | {{AUTHOR}} | Initial draft |
+### C. References
+- [Architecture Document](architecture.md)
+- [API Documentation](api-spec.md)
+- [Testing Rules](../rules/TESTING-RULES.md)
 
 ---
 
 **Document Owner:** {{OWNER}}
 **Last Updated:** {{DATE}}
+
+---
+
+## How to Use This Template
+
+1. **Fill all `{{PLACEHOLDERS}}`** with project specifics
+2. **Review shared modules** for standard sections
+3. **Customize** project-specific sections (routing, state management, etc.)
+4. **Keep updated** as architecture evolves
+
+**AI Note:** This template references shared modules for common sections. Fill template-specific sections and reference modules for standard content.

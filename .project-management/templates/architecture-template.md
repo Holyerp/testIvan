@@ -1,18 +1,33 @@
-# System Architecture Document
+# Architecture Document - {{PROJECT_NAME}}
 
-> **IMPORTANT:** This document must be written in **English only**. No exceptions.
-
-**Project Name:** {{PROJECT_NAME}}
 **Version:** 1.0
 **Date:** {{DATE}}
-**Status:** Draft / In Review / Approved
+**Status:** {{STATUS}}
 **Author:** {{AUTHOR}}
+
+---
+
+## Template Modules
+
+This template references shared modules:
+- **[Tech Stack & Architecture](modules/tech-stack-architecture.md)** - High-level architecture, component diagrams
+- **[Database Schema](modules/database-schema.md)** - Data architecture, ERD
+- **[Security & Deployment](modules/security-auth-deployment.md)** - Security architecture
+- **[Design & Performance](modules/design-performance-monitoring.md)** - Performance, monitoring
+
+**For AI:** Use modules for standard sections. Architecture-specific decisions below.
 
 ---
 
 ## 1. Executive Summary
 
-{{EXECUTIVE_SUMMARY}}
+**Project:** {{PROJECT_NAME}}
+**Architecture Style:** {{ARCHITECTURE_STYLE}}
+**Key Technologies:** {{KEY_TECH}}
+
+**Summary:** {{SUMMARY}}
+
+**Example:** {{PROJECT_NAME}} follows a modern 3-tier architecture with React frontend, Node.js/Express backend, and PostgreSQL database, deployed on Railway with automated CI/CD.
 
 ---
 
@@ -21,12 +36,24 @@
 ### 2.1 Architecture Style
 {{ARCHITECTURE_STYLE}}
 
-**Example:** Layered Architecture / Microservices / Monolithic / Event-Driven / etc.
+**Options:**
+- Monolithic
+- Microservices
+- Serverless
+- JAMstack
+- 3-tier (most common)
+
+**Example:** 3-tier architecture with clear separation of concerns (presentation, business logic, data).
 
 ### 2.2 Key Architectural Decisions
-1. {{DECISION_1}}
-2. {{DECISION_2}}
-3. {{DECISION_3}}
+
+| Decision | Choice | Rationale | Trade-offs |
+|----------|--------|-----------|------------|
+| Architecture | {{CHOICE}} | {{RATIONALE}} | {{TRADEOFFS}} |
+| Database | {{CHOICE}} | {{RATIONALE}} | {{TRADEOFFS}} |
+| Deployment | {{CHOICE}} | {{RATIONALE}} | {{TRADEOFFS}} |
+
+**Example:** See [modules/tech-stack-architecture.md](modules/tech-stack-architecture.md) for detailed architecture decisions table.
 
 ---
 
@@ -34,25 +61,18 @@
 
 ### 3.1 System Context Diagram
 
-```
-┌─────────────┐         ┌──────────────────┐         ┌─────────────┐
-│   Users     │────────▶│   Application    │────────▶│  Database   │
-│  (Browser)  │         │   {{APP_NAME}}   │         │             │
-└─────────────┘         └──────────────────┘         └─────────────┘
-                               │
-                               │
-                               ▼
-                        ┌──────────────┐
-                        │   External   │
-                        │   Services   │
-                        └──────────────┘
-```
+**See:** [modules/tech-stack-architecture.md](modules/tech-stack-architecture.md) for high-level architecture diagram.
 
 ### 3.2 External Systems & Integrations
-| System | Purpose | Communication Method |
-|--------|---------|---------------------|
-| {{SYSTEM_1}} | {{PURPOSE_1}} | {{METHOD_1}} |
-| {{SYSTEM_2}} | {{PURPOSE_2}} | {{METHOD_2}} |
+
+| System | Purpose | Integration Method |
+|--------|---------|-------------------|
+| {{SYSTEM}} | {{PURPOSE}} | {{METHOD}} |
+
+**Example:**
+- Stripe: Payment processing (REST API)
+- SendGrid: Email delivery (REST API)
+- S3: File storage (AWS SDK)
 
 ---
 
@@ -60,50 +80,22 @@
 
 ### 4.1 Application Containers
 
-```
-┌────────────────────────────────────────────────────────┐
-│                    Web Browser                          │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │         React Application (SPA)                   │  │
-│  │   - UI Components                                 │  │
-│  │   - State Management                              │  │
-│  │   - Client-side Routing                           │  │
-│  └──────────────────────────────────────────────────┘  │
-└────────────────────────────────────────────────────────┘
-                         │
-                         │ HTTPS/REST
-                         ▼
-┌────────────────────────────────────────────────────────┐
-│                   API Server                            │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │         Node.js / Express                         │  │
-│  │   - RESTful API                                   │  │
-│  │   - Authentication                                │  │
-│  │   - Business Logic                                │  │
-│  └──────────────────────────────────────────────────┘  │
-└────────────────────────────────────────────────────────┘
-                         │
-                         │ SQL/ORM
-                         ▼
-┌────────────────────────────────────────────────────────┐
-│                  Database Server                        │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │         PostgreSQL / MongoDB                      │  │
-│  │   - Persistent Data Storage                       │  │
-│  └──────────────────────────────────────────────────┘  │
-└────────────────────────────────────────────────────────┘
-```
+**Frontend Container:**
+- Technology: {{FRONTEND_TECH}}
+- Responsibilities: {{FRONTEND_RESP}}
+- Communication: HTTPS to backend
 
-### 4.2 Container Responsibilities
+**Backend Container:**
+- Technology: {{BACKEND_TECH}}
+- Responsibilities: {{BACKEND_RESP}}
+- Communication: SQL to database, HTTPS to external APIs
 
-#### Frontend Container
-{{FRONTEND_RESPONSIBILITIES}}
+**Database Container:**
+- Technology: {{DATABASE_TECH}}
+- Responsibilities: Data persistence
+- Communication: SQL queries from backend
 
-#### Backend Container
-{{BACKEND_RESPONSIBILITIES}}
-
-#### Database Container
-{{DATABASE_RESPONSIBILITIES}}
+**See:** [modules/tech-stack-architecture.md](modules/tech-stack-architecture.md) for detailed architecture diagrams.
 
 ---
 
@@ -111,66 +103,17 @@
 
 ### 5.1 Frontend Components
 
-```
-┌─────────────────────────────────────────┐
-│         Application Shell               │
-│  ┌───────────────────────────────────┐  │
-│  │      Navigation / Header          │  │
-│  └───────────────────────────────────┘  │
-│  ┌───────────────────────────────────┐  │
-│  │      Router                       │  │
-│  │   ┌───────────┬──────────────┐   │  │
-│  │   │  Pages    │  Components  │   │  │
-│  │   │           │              │   │  │
-│  │   └───────────┴──────────────┘   │  │
-│  └───────────────────────────────────┘  │
-│  ┌───────────────────────────────────┐  │
-│  │      State Management             │  │
-│  │   (Redux / Zustand / Context)     │  │
-│  └───────────────────────────────────┘  │
-│  ┌───────────────────────────────────┐  │
-│  │      API Service Layer            │  │
-│  └───────────────────────────────────┘  │
-└─────────────────────────────────────────┘
-```
+**See:** [modules/project-structure-api.md](modules/project-structure-api.md) for project structure.
 
-**Key Components:**
-- {{COMPONENT_1}}: {{DESCRIPTION_1}}
-- {{COMPONENT_2}}: {{DESCRIPTION_2}}
-- {{COMPONENT_3}}: {{DESCRIPTION_3}}
+**Key components:**
+{{FRONTEND_COMPONENTS}}
 
 ### 5.2 Backend Components
 
-```
-┌─────────────────────────────────────────┐
-│         Express Application             │
-│  ┌───────────────────────────────────┐  │
-│  │      Middleware Stack             │  │
-│  │   - CORS                          │  │
-│  │   - Auth                          │  │
-│  │   - Validation                    │  │
-│  │   - Error Handler                 │  │
-│  └───────────────────────────────────┘  │
-│  ┌───────────────────────────────────┐  │
-│  │      Routes                       │  │
-│  │   - /api/auth                     │  │
-│  │   - /api/users                    │  │
-│  │   - /api/products                 │  │
-│  └───────────────────────────────────┘  │
-│  ┌───────────────────────────────────┐  │
-│  │      Controllers                  │  │
-│  │   (Request Handlers)              │  │
-│  └───────────────────────────────────┘  │
-│  ┌───────────────────────────────────┐  │
-│  │      Services                     │  │
-│  │   (Business Logic)                │  │
-│  └───────────────────────────────────┘  │
-│  ┌───────────────────────────────────┐  │
-│  │      Models / Data Access         │  │
-│  │   (ORM/ODM)                       │  │
-│  └───────────────────────────────────┘  │
-└─────────────────────────────────────────┘
-```
+**See:** [modules/project-structure-api.md](modules/project-structure-api.md) for backend structure.
+
+**Key services:**
+{{BACKEND_SERVICES}}
 
 ---
 
@@ -178,262 +121,193 @@
 
 ### 6.1 Data Model
 
-{{DATA_MODEL}}
+**See:** [modules/database-schema.md](modules/database-schema.md) for complete ERD and Prisma schema.
 
 ### 6.2 Data Flow Diagram
 
 ```
-User Action
-    │
-    ▼
-UI Component ──────▶ API Service ──────▶ Backend API
-                                              │
-                                              ▼
-                                         Validation
-                                              │
-                                              ▼
-                                        Business Logic
-                                              │
-                                              ▼
-                                         Database
-                                              │
-                                              ▼
-                                         Response
-                                              │
-                                              ▼
-UI Component ◀────── API Service ◀────── Backend API
-    │
-    ▼
-Update UI
+User → Frontend → API → Backend Service → Database
+                                ↓
+                        External Services
 ```
 
+**Detailed flow:** See [modules/tech-stack-architecture.md](modules/tech-stack-architecture.md) for request flow diagram.
+
 ### 6.3 Data Storage Strategy
-{{DATA_STORAGE}}
+
+**Primary storage:** {{PRIMARY_STORAGE}}
+**Caching:** {{CACHING}}
+**File storage:** {{FILE_STORAGE}}
+
+**Example:**
+- Primary: PostgreSQL (relational data)
+- Cache: Redis (sessions, frequently accessed data)
+- Files: S3 (user uploads, static assets)
 
 ### 6.4 Caching Strategy
-{{CACHING_STRATEGY}}
+
+**Levels:**
+1. Browser cache (static assets)
+2. CDN cache (images, CSS, JS)
+3. Application cache (Redis - sessions, product listings)
+4. Database query cache
 
 ---
 
 ## 7. Security Architecture
 
-### 7.1 Authentication Flow
+**See:** [modules/security-auth-deployment.md](modules/security-auth-deployment.md)
 
-```
-1. User submits credentials
-2. Backend validates credentials
-3. Generate JWT token
-4. Return token to client
-5. Client stores token (localStorage/cookie)
-6. Client includes token in Authorization header
-7. Backend validates token on each request
-8. Grant/deny access
-```
-
-### 7.2 Authorization Model
-{{AUTHORIZATION_MODEL}}
-
-### 7.3 Security Layers
-1. **Network Layer:** {{NETWORK_SECURITY}}
-2. **Application Layer:** {{APP_SECURITY}}
-3. **Data Layer:** {{DATA_SECURITY}}
-
-### 7.4 Security Controls
-{{SECURITY_CONTROLS}}
+### Key Security Measures
+- HTTPS only
+- JWT authentication
+- Role-based access control (RBAC)
+- Input validation (Zod)
+- SQL injection prevention (Prisma)
+- XSS protection (React auto-escape)
+- CSRF tokens
+- Rate limiting
 
 ---
 
-## 8. Infrastructure Architecture
+## 8. Integration Architecture
 
-### 8.1 Deployment Architecture
+### 8.1 Third-Party Integrations
 
-```
-┌─────────────────────────────────────────────────┐
-│                   CDN / CloudFlare              │
-└─────────────────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────┐
-│              Load Balancer / Nginx              │
-└─────────────────────────────────────────────────┘
-                         │
-          ┌──────────────┴──────────────┐
-          ▼                             ▼
-┌──────────────────┐          ┌──────────────────┐
-│  App Instance 1  │          │  App Instance 2  │
-│   (Container)    │          │   (Container)    │
-└──────────────────┘          └──────────────────┘
-          │                             │
-          └──────────────┬──────────────┘
-                         ▼
-              ┌─────────────────────┐
-              │   Database Cluster  │
-              │    (Primary/Replica)│
-              └─────────────────────┘
-```
+**See:** [modules/project-structure-api.md](modules/project-structure-api.md) for API design.
 
-### 8.2 Hosting & Infrastructure
-{{HOSTING}}
+**Integrations:**
+{{INTEGRATIONS}}
 
-### 8.3 Scalability Strategy
+### 8.2 API Strategy
+
+**Internal API:**
+- RESTful design
+- JSON request/response
+- JWT authentication
+- Versioning: URL path (`/api/v1/`)
+
+**External APIs:**
+- Service-specific clients
+- Error handling
+- Retry logic
+- Rate limit handling
+
+---
+
+## 9. Deployment Architecture
+
+**See:** [modules/security-auth-deployment.md](modules/security-auth-deployment.md)
+
+**Infrastructure:**
+{{INFRASTRUCTURE}}
+
+**CI/CD Pipeline:**
+1. Push to main
+2. GitHub Actions trigger
+3. Run tests
+4. Build application
+5. Deploy to {{HOSTING}}
+6. Run migrations
+7. Health check
+
+---
+
+## 10. Performance & Scalability
+
+**See:** [modules/design-performance-monitoring.md](modules/design-performance-monitoring.md)
+
+### Performance Targets
+- Page load < 2s
+- API response < 500ms
+- Database query < 100ms
+
+### Scalability Strategy
 {{SCALABILITY}}
 
----
-
-## 9. Integration Architecture
-
-### 9.1 External API Integrations
-
-#### Integration: {{INTEGRATION_1}}
-- **Purpose:** {{PURPOSE}}
-- **Protocol:** REST / GraphQL / SOAP
-- **Authentication:** {{AUTH_METHOD}}
-- **Rate Limits:** {{RATE_LIMITS}}
-- **Error Handling:** {{ERROR_HANDLING}}
-
-#### Integration: {{INTEGRATION_2}}
-{{INTEGRATION_2_DETAILS}}
-
-### 9.2 Webhook Architecture
-{{WEBHOOKS}}
+**Example:**
+- Horizontal scaling: Multiple backend instances
+- Database: Read replicas for scaling reads
+- Caching: Redis cluster
+- CDN: CloudFlare for static assets
 
 ---
 
-## 10. Performance Architecture
+## 11. Monitoring & Observability
 
-### 10.1 Performance Requirements
-| Metric | Target | Current |
-|--------|--------|---------|
-| Page Load Time | < 2s | TBD |
-| API Response Time (p95) | < 500ms | TBD |
-| Database Query Time (p95) | < 100ms | TBD |
-| Concurrent Users | {{TARGET}} | TBD |
+**See:** [modules/design-performance-monitoring.md](modules/design-performance-monitoring.md)
 
-### 10.2 Performance Optimization Strategies
-{{PERFORMANCE_OPTIMIZATIONS}}
-
-### 10.3 Load Balancing
-{{LOAD_BALANCING}}
+**Stack:**
+- APM: Sentry
+- Logging: Winston
+- Metrics: Custom dashboards
+- Uptime: UptimeRobot
 
 ---
 
-## 11. Resilience & Reliability
+## 12. Disaster Recovery
 
-### 11.1 Fault Tolerance
-{{FAULT_TOLERANCE}}
+### 12.1 Backup Strategy
+{{BACKUP_STRATEGY}}
 
-### 11.2 Disaster Recovery
-- **RPO (Recovery Point Objective):** {{RPO}}
-- **RTO (Recovery Time Objective):** {{RTO}}
-- **Backup Strategy:** {{BACKUP}}
-- **Restore Process:** {{RESTORE}}
+**Example:**
+- Database: Daily automated backups (7-day retention)
+- File storage: S3 versioning enabled
+- Code: Git repository (multiple remotes)
 
-### 11.3 Circuit Breakers
-{{CIRCUIT_BREAKERS}}
+### 12.2 Recovery Procedures
+{{RECOVERY_PROCEDURES}}
 
----
-
-## 12. Monitoring & Observability
-
-### 12.1 Monitoring Strategy
-
-```
-Application ──▶ Logs ──▶ Log Aggregator ──▶ Alerts
-            ──▶ Metrics ──▶ Monitoring Tool ──▶ Dashboards
-            ──▶ Traces ──▶ APM Tool ──▶ Performance Insights
-```
-
-### 12.2 Key Metrics
-{{KEY_METRICS}}
-
-### 12.3 Alerting Rules
-{{ALERTING}}
+**Example:**
+1. Database restore from backup (<30 min RTO)
+2. Redeploy application from git
+3. Verify data integrity
+4. Resume operations
 
 ---
 
-## 13. DevOps & CI/CD
+## 13. Technical Debt & Future Considerations
 
-### 13.1 CI/CD Pipeline
+### 13.1 Known Technical Debt
+{{TECHNICAL_DEBT}}
 
-```
-Code Commit ──▶ Run Tests ──▶ Build ──▶ Deploy to Staging ──▶ E2E Tests ──▶ Deploy to Production
-                    │
-                    └──▶ Linting, Type Checking, Security Scan
-```
+### 13.2 Future Improvements
+{{FUTURE_IMPROVEMENTS}}
 
-### 13.2 Deployment Strategy
-{{DEPLOYMENT_STRATEGY}}
-
-### 13.3 Environment Strategy
-{{ENVIRONMENT_STRATEGY}}
+**Example:**
+- Microservices migration (if scale requires)
+- GraphQL API (if client needs change)
+- Real-time features (WebSockets)
+- Mobile native apps
 
 ---
 
-## 14. Technology Decisions & Rationale
+## 14. Appendices
 
-### 14.1 Frontend Technology Choices
-| Technology | Rationale |
-|------------|-----------|
-| {{TECH_1}} | {{RATIONALE_1}} |
-| {{TECH_2}} | {{RATIONALE_2}} |
+### A. Architecture Decision Records (ADRs)
+{{ADRS}}
 
-### 14.2 Backend Technology Choices
-| Technology | Rationale |
-|------------|-----------|
-| {{TECH_1}} | {{RATIONALE_1}} |
-| {{TECH_2}} | {{RATIONALE_2}} |
+### B. Glossary
+{{GLOSSARY}}
 
-### 14.3 Database Technology Choice
-{{DATABASE_RATIONALE}}
-
----
-
-## 15. Architecture Trade-offs
-
-### 15.1 Key Trade-offs Made
-{{TRADEOFFS}}
-
-### 15.2 Alternative Approaches Considered
-{{ALTERNATIVES}}
-
----
-
-## 16. Architecture Risks
-
-| Risk | Impact | Mitigation |
-|------|--------|-----------|
-| {{RISK_1}} | {{IMPACT_1}} | {{MITIGATION_1}} |
-| {{RISK_2}} | {{IMPACT_2}} | {{MITIGATION_2}} |
-
----
-
-## 17. Future Architecture Considerations
-
-{{FUTURE_CONSIDERATIONS}}
-
----
-
-## 18. Appendix
-
-### 18.1 Glossary
-| Term | Definition |
-|------|------------|
-| {{TERM_1}} | {{DEFINITION_1}} |
-| {{TERM_2}} | {{DEFINITION_2}} |
-
-### 18.2 References
-- {{REFERENCE_1}}
-- {{REFERENCE_2}}
-
----
-
-## Revision History
-
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | {{DATE}} | {{AUTHOR}} | Initial architecture document |
+### C. References
+- [Technical Specification](technical-spec.md)
+- [Database Schema](../templates/modules/database-schema.md)
+- [System Overview](../SYSTEM-OVERVIEW.md)
 
 ---
 
 **Document Owner:** {{OWNER}}
 **Last Updated:** {{DATE}}
+
+---
+
+## How to Use This Template
+
+1. **Fill `{{PLACEHOLDERS}}`** with project-specific information
+2. **Reference shared modules** for standard architecture patterns
+3. **Customize** integration and deployment sections
+4. **Update** as architecture evolves
+5. **Document decisions** in ADRs section
+
+**AI Note:** This template references shared modules for common architecture patterns. Focus on project-specific architectural decisions and integration strategies.

@@ -75,16 +75,6 @@ Claude automatically reads files **in this priority order:**
 │                                                                  │
 │  .project-management/rules/project-rules.md (overrides)        │
 └────────────────────────────────────────────────────────────────┘
-                              ↓
-┌────────────────────────────────────────────────────────────────┐
-│                    DOCUMENTATION LEVEL                          │
-│  .project-management/output/docs/                              │
-│    ├─ prd.md              ← Generated: Product requirements    │
-│    ├─ technical-spec.md   ← Generated: API specs, architecture │
-│    └─ architecture.md     ← Generated: System design           │
-│                                                                  │
-│  Commands: /generate-docs (regenerates from input files)       │
-└────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -101,10 +91,8 @@ Claude automatically reads files **in this priority order:**
 2. User runs: /init-project
 3. Claude reads: ALL input files
 4. Claude generates:
-   - output/docs/prd.md
-   - output/docs/technical-spec.md
-   - output/docs/architecture.md
-   - output/phases/phase-1.md (through phase-4.md)
+   - output/docs/prd.md, technical-spec.md, architecture.md
+   - output/phases/phase-1.md through phase-4.md
 5. Claude initializes: output/progress/*.md
 ```
 
@@ -125,20 +113,15 @@ Claude automatically reads files **in this priority order:**
 2. Claude reads: output/docs/technical-spec.md (API specs, DB schema)
 3. Claude reads: .CLAUDE.MD (coding standards)
 4. Claude uses: TodoWrite to break down US-005
-   ├─ Create Product model
-   ├─ Create POST /api/products endpoint
-   ├─ Create product form UI
-   ├─ Write unit tests
-   └─ Write integration tests
 5. Claude implements: Following .CLAUDE.MD standards
 6. Progress tracked: Automatically during /execute-work
 ```
 
 **What Claude reads:**
-- ✅ Current phase file (for user story details)
-- ✅ Technical spec (for implementation details)
-- ✅ .CLAUDE.MD (for coding standards)
-- ✅ Backlog (for acceptance criteria)
+- ✅ Current phase file (user story details)
+- ✅ Technical spec (implementation details)
+- ✅ .CLAUDE.MD (coding standards)
+- ✅ Backlog (acceptance criteria)
 - ❌ NOT scope.md (already translated to phase)
 
 ---
@@ -149,66 +132,27 @@ Claude automatically reads files **in this priority order:**
 
 **Claude's Process:**
 ```
-1. User runs: /execute-work phase 2
-2. Claude automatically plans Phase 2:
-   - input/backlog.md (available features for Core Features)
+1. Claude analyzes:
+   - input/backlog.md (available features)
    - output/progress/current-status.md (what's done)
-   - input/constraints.md (project timeline)
-   - output/phases/phase-1.md (previous phase velocity)
-3. Claude analyzes:
-   - Remaining P0/P1 features for Core Features milestone
-   - Overall velocity from Phase 1
-   - Dependencies
-4. Claude generates: output/phases/phase-2.md
-5. Claude executes: Work items in Phase 2
-6. Claude tracks: Progress automatically during execution
+   - output/phases/phase-1.md (previous velocity)
+2. Claude generates: output/phases/phase-2.md
+3. Claude executes: Work items in Phase 2
+4. Progress tracked: Automatically
 ```
-
-**What Claude reads:**
-- ✅ Backlog (what's available)
-- ✅ Constraints (timeline)
-- ✅ Previous phase (velocity)
-- ✅ Progress status
-- ✅ .CLAUDE.MD (for implementation during execution)
 
 ---
 
 ### Scenario 4: Updating Progress
 
-**User:** "/update-progress" (manual update, v3.0 tracks automatically)
-
-**Claude's Process:**
-```
-1. Claude asks: "What did you complete?"
-2. User responds: "Completed US-005 and US-006"
-3. Claude reads:
-   - output/phases/phase-N.md (current phase)
-   - output/progress/current-status.md
-   - output/progress/completed.md
-4. Claude updates:
-   - Marks US-005, US-006 as done in phase file
-   - Adds entries to completed.md
-   - Recalculates metrics in current-status.md
-   - Updates phase completion percentage
-5. Claude reports: Progress summary
-
-Note: In v3.0, progress is tracked automatically during /execute-work.
-This command is mainly for manual adjustments.
-```
-
-**What Claude reads:**
-- ✅ Current phase file
-- ✅ Progress files
-- ❌ NOT .CLAUDE.MD (not coding, just tracking)
-- ❌ NOT backlog (phase is already planned)
+**Note:** In v3.0, progress is tracked automatically during `/execute-work`.
+Use `/update-progress` only for manual adjustments.
 
 ---
 
 ## ⚠️ Conflict Resolution Rules
 
-### What if files conflict?
-
-**Priority (highest to lowest):**
+### Priority (highest to lowest):
 
 1. **`input/scope.md` and `input/backlog.md`**
    - **Source of truth** for WHAT to build
@@ -303,47 +247,34 @@ Is this documentation update? (keywords: "regenerate docs", "update docs")
 
 1. **User provides external documents (PDF, Word, images)?**
    → Use `/process-client-docs` first
-   → Read: [how-to-use/process-client-docs.md](../.claude/commands/how-to-use/process-client-docs.md) (~120 lines)
-   → Then proceed to other commands
 
 2. **Project not initialized yet?**
-   → Use `/init-project`
-   → Read: [how-to-use/start-project.md](../.claude/commands/how-to-use/start-project.md) (~120 lines)
-   → This is a one-time setup
+   → Use `/init-project` (one-time setup)
 
 3. **User wants to add/change scope (story, epic, phase)?**
    → Use `/add-scope add [type]` or `/add-scope edit [type]`
-   → Read: [how-to-use/add-requirement.md](../.claude/commands/how-to-use/add-requirement.md) (~150 lines)
    → For current phases (1-4) only
 
 4. **User wants to add requirement for future version (2.0, 3.0)?**
    → Use `/add-backlog-requirement story|epic`
-   → Read: [how-to-use/add-backlog-requirement.md](../.claude/commands/how-to-use/add-backlog-requirement.md) (~120 lines)
    → For post-launch features, not current phases
 
 5. **User wants to track a bug?**
    → Use `/add-bug`
-   → Read: [how-to-use/add-bug.md](../.claude/commands/how-to-use/add-bug.md) (~120 lines)
-   → Bugs tracked separately from features
 
 6. **User wants to implement work (phase, epic, story)?**
    → Use `/execute-work [scope]` (supports: phase N, epic X, story US-XXX, bug BUG-XXX)
-   → Read: [how-to-use/execute-phase.md](../.claude/commands/how-to-use/execute-phase.md) (~150 lines)
 
 7. **User wants status update?**
    → Use `/project-status`
-   → Read: [how-to-use/check-status.md](../.claude/commands/how-to-use/check-status.md) (~80 lines)
-   → Now includes bug metrics
 
 8. **User wants to update docs?**
    → Use `/generate-docs`
-   → Read: [how-to-use/generate-documentation.md](../.claude/commands/how-to-use/generate-documentation.md) (~100 lines)
 
 **Token efficiency:**
 - Quick guides: 80-150 lines
 - Full command docs: 200-450 lines
 - **Always read quick guide first** for 60-70% token savings
-- Read full docs only if quick guide insufficient
 
 ---
 
@@ -352,23 +283,18 @@ Is this documentation update? (keywords: "regenerate docs", "update docs")
 ### TodoWrite
 **When:** Implementing a single feature or user story
 **Scope:** Task-level (hours to days)
-**Example:** Breaking down US-005 into 5 implementation tasks
 
 ### /execute-work phase N
 **When:** Starting or continuing work in a phase
 **Scope:** Phase-level (1-4 months)
-**Example:** Automated planning and execution of Phase 1 (Foundation)
-**Note:** Replaces old /plan-sprint command with automated workflow
 
 ### /update-progress
 **When:** Manual progress updates (mostly automated in v3.0)
 **Scope:** Progress tracking
-**Example:** Manually marking US-005 as complete if not using /execute-work
 
 ### /project-status
 **When:** Need overall project health
 **Scope:** Project-level
-**Example:** Status check across all phases for stakeholders
 
 ---
 
@@ -388,11 +314,6 @@ Before Claude acts, verify:
 - [ ] Read `.CLAUDE.MD` for coding standards
 - [ ] Use TodoWrite to track implementation tasks
 - [ ] Progress tracked automatically
-
-**For Progress Updates:**
-- [ ] Read current phase file
-- [ ] Read progress files
-- [ ] Update metrics accurately (or use automated tracking)
 
 **For Documentation:**
 - [ ] Read all input files
@@ -435,7 +356,7 @@ Before Claude acts, verify:
 ---
 
 **Related Files:**
-- [Main README](.project-management/README.md) - Complete system guide
+- [Main README](README.md) - Complete system guide
 - [.CLAUDE.MD](../.CLAUDE.MD) - Coding standards
 - [Project Rules](rules/project-rules.md) - Project-specific overrides
 
