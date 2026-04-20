@@ -114,7 +114,7 @@ All extracted requirements and generated files must follow:
 
 ### STEP 3: Generate Input Files
 
-**Generate or update 4 input files:**
+**Generate or update input files:**
 
 #### 1. `scope.md` - Project Scope
 - Project name and vision
@@ -125,13 +125,74 @@ All extracted requirements and generated files must follow:
 - Stakeholders
 - Dependencies, assumptions, risks
 
-#### 2. `backlog.md` - Product Backlog
-- Organize by Epics
-- Write user stories (As a... I want... So that...)
-- Add acceptance criteria
-- Assign priorities (P0/P1/P2/P3)
-- Estimate story points
-- Identify dependencies
+#### 2. `backlog/` - Modular Product Backlog (AUTOMATIC)
+
+**🎯 CRITICAL: Generate modular structure directly (per documentation.md rules)**
+
+**Step 2.1: Analyze extracted stories**
+- Count total epics and stories
+- Identify priorities (P0/P1/P2/P3)
+- Group by feature areas and dependencies
+- Estimate complexity
+
+**Step 2.2: Categorize into phases**
+
+Use this logic to assign stories to phases:
+
+- **Phase 1 (Foundation):** Infrastructure, authentication, database setup, core API (P0 only)
+- **Phase 2 (Core):** Main features, critical user flows (P0/P1)
+- **Phase 3 (Advanced):** Secondary features, enhancements (P1/P2)
+- **Phase 4 (Polish):** Testing, deployment, bug fixes, optimizations
+- **Future:** Post-launch features, v2.0 enhancements (P3 or "Future" marked)
+
+**Step 2.3: Generate modular files**
+
+Create `.project-management/input/backlog/` directory with:
+
+1. **`README.md`** (< 200 lines) - Master index
+   - Summary statistics (total epics, stories, points)
+   - Links to all phase files
+   - Epic overview
+   - Quick navigation
+
+2. **`phase-1-foundation.md`** (< 200 lines)
+   - Foundation & infrastructure stories
+   - Authentication/authorization
+   - Database setup
+   - Core API endpoints
+
+3. **`phase-2-core.md`** (< 200 lines)
+   - Main feature epics
+   - Critical user flows
+   - Core business logic
+
+4. **`phase-3-advanced.md`** (< 200 lines)
+   - Secondary features
+   - Enhancements
+   - Advanced functionality
+
+5. **`phase-4-polish.md`** (< 200 lines)
+   - Testing tasks
+   - Deployment setup
+   - Bug fixes
+   - Performance optimization
+
+6. **`future.md`** (< 200 lines)
+   - Post-launch features
+   - v2.0+ requirements
+   - Nice-to-have enhancements
+
+**⚠️ FILE SIZE ENFORCEMENT (STRICT):**
+- Each phase file **MUST BE < 200 lines** (per `.claude/rules/documentation.md`)
+- If phase exceeds 200 lines, split into sub-phases:
+  - Example: `phase-2a-core-features.md`, `phase-2b-integrations.md`
+- README.md **MUST BE < 200 lines** (summary and links only)
+- Target: 150-180 lines per file (optimal)
+
+**Template Format:**
+Use templates from `.project-management/templates/`:
+- `phase-backlog-template.md` - For phase files
+- `backlog-readme-template.md` - For README.md
 
 #### 3. `technologies.md` - Tech Stack
 - Extract mentioned technologies
@@ -188,7 +249,13 @@ Constraints:
 
 📝 FILES GENERATED/UPDATED:
 ✅ .project-management/input/scope.md
-✅ .project-management/input/backlog.md
+✅ .project-management/input/backlog/ (MODULAR STRUCTURE)
+   ├─ README.md ({{lines}} lines)
+   ├─ phase-1-foundation.md ({{lines}} lines)
+   ├─ phase-2-core.md ({{lines}} lines)
+   ├─ phase-3-advanced.md ({{lines}} lines)
+   ├─ phase-4-polish.md ({{lines}} lines)
+   └─ future.md ({{lines}} lines)
 ✅ .project-management/input/technologies.md
 ✅ .project-management/input/constraints.md
 
@@ -199,8 +266,12 @@ Constraints:
 
 🎯 NEXT STEPS:
 1. Review generated files for accuracy
-2. Clarify ambiguous items with client
-3. Run /init-project to generate documentation
+2. Verify all phase files are < 200 lines
+3. Clarify ambiguous items with client
+4. Run /init-project to generate documentation
+
+💡 NOTE: Modular backlog structure generated automatically!
+   No need to run /migrate-to-modular (deprecated)
 ```
 
 ---
@@ -236,8 +307,11 @@ Constraints:
 
 **Before finishing:**
 - [ ] All documents read and processed
-- [ ] All 4 input files generated/updated
-- [ ] Epics and stories well-organized
+- [ ] All input files generated/updated (scope, backlog/, technologies, constraints)
+- [ ] Backlog is modular (directory structure, not single file)
+- [ ] Each phase file is < 200 lines (STRICT requirement)
+- [ ] README.md is < 200 lines
+- [ ] Epics and stories well-organized by phase
 - [ ] Priorities assigned logically
 - [ ] Constraints documented
 - [ ] Ambiguities flagged for clarification
