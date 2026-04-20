@@ -5,7 +5,17 @@ description: Migrate existing project from monolithic files to modular structure
 
 # Migrate to Modular Structure
 
-**Use when:** Upgrading existing project to new modular file organization
+⚠️ **DEPRECATED: This command is no longer needed for new projects.**
+
+**For new projects:** Use `/process-client-docs` which now generates modular structure directly.
+
+**Use this command ONLY when:**
+- Migrating existing/legacy projects with monolithic `backlog.md`
+- Converting old project structure to new modular format
+
+**For new projects, use:** `/process-client-docs` → generates modular backlog automatically ✅
+
+---
 
 **What it does:**
 - Splits large `backlog.md` into phase-specific files
