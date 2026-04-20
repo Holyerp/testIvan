@@ -8,11 +8,12 @@ This folder contains **project-specific rules** that extend the core `.CLAUDE.MD
 
 ```
 .project-management/rules/
-├── README.md              # This file
-├── project-rules.md       # MANDATORY - Core project conventions (153 lines)
-├── I18N-RULES.md         # CONDITIONAL - Internationalization rules (412 lines)
-├── I18N-SETUP.md         # GUIDE - How to setup i18n
-└── TESTING-RULES.md      # CONDITIONAL - Project-specific testing (397 lines)
+├── README.md                  # This file
+├── project-rules.md           # MANDATORY - Core project conventions (153 lines)
+├── DOCUMENTATION-RULES.md     # MANDATORY - Documentation standards (English-only, file sizes)
+├── I18N-RULES.md             # CONDITIONAL - Internationalization rules (412 lines)
+├── I18N-SETUP.md             # GUIDE - How to setup i18n
+└── TESTING-RULES.md          # CONDITIONAL - Project-specific testing (397 lines)
 ```
 
 ---
@@ -33,6 +34,20 @@ This folder contains **project-specific rules** that extend the core `.CLAUDE.MD
 
 ✅ **Always read:** This file is part of the core document hierarchy
 📏 **Size:** 153 lines (under 200-line target)
+
+---
+
+**`DOCUMENTATION-RULES.md`** - Documentation standards
+- **Language:** English only (MANDATORY)
+- **File size limits:** < 200 lines for backlogs (STRICT)
+- Writing style and formatting guidelines
+- Code comment standards
+- Commit message format
+- API documentation requirements
+- Quality checklist
+
+✅ **Always read:** This enforces documentation quality across the project
+📏 **Size:** ~400 lines (comprehensive reference guide)
 
 ---
 
@@ -155,7 +170,9 @@ Claude checks:
 | `database.md` | 139 | ✅ Under 200 |
 | `stack-specific.md` | 166 | ✅ Under 200 |
 | `project-rules.md` | 153 | ✅ Under 200 |
-| **Total** | **1,028** | ✅ All under 200 |
+| `DOCUMENTATION-RULES.md` | ~400 | ℹ️ Reference guide |
+| **Total (core)** | **1,028** | ✅ All under 200 |
+| **Total (with docs guide)** | **~1,428** | ✅ Complete |
 
 ### CONDITIONAL Files (read only when enabled)
 
