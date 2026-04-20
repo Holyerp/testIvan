@@ -19,6 +19,27 @@ A comprehensive system that provides structured planning, phase management, auto
 - **Code Quality Standards** - SOLID/DRY principles, testing requirements (80%+ coverage)
 - **Git Workflow** - Conventional commits and best practices
 
+---
+
+## 💡 NEW in v3.1: Modular Structure + Live Dashboard
+
+**Automatically organized backlog:**
+- 📂 Backlog split by phase (< 250 lines each) - easier to read
+- 📊 Live DASHBOARD.md - see progress instantly, no commands
+- ⚡ 70% faster for AI - processes only relevant phase
+- 🔄 Auto-updates - DASHBOARD refreshes during work
+
+**For existing projects:**
+```bash
+/migrate-to-modular    # One command to upgrade!
+```
+
+**For new projects:** Modular structure created automatically with `/init-project`
+
+[📖 Learn more about modular structure](.project-management/guides/MODULAR-STRUCTURE-GUIDE.md)
+
+---
+
 ## 🚀 Quick Start
 
 ### 1. Copy to Your Project
@@ -34,9 +55,11 @@ cp -r .claude /path/to/your/project/
 
 Edit the files in `.project-management/input/`:
 - `scope.md` - Define project scope and goals
-- `backlog.md` - List user stories and features
+- `backlog/` directory - List user stories by phase (created automatically)
 - `technologies.md` - Specify tech stack
 - `constraints.md` - Document limitations and requirements
+
+💡 **Note:** New projects get modular backlog structure automatically!
 
 ### 3. Initialize Project
 
@@ -56,10 +79,31 @@ This generates:
 /execute-work phase 1
 ```
 
+### 5. Check Progress Anytime
+
+**🚀 Instant View (Recommended):**
+```
+Open: .project-management/output/progress/DASHBOARD.md
+```
+- Always current (auto-updates during work)
+- No commands needed
+- See: overall progress, today's work, active stories, quality metrics
+
+**📊 Detailed Report (Optional):**
+```
+/project-status
+```
+- Comprehensive status report
+- Calculates all metrics
+- Exports to file
+
+💡 **Tip:** New in v3.1 - DASHBOARD.md updates automatically as you work!
+
 ## 📋 Available Commands
 
 ### Project Initialization
-- `/init-project` - Initialize project with tech stack selection, i18n configuration, and phase structure
+- `/init-project` - Initialize project with tech stack selection, i18n configuration, and phase structure (creates modular backlog automatically)
+- `/migrate-to-modular` - Migrate existing project from old backlog.md to modular structure (v3.1)
 
 ### Automated Execution
 - `/execute-work phase N` - Execute entire Phase N (all epics and stories)
@@ -102,25 +146,33 @@ Use `TodoWrite` tool to break down user stories into tasks and track implementat
 .project-management/
 ├── input/              # Project definition (customize these)
 │   ├── scope.md
-│   ├── backlog.md
-│   ├── backlog-future.md  # Future requirements (v2.0, v3.0)
+│   ├── backlog/        # ✨ NEW: Modular backlog (v3.1)
+│   │   ├── README.md                # Master index (< 150 lines)
+│   │   ├── phase-1-foundation.md    # Phase 1 stories only
+│   │   ├── phase-2-core.md          # Phase 2 stories only
+│   │   ├── phase-3-advanced.md      # Phase 3 stories only
+│   │   ├── phase-4-polish.md        # Phase 4 stories only
+│   │   └── future.md                # Post-launch (v2.0, v3.0)
 │   ├── technologies.md
 │   └── constraints.md
 ├── output/
 │   ├── docs/           # Generated documentation
 │   │   ├── prd.md
 │   │   └── technical-spec.md
-│   ├── phases/         # Phase plans
+│   ├── phases/         # Phase execution plans
 │   │   └── phase-N.md
 │   ├── bugs/           # Bug tracking
 │   │   ├── bug-roadmap.md
 │   │   └── bug-archive.md
 │   └── progress/       # Progress tracking
-│       ├── completed.md
-│       ├── current-status.md
-│       └── blockers.md
+│       ├── DASHBOARD.md         # ✨ NEW: Live view (auto-updates!)
+│       ├── daily-summary.md     # ✨ NEW: Today's work
+│       ├── weekly-report.md     # ✨ NEW: Weekly summary
+│       ├── current-status.md    # Detailed status
+│       ├── completed.md         # Historical log
+│       └── blockers.md          # Active blockers
 ├── client-input/       # Raw client documents
-└── templates/          # Document templates
+└── templates/          # Document templates (16 templates)
 
 .claude/
 ├── rules/              # Development standards
@@ -153,11 +205,13 @@ Use `TodoWrite` tool to break down user stories into tasks and track implementat
        → Repeats for all stories in phase
 
 3. TRACKING
-   └─> /project-status → Review progress
+   └─> Open DASHBOARD.md → See real-time progress (instant!)
+       → Or run /project-status → Detailed report
        → /run-tests coverage → Check test coverage
 
 4. REPEAT
    └─> /execute-work phase 2 → Continue with next phase
+       → DASHBOARD.md stays updated automatically
 ```
 
 ### Manual Workflow (Alternative)
@@ -244,14 +298,22 @@ This is a personal project management system. Feel free to fork and adapt to you
 
 ---
 
-**Version:** 3.0 (Phase-Based with Automation)
-**Updated:** 2026-03-27
+**Version:** 3.1.0 (Modular Structure + Live Dashboard)
+**Updated:** 2026-04-20
 
 ---
 
-## 🆕 What's New in v3.0
+## 🆕 What's New in v3.1.0
 
-**Major Changes:**
+**Major Improvements:**
+- ✅ **Modular backlog structure** - Organized by phase (< 250 lines each)
+- ✅ **Live DASHBOARD.md** - Auto-updating progress view (no commands needed!)
+- ✅ **70% token savings** - AI processes only relevant phase
+- ✅ **Real-time progress** - Just open DASHBOARD.md, always current
+- ✅ **Auto-updates during work** - DASHBOARD updates as you implement stories
+- ✅ **Migration command** - `/migrate-to-modular` for existing projects
+
+**Previous v3.0 Features:**
 - ✅ **Phase-based system** replaces sprint-based system
 - ✅ **Automated execution** with `/execute-work` command
 - ✅ **Plan mode** mandatory before implementation

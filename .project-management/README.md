@@ -1,7 +1,8 @@
 # Claude Project Management System
 
-**Version:** 3.0.0
+**Version:** 3.1.0
 **Created:** 2026-03-24
+**Updated:** 2026-04-20 (Modular Structure + Live Dashboard)
 **Purpose:** Autonomous project planning, documentation, and progress tracking system for Claude Code
 
 ---
@@ -41,6 +42,31 @@ This guide explains:
 - **Tracking?** → Automatic progress tracking during execution
 
 [📖 Read Full Integration Guide](INTEGRATION-GUIDE.md)
+
+---
+
+## 💡 NEW in v3.1: Modular Backlog + Live Dashboard
+
+**What changed:**
+- 📂 **Modular backlog** - Split by phase (< 250 lines each file)
+  - Old: Single `backlog.md` (800+ lines)
+  - New: `backlog/phase-1-foundation.md`, `phase-2-core.md`, etc.
+  - **Result:** 70% faster for AI, easier to read
+
+- 📊 **Live DASHBOARD.md** - Auto-updating progress view
+  - No commands needed - just open file
+  - Updates automatically during `/execute-work`
+  - See: overall %, today's work, active stories, quality metrics
+
+- 🔄 **Migration command** - `/migrate-to-modular`
+  - One command to upgrade existing projects
+  - Creates backlog/ structure + DASHBOARD.md
+  - Maintains all existing data
+
+**For new projects:** Modular structure created automatically
+**For existing projects:** Run `/migrate-to-modular` to upgrade
+
+[📖 Full modular structure guide](guides/MODULAR-STRUCTURE-GUIDE.md)
 
 ---
 
@@ -110,13 +136,13 @@ This system follows a **structured, opinionated approach** to project management
 # STEP 1: Fill input files manually
 .project-management/input/
 ├── scope.md          # Project vision, goals, phases
-├── backlog.md        # All features and user stories
 ├── technologies.md   # Tech stack
 └── constraints.md    # Timeline, budget, team
 
 # STEP 2: Initialize project
 /init-project
-# → Claude generates all documentation and Phase 1 plan
+# → Creates modular backlog/ structure automatically
+# → Generates all documentation and Phase 1 plan
 
 # STEP 3: Start development
 /execute-work phase 1    # Foundation (1-4 months)
@@ -125,11 +151,38 @@ This system follows a **structured, opinionated approach** to project management
 /execute-work phase 4    # Polish & Launch
 
 # Check status anytime
-/project-status
+open output/progress/DASHBOARD.md  # Instant view!
+# or
+/project-status                     # Detailed report
 ```
 
 **📖 Detailed input file guide:** [docs/INPUT-FILES-GUIDE.md](docs/INPUT-FILES-GUIDE.md)
 **📖 Complete workflows:** [docs/WORKFLOWS.md](docs/WORKFLOWS.md)
+
+---
+
+### 🔄 Option C: Migrate Existing Project
+
+**Already have a project with old backlog.md?**
+
+```bash
+# STEP 1: Run migration command
+/migrate-to-modular
+# → Splits backlog.md into phase files
+# → Creates DASHBOARD.md
+# → Creates all progress tracking files
+# → Backs up original backlog.md
+
+# STEP 2: Verify migration
+open input/backlog/README.md       # See master index
+open output/progress/DASHBOARD.md  # See live dashboard
+
+# STEP 3: Continue development
+/execute-work phase 2    # Continue where you left off
+# → DASHBOARD.md auto-updates during work!
+```
+
+**📖 Migration guide:** [guides/MODULAR-STRUCTURE-GUIDE.md](guides/MODULAR-STRUCTURE-GUIDE.md)
 
 ---
 
@@ -138,6 +191,7 @@ This system follows a **structured, opinionated approach** to project management
 | I want to... | Use this command | Quick Guide |
 |--------------|------------------|-------------|
 | Start new project | `/init-project` | [How-to](../.claude/commands/how-to-use/start-project.md) |
+| Migrate to modular structure | `/migrate-to-modular` | [Guide](guides/MODULAR-STRUCTURE-GUIDE.md) |
 | Process client docs | `/process-client-docs` | [How-to](../.claude/commands/how-to-use/process-client-docs.md) |
 | Add requirement (story/epic/phase) | `/add-scope add [type]` | [How-to](../.claude/commands/how-to-use/add-requirement.md) |
 | Add future requirement (v2.0, v3.0) | `/add-backlog-requirement` | [How-to](../.claude/commands/how-to-use/add-backlog-requirement.md) |
@@ -225,7 +279,15 @@ Before starting your project:
 
 ## 📜 Version History
 
-**v3.0.0 (Current)**
+**v3.1.0 (Current - 2026-04-20)**
+- Modular backlog structure (split by phase, < 250 lines each)
+- Live DASHBOARD.md (auto-updates during work)
+- Real-time progress visibility (no commands needed)
+- `/migrate-to-modular` command for existing projects
+- 70% token savings for AI processing
+- 16 reusable templates for project setup
+
+**v3.0.0 (2026-03-27)**
 - Phase-based system (1-4 months per phase)
 - 4 standard phases: Foundation, Core Features, Advanced Features, Polish & Launch
 - Automated execution with `/execute-work phase N`

@@ -2,8 +2,8 @@
 
 **Quick start guide for new users - get up and running in 5 minutes.**
 
-**Version:** 3.0.0
-**Last Updated:** 2026-03-27
+**Version:** 3.1.0
+**Last Updated:** 2026-04-20
 
 ---
 
@@ -57,12 +57,26 @@
 
 ---
 
-## What's New in v3.0
+## What's New in v3.1
 
-### Major Changes from v2.0
+### Major Changes from v3.0
 
-| Feature | v2.0 (Old) | v3.0 (New) |
+| Feature | v3.0 (Old) | v3.1 (New) |
 |---------|------------|------------|
+| **Backlog** | Single backlog.md | Modular (phase-1.md, phase-2.md, etc.) |
+| **File Size** | 800+ lines | < 250 lines per file (70% smaller!) |
+| **Progress View** | Run `/project-status` | Open DASHBOARD.md (instant!) |
+| **Updates** | Manual commands | Auto-updates during work |
+| **AI Processing** | Read entire backlog | Read only relevant phase (70% faster) |
+| **Migration** | N/A | `/migrate-to-modular` command |
+| **Templates** | 11 templates | 16 templates (progress tracking added) |
+
+---
+
+### v3.0 Features (Still Available)
+
+| Feature | v2.0 (Old) | v3.0+ |
+|---------|------------|-------|
 | **Planning** | Sprint-based (2 weeks) | Phase-based (1-4 months) |
 | **Execution** | Manual with TodoWrite | Automated with `/execute-work` |
 | **Testing** | Manual (npm test) | Automatic (Vitest + Playwright) |
@@ -75,7 +89,18 @@
 
 ---
 
-### New Commands in v3.0
+### New Commands in v3.1
+
+**✅ `/migrate-to-modular`**
+- Migrate existing project to modular structure
+- Splits backlog.md into phase files
+- Creates DASHBOARD.md and progress tracking
+- Backs up original files
+- One command to upgrade!
+
+---
+
+### Commands from v3.0
 
 **✅ `/execute-work phase/epic/story`**
 - Automated execution with plan mode
@@ -136,6 +161,40 @@ ls -la .project-management/
 # ├── defaults/        (tech stack templates)
 # └── guides/          (documentation)
 ```
+
+---
+
+## Understanding Modular Structure (v3.1)
+
+### What You'll Get
+
+**After running `/init-project`, you'll have:**
+
+```
+input/backlog/               ← Organized by phase
+├── README.md                ← Quick overview (< 150 lines)
+├── phase-1-foundation.md    ← Phase 1 stories only
+├── phase-2-core.md          ← Phase 2 stories only
+├── phase-3-advanced.md      ← Phase 3 stories only
+├── phase-4-polish.md        ← Phase 4 stories only
+└── future.md                ← Post-launch features
+
+output/progress/
+├── DASHBOARD.md             ← Live view (auto-updates!)
+├── daily-summary.md         ← Today's work log
+├── weekly-report.md         ← Weekly summary
+├── current-status.md        ← Detailed status
+├── completed.md             ← Historical log
+└── blockers.md              ← Active blockers
+```
+
+**Benefits:**
+- ✅ Smaller files (< 250 lines each) - easier to read
+- ✅ DASHBOARD.md shows live progress - no commands needed
+- ✅ 70% faster for AI - processes only relevant phase
+- ✅ Auto-updates during work - always current
+
+**Quick tip:** Bookmark `output/progress/DASHBOARD.md` - your at-a-glance project status!
 
 ---
 

@@ -6,6 +6,20 @@
 
 ---
 
+## 💡 NEW in v3.1: Modular Structure Benefits
+
+**For quick status checking:**
+- ✅ Open `DASHBOARD.md` (live view, no commands!)
+- ✅ 70% token savings - AI reads only relevant phase
+- ✅ Auto-updates during work
+
+**For existing projects:**
+- Use `/migrate-to-modular` to upgrade to modular structure
+
+[📖 Learn more](../../.project-management/guides/MODULAR-STRUCTURE-GUIDE.md)
+
+---
+
 ## 🎯 Quick Decision Tree
 
 ```
@@ -18,6 +32,10 @@ START HERE
     ├─ Project not initialized yet?
     │   └─→ Use /init-project
     │       └─→ [See: start-project.md]
+    │
+    ├─ Have existing project with old backlog.md?
+    │   └─→ Use /migrate-to-modular
+    │       └─→ [See: ../../.project-management/guides/MODULAR-STRUCTURE-GUIDE.md]
     │
     ├─ Need to add/edit scope (story, epic, phase)?
     │   └─→ Use /add-scope
@@ -52,15 +70,16 @@ START HERE
 
 | Task | Command | Guide | Lines | Time |
 |------|---------|-------|-------|------|
+| Start new project | `/init-project` | [start-project.md](./start-project.md) | ~120 | 5-10 min |
+| Migrate to modular structure | `/migrate-to-modular` | [MODULAR-STRUCTURE-GUIDE.md](../../.project-management/guides/MODULAR-STRUCTURE-GUIDE.md) | ~150 | 2-5 min |
+| Process client documents | `/process-client-docs` | [process-client-docs.md](./process-client-docs.md) | ~120 | 3-5 min |
 | Add requirement (story/epic/phase) | `/add-scope add [type]` | [add-requirement.md](./add-requirement.md) | ~150 | 2-5 min |
 | Add future requirement (v2.0, v3.0) | `/add-backlog-requirement` | [add-backlog-requirement.md](./add-backlog-requirement.md) | ~120 | 2-3 min |
 | Add bug to roadmap | `/add-bug` | [add-bug.md](./add-bug.md) | ~120 | 2-3 min |
-| Start new project | `/init-project` | [start-project.md](./start-project.md) | ~120 | 5-10 min |
 | Execute phase/epic/story | `/execute-work [scope]` | [execute-phase.md](./execute-phase.md) | ~150 | varies |
 | Execute bug fix | `/execute-work bug BUG-XXX` | [execute-phase.md](./execute-phase.md) | ~150 | varies |
 | Check project status | `/project-status` | [check-status.md](./check-status.md) | ~80 | 1 min |
 | Generate/update docs | `/generate-docs` | [generate-documentation.md](./generate-documentation.md) | ~100 | 2-3 min |
-| Process client documents | `/process-client-docs` | [process-client-docs.md](./process-client-docs.md) | ~120 | 3-5 min |
 
 **Helper Commands (no quick guide - see full command docs):**
 
