@@ -1,8 +1,8 @@
 # Claude Project Management System
 
-**Version:** 3.1.0
+**Version:** 3.2.0
 **Created:** 2026-03-24
-**Updated:** 2026-04-20 (Modular Structure + Live Dashboard)
+**Updated:** 2026-04-20 (Direct Modular Generation)
 **Purpose:** Autonomous project planning, documentation, and progress tracking system for Claude Code
 
 ---
@@ -45,26 +45,31 @@ This guide explains:
 
 ---
 
-## 💡 NEW in v3.1: Modular Backlog + Live Dashboard
+## 💡 NEW in v3.2: Direct Modular Generation
 
 **What changed:**
-- 📂 **Modular backlog** - Split by phase (< 250 lines each file)
-  - Old: Single `backlog.md` (800+ lines)
-  - New: `backlog/phase-1-foundation.md`, `phase-2-core.md`, etc.
-  - **Result:** 70% faster for AI, easier to read
+- 🚀 **Automatic modular backlog** - Generated directly by `/process-client-docs`
+  - Old: Generate `backlog.md` → Run `/migrate-to-modular` (2 steps)
+  - New: Generate `backlog/` modular structure directly (1 step)
+  - **Result:** 70% faster for AI, no duplicate work, immediate compliance
+
+- 📂 **Strict file size limits** - Enforced from day 1
+  - Each phase file **< 200 lines** (per documentation.md rules)
+  - README.md **< 200 lines** (master index only)
+  - Auto-split to sub-phases if exceeds limit
 
 - 📊 **Live DASHBOARD.md** - Auto-updating progress view
   - No commands needed - just open file
   - Updates automatically during `/execute-work`
   - See: overall %, today's work, active stories, quality metrics
 
-- 🔄 **Migration command** - `/migrate-to-modular`
-  - One command to upgrade existing projects
-  - Creates backlog/ structure + DASHBOARD.md
-  - Maintains all existing data
+- ⚠️ **Migration command deprecated** - `/migrate-to-modular`
+  - No longer needed for new projects
+  - Still available for legacy project migration
+  - Use `/process-client-docs` for new projects (auto-modular)
 
-**For new projects:** Modular structure created automatically
-**For existing projects:** Run `/migrate-to-modular` to upgrade
+**For new projects:** `/process-client-docs` → modular structure automatically ✅
+**For existing projects:** `/init-project` auto-migrates monolithic backlogs ✅
 
 [📖 Full modular structure guide](guides/MODULAR-STRUCTURE-GUIDE.md)
 
