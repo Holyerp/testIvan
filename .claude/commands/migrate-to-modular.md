@@ -63,10 +63,12 @@ description: Migrate existing project from monolithic files to modular structure
 ```
 
 **Benefits:**
-- Smaller files (< 250 lines each)
+- Smaller files (< 200 lines each - best practice)
 - Live dashboard - no command needed
 - Auto-updates during work
 - 70-80% AI token savings
+- Easier to read and maintain
+- Faster AI processing
 
 ---
 
@@ -144,7 +146,9 @@ mkdir -p .project-management/input/backlog/
 - [ ] No duplicate stories
 - [ ] Story IDs sequential (US-001, US-002, ...)
 - [ ] All epics categorized
-- [ ] Phase file sizes < 250 lines
+- [ ] **Phase file sizes < 200 lines** (STRICT REQUIREMENT)
+- [ ] README.md < 200 lines
+- [ ] Each file focused and readable
 
 **Show summary:**
 ```
@@ -427,8 +431,10 @@ Open progress/DASHBOARD.md → See current status instantly
 **Benefits:**
 - 📉 70-80% token reduction for AI
 - 📊 Live dashboard (no commands)
-- 📁 Organized by phase (< 250 lines each)
+- 📁 Organized by phase (< 200 lines each - best practice)
 - ⚡ Faster processing
+- 📖 More readable and maintainable
+- 🎯 Focused, single-purpose files
 
 **Safety:**
 - 💾 Automatic backups
@@ -450,10 +456,16 @@ When executing this command:
    - `templates/backlog-readme-template.md` - For master README
    - `templates/dashboard-template.md` - For DASHBOARD.md
 
-4. **File Size Limits:**
-   - Phase files: Target < 200 lines, max 250 lines
-   - README.md: Target < 200 lines
+4. **File Size Limits (STRICT):**
+   - Phase files: **MUST BE < 200 lines** (target: 150-180 lines)
+   - README.md: **MUST BE < 200 lines** (target: 150 lines)
    - DASHBOARD.md: Target < 250 lines
+
+   **Best Practice:**
+   - Keep files small and focused for readability
+   - If phase exceeds 200 lines, split into sub-phases or move stories to next phase
+   - Smaller files = faster AI processing, easier human reading
+   - Token efficiency: aim for 150-180 lines per file
 
 5. **Categorization Logic:**
    ```
