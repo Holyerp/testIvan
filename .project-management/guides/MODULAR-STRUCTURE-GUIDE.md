@@ -430,5 +430,39 @@ A: Not recommended. Auto-updates will overwrite. Use `/update-progress` for manu
 
 ---
 
-**Last Updated:** 2026-04-14
+## ✅ Real Project Example
+
+**This project has been migrated to modular structure!**
+
+**Migration completed:** 2026-04-20
+
+**Results:**
+- Old `backlog.md`: 381 lines
+- New structure: 6 files (96-214 lines each)
+- Files created:
+  - `input/backlog/README.md` (214 lines) - Master index
+  - `input/backlog/phase-1-foundation.md` (145 lines) - Auth & infrastructure
+  - `input/backlog/phase-2-core.md` (159 lines) - Products, cart, checkout
+  - `input/backlog/phase-3-advanced.md` (132 lines) - Orders, inventory, reviews
+  - `input/backlog/phase-4-polish.md` (96 lines) - Vendor dashboard, bugs
+  - `input/backlog/future.md` (120 lines) - Post-launch features
+  - `output/progress/DASHBOARD.md` (Live status view)
+
+**To view:**
+```bash
+# Master index
+open .project-management/input/backlog/README.md
+
+# Live dashboard
+open .project-management/output/progress/DASHBOARD.md
+
+# Current phase
+open .project-management/input/backlog/phase-1-foundation.md
+```
+
+**Backup location:** `input/backlog.md.backup-2026-04-20`
+
+---
+
+**Last Updated:** 2026-04-20
 **Version:** 3.1.0

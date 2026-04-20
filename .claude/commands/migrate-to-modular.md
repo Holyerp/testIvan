@@ -437,5 +437,63 @@ Open progress/DASHBOARD.md → See current status instantly
 
 ---
 
+## 🔧 Technical Implementation Notes
+
+**For Claude:**
+
+When executing this command:
+
+1. **Working Directory:** `.project-management/`
+2. **Backup Date Format:** `backlog.md.backup-YYYY-MM-DD` (e.g., `backlog.md.backup-2026-04-20`)
+3. **Templates to Use:**
+   - `templates/phase-backlog-template.md` - For phase files
+   - `templates/backlog-readme-template.md` - For master README
+   - `templates/dashboard-template.md` - For DASHBOARD.md
+
+4. **File Size Limits:**
+   - Phase files: Target < 200 lines, max 250 lines
+   - README.md: Target < 200 lines
+   - DASHBOARD.md: Target < 250 lines
+
+5. **Categorization Logic:**
+   ```
+   Phase 1: P0 + (Infrastructure|Auth|Setup|Database|API) keywords
+   Phase 2: P0/P1 + (Product|Cart|Checkout|Payment|Order) keywords
+   Phase 3: P1/P2 + (Profile|Inventory|Review|Notification|Admin) keywords
+   Phase 4: P2 + (Analytics|Report|Dashboard) keywords + bugs/polish
+   Future: P3 or keywords (v2|future|post-launch|enhancement)
+   ```
+
+6. **Story ID Pattern:** `US-\d{3}` (e.g., US-001, US-002)
+7. **Technical Task Pattern:** `T-\d{3}` (e.g., T-001, T-002)
+8. **Bug Pattern:** `BUG-\d{3}` (e.g., BUG-001)
+
+---
+
+## ✅ Real Project Example
+
+**This command has been tested on this project:**
+
+**Before Migration:**
+- `input/backlog.md` - 381 lines
+- `input/backlog-future.md` - 112 lines
+
+**After Migration (Actual Results):**
+- `input/backlog/README.md` - 214 lines ✅
+- `input/backlog/phase-1-foundation.md` - 145 lines ✅
+- `input/backlog/phase-2-core.md` - 159 lines ✅
+- `input/backlog/phase-3-advanced.md` - 132 lines ✅
+- `input/backlog/phase-4-polish.md` - 96 lines ✅
+- `input/backlog/future.md` - 120 lines ✅
+- `output/progress/DASHBOARD.md` - 218 lines ✅
+- Plus 5 other progress files
+
+**Migration Date:** 2026-04-20
+**See:** `MIGRATION-COMPLETE.md` for full report
+
+---
+
 **Version:** 3.1.0
 **Created:** 2026-04-14
+**Last Updated:** 2026-04-20
+**Status:** ✅ Tested and Working
