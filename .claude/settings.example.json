@@ -15,11 +15,13 @@
       "WebSearch(*)"
     ],
     "deny": [
+      "Bash(rm -rf /)",
       "Bash(rm -rf *)",
       "Bash(git push --force *)",
       "Bash(git reset --hard *)"
     ],
     "ask": []
   },
-  "defaultMode": "acceptEdits"
+  "defaultMode": "acceptEdits",
+  "_comment": "⚠️ IMPORTANT: Copy this to settings.json. Claude should NEVER modify settings.json automatically. See .claude/rules/permissions.md for details."
 }
