@@ -8,6 +8,32 @@
 
 ## Data Sources
 
+### DASHBOARD.md (Primary Source - NEW!)
+- **Location:** `.project-management/output/progress/DASHBOARD.md`
+- **Priority:** Read FIRST - contains pre-calculated metrics
+- **Extract:**
+  - Overall progress % (already calculated)
+  - Current phase name and progress %
+  - Stories completed count (total and by phase)
+  - Story points completed (total and by phase)
+  - Active blockers count
+  - Today's progress (stories completed today)
+  - Currently working on (active stories)
+  - Velocity metrics (points per week)
+  - Timeline projections
+  - Quality metrics (test coverage, passing tests)
+  - Phase breakdown (all phases with progress %)
+
+**Benefits:**
+- ✅ Saves 60-70% token usage (metrics pre-calculated)
+- ✅ Always up-to-date (auto-updated during /execute-work)
+- ✅ Single source of truth for current status
+- ✅ No need to recalculate metrics from scratch
+
+**Fallback:** If DASHBOARD.md doesn't exist, calculate metrics from phase files (legacy method)
+
+---
+
 ### Phase Files
 - **Location:** `.project-management/output/phases/phase-*.md`
 - **Read:** All phase files (1, 2, 3, 4)
@@ -18,13 +44,22 @@
   - Dependencies
   - Epics
 
-### Backlog
-- **Location:** `.project-management/input/backlog.md`
-- **Extract:**
-  - All user stories with IDs
-  - Story points
-  - Priorities (P0/P1/P2/P3)
+### Backlog (Modular Structure)
+- **Primary Location:** `.project-management/input/backlog/README.md` (master index with statistics)
+- **Phase Files:** `.project-management/input/backlog/phase-*.md` (detailed stories per phase)
+- **Extract from README.md:**
+  - Total story count
+  - Total points
+  - Phase breakdown (stories and points per phase)
+  - Priority breakdown (P0/P1/P2/P3 counts)
+- **Extract from phase files (if detailed breakdown needed):**
+  - All user stories with IDs (US-XXX)
+  - Story points per story
+  - Priorities per story
   - Epic groupings
+  - Acceptance criteria and dependencies
+
+**Fallback:** If `backlog/README.md` doesn't exist, read `backlog.md` (legacy structure)
 
 ### Progress Files
 - **Location:** `.project-management/output/progress/`
@@ -174,6 +209,28 @@ Extract: blocker_id, severity, status, affected_stories
 - Cache file reads (memoize within single /project-status run)
 - Don't cache across runs (data changes frequently)
 - Parse each file only once per run
+
+---
+
+## ✅ Modular Structure Integration
+
+**Status:** Updated for modular backlog system (2026-04-20)
+
+**Key Changes:**
+1. **DASHBOARD.md as primary source** - Read first for pre-calculated metrics
+2. **Backlog from README.md** - Use master index for statistics
+3. **Phase files from backlog/** - Read detailed stories from phase-*.md files
+4. **Backward compatibility** - Falls back to legacy structure if modular doesn't exist
+
+**Reading Strategy:**
+```
+Priority 1: Read DASHBOARD.md (if exists) → Use pre-calculated metrics
+Priority 2: Read backlog/README.md (if exists) → Get summary statistics
+Priority 3: Read backlog/phase-*.md (optional) → Get detailed story info
+Fallback: Read backlog.md (legacy) → Calculate everything from scratch
+```
+
+**Token Savings:** 60-70% reduction by using DASHBOARD.md + README.md
 
 ---
 

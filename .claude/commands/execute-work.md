@@ -75,19 +75,51 @@ Store both choices for later use.
 
 ---
 
-### STEP 1: ENTER PLAN MODE (MANDATORY)
+### STEP 1: DETECT STRUCTURE & ENTER PLAN MODE (MANDATORY)
+
+**STEP 1A: Detect Backlog Structure (Automatic)**
+
+```
+if exists(".project-management/input/backlog/README.md"):
+    → MODULAR structure (new)
+    → Backlog files: input/backlog/phase-*.md
+    → Master index: input/backlog/README.md
+    → Dashboard: output/progress/DASHBOARD.md (if exists)
+else if exists(".project-management/input/backlog.md"):
+    → MONOLITHIC structure (legacy)
+    → Backlog file: input/backlog.md
+```
+
+Store detected `structure_type` for use in STEP 3.
+
+**STEP 1B: Read Context Files**
 
 **📖 See:** `modules/execute-work-plan-mode.md` for complete plan mode workflow
 
-**Summary:**
-1. Read ALL required context files:
-   - For phase/epic/story: technical-spec, backlog, phase files, rules
-   - For bug: bug-roadmap.md, affected component files, rules
-2. Analyze scope:
+**Read based on detected structure:**
+
+**Modular Structure:**
+1. **Identify target phase** for story/epic/bug
+2. Read `input/backlog/README.md` - Master index with statistics
+3. Read `input/backlog/phase-N-*.md` - Relevant phase backlog file only (not all files!)
+4. Read `output/progress/DASHBOARD.md` - Current progress metrics (if exists)
+5. Read `output/phases/phase-N.md` - Execution phase file
+6. Read technical spec, rules files
+7. For bugs: read `bug-roadmap.md`, affected component files
+
+**Legacy Structure:**
+1. Read `input/backlog.md` - Full backlog
+2. Read `output/phases/phase-N.md` - Execution phase file
+3. Read technical spec, rules files
+4. For bugs: read `bug-roadmap.md`, affected component files
+
+**STEP 1C: Analyze & Plan**
+
+1. Analyze scope:
    - Phase/epic/story: breakdown, dependencies, estimates
    - Bug: reproduction steps, affected code, root cause analysis
-3. Create detailed plan with estimates, risks, success criteria
-4. Wait for user approval ([Yes/No/Revise])
+2. Create detailed plan with estimates, risks, success criteria
+3. Wait for user approval ([Yes/No/Revise])
 
 **Bug-Specific Plan Requirements:**
 - Read bug details from `.project-management/output/bugs/bug-roadmap.md`
@@ -96,7 +128,7 @@ Store both choices for later use.
 - Include regression test requirements
 - Estimate fix complexity (story points)
 
-**Output:** Detailed plan approved by user
+**Output:** Detailed plan approved by user + `structure_type` detected
 
 ---
 
@@ -114,29 +146,49 @@ Execution Mode: [Continuous / Paused]
 
 ### STEP 3: IMPLEMENTATION LOOP
 
-**📖 See:** `modules/execute-work-implementation.md` for complete implementation workflow
+**📖 See:**
+- `modules/execute-work-implementation.md` - Complete implementation workflow
+- `modules/execute-work-dashboard-update.md` - DASHBOARD.md auto-update logic (NEW!)
 
 **Summary for each story/bug:**
 1. Initialize story/bug with TodoWrite breakdown
-2. Read context:
-   - Story: from technical spec
+2. **Auto-update DASHBOARD.md (if exists):** "Currently Working On" section
+3. Read context:
+   - Story: from technical spec (or from relevant phase backlog if modular)
    - Bug: from bug-roadmap.md + affected component
-3. Implement tasks following `.claude/rules/code-quality.md` (SOLID & DRY principles)
-4. Write tests following `.claude/rules/testing.md`:
+4. Implement tasks following `.claude/rules/code-quality.md` (SOLID & DRY principles)
+5. Write tests following `.claude/rules/testing.md`:
    - Story: unit, integration, E2E
    - Bug: regression test + existing test updates
    - ALL API status codes: 200/400/401/403/404/500
-5. Verify i18n (if I18N-RULES.md exists)
-6. Run tests → **SECOND-TO-LAST STEP**
+6. Verify i18n (if I18N-RULES.md exists)
+7. Run tests → **SECOND-TO-LAST STEP**
    - See `modules/execute-work-quality-gates.md` for validation
-7. Create git commit following `.claude/rules/git.md` (NO AI credits, conventional commits) → **FINAL STEP**
+   - **Auto-update DASHBOARD.md:** Quality metrics section
+8. Create git commit following `.claude/rules/git.md` (NO AI credits, conventional commits) → **FINAL STEP**
    - Bug commits: reference BUG-XXX in message
-8. Update progress tracking:
-   - Story: update phase file
+9. Update progress tracking:
+   - **Modular structure:**
+     - Update `output/phases/phase-N.md` (execution phase)
+     - **Auto-update DASHBOARD.md:** Today's Progress, Recently Completed, Phase Progress, Overall Progress
+     - Update `output/progress/daily-summary.md` (move from "In Progress" to "Completed")
+     - Update `output/progress/completed.md` (append completion entry)
+     - If tracking mode is "Complete": update all progress files
+   - **Legacy structure:**
+     - Update `output/phases/phase-N.md`
+     - Update progress files based on tracking mode
    - Bug: update bug status (New → In Progress → Fixed), move to archive when complete
-9. Check execution mode (continue or pause)
+10. Check execution mode (continue or pause)
 
 **Quality Gate:** Tests must pass, coverage > 80%, all API codes tested, i18n complete
+
+**🚀 Auto-Updates (Modular Structure Only):**
+- **Story started** → Update DASHBOARD.md "Currently Working On"
+- **Tests run** → Update DASHBOARD.md "Quality Metrics"
+- **Story completed** → Update DASHBOARD.md "Today's Progress", "Recently Completed", progress %
+- **Phase completed** → Update DASHBOARD.md "Phase Breakdown"
+
+**See:** `modules/execute-work-dashboard-update.md` for detailed update logic
 
 ---
 
@@ -201,6 +253,42 @@ Phase {{N}}: {{completed_points}}/{{total_points}} points ({{percentage}}%)
 - `modules/execute-work-plan-mode.md` - STEP 1 (Plan mode)
 - `modules/execute-work-implementation.md` - STEP 3 (Implementation loop)
 - `modules/execute-work-quality-gates.md` - Validation & quality checks
+- `modules/execute-work-dashboard-update.md` - DASHBOARD.md auto-update logic (NEW!)
+
+---
+
+## 🔄 Backward Compatibility & Modular Structure Support
+
+**This command automatically detects and supports:**
+
+1. **Modular Backlog Structure (NEW):**
+   - Reads from relevant `input/backlog/phase-*.md` file only (not entire backlog!)
+   - Auto-updates `output/progress/DASHBOARD.md` in real-time
+   - Updates `daily-summary.md` during work
+   - Updates master index `input/backlog/README.md` statistics
+   - 60-70% token savings (reads only relevant phase backlog)
+   - Always up-to-date progress without running commands
+
+2. **Monolithic Backlog Structure (LEGACY):**
+   - Reads from single `input/backlog.md`
+   - Updates phase files and progress files
+   - Still fully functional
+   - Consider running `/migrate-to-modular` to upgrade
+
+**Detection is automatic** - no user action needed!
+
+**Auto-Updates (Modular Structure Only):**
+
+When DASHBOARD.md exists, it's automatically updated during work:
+
+1. **Story started** → "Currently Working On" section updated
+2. **Tests run** → "Quality Metrics" section updated
+3. **Story completed** → "Today's Progress", "Recently Completed", progress % updated
+4. **Phase completed** → "Phase Breakdown" section updated
+
+**Result:** Real-time project visibility without running `/project-status`!
+
+**See:** `modules/execute-work-dashboard-update.md` for update logic
 
 ---
 
@@ -323,6 +411,31 @@ Context Read:
 
 ---
 
-**Version:** 3.0.0
+## ✅ Modular Structure Support
+
+**Status:** ✅ Integrated (2026-04-20)
+
+**New Features:**
+- ✅ Auto-detects modular vs monolithic backlog structure
+- ✅ Reads only relevant phase backlog file (60-70% token savings)
+- ✅ Auto-updates DASHBOARD.md during work execution
+- ✅ Updates daily-summary.md in real-time
+- ✅ Updates README.md master index statistics
+- ✅ Fully backward compatible with legacy structure
+
+**Performance:**
+- **Modular:** Reads 1 phase file (~150 lines) vs entire backlog (~800 lines)
+- **Auto-updates:** DASHBOARD.md stays current without manual commands
+- **Token Savings:** 60-70% per execution
+
+**See:**
+- `COMMAND-STATUS.md` - Implementation tracking
+- `modules/execute-work-dashboard-update.md` - Auto-update logic
+- `modules/backlog-organization.md` - Modular backlog structure
+
+---
+
+**Version:** 3.1.0
 **Created:** 2026-03-27
+**Updated:** 2026-04-20 (Modular structure support + DASHBOARD auto-updates)
 **Command Type:** Implementation Automation

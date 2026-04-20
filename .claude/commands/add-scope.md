@@ -72,10 +72,25 @@ Add or edit phases, epics, or stories with automatic renumbering and cross-refer
 - Validate command syntax
 - Determine placement logic
 
-### STEP 2: Read Project State
-- Read all phase files
-- Read backlog.md
+### STEP 2: Detect Structure & Read Project State
+
+**Structure Detection (Automatic):**
+```
+if exists(".project-management/input/backlog/README.md"):
+    → MODULAR structure (new)
+    → Backlog files: input/backlog/phase-*.md
+    → Master index: input/backlog/README.md
+else if exists(".project-management/input/backlog.md"):
+    → MONOLITHIC structure (legacy)
+    → Backlog file: input/backlog.md
+```
+
+**Read Project State:**
+- Read all phase files (`.project-management/output/phases/phase-*.md`)
+- **Modular:** Read backlog/README.md + relevant phase file (e.g., backlog/phase-1-foundation.md)
+- **Legacy:** Read backlog.md
 - Read progress files
+- Read DASHBOARD.md (if exists)
 - Analyze current structure
 
 ### STEP 3: Generate Content
@@ -102,10 +117,26 @@ Add or edit phases, epics, or stories with automatic renumbering and cross-refer
 **[Renumbering details in add-scope-renumbering.md](modules/add-scope-renumbering.md)**
 **[Edit mode details in add-scope-edit-mode.md](modules/add-scope-edit-mode.md)**
 
-- Update phase files
-- Update backlog.md
-- Update progress files
-- Apply renumbering if needed
+**Update files based on detected structure:**
+
+**Modular Structure:**
+1. Update phase execution files (`output/phases/phase-*.md`)
+2. **Route story to correct backlog file:**
+   - Phase 1 stories → `input/backlog/phase-1-foundation.md`
+   - Phase 2 stories → `input/backlog/phase-2-core.md`
+   - Phase 3 stories → `input/backlog/phase-3-advanced.md`
+   - Phase 4 stories → `input/backlog/phase-4-polish.md`
+   - Future stories → `input/backlog/future.md`
+3. **Update master index:** `input/backlog/README.md` (recalculate statistics)
+4. Update progress files
+5. **Update DASHBOARD.md** (if exists) - recalculate metrics
+6. Apply renumbering if needed
+
+**Legacy Structure:**
+1. Update phase execution files (`output/phases/phase-*.md`)
+2. Update `input/backlog.md`
+3. Update progress files
+4. Apply renumbering if needed
 
 ### STEP 6: Integrity Check
 **Run 5 checks:**
@@ -263,6 +294,60 @@ STEP 8: Summary
 
 ---
 
+## 🔄 Backward Compatibility & Modular Structure Support
+
+**This command automatically detects and supports:**
+
+1. **Modular Backlog Structure (NEW):**
+   - Writes stories to correct phase file (e.g., `input/backlog/phase-1-foundation.md`)
+   - Updates master index (`input/backlog/README.md`) with recalculated statistics
+   - Updates DASHBOARD.md metrics if it exists
+   - Phase routing logic:
+     - P0 + foundation keywords → phase-1-foundation.md
+     - P0/P1 + core keywords → phase-2-core.md
+     - P1/P2 + advanced keywords → phase-3-advanced.md
+     - P2 + polish/bugs → phase-4-polish.md
+     - P3 or future keywords → future.md
+
+2. **Monolithic Backlog Structure (LEGACY):**
+   - Writes all stories to single `input/backlog.md`
+   - Still fully functional
+   - Consider running `/migrate-to-modular` to upgrade
+
+**Detection is automatic** - no user action needed!
+
+**See:** `modules/add-scope-input-parsing.md` for phase routing implementation details.
+
+---
+
+## ✅ Modular Structure Support
+
+**Status:** ✅ Integrated (2026-04-20)
+
+**New Capabilities:**
+- ✅ Auto-detects modular vs monolithic backlog structure
+- ✅ Routes stories to correct phase-specific backlog file
+- ✅ Maintains README.md master index with updated statistics
+- ✅ Updates DASHBOARD.md when adding/editing stories
+- ✅ Fully backward compatible with legacy structure
+
+**Phase Routing Example:**
+```
+User: /add-scope add story 1 3
+→ Detects modular structure exists
+→ Determines story belongs to Phase 1
+→ Writes to input/backlog/phase-1-foundation.md (not backlog.md)
+→ Updates input/backlog/README.md statistics
+→ Updates output/progress/DASHBOARD.md metrics
+```
+
+**See:**
+- `COMMAND-STATUS.md` - Implementation tracking
+- `modules/backlog-organization.md` - Modular backlog structure
+- `modules/live-progress-dashboard.md` - DASHBOARD.md auto-updates
+
+---
+
 **Documentation Rules:**
 - `.CLAUDE.MD` - English only
 - `.claude/rules/git.md` - Conventional commits, NO AI credits
@@ -271,7 +356,11 @@ STEP 8: Summary
 - `/add-backlog-requirement` - Add future requirements (Version 2.0+)
 - `/execute-work` - Execute stories from updated backlog
 - `/generate-docs` - Update PRD/tech-spec/architecture after scope changes
+- `/migrate-to-modular` - Migrate from monolithic to modular backlog structure
 
 ---
+
+**Version:** 3.1.0
+**Updated:** 2026-04-20 (Modular structure support)
 
 **Note:** This is a condensed overview. For detailed implementation logic, see the module files linked above.

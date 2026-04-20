@@ -57,7 +57,7 @@ After 2 failed path attempts → Claude requires option [2] (manual input).
 
 ---
 
-### 0.2 Validate Project State
+### 0.2 Validate Project State & Detect Structure
 
 **Claude checks:** Do phase files exist in `.project-management/output/phases/`?
 
@@ -72,6 +72,30 @@ Run /init-project first to set up the project structure.
 Project management structure not found.
 Create .project-management/ and run /init-project first.
 ```
+
+**Structure Detection (Automatic):**
+
+Claude detects which backlog structure is in use:
+
+```
+if exists(".project-management/input/backlog/README.md"):
+    structure_type = "modular"
+    backlog_index = "input/backlog/README.md"
+    backlog_files = {
+        1: "input/backlog/phase-1-foundation.md",
+        2: "input/backlog/phase-2-core.md",
+        3: "input/backlog/phase-3-advanced.md",
+        4: "input/backlog/phase-4-polish.md",
+        "future": "input/backlog/future.md"
+    }
+else if exists(".project-management/input/backlog.md"):
+    structure_type = "monolithic"
+    backlog_file = "input/backlog.md"
+```
+
+**Claude stores:** `structure_type`, `backlog_files` (or `backlog_file`)
+
+This detection determines where stories will be written in STEP 5.
 
 ---
 
@@ -260,6 +284,39 @@ Story is appended at end of the epic's story list (no position selection for sto
 
 ---
 
+## 2.4 Determine Target Backlog File (Modular Structure Only)
+
+**If structure_type = "modular":**
+
+After determining `target_phase` in STEP 2, Claude maps it to the correct backlog file:
+
+```
+Phase Routing Logic:
+- Phase 1 → input/backlog/phase-1-foundation.md
+- Phase 2 → input/backlog/phase-2-core.md
+- Phase 3 → input/backlog/phase-3-advanced.md
+- Phase 4 → input/backlog/phase-4-polish.md
+- Future (no phase) → input/backlog/future.md
+```
+
+**Claude stores:** `target_backlog_file`
+
+**Example:**
+```
+User: /add-scope add story 2 3
+→ target_phase = 2
+→ target_epic = 3
+→ structure_type = "modular"
+→ target_backlog_file = "input/backlog/phase-2-core.md"
+→ Story will be written to phase-2-core.md (not backlog.md)
+```
+
+**If structure_type = "monolithic":**
+
+All stories written to single `input/backlog.md` file (legacy behavior).
+
+---
+
 ## Validation Rules
 
 ### Position
@@ -289,5 +346,21 @@ US-[XXX] not found in any phase file. Available stories:
 
 ---
 
-**Version:** 3.0.0
-**Last Updated:** 2026-04-02
+## ✅ Modular Structure Support
+
+**Status:** ✅ Integrated (2026-04-20)
+
+**New Features:**
+- ✅ Auto-detects modular vs monolithic backlog structure (Section 0.2)
+- ✅ Routes stories to correct phase-specific backlog file (Section 2.4)
+- ✅ Supports both structures transparently
+- ✅ No user intervention required
+
+**See:**
+- `backlog-organization.md` - Modular backlog structure definition
+- `add-scope-readme-update.md` - README.md statistics update logic (NEW)
+
+---
+
+**Version:** 3.1.0
+**Last Updated:** 2026-04-20 (Modular structure support)
