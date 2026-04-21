@@ -325,7 +325,12 @@ if hasdir ".claude/commands/how-to-use"; then
     base=$(basename "$cmd_file" .md)
     case "$base" in
       COMMAND-TEMPLATE) continue ;;
+      *-reference) continue ;;  # companion modules, not standalone commands
     esac
+    # Skip files that declare themselves companions in their first 3 lines
+    if head -3 "$cmd_file" 2>/dev/null | grep -qiE '^Companion to'; then
+      continue
+    fi
     if [ ! -f ".claude/commands/how-to-use/$base.md" ]; then
       finding "🟡 MEDIUM" "Command /$base has no how-to-use guide"
     fi
