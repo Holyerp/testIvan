@@ -70,7 +70,25 @@ cp -r .claude /path/to/your/project/
 
 Without these, personal `settings.local.json` (may contain tokens), client-private docs, and constantly-regenerated progress files would leak into git.
 
-### 2. Customize Input Files
+### 2. Initialize Git + Initial Commit
+
+If your project is not already a git repository, do this **before running any `/` commands**:
+
+```bash
+cd /path/to/your/project
+git init -b main
+git add .
+git commit -m "chore: add Claude PM system framework"
+```
+
+Why this matters:
+- `/execute-work` creates commits automatically per story — it needs a git repo to commit into
+- The bundled `stop-changelog-check.sh` hook compares `HEAD` against `main` — it silently no-ops on a non-git repo but can't warn you about missing CHANGELOG entries
+- Having a clean baseline commit makes it easy to see exactly what Claude changed during phase execution
+
+If your project is already a git repo, just run `git add .` + commit the framework files once and continue.
+
+### 3. Customize Input Files
 
 Edit the files in `.project-management/input/`:
 - `scope.md` - Define project scope and goals
@@ -80,7 +98,7 @@ Edit the files in `.project-management/input/`:
 
 💡 **Note:** New projects get modular backlog structure automatically!
 
-### 3. Initialize Project
+### 4. Initialize Project
 
 Run in Claude Code:
 ```
@@ -92,13 +110,13 @@ This generates:
 - Technical Specification
 - Phase structure (4 phases: Foundation → Core → Advanced → Polish)
 
-### 4. Start Development
+### 5. Start Development
 
 ```
 /execute-work phase 1
 ```
 
-### 5. Check Progress Anytime
+### 6. Check Progress Anytime
 
 **🚀 Instant View (Recommended):**
 ```
