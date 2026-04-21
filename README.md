@@ -332,22 +332,6 @@ This is a personal project management system. Feel free to fork and adapt to you
 - ✅ **Version strings unified** across all top-level docs
 - ✅ **`/migrate-to-modular` marked legacy-only** (`/init-project` and `/process-client-docs` generate modular directly)
 
-**v3.1.0 baseline:**
-- ✅ **Modular backlog structure** - Organized by phase (< 200 lines each)
-- ✅ **Live DASHBOARD.md** - Auto-updating progress view (no commands needed)
-- ✅ **~70% token savings** - AI processes only the relevant phase
-- ✅ **Real-time progress** - Open DASHBOARD.md, always current
-- ✅ **Auto-updates during work** - DASHBOARD updates as stories complete
-
-**Previous v3.0 Features:**
-- ✅ **Phase-based system** replaces sprint-based system
-- ✅ **Automated execution** with `/execute-work` command
-- ✅ **Plan mode** mandatory before implementation
-- ✅ **Auto-testing** with Vitest + Playwright
-- ✅ **Auto-commits** following git rules (NO AI credits)
-- ✅ **Auto-progress** tracking updates
-- ✅ **Default tech stack** system (3 options)
-- ✅ **i18n configuration** during initialization
-- ✅ **Manual testing** with `/run-tests` command
+For the full version history and feature-by-feature detail, see [CHANGELOG.md](CHANGELOG.md).
 
 **Migration:** See [MIGRATION-GUIDE.md](.project-management/docs/MIGRATION-GUIDE.md) for upgrading from v2.0
