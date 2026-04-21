@@ -1,6 +1,7 @@
 # System Architecture
 
-**Version:** 3.0.0
+**Version:** 3.2.0
+**Last Reviewed:** 2026-04-21
 **Purpose:** Detailed system architecture and folder structure
 
 ---
@@ -12,8 +13,14 @@
 │
 ├── input/                      # YOU fill these files
 │   ├── scope.md               # Project scope, vision, goals
-│   ├── backlog.md             # Features, user stories, epics
-│   ├── backlog-future.md      # Future requirements (v2.0, v3.0)
+│   ├── backlog/                # Modular backlog (v3.1+)
+│   │   ├── README.md              # Master index
+│   │   ├── phase-1-foundation.md
+│   │   ├── phase-2-core.md
+│   │   ├── phase-3-advanced.md
+│   │   ├── phase-4-polish.md
+│   │   └── future.md              # Post-launch (v2.0/v3.0)
+│   ├── backlog-future.md      # Legacy versioned future backlog (managed by /add-backlog-requirement)
 │   ├── technologies.md        # Tech stack and tools
 │   └── constraints.md         # Timeline, budget, team constraints
 │
@@ -34,9 +41,11 @@
 │   │   ├── phase-3.md        # Phase 3: Advanced Features
 │   │   └── phase-4.md        # Phase 4: Polish & Launch
 │   │
-│   ├── progress/              # Progress tracking
-│   │   ├── phase-1-progress.md    # Phase 1 progress
-│   │   ├── phase-2-progress.md    # Phase 2 progress
+│   ├── progress/              # Progress tracking (auto-updated by /execute-work)
+│   │   ├── DASHBOARD.md           # Live at-a-glance view
+│   │   ├── daily-summary.md       # Today's work
+│   │   ├── weekly-report.md       # Weekly summary
+│   │   ├── current-status.md      # Detailed status snapshot
 │   │   ├── completed.md           # Completed work log
 │   │   └── blockers.md            # Known blockers and issues
 │   │
@@ -148,7 +157,7 @@ OR
 Client → client-input/*.pdf/docx → /process-client-docs → input/*.md → /init-project
 
 Phase Planning:
-output/docs/*.md + input/backlog.md → /execute-work phase N → output/phases/phase-N.md
+output/docs/*.md + input/backlog/phase-N-*.md → /execute-work phase N → output/phases/phase-N.md
 
 Execution:
 phase-N.md → Implementation → Auto-testing → Auto-commit → Auto-progress update

@@ -21,20 +21,17 @@ A comprehensive system that provides structured planning, phase management, auto
 
 ---
 
-## 💡 NEW in v3.1: Modular Structure + Live Dashboard
+## 💡 Current Structure: Modular Backlog + Live Dashboard (v3.1+)
 
 **Automatically organized backlog:**
-- 📂 Backlog split by phase (< 250 lines each) - easier to read
-- 📊 Live DASHBOARD.md - see progress instantly, no commands
-- ⚡ 70% faster for AI - processes only relevant phase
-- 🔄 Auto-updates - DASHBOARD refreshes during work
+- 📂 Backlog split by phase (< 200 lines each) — easier to read
+- 📊 Live DASHBOARD.md — see progress instantly, no commands
+- ⚡ ~70% token savings for AI — processes only the relevant phase
+- 🔄 Auto-updates — DASHBOARD refreshes during work
 
-**For existing projects:**
-```bash
-/migrate-to-modular    # One command to upgrade!
-```
+**For new projects:** Modular structure is generated directly by `/init-project` or `/process-client-docs`.
 
-**For new projects:** Modular structure created automatically with `/init-project`
+**For legacy projects** (monolithic `backlog.md`): `/migrate-to-modular` still exists as a one-shot upgrade path.
 
 [📖 Learn more about modular structure](.project-management/guides/MODULAR-STRUCTURE-GUIDE.md)
 
@@ -97,13 +94,13 @@ Open: .project-management/output/progress/DASHBOARD.md
 - Calculates all metrics
 - Exports to file
 
-💡 **Tip:** New in v3.1 - DASHBOARD.md updates automatically as you work!
+💡 **Tip:** DASHBOARD.md updates automatically as you work (no command needed).
 
 ## 📋 Available Commands
 
 ### Project Initialization
 - `/init-project` - Initialize project with tech stack selection, i18n configuration, and phase structure (creates modular backlog automatically)
-- `/migrate-to-modular` - Migrate existing project from old backlog.md to modular structure (v3.1)
+- `/migrate-to-modular` - Legacy one-shot upgrade from old `backlog.md` to modular structure (new projects don't need this)
 
 ### Automated Execution
 - `/execute-work phase N` - Execute entire Phase N (all epics and stories)
@@ -146,7 +143,7 @@ Use `TodoWrite` tool to break down user stories into tasks and track implementat
 .project-management/
 ├── input/              # Project definition (customize these)
 │   ├── scope.md
-│   ├── backlog/        # ✨ NEW: Modular backlog (v3.1)
+│   ├── backlog/        # Modular backlog (split by phase)
 │   │   ├── README.md                # Master index (< 150 lines)
 │   │   ├── phase-1-foundation.md    # Phase 1 stories only
 │   │   ├── phase-2-core.md          # Phase 2 stories only
@@ -298,20 +295,27 @@ This is a personal project management system. Feel free to fork and adapt to you
 
 ---
 
-**Version:** 3.1.0 (Modular Structure + Live Dashboard)
-**Updated:** 2026-04-20
+**Version:** 3.2.0 (Direct Modular Generation + Cleanup)
+**Updated:** 2026-04-21
 
 ---
 
-## 🆕 What's New in v3.1.0
+## 🆕 What's New in v3.2.0
 
-**Major Improvements:**
-- ✅ **Modular backlog structure** - Organized by phase (< 250 lines each)
-- ✅ **Live DASHBOARD.md** - Auto-updating progress view (no commands needed!)
-- ✅ **70% token savings** - AI processes only relevant phase
-- ✅ **Real-time progress** - Just open DASHBOARD.md, always current
-- ✅ **Auto-updates during work** - DASHBOARD updates as you implement stories
-- ✅ **Migration command** - `/migrate-to-modular` for existing projects
+**Cleanup & correctness:**
+- ✅ **`/update-progress` removed** — DASHBOARD.md auto-update during `/execute-work` replaces it
+- ✅ **Meta-repo self-hosted on modular structure** — the framework's own backlog is now split by phase
+- ✅ **Broken FAQ/troubleshooting links fixed** across all docs
+- ✅ **Dead references removed** (MIGRATION-COMPLETE.md, test-migration/)
+- ✅ **Version strings unified** across all top-level docs
+- ✅ **`/migrate-to-modular` marked legacy-only** (`/init-project` and `/process-client-docs` generate modular directly)
+
+**v3.1.0 baseline:**
+- ✅ **Modular backlog structure** - Organized by phase (< 200 lines each)
+- ✅ **Live DASHBOARD.md** - Auto-updating progress view (no commands needed)
+- ✅ **~70% token savings** - AI processes only the relevant phase
+- ✅ **Real-time progress** - Open DASHBOARD.md, always current
+- ✅ **Auto-updates during work** - DASHBOARD updates as stories complete
 
 **Previous v3.0 Features:**
 - ✅ **Phase-based system** replaces sprint-based system

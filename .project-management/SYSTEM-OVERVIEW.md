@@ -83,7 +83,7 @@ testProject/
 | File | Purpose | When to Fill | When Claude Reads |
 |------|---------|--------------|-------------------|
 | `input/scope.md` | Project vision & goals | Once (start), update as needed | Planning, doc generation |
-| `input/backlog.md` | All features & stories | Ongoing (add features) | Sprint planning, doc generation |
+| `input/backlog/` | All features & stories (modular, split by phase) | Ongoing (add features via `/add-scope`) | Phase planning, doc generation |
 | `input/technologies.md` | Tech stack decisions | Once (start), update if stack changes | Doc generation, architecture |
 | `input/constraints.md` | Timeline, budget, team | Once (start), update as needed | Sprint planning |
 
@@ -132,7 +132,7 @@ testProject/
 → Run: `/init-project`
 
 **Know what to build**
-→ Read: `input/scope.md`, `input/backlog.md`
+→ Read: `input/scope.md`, `input/backlog/`
 
 **Know how to build it**
 → Read: `output/docs/technical-spec.md`
@@ -167,7 +167,7 @@ testProject/
 USER INPUT
     ↓
 input/scope.md
-input/backlog.md
+input/backlog/
 input/technologies.md
 input/constraints.md
     ↓
@@ -241,7 +241,7 @@ As needed:
 - Add new client docs to client-input/
 - Run /process-client-docs      ← Merge new requirements
 - Run /generate-docs            ← Update docs (if inputs change)
-- Edit input/backlog.md         ← Add new features manually
+- Edit input/backlog/         ← Add new features manually
 ```
 
 ---
@@ -251,7 +251,7 @@ As needed:
 ### Phase 1: Setup (Once)
 ```
 1. Manually fill input/scope.md           ← Define project
-2. Manually fill input/backlog.md         ← List all features
+2. Manually fill input/backlog/         ← List all features
 3. Manually fill input/technologies.md    ← Choose tech stack
 4. Manually fill input/constraints.md     ← Set limitations
 5. Run /init-project                      ← Generate everything

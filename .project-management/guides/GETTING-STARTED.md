@@ -457,6 +457,6 @@ Before marking story complete:
 
 ---
 
-**Version:** 3.0.0
-**Last Updated:** 2026-03-27
-**Part of:** Claude Project Management System v3.0
+**Version:** 3.2.0
+**Last Updated:** 2026-04-21
+**Part of:** Claude Project Management System v3.2

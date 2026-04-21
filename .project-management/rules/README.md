@@ -102,7 +102,7 @@ These files follow the **"enable by configuration"** pattern:
 
 ```
 1. Project Planning (.project-management/)
-   ├── input/scope.md, input/backlog.md
+   ├── input/scope.md, input/backlog/
    └── output/docs/technical-spec.md
 
 2. Core Standards (.CLAUDE.MD)

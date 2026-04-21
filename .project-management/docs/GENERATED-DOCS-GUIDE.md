@@ -1,6 +1,7 @@
 # Generated Documentation Guide
 
-**Version:** 3.0.0
+**Version:** 3.2.0
+**Last Reviewed:** 2026-04-21
 **Purpose:** Understanding Claude-generated project documentation
 
 ---
@@ -46,7 +47,7 @@ Define WHAT to build and WHY
 - Use cases
 
 **3. Feature Requirements**
-- Derived from `input/backlog.md`
+- Derived from `input/backlog/` (phase files + README)
 - All epics and stories
 - Organized by priority
 
@@ -76,7 +77,7 @@ Define WHAT to build and WHY
 ### Regenerating
 
 ```bash
-# After updating scope.md or backlog.md
+# After updating scope.md or any backlog/phase-*.md
 /generate-docs
 ```
 
@@ -147,7 +148,7 @@ Define HOW to build the product technically
 ### Regenerating
 
 ```bash
-# After updating technologies.md or backlog.md
+# After updating technologies.md or any backlog/phase-*.md
 /generate-docs
 ```
 
@@ -277,7 +278,7 @@ Complete API reference documentation
 
 ```bash
 # Fill input files first
-# Edit: scope.md, backlog.md, technologies.md, constraints.md
+# Edit: scope.md, backlog/*.md, technologies.md, constraints.md
 
 # Initialize project
 /init-project

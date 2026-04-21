@@ -332,7 +332,7 @@
 ## Appendix
 
 ### Links & Resources
-- [Backlog](../input/backlog.md)
+- [Backlog](../input/backlog/README.md)
 - [Current Phase](../output/phases/phase-{{NUMBER}}.md)
 - [Project Scope](../input/scope.md)
 - [Technical Spec](../output/docs/technical-spec.md)

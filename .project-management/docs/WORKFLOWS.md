@@ -1,6 +1,7 @@
 # Workflow Examples
 
-**Version:** 3.0.0
+**Version:** 3.2.0
+**Last Reviewed:** 2026-04-21
 **Purpose:** Step-by-step workflow examples for common scenarios
 
 ---
@@ -42,7 +43,7 @@ This guide shows complete workflows for common project management scenarios.
 # Claude will:
 # ✅ Read all documents (PDFs, Word, images, text)
 # ✅ Extract requirements, features, goals
-# ✅ Generate scope.md, backlog.md, technologies.md, constraints.md
+# ✅ Generate scope.md, backlog/ (modular), technologies.md, constraints.md
 # ✅ Ask clarifying questions
 
 # =====================================
@@ -51,7 +52,7 @@ This guide shows complete workflows for common project management scenarios.
 # Review generated files:
 .project-management/input/
 ├── scope.md          # ✅ Auto-generated
-├── backlog.md        # ✅ Auto-generated
+├── backlog/          # ✅ Auto-generated (modular: README + phase-1..4 + future)
 ├── technologies.md   # ✅ Auto-suggested
 └── constraints.md    # ✅ Auto-extracted
 
@@ -108,7 +109,7 @@ This guide shows complete workflows for common project management scenarios.
 # Navigate to .project-management/input/
 # Edit these files:
 ├── scope.md          # Project vision, goals, phases
-├── backlog.md        # All features and user stories
+├── backlog/          # Modular backlog (README + phase-1..4 + future.md)
 ├── technologies.md   # Tech stack
 └── constraints.md    # Timeline, budget, team
 
@@ -181,7 +182,7 @@ This guide shows complete workflows for common project management scenarios.
 # =====================================
 /add-scope add story [phase] [epic]
 
-# OR manually update backlog.md with new stories
+# OR manually update the relevant backlog/phase-*.md with new stories
 
 # =====================================
 # STEP 2: Update Scope (if needed)
@@ -353,7 +354,7 @@ This guide shows complete workflows for common project management scenarios.
 /promote-requirement US-XXX --to-phase N
 
 # Moves from backlog-future.md to:
-# ✅ input/backlog.md
+# ✅ input/backlog/phase-N-*.md
 # ✅ output/phases/phase-N.md
 # ✅ Status: Future → Todo
 
@@ -384,7 +385,7 @@ This guide shows complete workflows for common project management scenarios.
 /add-scope add epic 1
 
 # Adds epic to Phase 1
-# Updates backlog.md with global epic number
+# Updates backlog/phase-1-foundation.md with global epic number
 
 # =====================================
 # Add Story to Epic

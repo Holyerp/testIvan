@@ -120,7 +120,7 @@
 - Creates backups before migration
 - Validates content integrity
 
-**Version:** 3.0.0
+**Version:** 3.2.0
 
 ---
 

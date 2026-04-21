@@ -2,8 +2,8 @@
 
 **Common issues and solutions for the Claude Project Management System v3.0**
 
-**Version:** 3.0.0
-**Last Updated:** 2026-03-27
+**Version:** 3.2.0
+**Last Updated:** 2026-04-21
 
 ---
 
@@ -163,7 +163,7 @@ vim .project-management/output/docs/technical-spec.md
 **Solution 3: Break epic into smaller epics**
 ```bash
 # Edit backlog
-vim .project-management/input/backlog.md
+vim .project-management/input/backlog/phase-1-foundation.md   # (or relevant phase file)
 
 # Split large epic:
 Epic-2: User Management (30 stories)
@@ -374,7 +374,7 @@ cat .project-management/output/sprints/sprint-1.md
 
 # Organize stories into phases
 # Edit backlog to group by epics
-vim .project-management/input/backlog.md
+vim .project-management/input/backlog/phase-1-foundation.md   # (or relevant phase file)
 
 # Regenerate with phases
 /init-project
@@ -447,6 +447,6 @@ See [../docs/MIGRATION-GUIDE.md](../docs/MIGRATION-GUIDE.md) (if exists)
 
 ---
 
-**Version:** 3.0.0
-**Last Updated:** 2026-03-27
-**Part of:** Claude Project Management System v3.0
+**Version:** 3.2.0
+**Last Updated:** 2026-04-21
+**Part of:** Claude Project Management System v3.2

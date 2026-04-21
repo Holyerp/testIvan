@@ -1,6 +1,7 @@
 # Reusing for Other Projects
 
-**Version:** 3.0.0
+**Version:** 3.2.0
+**Last Reviewed:** 2026-04-21
 **Purpose:** Guide for reusing this project management system across projects
 
 ---
@@ -59,7 +60,7 @@ rm .project-management/input/*
 # Option B: Edit existing
 # Edit input files with new project info
 # - scope.md
-# - backlog.md
+# - backlog/   (modular structure)
 # - technologies.md
 # - constraints.md
 
@@ -203,7 +204,7 @@ git push -u origin main
 
 **Input Files** (`.project-management/input/`)
 - ✅ `scope.md` - New project vision and goals
-- ✅ `backlog.md` - New features and user stories
+- ✅ `backlog/` - New features and user stories (modular)
 - ✅ `technologies.md` - New tech stack
 - ✅ `constraints.md` - New timeline and constraints
 
@@ -323,7 +324,7 @@ cp -r ~/project-management-template/.project-management/templates/* \
 
 ### Input Files
 - [ ] Filled `input/scope.md` completely
-- [ ] Filled `input/backlog.md` with all features
+- [ ] Populated `input/backlog/` with phase files (or let `/init-project` generate them)
 - [ ] Filled `input/technologies.md` with tech stack
 - [ ] Filled `input/constraints.md` with constraints
 - [ ] Reviewed for completeness (no TODOs/placeholders)
@@ -365,7 +366,7 @@ Timeline:
 ### Scenario 2: Different Story Point Scale
 
 ```markdown
-# In backlog.md header, note:
+# In backlog/README.md header, note:
 Story Points (T-Shirt Sizes):
 - XS: 1 point
 - S: 2 points

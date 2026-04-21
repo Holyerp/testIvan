@@ -2,8 +2,8 @@
 
 **Phase-based project management with automated execution.**
 
-**Version:** 3.0.0
-**Last Updated:** 2026-03-27
+**Version:** 3.2.0
+**Last Updated:** 2026-04-21
 
 ---
 
@@ -217,6 +217,6 @@ Project
 
 ---
 
-**Version:** 3.0.0
-**Last Updated:** 2026-03-27
+**Version:** 3.2.0
+**Last Updated:** 2026-04-21
 **System:** Claude Project Management System (Phase-Based with Automation)

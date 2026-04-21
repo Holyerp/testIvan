@@ -11,7 +11,7 @@ Claude automatically reads files **in this priority order:**
 ### 1️⃣ Project Planning Context (if planning/starting work)
 ```
 .project-management/input/scope.md          ← What are we building?
-.project-management/input/backlog.md        ← What features do we need?
+.project-management/input/backlog/          ← What features do we need? (modular)
 .project-management/output/phases/phase-N.md  ← What's in current phase?
 ```
 
@@ -36,7 +36,7 @@ Claude automatically reads files **in this priority order:**
 │                    PROJECT LEVEL                                │
 │  .project-management/input/                                     │
 │    ├─ scope.md          ← WHAT: Project vision & goals         │
-│    ├─ backlog.md        ← WHAT: All features & priorities      │
+│    ├─ backlog/          ← WHAT: All features (modular by phase)│
 │    ├─ technologies.md   ← WHAT: Tech stack decisions           │
 │    └─ constraints.md    ← WHAT: Deadlines, budget, team        │
 │                                                                  │
@@ -133,8 +133,8 @@ Claude automatically reads files **in this priority order:**
 **Claude's Process:**
 ```
 1. Claude analyzes:
-   - input/backlog.md (available features)
-   - output/progress/current-status.md (what's done)
+   - input/backlog/ (available features, modular)
+   - output/progress/DASHBOARD.md (what's done)
    - output/phases/phase-1.md (previous velocity)
 2. Claude generates: output/phases/phase-2.md
 3. Claude executes: Work items in Phase 2
@@ -154,7 +154,7 @@ Manual adjustments: edit the progress files directly. The `/update-progress` com
 
 ### Priority (highest to lowest):
 
-1. **`input/scope.md` and `input/backlog.md`**
+1. **`input/scope.md` and `input/backlog/`**
    - **Source of truth** for WHAT to build
    - If scope says "no authentication", don't build authentication
 
@@ -326,7 +326,7 @@ Before Claude acts, verify:
 
 ### ❌ DON'T:
 - Don't read `.CLAUDE.MD` when planning (it's for coding)
-- Don't read `input/backlog.md` when coding (read phase plan instead)
+- Don't read all of `input/backlog/` when coding (read the current phase file instead)
 - Don't use `/execute-work` for individual tasks (use TodoWrite)
 - Don't use TodoWrite for phase planning (use `/execute-work phase N`)
 - Don't skip reading technical-spec.md when implementing
@@ -362,5 +362,5 @@ Before Claude acts, verify:
 
 ---
 
-**Last Updated:** 2026-03-30
-**Version:** 3.0.0
+**Last Updated:** 2026-04-21
+**Version:** 3.2.0

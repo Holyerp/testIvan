@@ -166,28 +166,25 @@ open output/progress/DASHBOARD.md  # Instant view!
 
 ---
 
-### 🔄 Option C: Migrate Existing Project
+### 🔄 Option C: Migrate Legacy Project (monolithic backlog.md)
 
-**Already have a project with old backlog.md?**
+**Only if you have an older project with a single `input/backlog.md`.**
+New projects get modular structure directly from `/init-project` and `/process-client-docs` — no migration needed.
 
 ```bash
-# STEP 1: Run migration command
+# One-shot upgrade for legacy projects:
 /migrate-to-modular
 # → Splits backlog.md into phase files
-# → Creates DASHBOARD.md
-# → Creates all progress tracking files
-# → Backs up original backlog.md
+# → Creates DASHBOARD.md and all progress tracking files
+# → Backs up the original backlog.md
 
-# STEP 2: Verify migration
-open input/backlog/README.md       # See master index
-open output/progress/DASHBOARD.md  # See live dashboard
-
-# STEP 3: Continue development
-/execute-work phase 2    # Continue where you left off
-# → DASHBOARD.md auto-updates during work!
+# Verify and continue:
+open input/backlog/README.md
+open output/progress/DASHBOARD.md
+/execute-work phase 2
 ```
 
-**📖 Migration guide:** [guides/MODULAR-STRUCTURE-GUIDE.md](guides/MODULAR-STRUCTURE-GUIDE.md)
+**📖 Details:** [guides/MODULAR-STRUCTURE-GUIDE.md](guides/MODULAR-STRUCTURE-GUIDE.md)
 
 ---
 
@@ -196,7 +193,7 @@ open output/progress/DASHBOARD.md  # See live dashboard
 | I want to... | Use this command | Quick Guide |
 |--------------|------------------|-------------|
 | Start new project | `/init-project` | [How-to](../.claude/commands/how-to-use/start-project.md) |
-| Migrate to modular structure | `/migrate-to-modular` | [Guide](guides/MODULAR-STRUCTURE-GUIDE.md) |
+| Migrate legacy project to modular | `/migrate-to-modular` (legacy-only) | [Guide](guides/MODULAR-STRUCTURE-GUIDE.md) |
 | Process client docs | `/process-client-docs` | [How-to](../.claude/commands/how-to-use/process-client-docs.md) |
 | Add requirement (story/epic/phase) | `/add-scope add [type]` | [How-to](../.claude/commands/how-to-use/add-requirement.md) |
 | Add future requirement (v2.0, v3.0) | `/add-backlog-requirement` | [How-to](../.claude/commands/how-to-use/add-backlog-requirement.md) |
@@ -271,7 +268,7 @@ open output/progress/DASHBOARD.md  # See live dashboard
 Before starting your project:
 
 - [ ] Filled `input/scope.md` completely
-- [ ] Filled `input/backlog.md` with all features
+- [ ] Populated `input/backlog/` with phase files (or let `/init-project` generate them)
 - [ ] Filled `input/technologies.md` with tech stack
 - [ ] Filled `input/constraints.md` with realistic constraints
 - [ ] Reviewed `.CLAUDE.MD` coding standards
@@ -285,12 +282,20 @@ Before starting your project:
 
 ## 📜 Version History
 
-**v3.1.0 (Current - 2026-04-20)**
-- Modular backlog structure (split by phase, < 250 lines each)
+**v3.2.0 (Current — 2026-04-21)**
+- Removed `/update-progress` (DASHBOARD auto-update replaces it)
+- Meta-repo self-hosted on modular structure
+- Broken `FAQ-TROUBLESHOOTING.md` links fixed across all docs
+- Dead references cleaned (`MIGRATION-COMPLETE.md`, `test-migration/`)
+- `/migrate-to-modular` repositioned as legacy-only
+- Unified version strings across top-level docs
+
+**v3.1.0 (2026-04-20)**
+- Modular backlog structure (split by phase, < 200 lines each)
 - Live DASHBOARD.md (auto-updates during work)
 - Real-time progress visibility (no commands needed)
-- `/migrate-to-modular` command for existing projects
-- 70% token savings for AI processing
+- `/migrate-to-modular` command introduced
+- ~70% token savings for AI processing
 - 16 reusable templates for project setup
 
 **v3.0.0 (2026-03-27)**

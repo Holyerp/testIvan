@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.2.0] - 2026-04-21
+
+### Removed
+- **`/update-progress` command** — DASHBOARD.md auto-updates during `/execute-work` cover its role; manual edits to progress files are done directly. This removes a long-stale PENDING integration.
+
+### Added
+- **Meta-repo migrated to modular backlog** — the framework now dogfoods its own `input/backlog/` split (phase-1..4 + future + README) plus `output/progress/` live files (DASHBOARD, daily-summary, weekly-report, current-status, completed, blockers).
+- **Formal CHANGELOG entries** for 3.1 and 3.2 (previously missing).
+
+### Fixed
+- **Broken `FAQ-TROUBLESHOOTING.md` links** — 8 references across 5 files now point at the correct `guides/FAQ.md` / `guides/TROUBLESHOOTING.md`.
+- **Dead references removed** — `MIGRATION-COMPLETE.md` and `test-migration/` (never existed on disk).
+- **Version strings unified** — root README, `.project-management/README.md`, and CHANGELOG now agree on v3.2.0 as current.
+
+### Changed
+- **`/migrate-to-modular` repositioned** — marked legacy-only in primary docs. New projects use `/init-project` / `/process-client-docs` (direct modular generation).
+- **~20 `/update-progress` references scrubbed** across docs, modules, and how-to-use guides; readers now routed to DASHBOARD.md or direct file edits.
+- **`.claude/commands/how-to-use/README.md`** — removed the `/update-progress` row from the helper-commands table.
+
+---
+
+## [3.1.0] - 2026-04-20
+
+### Added
+- **Modular backlog structure** — `input/backlog/` split by phase (< 200 lines each) replacing monolithic `backlog.md`.
+- **Live DASHBOARD.md** — `output/progress/DASHBOARD.md` auto-updates during `/execute-work` (real-time progress without running commands).
+- **Daily and weekly summary files** — `daily-summary.md`, `weekly-report.md` under `output/progress/`.
+- **`/migrate-to-modular` command** — one-shot migration from monolithic to modular structure for existing projects.
+- **Direct modular generation** — `/init-project` and `/process-client-docs` produce the modular layout directly.
+- **Modular structure guide** — `guides/MODULAR-STRUCTURE-GUIDE.md`.
+- **Supporting modules** — `backlog-organization.md`, `live-progress-dashboard.md`, `execute-work-dashboard-update.md`, `add-scope-readme-update.md`, `init-project-structure-setup.md`.
+
+### Changed
+- **`/project-status`, `/add-scope`, `/execute-work`** integrated with modular structure (auto-detect monolithic vs modular, read only the relevant phase file).
+- **~69% average token savings per command** (project-status, add-scope, execute-work).
+
+---
+
 ## [Unreleased]
 
 ### Added
@@ -216,6 +254,8 @@ Complete overhaul from sprint-based to phase-based planning with full automation
 
 ---
 
+[3.2.0]: https://github.com/nnikolic/claude_repo/compare/v3.1.0...v3.2.0
+[3.1.0]: https://github.com/nnikolic/claude_repo/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/nnikolic/claude_repo/compare/v2.0.0...v3.0.0
 [2.0.0]: https://github.com/nnikolic/claude_repo/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/nnikolic/claude_repo/releases/tag/v1.0.0

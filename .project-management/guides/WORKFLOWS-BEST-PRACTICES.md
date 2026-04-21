@@ -2,8 +2,8 @@
 
 **Quick reference for workflows and best practices. For detailed information, see linked documentation.**
 
-**Version:** 3.0.0
-**Last Updated:** 2026-03-27
+**Version:** 3.2.0
+**Last Updated:** 2026-04-21
 
 ---
 
@@ -334,8 +334,8 @@ Tests failing?
 
 ---
 
-**Version:** 3.0.0
-**Last Updated:** 2026-03-27
-**Part of:** Claude Project Management System v3.0
+**Version:** 3.2.0
+**Last Updated:** 2026-04-21
+**Part of:** Claude Project Management System v3.2
 
 **Note:** This is a quick reference. For comprehensive workflows and best practices, see the detailed documentation linked above.

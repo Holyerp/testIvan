@@ -66,30 +66,24 @@ open .project-management/output/progress/DASHBOARD.md
 
 ---
 
-## 🔄 Existing Project
+## 🔄 Legacy Project (monolithic `backlog.md`)
 
-### You have old backlog.md?
+Only needed for older projects. `/init-project` and `/process-client-docs` already generate the modular structure directly.
 
-**One command to upgrade:**
+**One-shot legacy upgrade:**
 ```bash
-/migrate-to-modular
+/migrate-to-modular       # legacy-only — skip for new projects
 ```
 
-**What it does:**
-- ✅ Splits backlog.md into phase files
-- ✅ Creates DASHBOARD.md (live view)
-- ✅ Creates progress tracking files
-- ✅ Backs up original files
-- ✅ Ready in 2-5 minutes
+What it does: splits `backlog.md` into phase files, creates DASHBOARD.md + other progress files, and backs up the original. Takes 2-5 minutes.
 
-**Then continue:**
+After migration:
 ```bash
-# Check current status
 open .project-management/output/progress/DASHBOARD.md
-
-# Continue development
-/execute-work phase 2    # or wherever you left off
+/execute-work phase 2     # or wherever you left off
 ```
+
+Details: [guides/MODULAR-STRUCTURE-GUIDE.md](guides/MODULAR-STRUCTURE-GUIDE.md)
 
 ---
 
@@ -132,7 +126,7 @@ output/
 | I want to... | Command |
 |--------------|---------|
 | Start new project | `/init-project` |
-| Upgrade existing project | `/migrate-to-modular` |
+| Upgrade legacy project | `/migrate-to-modular` (legacy-only) |
 | Add a feature | `/add-scope add story [phase] [epic]` |
 | Work on phase | `/execute-work phase 1` |
 | Work on single story | `/execute-work story US-001` |
