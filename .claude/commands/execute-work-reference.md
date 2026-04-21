@@ -1,0 +1,173 @@
+# Execute Work — Reference
+
+Companion to `execute-work.md`. Holds the long-tail material (modes, templates, error handling, examples) that doesn't need to be in the orchestrator.
+
+---
+
+## Execution Modes
+
+### 1. Execution Mode (Continuous vs Paused)
+
+- **Continuous** — auto-continues to next story without pausing.
+- **Paused** — waits for approval after each story.
+
+Pick Continuous for well-understood phases; Paused for complex phases where you want human checkpoints.
+
+### 2. Progress Tracking Mode
+
+| Mode | Updates | Use when |
+|------|---------|----------|
+| **Phase Only (recommended)** | Only `phase-N.md` | Long phases, many stories. Saves ~10-30s per story. |
+| **Complete** | `phase-N.md`, `completed.md`, `current-status.md`, full velocity recalc | Short phases, final phase, or when you need comprehensive tracking in one pass. |
+
+**Neither mode updates `blockers.md`** — that file requires manual input (see `.claude/rules/…`).
+
+For backfills later: re-run `/execute-work` in Complete mode, or edit the progress files directly. The `/update-progress` command was removed in v3.2.0.
+
+---
+
+## Completion Report Template
+
+Emitted when all stories in scope are done.
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎉 [Phase N / Epic X / Story US-XXX] — COMPLETED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📈 STATISTICS
+
+Stories Completed:     {{completed_stories}} / {{total_stories}}
+Story Points:          {{completed_points}} / {{total_points}} ({{percentage}}%)
+Tests Written:         {{tests_written}}
+Tests Passing:         {{tests_passing}} / {{tests_total}}
+Code Coverage:         {{coverage}}%
+Git Commits:           {{commit_count}}
+Duration:              {{duration}}
+Average Velocity:      {{velocity}} points/day
+Progress Tracking:     {{Phase Only / Complete}}
+
+✅ QUALITY METRICS
+
+- SOLID & DRY compliance  ✅
+- Test coverage           ✅ {{coverage}}% (target 80%+)
+- API status codes        ✅ all tested
+{{- i18n translations     ✅ complete}}
+- Linting                 ✅ no errors
+- Git conventions         ✅ (NO AI credits)
+
+🎯 NEXT STEPS
+
+{{If Phase completed:}}  Phase {{N}} done — next: /execute-work phase {{N+1}}
+{{If Epic completed:}}   Epic {{X}} done — continue with remaining epics in Phase {{N}}
+{{If Story completed:}}  Story US-XXX done — continue with remaining stories
+
+{{If Progress Tracking was "Phase Only":}}
+ℹ️  Only phase file was updated. For complete tracking, re-run in
+   Complete mode or edit completed.md / current-status.md directly.
+
+📊 PHASE PROGRESS
+
+Phase {{N}}: {{completed_points}}/{{total_points}} points ({{percentage}}%)
+[████████████░░░░░░░░] {{percentage}}%
+```
+
+---
+
+## Quality Gates (story completion checklist)
+
+A story moves to Completed only when:
+
+- [ ] All tasks implemented
+- [ ] All tests written (unit + integration + E2E)
+- [ ] All tests passing
+- [ ] Coverage ≥ 80%
+- [ ] All API status codes covered: 200/400/401/403/404/500
+- [ ] i18n translations added (if required)
+- [ ] SOLID & DRY principles followed
+- [ ] Git commit created (no AI credits)
+- [ ] Progress tracking updated (at least phase file)
+
+Implementation detail: `modules/execute-work-quality-gates.md`.
+
+---
+
+## Error Handling
+
+| Situation | Action |
+|-----------|--------|
+| Tests fail | Do **not** mark story complete. Fix per quality-gates module, re-run, repeat. |
+| User cancels mid-execution | Mark current story as "In Progress" in phase file + update progress with partial state. User resumes with same command. |
+| Dependency missing | Mark story as "Blocked" + log in `blockers.md`. Continue with non-dependent stories if any. |
+| DASHBOARD.md write failure | Log error, continue implementation — user can edit DASHBOARD manually later. Never block the story over an observability write. |
+
+---
+
+## Backward Compatibility
+
+### Modular backlog structure (default in v3.1+)
+
+- Reads only the relevant `input/backlog/phase-*.md` file (not entire backlog).
+- Auto-updates `output/progress/DASHBOARD.md` during work (real-time visibility).
+- Auto-updates `daily-summary.md` as stories progress.
+- Auto-updates `input/backlog/README.md` master-index statistics.
+- ~60-70% token savings vs monolithic per run.
+
+### Monolithic backlog structure (legacy)
+
+- Reads the single `input/backlog.md`.
+- Updates phase file + progress files based on chosen tracking mode.
+- Fully supported, no deprecation.
+- Consider `/migrate-to-modular` to upgrade (one-shot).
+
+Detection is automatic; no user action.
+
+---
+
+## Example Execution Trace
+
+```
+user: /execute-work phase 1
+
+Claude: Execution Mode?
+        [1] Continuous  [2] Paused
+user:   1
+
+Claude: Progress Tracking Mode?
+        [1] Phase Only  [2] Complete
+user:   1
+
+Claude: 📋 [PLAN MODE ACTIVATED]
+        Context read: technical spec ✅, backlog ✅, rules ✅
+        [shows detailed plan]
+        Proceed? [Yes/No/Revise]
+user:   Yes
+
+Claude: 🚀 [EXITING PLAN MODE — ENTERING IMPLEMENTATION MODE]
+
+        🚀 Starting US-001: Project Setup
+        [implements → writes tests → runs tests ✅ → commits]
+        ✅ US-001 COMPLETED
+
+        ▶️  Continuing with US-002…
+        [repeat for each story]
+
+        🎉 Phase 1 — COMPLETED
+        [completion report]
+```
+
+---
+
+## Related Modules
+
+- `modules/execute-work-plan-mode.md` — plan mode workflow
+- `modules/execute-work-implementation.md` — per-story implementation loop
+- `modules/execute-work-quality-gates.md` — validation
+- `modules/execute-work-dashboard-events.md` — DASHBOARD update triggers
+- `modules/execute-work-dashboard-mechanics.md` — DASHBOARD update internals
+- `modules/backlog-organization.md` — modular vs monolithic backlog rules
+
+---
+
+**Version:** 3.2.0
+**Created:** 2026-04-21 (split from `execute-work.md`)

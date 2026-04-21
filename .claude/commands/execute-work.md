@@ -22,423 +22,141 @@ Execute implementation of a phase, epic, or individual story with full automatio
 
 ---
 
-## 📋 YOUR TASK - MANDATORY WORKFLOW
+## 📋 YOUR TASK — MANDATORY WORKFLOW
 
-**🔧 CRITICAL RULES TO FOLLOW:**
-Before ANY implementation, you MUST read and follow these rules:
-- **`.claude/rules/code-quality.md`** - SOLID & DRY principles (MANDATORY for ALL code)
-- **`.claude/rules/testing.md`** - Testing requirements, API status code matrix, coverage targets
-- **`.claude/rules/git.md`** - Commit message format (NO AI credits), conventional commits
-- **`.CLAUDE.MD`** - Core standards and workflow
-
-**When to read:**
-- Plan mode: Read ALL rules to create accurate plan
-- Implementation: Follow code-quality.md and testing.md during coding
-- Commit: Follow git.md for commit messages (NO AI credits)
+**🔧 CRITICAL RULES** — read before any implementation:
+- `.claude/rules/code-quality.md` — SOLID & DRY (mandatory)
+- `.claude/rules/testing.md` — Testing requirements, API status matrix, coverage targets
+- `.claude/rules/git.md` — Commit format (NO AI credits), conventional commits
+- `.CLAUDE.MD` — Core standards and workflow
 
 ---
 
-### STEP 0: PARSE ARGUMENTS & MODE SELECTION
+### STEP 0 — Parse arguments & mode selection
 
-**1. Parse the command argument:**
-- `phase N` → Execute all epics and stories in Phase N
-- `epic EPIC-X` → Execute all stories in Epic X
-- `story US-XXX` → Execute single story US-XXX
-- `bug BUG-XXX` → Execute bug fix for BUG-XXX
+**Parse the command argument:**
+- `phase N` → all epics + stories in Phase N
+- `epic EPIC-X` → all stories in Epic X
+- `story US-XXX` → single story
+- `bug BUG-XXX` → bug fix flow
 
-**2. Ask user for execution mode:**
+**Ask the user for two modes:**
+
 ```
-"Execution Mode:"
+Execution Mode:
 [1] Continuous (no pauses between stories)
 [2] Paused (wait for approval after each story)
+
+Progress Tracking Mode:
+[1] Phase Only (faster — updates only phase file)
+[2] Complete (slower — updates all progress files)
 ```
 
-**3. Ask user for progress tracking mode:**
-```
-"Progress Tracking Mode:"
-[1] Phase Only (faster - updates only phase file)
-[2] Complete (slower - updates all progress files)
-
-ℹ️  Recommendation: Use "Phase Only" for faster execution.
-   If you need the other progress files refreshed, either run
-   "Complete" on the next pass or edit them directly
-   (the /update-progress command was removed in v3.2.0).
-
-   Complete mode updates:
-   - Phase file (phase-N.md)
-   - Completed work log (completed.md)
-   - Current status (current-status.md)
-   - Overall metrics and velocity
-
-   Note: Complete mode may add 10-30 seconds per story.
-```
-
-Store both choices for later use.
+Store both choices. For trade-offs, see `execute-work-reference.md` → Execution Modes.
 
 ---
 
-### STEP 1: DETECT STRUCTURE & ENTER PLAN MODE (MANDATORY)
+### STEP 1 — Detect structure & enter plan mode (MANDATORY)
 
-**STEP 1A: Detect Backlog Structure (Automatic)**
+**1A. Detect backlog structure:**
 
 ```
 if exists(".project-management/input/backlog/README.md"):
-    → MODULAR structure (new)
-    → Backlog files: input/backlog/phase-*.md
-    → Master index: input/backlog/README.md
-    → Dashboard: output/progress/DASHBOARD.md (if exists)
+    structure_type = "modular"      # input/backlog/phase-*.md
 else if exists(".project-management/input/backlog.md"):
-    → MONOLITHIC structure (legacy)
-    → Backlog file: input/backlog.md
+    structure_type = "monolithic"   # input/backlog.md
 ```
 
-Store detected `structure_type` for use in STEP 3.
+**1B. Read context files** — see `modules/execute-work-plan-mode.md` for the full read list per structure type.
 
-**STEP 1B: Read Context Files**
+**1C. Analyze & plan** — create a detailed plan with estimates, risks, success criteria. Wait for user approval (`Yes / No / Revise`).
 
-**📖 See:** `modules/execute-work-plan-mode.md` for complete plan mode workflow
+**For bugs:** read `output/bugs/bug-roadmap.md`, analyze affected component, plan fix with root-cause analysis + regression-test requirements.
 
-**Read based on detected structure:**
-
-**Modular Structure:**
-1. **Identify target phase** for story/epic/bug
-2. Read `input/backlog/README.md` - Master index with statistics
-3. Read `input/backlog/phase-N-*.md` - Relevant phase backlog file only (not all files!)
-4. Read `output/progress/DASHBOARD.md` - Current progress metrics (if exists)
-5. Read `output/phases/phase-N.md` - Execution phase file
-6. Read technical spec, rules files
-7. For bugs: read `bug-roadmap.md`, affected component files
-
-**Legacy Structure:**
-1. Read `input/backlog.md` - Full backlog
-2. Read `output/phases/phase-N.md` - Execution phase file
-3. Read technical spec, rules files
-4. For bugs: read `bug-roadmap.md`, affected component files
-
-**STEP 1C: Analyze & Plan**
-
-1. Analyze scope:
-   - Phase/epic/story: breakdown, dependencies, estimates
-   - Bug: reproduction steps, affected code, root cause analysis
-2. Create detailed plan with estimates, risks, success criteria
-3. Wait for user approval ([Yes/No/Revise])
-
-**Bug-Specific Plan Requirements:**
-- Read bug details from `.project-management/output/bugs/bug-roadmap.md`
-- Analyze affected component/file
-- Plan fix approach with root cause analysis
-- Include regression test requirements
-- Estimate fix complexity (story points)
-
-**Output:** Detailed plan approved by user + `structure_type` detected
+**Output:** approved plan + detected `structure_type`.
 
 ---
 
-### STEP 2: EXIT PLAN MODE → ENTER IMPLEMENTATION MODE
+### STEP 2 — Exit plan mode → implementation
 
-**Display:**
 ```
-🚀 [EXITING PLAN MODE - ENTERING IMPLEMENTATION MODE]
-
-Starting implementation...
+🚀 [EXITING PLAN MODE — ENTERING IMPLEMENTATION MODE]
 Execution Mode: [Continuous / Paused]
 ```
 
 ---
 
-### STEP 3: IMPLEMENTATION LOOP
+### STEP 3 — Implementation loop
 
-**📖 See:**
-- `modules/execute-work-implementation.md` - Complete implementation workflow
-- `modules/execute-work-dashboard-events.md` + `modules/execute-work-dashboard-mechanics.md` - DASHBOARD.md auto-update logic (NEW!)
+**For each story/bug** (detailed workflow in `modules/execute-work-implementation.md`):
 
-**Summary for each story/bug:**
-1. Initialize story/bug with TodoWrite breakdown
-2. **Auto-update DASHBOARD.md (if exists):** "Currently Working On" section
-3. Read context:
-   - Story: from technical spec (or from relevant phase backlog if modular)
-   - Bug: from bug-roadmap.md + affected component
-4. Implement tasks following `.claude/rules/code-quality.md` (SOLID & DRY principles)
-5. Write tests following `.claude/rules/testing.md`:
-   - Story: unit, integration, E2E
-   - Bug: regression test + existing test updates
-   - ALL API status codes: 200/400/401/403/404/500
-6. Verify i18n (if I18N-RULES.md exists)
-7. Run tests → **SECOND-TO-LAST STEP**
-   - See `modules/execute-work-quality-gates.md` for validation
-   - **Auto-update DASHBOARD.md:** Quality metrics section
-8. Create git commit following `.claude/rules/git.md` (NO AI credits, conventional commits) → **FINAL STEP**
-   - Bug commits: reference BUG-XXX in message
-9. Update progress tracking:
-   - **Modular structure:**
-     - Update `output/phases/phase-N.md` (execution phase)
-     - **Auto-update DASHBOARD.md:** Today's Progress, Recently Completed, Phase Progress, Overall Progress
-     - Update `output/progress/daily-summary.md` (move from "In Progress" to "Completed")
-     - Update `output/progress/completed.md` (append completion entry)
-     - If tracking mode is "Complete": update all progress files
-   - **Legacy structure:**
-     - Update `output/phases/phase-N.md`
-     - Update progress files based on tracking mode
-   - Bug: update bug status (New → In Progress → Fixed), move to archive when complete
-10. Check execution mode (continue or pause)
+1. Break down with TodoWrite.
+2. Auto-update `DASHBOARD.md` → "Currently Working On" *(modular only)*.
+3. Read context (story from phase backlog / bug from bug-roadmap).
+4. Implement following `.claude/rules/code-quality.md` (SOLID & DRY).
+5. Write tests following `.claude/rules/testing.md` (unit + integration + E2E + all API status codes 200/400/401/403/404/500).
+6. Verify i18n (if `.project-management/rules/I18N-RULES.md` exists).
+7. **Second-to-last step:** run tests (see `modules/execute-work-quality-gates.md`); auto-update DASHBOARD "Quality Metrics".
+8. **Final step:** git commit per `.claude/rules/git.md` (NO AI credits). Bug commits reference `BUG-XXX`.
+9. Update progress tracking (phase file + DASHBOARD auto-update + completed.md / daily-summary.md per Complete mode).
+10. Check execution mode; continue or pause.
 
-**Quality Gate:** Tests must pass, coverage > 80%, all API codes tested, i18n complete
+**Quality gate:** tests pass, coverage ≥ 80%, all API codes tested, i18n complete.
 
-**🚀 Auto-Updates (Modular Structure Only):**
-- **Story started** → Update DASHBOARD.md "Currently Working On"
-- **Tests run** → Update DASHBOARD.md "Quality Metrics"
-- **Story completed** → Update DASHBOARD.md "Today's Progress", "Recently Completed", progress %
-- **Phase completed** → Update DASHBOARD.md "Phase Breakdown"
+**Auto-update triggers (modular only):** story started → Currently Working On; tests run → Quality Metrics; story completed → Today's Progress + Recently Completed + progress %; phase completed → Phase Breakdown.
 
-**See:** `modules/execute-work-dashboard-events.md` + `modules/execute-work-dashboard-mechanics.md` for detailed update logic
+Full event mapping: `modules/execute-work-dashboard-events.md` + `modules/execute-work-dashboard-mechanics.md`.
 
 ---
 
-### STEP 4: COMPLETION REPORT
+### STEP 4 — Completion report
 
-**When ALL stories in scope are completed:**
+When all stories in scope are done, emit the standard completion block with:
 
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎉 [Phase N / Epic X / Story US-XXX] - COMPLETED
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- stories completed / total, points done / total, velocity
+- tests written / passing, coverage %
+- SOLID & DRY compliance, lint, git conventions (all ✅)
+- next steps (advance phase / continue epic / next story)
 
-📈 STATISTICS:
-
-Stories Completed:     {{completed_stories}} / {{total_stories}}
-Story Points:          {{completed_points}} / {{total_points}} ({{percentage}}%)
-Tests Written:         {{tests_written}}
-Tests Passing:         {{tests_passing}} / {{tests_total}}
-Code Coverage:         {{coverage}}%
-Git Commits:           {{commit_count}}
-Duration:              {{duration}}
-Average Velocity:      {{velocity}} points/day
-Progress Tracking:     {{Phase Only / Complete}}
-
-✅ QUALITY METRICS:
-
-- SOLID & DRY Compliance:  ✅ Pass
-- Test Coverage:           ✅ {{coverage}}% (Target: 80%+)
-- API Status Codes:        ✅ All tested
-{{- i18n Translations:       ✅ Complete}}
-- Linting:                 ✅ No errors
-- Git Conventions:         ✅ Followed (NO AI credits)
-
-🎯 NEXT STEPS:
-
-{{If Phase completed:}}
-Phase {{N}} is complete! Ready to start Phase {{N+1}}.
-Run: /execute-work phase {{N+1}}
-
-{{If Epic completed:}}
-Epic {{X}} is complete! Continue with remaining epics in Phase {{N}}.
-
-{{If Story completed:}}
-Story US-XXX is complete! Continue with remaining stories.
-
-{{If Progress Tracking Mode was "Phase Only":}}
-ℹ️  Note: Only phase file was updated during execution.
-   For complete tracking, run `/execute-work` again in Complete mode or
-   edit completed.md / current-status.md / blockers.md directly.
-
-📊 PHASE PROGRESS:
-
-Phase {{N}}: {{completed_points}}/{{total_points}} points ({{percentage}}%)
-
-[████████████░░░░░░░░] {{percentage}}%
-```
+Template and full field list: `execute-work-reference.md` → Completion Report Template.
 
 ---
 
 ## 📚 Module References
 
-**Detailed workflows available in:**
-- `modules/execute-work-plan-mode.md` - STEP 1 (Plan mode)
-- `modules/execute-work-implementation.md` - STEP 3 (Implementation loop)
-- `modules/execute-work-quality-gates.md` - Validation & quality checks
-- `modules/execute-work-dashboard-events.md` + `modules/execute-work-dashboard-mechanics.md` - DASHBOARD.md auto-update logic (NEW!)
+| Module | Covers |
+|--------|--------|
+| `modules/execute-work-plan-mode.md` | STEP 1 plan mode workflow |
+| `modules/execute-work-implementation.md` | STEP 3 implementation loop |
+| `modules/execute-work-quality-gates.md` | Test + coverage validation |
+| `modules/execute-work-dashboard-events.md` | DASHBOARD auto-update triggers |
+| `modules/execute-work-dashboard-mechanics.md` | DASHBOARD update internals |
+| `execute-work-reference.md` | Modes, quality gates, error handling, examples |
 
 ---
 
-## 🔄 Backward Compatibility & Modular Structure Support
+## Mandatory Requirements (summary)
 
-**This command automatically detects and supports:**
+1. **Plan mode is mandatory** — no implementation without approval.
+2. **Tests are mandatory** — story is not done until tests pass.
+3. **Coverage ≥ 80%** — enforced before completion.
+4. **All API status codes tested** — 200/400/401/403/404/500.
+5. **i18n compliance** — if `I18N-RULES.md` exists, translations are mandatory.
+6. **Git conventions** — NO AI credits; conventional commits.
+7. **SOLID & DRY** — per `.claude/rules/code-quality.md`.
+8. **TodoWrite** — used for task breakdown and tracking.
 
-1. **Modular Backlog Structure (NEW):**
-   - Reads from relevant `input/backlog/phase-*.md` file only (not entire backlog!)
-   - Auto-updates `output/progress/DASHBOARD.md` in real-time
-   - Updates `daily-summary.md` during work
-   - Updates master index `input/backlog/README.md` statistics
-   - 60-70% token savings (reads only relevant phase backlog)
-   - Always up-to-date progress without running commands
-
-2. **Monolithic Backlog Structure (LEGACY):**
-   - Reads from single `input/backlog.md`
-   - Updates phase files and progress files
-   - Still fully functional
-   - Consider running `/migrate-to-modular` to upgrade
-
-**Detection is automatic** - no user action needed!
-
-**Auto-Updates (Modular Structure Only):**
-
-When DASHBOARD.md exists, it's automatically updated during work:
-
-1. **Story started** → "Currently Working On" section updated
-2. **Tests run** → "Quality Metrics" section updated
-3. **Story completed** → "Today's Progress", "Recently Completed", progress % updated
-4. **Phase completed** → "Phase Breakdown" section updated
-
-**Result:** Real-time project visibility without running `/project-status`!
-
-**See:** `modules/execute-work-dashboard-events.md` + `modules/execute-work-dashboard-mechanics.md` for update logic
+Full quality-gate checklist + error handling: `execute-work-reference.md`.
 
 ---
 
-## ⚠️ IMPORTANT NOTES
+## Backward Compatibility
 
-### Execution Modes
-
-**1. Execution Mode (Continuous vs Paused):**
-- **Continuous:** Auto-continues to next story without pausing
-- **Paused:** Waits for approval after each story
-
-**2. Progress Tracking Mode:**
-- **Phase Only (Recommended):** Faster execution, updates only `phase-N.md`
-  - Best for: Long phases with many stories
-  - Time saved: ~10-30 seconds per story
-  - For complete tracking later: re-run in Complete mode, or edit progress files directly
-
-- **Complete:** Slower execution, updates ALL progress files
-  - Updates: `phase-N.md`, `completed.md`, `current-status.md`
-  - Best for: Small phases, final phase completion, or when you need real-time comprehensive tracking
-  - Note: Does NOT update `blockers.md` (requires manual input)
-
-### Mandatory Requirements
-
-1. **Plan Mode is MANDATORY** - Never start implementation without plan approval
-2. **Tests are MANDATORY** - Story is NOT done until tests pass
-3. **Coverage Target: 80%+** - Must be met before marking story complete
-4. **API Status Codes** - ALL must be tested (200/400/401/403/404/500) per `.claude/rules/testing.md`
-5. **i18n Compliance** - IF I18N-RULES.md exists, translations are MANDATORY
-6. **Git Conventions** - NO AI credits in commits, conventional format per `.claude/rules/git.md`
-7. **SOLID & DRY** - Must follow principles from `.claude/rules/code-quality.md`
-8. **TodoWrite Usage** - Use TodoWrite for task breakdown and tracking
-
-### Quality Gates
-
-**Story can only be marked COMPLETE when:**
-- [x] All tasks implemented
-- [x] All tests written (unit, integration, E2E)
-- [x] All tests passing
-- [x] Coverage > 80%
-- [x] All API status codes tested
-- [x] i18n translations added (if required)
-- [x] SOLID & DRY principles followed
-- [x] Git commit created (no AI credits)
-- [x] Progress tracking updated
-
-### Error Handling
-
-**If tests fail:**
-- Do NOT mark story as complete
-- Fix the issues (see `modules/execute-work-quality-gates.md`)
-- Re-run tests
-- Repeat until all pass
-
-**If user cancels mid-execution:**
-- Mark current story as "In Progress" in phase file
-- Update progress with partial completion
-- User can resume with same command later
-
-**If dependency is missing:**
-- Mark story as "Blocked"
-- Update progress file with blocker info
-- Continue with non-dependent stories (if any)
-
----
-
-## 📝 Example Execution
-
-```bash
-# User runs:
-/execute-work phase 1
-
-# Claude asks:
-"Execution Mode?"
-[1] Continuous
-[2] Paused
-
-# User selects: 1
-
-# Claude enters PLAN MODE:
-📋 [PLAN MODE ACTIVATED]
-
-Context Read:
-✅ Technical spec
-✅ Backlog
-✅ Core standards
-...
-
-[Shows detailed plan]
-
-✅ Proceed? [Yes/No/Revise]
-
-# User: Yes
-
-# Claude enters IMPLEMENTATION MODE:
-🚀 [EXITING PLAN MODE - ENTERING IMPLEMENTATION MODE]
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 Starting: US-001 - Project Setup
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-[Implements US-001]
-[Writes tests]
-[Runs tests - all pass]
-[Creates git commit]
-[Updates progress]
-
-✅ US-001 COMPLETED
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-▶️  Continuing with next story: US-002
-
-[Repeats for all stories]
-
-🎉 Phase 1 - COMPLETED
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-[Shows completion report]
-```
-
----
-
-## ✅ Modular Structure Support
-
-**Status:** ✅ Integrated (2026-04-20)
-
-**New Features:**
-- ✅ Auto-detects modular vs monolithic backlog structure
-- ✅ Reads only relevant phase backlog file (60-70% token savings)
-- ✅ Auto-updates DASHBOARD.md during work execution
-- ✅ Updates daily-summary.md in real-time
-- ✅ Updates README.md master index statistics
-- ✅ Fully backward compatible with legacy structure
-
-**Performance:**
-- **Modular:** Reads 1 phase file (~150 lines) vs entire backlog (~800 lines)
-- **Auto-updates:** DASHBOARD.md stays current without manual commands
-- **Token Savings:** 60-70% per execution
-
-**See:**
-- `COMMAND-STATUS.md` - Implementation tracking
-- `modules/execute-work-dashboard-events.md` + `modules/execute-work-dashboard-mechanics.md` - Auto-update logic
-- `modules/backlog-organization.md` - Modular backlog structure
+Auto-detects modular vs monolithic backlog — no user action needed. See `execute-work-reference.md` → Backward Compatibility for the trade-offs (token usage, DASHBOARD availability, auto-update scope).
 
 ---
 
 **Version:** 3.2.0
 **Created:** 2026-03-27
-**Updated:** 2026-04-20 (Modular structure support + DASHBOARD auto-updates)
+**Updated:** 2026-04-21 (split: reference moved to execute-work-reference.md)
 **Command Type:** Implementation Automation
