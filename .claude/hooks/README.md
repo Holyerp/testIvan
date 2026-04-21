@@ -59,3 +59,38 @@ If `.claude/settings.json` already exists, merge the `hooks` block from `setting
 1. **Never block.** All hooks emit warnings via `systemMessage`; none return a blocking decision. File-size discipline is a gentle nudge, not a gate.
 2. **Silent on success.** A hook that didn't fire leaves zero output. Only actionable messages appear.
 3. **Self-contained.** Each script handles its own JSON parsing (via `jq`) and failure modes (missing files, no git upstream, etc.). If a dependency is missing, the hook exits silently rather than erroring.
+
+---
+
+## Tests
+
+Hooks come with an automated test suite under `.claude/hooks/tests/`.
+
+**Run all tests:**
+
+```bash
+bash .claude/hooks/tests/run-tests.sh
+```
+
+**Run one test file** (substring match):
+
+```bash
+bash .claude/hooks/tests/run-tests.sh post-write
+bash .claude/hooks/tests/run-tests.sh audit-pm
+bash .claude/hooks/tests/run-tests.sh stop-changelog
+```
+
+Coverage (v3.2):
+
+- `test-post-write-validations.sh` — 15 assertions: small file / oversize backlog (200-cap) / module ideal-vs-hardmax thresholds / command soft target / how-to-use exclusion / missing file / missing `file_path`.
+- `test-stop-changelog-check.sh` — 7 assertions: outside-git silence, no upstream, commits ahead with/without CHANGELOG, multi-commit, SIGPIPE regression guard.
+- `test-audit-pm.sh` — 13 assertions: clean repo, version mismatch, missing rule, broken link, code-fence exemption, oversize backlog, legacy command (active vs historical context).
+
+**Run before every change to `.claude/hooks/*.sh`** — each assertion is there because it caught a real bug (SIGPIPE, false-positive false-negatives, etc.).
+
+Add new tests by:
+1. Creating a scratch dir with `mk_scratch` (from `lib.sh`).
+2. Preparing a fixture under it.
+3. Piping the expected hook stdin and capturing output.
+4. Asserting with `assert_contains` / `assert_empty` / `assert_not_contains`.
+5. Calling `report_results` at the end to tally pass/fail.
