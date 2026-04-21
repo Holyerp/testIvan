@@ -16,7 +16,7 @@
 **For legacy projects** (monolithic `backlog.md`):
 - One-shot upgrade via `/migrate-to-modular` (legacy-only)
 
-[📖 Learn more](../../.project-management/guides/MODULAR-STRUCTURE-GUIDE.md)
+[📖 Learn more](../../../.project-management/guides/MODULAR-STRUCTURE-GUIDE.md)
 
 ---
 
@@ -35,7 +35,7 @@ START HERE
     │
     ├─ Legacy project with monolithic backlog.md?
     │   └─→ Use /migrate-to-modular (legacy-only)
-    │       └─→ [See: ../../.project-management/guides/MODULAR-STRUCTURE-GUIDE.md]
+    │       └─→ [See: ../../../.project-management/guides/MODULAR-STRUCTURE-GUIDE.md]
     │
     ├─ Need to add/edit scope (story, epic, phase)?
     │   └─→ Use /add-scope
@@ -81,7 +81,7 @@ START HERE
 | Task | Command | Guide | Lines | Time |
 |------|---------|-------|-------|------|
 | Start new project | `/init-project` | [init-project.md](./init-project.md) | ~120 | 5-10 min |
-| Migrate legacy project to modular | `/migrate-to-modular` (legacy) | [MODULAR-STRUCTURE-GUIDE.md](../../.project-management/guides/MODULAR-STRUCTURE-GUIDE.md) | ~150 | 2-5 min |
+| Migrate legacy project to modular | `/migrate-to-modular` (legacy) | [MODULAR-STRUCTURE-GUIDE.md](../../../.project-management/guides/MODULAR-STRUCTURE-GUIDE.md) | ~150 | 2-5 min |
 | Process client documents | `/process-client-docs` | [process-client-docs.md](./process-client-docs.md) | ~120 | 3-5 min |
 | Add requirement (story/epic/phase) | `/add-scope add [type]` | [add-scope.md](./add-scope.md) | ~150 | 2-5 min |
 | Add future requirement (v2.0, v3.0) | `/add-backlog-requirement` | [add-backlog-requirement.md](./add-backlog-requirement.md) | ~120 | 2-3 min |

@@ -174,18 +174,20 @@ broken_count=0
 check_links() {
   local from_file="$1"
   local from_dir; from_dir="$(dirname "$from_file")"
-  # Extract markdown links: [text](target) where target doesn't start with http:// or #
-  grep -oE '\[[^]]+\]\([^)]+\)' "$from_file" 2>/dev/null \
+  # Strip fenced code blocks (```...``` and indented 4-space code blocks)
+  # before link extraction — example code inside fences is not a real link.
+  awk '
+    /^```/ { fence = !fence; next }
+    !fence { print }
+  ' "$from_file" 2>/dev/null \
+    | grep -oE '\[[^]]+\]\([^)]+\)' \
     | sed -E 's/.*\(([^)]+)\)/\1/' \
     | grep -vE '^(https?://|#|mailto:)' \
     | while read -r target; do
-        # Strip anchor
         target="${target%%#*}"
         [ -z "$target" ] && continue
-        # Resolve relative to from_dir
         resolved=$(cd "$from_dir" 2>/dev/null && cd "$(dirname "$target")" 2>/dev/null && pwd)/$(basename "$target")
         if [ ! -e "$resolved" ]; then
-          # Try path as-is (relative to from_dir, with no resolve trick)
           if [ ! -e "$from_dir/$target" ]; then
             printf '  - %s → %s\n' "$from_file" "$target"
           fi
@@ -194,9 +196,10 @@ check_links() {
 }
 
 tmp_broken=$(mktemp)
-# Skip templates/ (paths use {{placeholders}}, instantiated at copy time, not valid as-written)
+# Skip templates/ and COMMAND-TEMPLATE.md (paths use {{placeholders}} or
+# placeholder command names, instantiated at copy time — not valid as-written)
 for f in $(find .project-management .claude -name "*.md" -type f 2>/dev/null \
-  | grep -vE '/(templates|client-input|examples)/'); do
+  | grep -vE '/(templates|client-input|examples)/|/COMMAND-TEMPLATE\.md$'); do
   check_links "$f" 2>/dev/null \
     | grep -vE '\{\{.*\}\}|\$\{.*\}|\$[A-Z_]+' \
     >> "$tmp_broken"
@@ -219,13 +222,28 @@ rm -f "$tmp_broken"
 section "E. Backlog structure references"
 
 if [ "$STRUCTURE" = "modular" ]; then
-  # Any doc still referencing `input/backlog.md` singular is likely stale
-  # Exception: MIGRATION-GUIDE, MODULAR-STRUCTURE-GUIDE, WHATS-NEW legitimately discuss the legacy form
-  stale=$(grep -rlE 'input/backlog\.md' \
-    .project-management/docs .project-management/guides .project-management/README.md \
-    .project-management/INTEGRATION-GUIDE.md .project-management/SYSTEM-OVERVIEW.md \
-    .project-management/QUICK-START.md 2>/dev/null \
-    | grep -vE '(MIGRATION-GUIDE|MODULAR-STRUCTURE-GUIDE|WHATS-NEW)' || true)
+  # Detect docs still treating monolithic `input/backlog.md` as the authoritative structure.
+  # A file is flagged only if it mentions `input/backlog.md` in a structural assertion —
+  # we strip inline-code quotes (`input/backlog.md`) and any line whose context words include
+  # "legacy", "monolithic", "migration", "option c", "v3.0" (those are legitimately explaining
+  # the old form).
+  # Exception (wholesale skip): MIGRATION-GUIDE, MODULAR-STRUCTURE-GUIDE, WHATS-NEW.
+  stale=""
+  for f in .project-management/README.md .project-management/INTEGRATION-GUIDE.md \
+           .project-management/SYSTEM-OVERVIEW.md .project-management/QUICK-START.md \
+           .project-management/docs/*.md .project-management/guides/*.md; do
+    [ -f "$f" ] || continue
+    case "$f" in
+      *MIGRATION-GUIDE*|*MODULAR-STRUCTURE-GUIDE*|*WHATS-NEW*) continue ;;
+    esac
+    # Extract lines mentioning input/backlog.md that are NOT inside backticks
+    # and NOT in a legacy/migration/monolithic context on the same line.
+    hits=$(grep -nE 'input/backlog\.md' "$f" 2>/dev/null \
+      | grep -viE 'legacy|monolithic|migration|option c|v3\.0|older project|if you have' \
+      | grep -vE '`[^`]*input/backlog\.md[^`]*`' || true)
+    [ -n "$hits" ] && stale="$stale$f\n"
+  done
+  stale=$(printf '%b' "$stale" | sed '/^$/d')
   if [ -n "$stale" ]; then
     finding "🟠 HIGH" "Docs reference monolithic \`input/backlog.md\` despite modular structure:"
     printf '%s\n' "$stale" | sed 's/^/  - /'
@@ -244,15 +262,45 @@ if hasdir ".project-management/output/sprints"; then
 fi
 
 # Removed commands
+# Flag only ACTIVE references to removed commands, not historical / example mentions.
+# Skip wholesale: CHANGELOG, MIGRATION-GUIDE, COMMAND-STATUS, audit-pm.md (uses them as examples).
+# Then per-line: skip lines that say "was removed", "removed in v", "example", "legacy",
+# "historical", or that mention them inside inline-code context.
 for cmd in /plan-sprint /update-progress; do
-  removed_hits=$(grep -rlE "${cmd}([[:space:]]|$|\`|\")" \
+  cmd_escaped=$(printf '%s' "$cmd" | sed 's/[\/]/\\&/g')
+  candidates=$(grep -rlE "${cmd}([[:space:]]|$|\`|\")" \
     .project-management .claude --include='*.md' 2>/dev/null \
-    | xargs -I{} grep -lE "${cmd}([[:space:]]|$|\`|\")" {} 2>/dev/null \
-    | grep -vE '(CHANGELOG|MIGRATION-GUIDE|COMMAND-STATUS)' || true)
-  if [ -n "$removed_hits" ]; then
-    hit_count=$(printf '%s\n' "$removed_hits" | wc -l | tr -d ' ')
-    finding "🟡 MEDIUM" "Removed command '$cmd' still referenced in $hit_count file(s) outside history docs"
-    printf '%s\n' "$removed_hits" | head -5 | sed 's/^/  - /'
+    | grep -vE '(CHANGELOG|MIGRATION-GUIDE|COMMAND-STATUS|audit-pm\.md)' || true)
+  active_hits=""
+  for f in $candidates; do
+    [ -f "$f" ] || continue
+    # Look for lines mentioning the command that AREN'T historical/migration context.
+    # Check ±2 lines around each match — migration narrative often spans lines
+    # (e.g. command name on one line, "was removed" two lines later).
+    hits=$(awk -v cmd="${cmd}" '
+      BEGIN { hist="was removed|removed in v|historical|previously|legacy|example|no longer|replaced|replaces|deprecated|deleted|v3\\.2\\.0" }
+      {
+        buf[NR%5] = $0
+        if ($0 ~ cmd) {
+          # Inspect 5-line window: current line ±2
+          ctx = ""
+          for (i = NR-2; i <= NR+2; i++) { ctx = ctx " " buf[i%5] }
+          # Also pull 2 lines ahead from raw input
+          getline la1; getline la2
+          ctx = ctx " " la1 " " la2
+          buf[(NR+1)%5] = la1; buf[(NR+2)%5] = la2
+          if (tolower(ctx) !~ hist) print NR ": " $0
+          NR += 2
+        }
+      }
+    ' "$f" 2>/dev/null || true)
+    [ -n "$hits" ] && active_hits="$active_hits$f\n"
+  done
+  active_hits=$(printf '%b' "$active_hits" | sed '/^$/d')
+  if [ -n "$active_hits" ]; then
+    hit_count=$(printf '%s\n' "$active_hits" | wc -l | tr -d ' ')
+    finding "🟡 MEDIUM" "Removed command '$cmd' actively referenced in $hit_count file(s)"
+    printf '%s\n' "$active_hits" | head -5 | sed 's/^/  - /'
   fi
 done
 
