@@ -186,7 +186,7 @@
 - ✅ Fully backward compatible with legacy structure
 
 **New Modules Created:**
-- `modules/execute-work-dashboard-update.md` - Real-time DASHBOARD.md auto-update logic
+- `modules/execute-work-dashboard-events.md` + `modules/execute-work-dashboard-mechanics.md` - Real-time DASHBOARD.md auto-update (split from original in v3.2 for readability)
 
 **Auto-Update Triggers:**
 - Story started → "Currently Working On" section
@@ -314,7 +314,8 @@
 | Module | Purpose | Lines |
 |--------|---------|-------|
 | `add-scope-readme-update.md` | Maintain README.md statistics when adding stories | 337 |
-| `execute-work-dashboard-update.md` | Auto-update DASHBOARD.md during work | 542 |
+| `execute-work-dashboard-events.md` | DASHBOARD.md update events | 191 |
+| `execute-work-dashboard-mechanics.md` | DASHBOARD.md update mechanics | 160 |
 
 **Total new documentation:** 879 lines
 

@@ -150,7 +150,7 @@ Execution Mode: [Continuous / Paused]
 
 **📖 See:**
 - `modules/execute-work-implementation.md` - Complete implementation workflow
-- `modules/execute-work-dashboard-update.md` - DASHBOARD.md auto-update logic (NEW!)
+- `modules/execute-work-dashboard-events.md` + `modules/execute-work-dashboard-mechanics.md` - DASHBOARD.md auto-update logic (NEW!)
 
 **Summary for each story/bug:**
 1. Initialize story/bug with TodoWrite breakdown
@@ -190,7 +190,7 @@ Execution Mode: [Continuous / Paused]
 - **Story completed** → Update DASHBOARD.md "Today's Progress", "Recently Completed", progress %
 - **Phase completed** → Update DASHBOARD.md "Phase Breakdown"
 
-**See:** `modules/execute-work-dashboard-update.md` for detailed update logic
+**See:** `modules/execute-work-dashboard-events.md` + `modules/execute-work-dashboard-mechanics.md` for detailed update logic
 
 ---
 
@@ -256,7 +256,7 @@ Phase {{N}}: {{completed_points}}/{{total_points}} points ({{percentage}}%)
 - `modules/execute-work-plan-mode.md` - STEP 1 (Plan mode)
 - `modules/execute-work-implementation.md` - STEP 3 (Implementation loop)
 - `modules/execute-work-quality-gates.md` - Validation & quality checks
-- `modules/execute-work-dashboard-update.md` - DASHBOARD.md auto-update logic (NEW!)
+- `modules/execute-work-dashboard-events.md` + `modules/execute-work-dashboard-mechanics.md` - DASHBOARD.md auto-update logic (NEW!)
 
 ---
 
@@ -291,7 +291,7 @@ When DASHBOARD.md exists, it's automatically updated during work:
 
 **Result:** Real-time project visibility without running `/project-status`!
 
-**See:** `modules/execute-work-dashboard-update.md` for update logic
+**See:** `modules/execute-work-dashboard-events.md` + `modules/execute-work-dashboard-mechanics.md` for update logic
 
 ---
 
@@ -433,7 +433,7 @@ Context Read:
 
 **See:**
 - `COMMAND-STATUS.md` - Implementation tracking
-- `modules/execute-work-dashboard-update.md` - Auto-update logic
+- `modules/execute-work-dashboard-events.md` + `modules/execute-work-dashboard-mechanics.md` - Auto-update logic
 - `modules/backlog-organization.md` - Modular backlog structure
 
 ---

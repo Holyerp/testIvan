@@ -1,15 +1,30 @@
 # Frequently Asked Questions
 
-**Common questions about the Claude Project Management System v3.0**
-
 **Version:** 3.2.0
 **Last Updated:** 2026-04-21
 
 ---
 
+## When to Read This File
+
+**FAQ answers "how should I use this?"** — conceptual questions about workflow, choices, and tradeoffs. It's the right place when you're trying to decide *how* to approach something, not when something is broken.
+
+| You are asking... | Read this |
+|---|---|
+| When should I use /execute-work vs manual? | **FAQ** (here) |
+| What's the difference between phase/epic/story? | **FAQ** |
+| Why mandatory plan mode? | **FAQ** |
+| `/execute-work` returns "command not found" | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) |
+| Tests keep failing; how do I diagnose? | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) |
+| Progress files look stale | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) |
+
+**Rule of thumb:** "How do I…?" → FAQ. "Why doesn't X work?" → TROUBLESHOOTING.
+
+---
+
 ## Quick Links
 
-- **Troubleshooting:** [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+- **Troubleshooting (symptom → fix):** [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 - **Getting Started:** [GETTING-STARTED.md](GETTING-STARTED.md)
 - **Commands Reference:** [COMMANDS-REFERENCE.md](COMMANDS-REFERENCE.md)
 

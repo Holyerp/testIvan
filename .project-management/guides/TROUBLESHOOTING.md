@@ -1,15 +1,31 @@
 # Troubleshooting Guide
 
-**Common issues and solutions for the Claude Project Management System v3.0**
-
 **Version:** 3.2.0
 **Last Updated:** 2026-04-21
 
 ---
 
+## When to Read This File
+
+**Troubleshooting answers "why doesn't X work?"** — symptom → solution for concrete problems you're hitting right now. Every entry starts with an observable symptom and walks through a diagnostic fix.
+
+| You are asking... | Read this |
+|---|---|
+| `/execute-work` returns "command not found" | **Troubleshooting** (here) |
+| Tests keep failing after implementation | **Troubleshooting** |
+| Coverage is below 80% and phase gate fails | **Troubleshooting** |
+| Progress files look stale | **Troubleshooting** |
+| When should I use /execute-work vs manual? | [FAQ.md](FAQ.md) |
+| What's the difference between phase/epic/story? | [FAQ.md](FAQ.md) |
+| Why is plan mode mandatory? | [FAQ.md](FAQ.md) |
+
+**Rule of thumb:** "Why doesn't X work?" → Troubleshooting. "How do I…?" → FAQ.
+
+---
+
 ## Quick Links
 
-- **FAQ:** [FAQ.md](FAQ.md)
+- **FAQ (how to use):** [FAQ.md](FAQ.md)
 - **Getting Started:** [GETTING-STARTED.md](GETTING-STARTED.md)
 - **Migration from v2.0:** [Migration section](#migration-from-v20) (below)
 

@@ -173,7 +173,7 @@ Some files auto-update during command execution:
 **Module Documentation:**
 - `.claude/commands/modules/backlog-organization.md` - Backlog structure
 - `.claude/commands/modules/live-progress-dashboard.md` - Dashboard auto-updates
-- `.claude/commands/modules/execute-work-dashboard-update.md` - Auto-update logic
+- `.claude/commands/modules/execute-work-dashboard-events.md` + `execute-work-dashboard-mechanics.md` - Auto-update logic (split)
 
 **Guides:**
 - `.project-management/guides/MODULAR-STRUCTURE-GUIDE.md` - User guide
