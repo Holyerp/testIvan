@@ -211,7 +211,7 @@
 ### 2. Prioritization
 ✅ **Critical → Immediate** - Drop everything and fix
 ✅ **High → This phase** - Fix before phase completion
-✅ **Medium → When possible** - Fit into sprint planning
+✅ **Medium → When possible** - Fit into phase planning
 ✅ **Low → Backlog** - Fix when convenient
 
 ❌ **Don't:**

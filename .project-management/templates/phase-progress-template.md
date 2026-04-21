@@ -197,7 +197,7 @@ E2E Tests:           {{E2E_COVERAGE}}%
 
 ## Velocity Tracking
 
-### Current Sprint Velocity
+### Current Phase Velocity
 - **Planned Velocity:** {{PLANNED_VELOCITY}} points/week
 - **Actual Velocity:** {{ACTUAL_VELOCITY}} points/week
 - **Variance:** {{VARIANCE}}%
