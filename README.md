@@ -48,6 +48,28 @@ cp .CLAUDE.MD /path/to/your/project/
 cp -r .claude /path/to/your/project/
 ```
 
+**Also merge these `.gitignore` entries into your project's existing `.gitignore`** (don't overwrite — your project already has language/framework-specific patterns):
+
+```gitignore
+# Claude settings: keep out of git (use settings.example.json as template)
+.claude/settings.json
+.claude/settings.local.json
+
+# Client docs (privacy)
+.project-management/client-input/*
+!.project-management/client-input/README.md
+
+# Regenerated output files (recreated by /execute-work)
+.project-management/output/docs/*
+.project-management/output/phases/*
+.project-management/output/progress/*
+!.project-management/output/docs/.gitkeep
+!.project-management/output/phases/.gitkeep
+!.project-management/output/progress/.gitkeep
+```
+
+Without these, personal `settings.local.json` (may contain tokens), client-private docs, and constantly-regenerated progress files would leak into git.
+
 ### 2. Customize Input Files
 
 Edit the files in `.project-management/input/`:
