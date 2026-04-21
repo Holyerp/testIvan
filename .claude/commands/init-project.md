@@ -5,7 +5,7 @@ description: Initialize project with tech stack selection, i18n configuration, a
 
 # Initialize Project
 
-**📖 Quick Start:** See [how-to-use/start-project.md](./how-to-use/start-project.md) for quick guide (~120 lines)
+**📖 Quick Start:** See [how-to-use/init-project.md](./how-to-use/init-project.md) for quick guide (~120 lines)
 
 You are initializing a new project with the Claude Project Management System.
 

@@ -169,7 +169,7 @@ When a feature touches multiple apps, create:
 
 - **Init Project Command:** [.claude/commands/init-project.md](../../.claude/commands/init-project.md)
 - **Structure Setup Module:** [.claude/commands/modules/init-project-structure-setup.md](../../.claude/commands/modules/init-project-structure-setup.md)
-- **Quick Start Guide:** [.claude/commands/how-to-use/start-project.md](../../.claude/commands/how-to-use/start-project.md)
+- **Quick Start Guide:** [.claude/commands/how-to-use/init-project.md](../../.claude/commands/how-to-use/init-project.md)
 - **Integration Guide:** [.project-management/INTEGRATION-GUIDE.md](../INTEGRATION-GUIDE.md)
 
 ---

@@ -11,17 +11,17 @@
 
 | I want to... | Use this command | Quick Guide |
 |--------------|------------------|-------------|
-| Start new project | `/init-project` | [How-to](../.claude/commands/how-to-use/start-project.md) |
+| Start new project | `/init-project` | [How-to](../.claude/commands/how-to-use/init-project.md) |
 | Process client docs | `/process-client-docs` | [How-to](../.claude/commands/how-to-use/process-client-docs.md) |
-| Add requirement (story/epic/phase) | `/add-scope add [type]` | [How-to](../.claude/commands/how-to-use/add-requirement.md) |
+| Add requirement (story/epic/phase) | `/add-scope add [type]` | [How-to](../.claude/commands/how-to-use/add-scope.md) |
 | Add future requirement (v2.0, v3.0) | `/add-backlog-requirement` | [How-to](../.claude/commands/how-to-use/add-backlog-requirement.md) |
 | Add bug to roadmap | `/add-bug` | [How-to](../.claude/commands/how-to-use/add-bug.md) |
-| Execute phase work | `/execute-work phase N` | [How-to](../.claude/commands/how-to-use/execute-phase.md) |
-| Fix a bug | `/execute-work bug BUG-XXX` | [How-to](../.claude/commands/how-to-use/execute-phase.md) |
+| Execute phase work | `/execute-work phase N` | [How-to](../.claude/commands/how-to-use/execute-work.md) |
+| Fix a bug | `/execute-work bug BUG-XXX` | [How-to](../.claude/commands/how-to-use/execute-work.md) |
 | Promote future requirement | `/promote-requirement US-XXX --to-phase N` | Full docs only |
 | Run tests manually | `/run-tests [scope]` | Full docs only |
 | Check project status | `/project-status` | [How-to](../.claude/commands/how-to-use/check-status.md) |
-| Update documentation | `/generate-docs` | [How-to](../.claude/commands/how-to-use/generate-documentation.md) |
+| Update documentation | `/generate-docs` | [How-to](../.claude/commands/how-to-use/generate-docs.md) |
 
 **For detailed documentation:** See full command files in [../.claude/commands/](../.claude/commands/)
 
@@ -42,14 +42,14 @@
 - **Purpose:** Initialize project with tech stack, i18n, and phase structure
 - **When:** One-time, after filling input files or processing client docs
 - **Output:** Complete documentation + Phase 1 plan
-- **Quick guide:** [start-project.md](../.claude/commands/how-to-use/start-project.md)
+- **Quick guide:** [start-project.md](../.claude/commands/how-to-use/init-project.md)
 - **Full docs:** [../.claude/commands/init-project.md](../.claude/commands/init-project.md)
 
 **`/generate-docs`**
 - **Purpose:** Regenerate project documentation from input files
 - **When:** After updating scope, backlog, or technologies
 - **Output:** Updated PRD, tech spec, architecture docs
-- **Quick guide:** [generate-documentation.md](../.claude/commands/how-to-use/generate-documentation.md)
+- **Quick guide:** [generate-documentation.md](../.claude/commands/how-to-use/generate-docs.md)
 - **Full docs:** [../.claude/commands/generate-docs.md](../.claude/commands/generate-docs.md)
 
 ---
@@ -61,7 +61,7 @@
 - **Usage:** `/execute-work {phase N | epic EPIC-X | story US-XXX | bug BUG-XXX}`
 - **When:** Daily development work
 - **Features:** Plan mode → Implementation → Testing → Commit → Progress tracking
-- **Quick guide:** [execute-phase.md](../.claude/commands/how-to-use/execute-phase.md)
+- **Quick guide:** [execute-phase.md](../.claude/commands/how-to-use/execute-work.md)
 - **Full docs:** [../.claude/commands/execute-work.md](../.claude/commands/execute-work.md)
 
 **`/run-tests`**
@@ -82,7 +82,7 @@
   - `/add-scope edit {phase N | epic EPIC-X | story US-XXX}`
 - **When:** Scope changes, new features, editing requirements
 - **Features:** Auto-renumbering, cross-reference updates, integrity checks
-- **Quick guide:** [add-requirement.md](../.claude/commands/how-to-use/add-requirement.md)
+- **Quick guide:** [add-requirement.md](../.claude/commands/how-to-use/add-scope.md)
 - **Full docs:** [../.claude/commands/add-scope.md](../.claude/commands/add-scope.md)
 
 **`/add-backlog-requirement`**
@@ -226,13 +226,13 @@ Tests or docs?
 ## Getting Help
 
 ### Quick Guides (80-150 lines)
-- **Start project:** [../.claude/commands/how-to-use/start-project.md](../.claude/commands/how-to-use/start-project.md)
-- **Execute work:** [../.claude/commands/how-to-use/execute-phase.md](../.claude/commands/how-to-use/execute-phase.md)
-- **Add requirements:** [../.claude/commands/how-to-use/add-requirement.md](../.claude/commands/how-to-use/add-requirement.md)
+- **Start project:** [../.claude/commands/how-to-use/init-project.md](../.claude/commands/how-to-use/init-project.md)
+- **Execute work:** [../.claude/commands/how-to-use/execute-work.md](../.claude/commands/how-to-use/execute-work.md)
+- **Add requirements:** [../.claude/commands/how-to-use/add-scope.md](../.claude/commands/how-to-use/add-scope.md)
 - **Add bugs:** [../.claude/commands/how-to-use/add-bug.md](../.claude/commands/how-to-use/add-bug.md)
 - **Check status:** [../.claude/commands/how-to-use/check-status.md](../.claude/commands/how-to-use/check-status.md)
 - **Process client docs:** [../.claude/commands/how-to-use/process-client-docs.md](../.claude/commands/how-to-use/process-client-docs.md)
-- **Generate docs:** [../.claude/commands/how-to-use/generate-documentation.md](../.claude/commands/how-to-use/generate-documentation.md)
+- **Generate docs:** [../.claude/commands/how-to-use/generate-docs.md](../.claude/commands/how-to-use/generate-docs.md)
 
 ### Full Documentation (200-450 lines)
 - **All commands:** [../.claude/commands/](../.claude/commands/)

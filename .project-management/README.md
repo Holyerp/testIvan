@@ -192,17 +192,17 @@ open output/progress/DASHBOARD.md
 
 | I want to... | Use this command | Quick Guide |
 |--------------|------------------|-------------|
-| Start new project | `/init-project` | [How-to](../.claude/commands/how-to-use/start-project.md) |
+| Start new project | `/init-project` | [How-to](../.claude/commands/how-to-use/init-project.md) |
 | Migrate legacy project to modular | `/migrate-to-modular` (legacy-only) | [Guide](guides/MODULAR-STRUCTURE-GUIDE.md) |
 | Process client docs | `/process-client-docs` | [How-to](../.claude/commands/how-to-use/process-client-docs.md) |
-| Add requirement (story/epic/phase) | `/add-scope add [type]` | [How-to](../.claude/commands/how-to-use/add-requirement.md) |
+| Add requirement (story/epic/phase) | `/add-scope add [type]` | [How-to](../.claude/commands/how-to-use/add-scope.md) |
 | Add future requirement (v2.0, v3.0) | `/add-backlog-requirement` | [How-to](../.claude/commands/how-to-use/add-backlog-requirement.md) |
 | Add bug to roadmap | `/add-bug` | [How-to](../.claude/commands/how-to-use/add-bug.md) |
-| Execute phase work | `/execute-work phase N` | [How-to](../.claude/commands/how-to-use/execute-phase.md) |
-| Fix a bug | `/execute-work bug BUG-XXX` | [How-to](../.claude/commands/how-to-use/execute-phase.md) |
+| Execute phase work | `/execute-work phase N` | [How-to](../.claude/commands/how-to-use/execute-work.md) |
+| Fix a bug | `/execute-work bug BUG-XXX` | [How-to](../.claude/commands/how-to-use/execute-work.md) |
 | Promote future requirement | `/promote-requirement US-XXX --to-phase N` | See command docs |
 | Check project status | `/project-status` | [How-to](../.claude/commands/how-to-use/check-status.md) |
-| Update documentation | `/generate-docs` | [How-to](../.claude/commands/how-to-use/generate-documentation.md) |
+| Update documentation | `/generate-docs` | [How-to](../.claude/commands/how-to-use/generate-docs.md) |
 
 **📖 Full command documentation:** [guides/COMMANDS-REFERENCE.md](guides/COMMANDS-REFERENCE.md)
 

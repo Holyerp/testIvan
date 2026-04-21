@@ -5,7 +5,7 @@ description: Generate or update project documentation (PRD, technical spec, arch
 
 # Generate Documentation
 
-**📖 Quick Start:** See [how-to-use/generate-documentation.md](./how-to-use/generate-documentation.md) for quick guide (~100 lines)
+**📖 Quick Start:** See [how-to-use/generate-docs.md](./how-to-use/generate-docs.md) for quick guide (~100 lines)
 
 You are generating or updating project documentation based on current input files.
 

@@ -5,7 +5,7 @@ description: Add or edit a phase, epic, or story with automatic renumbering and 
 
 # Add/Edit Scope Command
 
-**📖 Quick Start:** See [how-to-use/add-requirement.md](./how-to-use/add-requirement.md) for quick guide (~150 lines)
+**📖 Quick Start:** See [how-to-use/add-scope.md](./how-to-use/add-scope.md) for quick guide (~150 lines)
 
 Add or edit phases, epics, or stories with automatic renumbering and cross-reference updates across all project files.
 

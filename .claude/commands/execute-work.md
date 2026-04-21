@@ -5,7 +5,7 @@ description: Execute a phase, epic, or story with automatic planning, implementa
 
 # Execute Work Command
 
-**📖 Quick Start:** See [how-to-use/execute-phase.md](./how-to-use/execute-phase.md) for quick guide (~150 lines)
+**📖 Quick Start:** See [how-to-use/execute-work.md](./how-to-use/execute-work.md) for quick guide (~150 lines)
 
 Execute implementation of a phase, epic, or individual story with full automation.
 
