@@ -172,8 +172,8 @@ Claude: Reading project data...
 - When planning next sprint/phase
 
 **Automatic updates:**
-- `/execute-work` updates progress automatically
-- Manual update: `/update-progress`
+- `/execute-work` updates progress automatically (DASHBOARD.md, daily-summary.md, etc.)
+- Manual edits: open the progress file directly
 
 ---
 

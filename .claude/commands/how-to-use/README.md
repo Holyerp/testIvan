@@ -87,7 +87,6 @@ START HERE
 |------|---------|-----------|-------------------|
 | Promote future requirement | `/promote-requirement US-XXX --to-phase N` | [promote-requirement.md](../promote-requirement.md) | Helper command, rarely used standalone |
 | Run tests manually | `/run-tests [type]` | [run-tests.md](../run-tests.md) | Automated in `/execute-work`, manual use is straightforward |
-| Update progress manually | `/update-progress` | [update-progress.md](../update-progress.md) | Automated in `/execute-work` (v3.0+), legacy manual mode |
 
 ---
 

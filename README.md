@@ -132,8 +132,8 @@ Open: .project-management/output/progress/DASHBOARD.md
 - `/add-bug` - Add bugs to roadmap for tracking and execution
 
 ### Progress & Status
-- `/update-progress` - Update phase and story progress
 - `/project-status` - Generate comprehensive status report (includes bug metrics)
+- Open `.project-management/output/progress/DASHBOARD.md` for live, auto-updated progress
 - `/process-client-docs` - Extract requirements from client documents
 - `/generate-docs` - Generate or update project documentation
 
@@ -228,7 +228,7 @@ Use `TodoWrite` tool to break down user stories into tasks and track implementat
        → Commit manually → Update progress
 
 4. TRACKING
-   └─> /update-progress → /project-status
+   └─> Open DASHBOARD.md (auto-updated) → /project-status (on demand)
 
 5. REPEAT
    └─> Next phase

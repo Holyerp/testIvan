@@ -145,8 +145,8 @@ Claude automatically reads files **in this priority order:**
 
 ### Scenario 4: Updating Progress
 
-**Note:** In v3.0, progress is tracked automatically during `/execute-work`.
-Use `/update-progress` only for manual adjustments.
+**Note:** Progress is tracked automatically during `/execute-work` — the live view is `output/progress/DASHBOARD.md`.
+Manual adjustments: edit the progress files directly. The `/update-progress` command was removed in v3.2.0.
 
 ---
 
@@ -230,7 +230,7 @@ Is this documentation update? (keywords: "regenerate docs", "update docs")
 → Read: `.CLAUDE.MD`, `rules/project-rules.md`, existing code
 
 **Updating progress?**
-→ Automatic during `/execute-work`, or manual via `/update-progress`
+→ Automatic during `/execute-work`. Manual edits: open DASHBOARD.md directly.
 
 **Generating docs?**
 → Read: `input/*.md`, `templates/*.md`
@@ -288,9 +288,9 @@ Is this documentation update? (keywords: "regenerate docs", "update docs")
 **When:** Starting or continuing work in a phase
 **Scope:** Phase-level (1-4 months)
 
-### /update-progress
-**When:** Manual progress updates (mostly automated in v3.0)
-**Scope:** Progress tracking
+### DASHBOARD.md (live progress)
+**When:** Always current — auto-updated during `/execute-work`
+**Scope:** Progress tracking (no command — `/update-progress` was removed in v3.2.0)
 
 ### /project-status
 **When:** Need overall project health
@@ -349,7 +349,7 @@ Before Claude acts, verify:
 2. **Executing phase work?** → Use `/execute-work phase N` (automated planning + execution)
 3. **Implementing feature?** → Use TodoWrite + `.CLAUDE.MD`
 4. **Writing code?** → Follow `.CLAUDE.MD` standards
-5. **Tracking progress?** → Automatic in `/execute-work`, or manual via `/update-progress`
+5. **Tracking progress?** → Automatic in `/execute-work`; open DASHBOARD.md for the live view
 
 **Everything has its place. No conflicts. No confusion.**
 

@@ -18,7 +18,6 @@ testProject/
 │       ├── init-project.md                        # Initialize project with docs & Phase 1
 │       ├── generate-docs.md                       # Generate/update all documentation
 │       ├── execute-work.md                        # Execute work with automated phase planning
-│       ├── update-progress.md                     # Update progress tracking (mostly automated)
 │       └── project-status.md                      # Get comprehensive status report
 │
 └── 📂 .project-management/
@@ -96,9 +95,10 @@ testProject/
 | `output/docs/technical-spec.md` | Technical details | `/init-project`, `/generate-docs` | **While implementing** |
 | `output/docs/architecture.md` | System design | `/init-project`, `/generate-docs` | Planning architecture |
 | `output/phases/phase-N.md` | Phase plan | `/execute-work phase N` | **During phase (1-4 months)** |
-| `output/progress/current-status.md` | Project status | `/update-progress`, `/project-status` | Checking progress |
-| `output/progress/completed.md` | Work log | `/update-progress` | Retrospectives |
-| `output/progress/blockers.md` | Issues log | `/update-progress` | Identifying blockers |
+| `output/progress/DASHBOARD.md` | Live project status | `/execute-work` (auto) | Daily at-a-glance |
+| `output/progress/current-status.md` | Detailed status snapshot | `/project-status` | On-demand report |
+| `output/progress/completed.md` | Work log | `/execute-work` (auto) | Retrospectives |
+| `output/progress/blockers.md` | Issues log | `/execute-work` (auto) | Identifying blockers |
 
 ### Command Files
 
@@ -108,7 +108,6 @@ testProject/
 | `.claude/commands/init-project.md` | Initialize project | Once at start (after inputs ready) |
 | `.claude/commands/generate-docs.md` | Update docs | When inputs change |
 | `.claude/commands/execute-work.md` | Execute phase work | Start Phase 1, 2, 3, or 4 (1-4 months each) |
-| `.claude/commands/update-progress.md` | Manual progress updates | As needed (automated in execute-work) |
 | `.claude/commands/project-status.md` | Check status | Anytime |
 | `.claude/commands/add-scope.md` | Add/edit phases, epics, stories | When scope changes |
 
@@ -120,7 +119,7 @@ testProject/
 | `templates/technical-spec-template.md` | Tech spec structure | `/generate-docs` |
 | `templates/architecture-template.md` | Architecture structure | `/generate-docs` |
 | `templates/phase-template.md` | Phase plan structure | `/execute-work`, `/add-scope` |
-| `templates/progress-template.md` | Progress report structure | `/update-progress` |
+| `templates/progress-template.md` | Progress report structure | `/execute-work` (auto), `/project-status` |
 
 ---
 
@@ -190,7 +189,7 @@ output/phases/phase-N.md
     ↓
 CODE (following .CLAUDE.MD)
     ↓
-    ↓ /update-progress
+    ↓ auto-tracked by /execute-work
     ↓
 PROGRESS TRACKING
     ↓

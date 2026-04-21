@@ -29,10 +29,10 @@ This guide has been split into focused sections for better readability and AI op
 - `/init-project` - Initialize project
 - `/execute-work` - Automated implementation
 - `/run-tests` - Manual testing
-- `/update-progress` - Progress tracking
 - `/project-status` - Status reports
 - `/process-client-docs` - Requirements extraction
 - `/generate-docs` - Documentation regeneration
+- Live progress: `output/progress/DASHBOARD.md` (auto-updated)
 
 **Read this when:** You need to look up command syntax or options
 
@@ -49,7 +49,7 @@ This guide has been split into focused sections for better readability and AI op
 
 ---
 
-### ❓ [FAQ & Troubleshooting](guides/FAQ-TROUBLESHOOTING.md)
+### ❓ [FAQ](guides/FAQ.md) & [Troubleshooting](guides/TROUBLESHOOTING.md)
 **For problem solving** - Answers and solutions
 - Frequently asked questions
 - Troubleshooting guides
@@ -68,8 +68,8 @@ This guide has been split into focused sections for better readability and AI op
 /execute-work phase 1      # Automated phase execution
 /execute-work story US-001 # Single story execution
 /run-tests all             # Manual testing
-/update-progress           # Manual progress update
 /project-status            # Status report
+# Live progress: open output/progress/DASHBOARD.md (auto-updated)
 ```
 
 ---
@@ -116,7 +116,8 @@ This guide has been split into focused sections for better readability and AI op
     ├── GETTING-STARTED.md
     ├── COMMANDS-REFERENCE.md
     ├── WORKFLOWS-BEST-PRACTICES.md
-    └── FAQ-TROUBLESHOOTING.md
+    ├── FAQ.md
+    └── TROUBLESHOOTING.md
 
 .claude/
 ├── commands/          (slash commands)
@@ -190,7 +191,7 @@ Project
 → Apply best practices
 
 **If you have issues:**
-→ Check [FAQ & Troubleshooting](guides/FAQ-TROUBLESHOOTING.md)
+→ Check [FAQ](guides/FAQ.md) or [Troubleshooting](guides/TROUBLESHOOTING.md)
 → Find your specific issue
 → Apply the solution
 

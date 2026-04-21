@@ -62,7 +62,8 @@
 │   ├── GETTING-STARTED.md
 │   ├── WORKFLOWS-BEST-PRACTICES.md
 │   ├── COMMANDS-REFERENCE.md
-│   └── FAQ-TROUBLESHOOTING.md
+│   ├── FAQ.md
+│   └── TROUBLESHOOTING.md
 │
 ├── docs/                       # Additional documentation
 │   ├── ARCHITECTURE.md        # This file
@@ -96,7 +97,6 @@
 │   ├── add-bug.md             # Add bugs to roadmap
 │   ├── add-backlog-requirement.md # Add future requirements
 │   ├── promote-requirement.md # Promote future to active
-│   ├── update-progress.md     # Update progress manually
 │   ├── project-status.md      # Show project status
 │   ├── run-tests.md           # Manual test execution
 │   │
@@ -155,8 +155,8 @@ phase-N.md → Implementation → Auto-testing → Auto-commit → Auto-progress
 
 Status Tracking:
 output/progress/*.md ← Auto-updated during execution
-                    ← Manual update via /update-progress
-                    → /project-status report
+                    ← Manual edits: open files directly
+                    → /project-status (on-demand report)
 ```
 
 ---

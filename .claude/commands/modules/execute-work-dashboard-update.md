@@ -516,7 +516,7 @@ function onStoryComplete(storyPoints) {
    ```
    Error: Could not write DASHBOARD.md
    → Log error, continue execution
-   → User can run /update-progress manually later
+   → User can edit DASHBOARD.md manually later
    ```
 
 ---

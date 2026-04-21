@@ -35,7 +35,6 @@
 **Results:**
 - Input: `backlog.md` (381 lines)
 - Output: 6 backlog files + 6 progress files
-- See: `MIGRATION-COMPLETE.md` for full report
 
 ---
 
@@ -206,15 +205,10 @@
 
 ---
 
-### 5. `/update-progress` ⏸️ PENDING
-**Status:** Not yet integrated (planned)
+### 5. `/update-progress` ❌ REMOVED (v3.2.0)
+**Status:** Command deleted 2026-04-21.
 
-**Planned Features:**
-- Should update all progress files
-- Should recalculate metrics
-- Should sync with DASHBOARD.md
-
-**Note:** With DASHBOARD.md auto-updates in `/execute-work`, this command is less critical
+**Rationale:** DASHBOARD.md auto-updates during `/execute-work` covered the command's job. Manual edits to progress files are done directly. Removing the command reduces surface area and eliminates a broken integration that was flagged as PENDING for a long time.
 
 ---
 
@@ -244,11 +238,10 @@
 ## 🔗 Related Documentation
 
 **Implementation:**
-- [MIGRATION-COMPLETE.md](MIGRATION-COMPLETE.md) - Full migration report
 - [MODULAR-STRUCTURE-GUIDE.md](guides/MODULAR-STRUCTURE-GUIDE.md) - User guide
 
 **Examples:**
-- [test-migration/](test-migration/) - Demo with 400+ line backlog
+- [examples/](examples/) - Reference backlog examples
 
 **Templates:**
 - [templates/dashboard-template.md](templates/dashboard-template.md)
@@ -339,7 +332,7 @@
 1. User runs `/execute-work story US-001`
 2. Story completed
 3. User manually runs `/project-status` to see progress
-4. User manually runs `/update-progress` to update files
+4. User manually edits progress files (the /update-progress command previously did this; removed in v3.2.0)
 
 **After (autonomous):**
 1. User runs `/execute-work story US-001`
@@ -404,8 +397,6 @@
 3. ✅ Monitor DASHBOARD.md auto-updates
 
 **Future enhancements:**
-- ⏸️ Integrate `/update-progress` (lower priority now)
-- ⏸️ Create `/migrate-to-modular` for other projects
 - ⏸️ Add more quality metrics to DASHBOARD.md
 
 **For other projects:**

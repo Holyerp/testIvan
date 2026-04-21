@@ -164,7 +164,7 @@ output/
 - [MODULAR-STRUCTURE-GUIDE.md](guides/MODULAR-STRUCTURE-GUIDE.md) - Understanding modular backlog
 - [Command Index](../.claude/commands/how-to-use/README.md) - All commands explained
 
-**Stuck?** Check [FAQ](guides/FAQ-TROUBLESHOOTING.md)
+**Stuck?** Check [FAQ](guides/FAQ.md) or [Troubleshooting](guides/TROUBLESHOOTING.md)
 
 ---
 

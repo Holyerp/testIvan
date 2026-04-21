@@ -20,7 +20,7 @@
 | **Learn best practices** | [docs/BEST-PRACTICES.md](docs/BEST-PRACTICES.md) |
 | **Reuse for other projects** | [docs/REUSE-GUIDE.md](docs/REUSE-GUIDE.md) |
 | **Find command reference** | [guides/COMMANDS-REFERENCE.md](guides/COMMANDS-REFERENCE.md) |
-| **Troubleshoot issues** | [guides/FAQ-TROUBLESHOOTING.md](guides/FAQ-TROUBLESHOOTING.md) |
+| **Troubleshoot issues** | [guides/TROUBLESHOOTING.md](guides/TROUBLESHOOTING.md) (or [FAQ](guides/FAQ.md)) |
 | **Migrate from v2.0** | [docs/MIGRATION-GUIDE.md](docs/MIGRATION-GUIDE.md) |
 
 ---
@@ -227,7 +227,8 @@ open output/progress/DASHBOARD.md  # See live dashboard
 - **[Getting Started](guides/GETTING-STARTED.md)** - Detailed onboarding guide
 - **[Commands Reference](guides/COMMANDS-REFERENCE.md)** - All slash commands explained
 - **[Workflows & Best Practices](guides/WORKFLOWS-BEST-PRACTICES.md)** - Advanced workflow patterns
-- **[FAQ & Troubleshooting](guides/FAQ-TROUBLESHOOTING.md)** - Common issues and solutions
+- **[FAQ](guides/FAQ.md)** - Frequently asked questions
+- **[Troubleshooting](guides/TROUBLESHOOTING.md)** - Common issues and solutions
 
 ### Integration & Migration
 - **[Integration Guide](INTEGRATION-GUIDE.md)** - How everything works together

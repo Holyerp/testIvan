@@ -230,16 +230,13 @@ This guide shows complete workflows for common project management scenarios.
 # =====================================
 # STEP 1: Report Blocker
 # =====================================
-/update-progress
+# Open output/progress/blockers.md and add a new entry
+# (e.g. "Payment API down, can't test checkout")
 
-# Claude asks: "Any blockers?"
-# You describe: "Payment API down, can't test checkout"
-
-# Claude:
-# ✅ Logs blocker in output/progress/blockers.md
-# ✅ Updates current phase status
-# ✅ Marks affected stories as blocked
-# ✅ Suggests mitigation strategies
+# What to update:
+# - blockers.md: the blocker itself
+# - DASHBOARD.md "Active Blockers" (will also auto-update on next /execute-work)
+# - Mark affected stories as blocked in the relevant phase file
 
 # =====================================
 # STEP 2: Check Impact
@@ -259,10 +256,8 @@ This guide shows complete workflows for common project management scenarios.
 # =====================================
 # STEP 4: When Resolved
 # =====================================
-/update-progress
-
-# Update blocker status to resolved
-# Resume blocked stories
+# Edit blockers.md to mark the entry resolved
+# Resume blocked stories via /execute-work
 ```
 
 ---

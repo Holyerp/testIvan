@@ -21,7 +21,6 @@
 | Promote future requirement | `/promote-requirement US-XXX --to-phase N` | Full docs only |
 | Run tests manually | `/run-tests [scope]` | Full docs only |
 | Check project status | `/project-status` | [How-to](../.claude/commands/how-to-use/check-status.md) |
-| Update progress manually | `/update-progress` | Full docs only |
 | Update documentation | `/generate-docs` | [How-to](../.claude/commands/how-to-use/generate-documentation.md) |
 
 **For detailed documentation:** See full command files in [../.claude/commands/](../.claude/commands/)
@@ -126,12 +125,10 @@
 - **Quick guide:** [check-status.md](../.claude/commands/how-to-use/check-status.md)
 - **Full docs:** [../.claude/commands/project-status.md](../.claude/commands/project-status.md)
 
-**`/update-progress`**
-- **Purpose:** Manual progress tracking
-- **Usage:** `/update-progress`
-- **When:** Manual workflow (not needed with `/execute-work` automation)
-- **Output:** Updated progress files, current status
-- **Full docs:** [../.claude/commands/update-progress.md](../.claude/commands/update-progress.md)
+**Progress tracking**
+- Progress is now updated automatically during `/execute-work`
+- Open `../output/progress/DASHBOARD.md` for live view
+- No manual command — the `/update-progress` command was removed in v3.2.0
 
 ---
 
@@ -164,7 +161,7 @@ cp client-docs/* .project-management/client-input/
 /run-tests all
 # → Fix issues
 # → Commit manually
-/update-progress
+# → Open DASHBOARD.md (auto-updated) to check progress
 ```
 
 ### Scope Management
@@ -216,8 +213,8 @@ Scope changed?
 └─ Promote future? → /promote-requirement US-XXX
 
 Need status?
-├─ Quick check? → /project-status
-└─ Manual update? → /update-progress
+├─ Live view? → Open DASHBOARD.md (auto-updated)
+└─ Detailed report? → /project-status
 
 Tests or docs?
 ├─ Run tests? → /run-tests [scope]

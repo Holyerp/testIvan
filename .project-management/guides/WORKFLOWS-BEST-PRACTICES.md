@@ -134,8 +134,8 @@ Project
 git add .
 git commit -m "feat: implement US-015"
 
-# Update progress
-/update-progress
+# Progress: open output/progress/DASHBOARD.md (auto-updated when you use /execute-work).
+# Manual edits: open the progress file directly.
 ```
 
 **Best for:** Exploratory work, learning new tech, prototyping
@@ -152,7 +152,7 @@ git commit -m "feat: implement US-015"
 # Manual implementation US-002 # Complex story → manual
 /execute-work epic Epic-3     # Entire epic → automated
 /run-tests all                # Manual test run
-/update-progress              # Manual progress update
+# Progress auto-updates via /execute-work → open DASHBOARD.md
 ```
 
 **Best for:** Most projects - use right tool for each task
@@ -207,10 +207,10 @@ git commit -m "feat: implement US-015"
 - Recommendations
 ```
 
-### 7. Update Progress
-- ✅ Automatic in `/execute-work`
-- ✅ Manual: `/update-progress` (if not using automation)
-- ✅ Daily updates recommended
+### 7. Progress Tracking
+- ✅ Automatic in `/execute-work` (DASHBOARD.md, daily-summary.md, etc. refresh on story completion)
+- ✅ Live view: open `output/progress/DASHBOARD.md` — always current
+- ✅ Manual adjustments: edit progress files directly (the `/update-progress` command was removed in v3.2.0)
 
 ### 8. Use Status Reports
 ```bash
@@ -235,13 +235,13 @@ git commit -m "feat: implement US-015"
 ### 10. Handle Blockers Promptly
 ```bash
 # When blocked
-/update-progress → Document blocker
+Edit output/progress/blockers.md → Document blocker
 
 # Check impact
 /project-status → See blocker impact
 
 # When resolved
-/update-progress → Mark as resolved
+Edit blockers.md → Mark as resolved
 ```
 
 **[Detailed best practices →](../docs/BEST-PRACTICES.md)**
@@ -265,7 +265,7 @@ Fill input/*.md → /init-project → /execute-work phase 1
 /execute-work phase N → Continue work → /project-status
 
 # Manual
-Implement → /run-tests → Commit → /update-progress
+Implement → /run-tests → Commit → Open DASHBOARD.md (auto-updated) to verify
 ```
 
 ### Debugging Issues

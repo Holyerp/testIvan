@@ -511,7 +511,6 @@ When executing this command:
 - Plus 5 other progress files
 
 **Migration Date:** 2026-04-20
-**See:** `MIGRATION-COMPLETE.md` for full report
 
 ---
 

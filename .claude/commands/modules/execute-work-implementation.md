@@ -213,7 +213,7 @@ Mark "Create git commit" todo as completed
 - Tests: {{total_tests}} passing
 - Coverage: {{coverage}}%
 
-ℹ️  Run /update-progress later for complete tracking.
+ℹ️  For complete tracking later: re-run in Complete mode or edit progress files directly.
 ```
 
 ---
@@ -250,7 +250,7 @@ Mark "Create git commit" todo as completed
 
 **4. Skip Blockers File:**
 - **DO NOT** update `blockers.md` automatically
-- Blockers require manual input (use `/update-progress` for blockers)
+- Blockers require manual input — edit `blockers.md` directly
 
 **Display:**
 ```
@@ -268,7 +268,7 @@ Mark "Create git commit" todo as completed
 - Tests: {{total_tests}} passing
 - Coverage: {{coverage}}%
 
-ℹ️  Note: Blockers not updated (use /update-progress for blockers)
+ℹ️  Note: Blockers not updated (edit blockers.md directly when needed)
 ```
 
 ---

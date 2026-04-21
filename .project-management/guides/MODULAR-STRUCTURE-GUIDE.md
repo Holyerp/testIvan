@@ -386,10 +386,9 @@ Claude will add to correct phase backlog file.
 /project-status
 ```
 
-**Manual progress update:**
-```bash
-/update-progress
-```
+**Manual progress adjustments:**
+Edit progress files directly (`DASHBOARD.md`, `blockers.md`, etc.).
+The `/update-progress` command was removed in v3.2.0.
 
 ---
 
@@ -414,7 +413,7 @@ A: No, both exist. DASHBOARD.md for quick view, /project-status for detailed rep
 A: Every time you use `/execute-work`. Real-time during work.
 
 **Q: Can I edit DASHBOARD.md manually?**
-A: Not recommended. Auto-updates will overwrite. Use `/update-progress` for manual changes.
+A: Not recommended — the next `/execute-work` run will overwrite sections it auto-manages. If you must edit manually, do it right before running a report and expect it to be replaced later.
 
 ---
 

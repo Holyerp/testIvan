@@ -48,7 +48,6 @@ ls -la .claude/commands/
 # execute-work.md
 # init-project.md
 # run-tests.md
-# update-progress.md
 # project-status.md
 # process-client-docs.md
 # generate-docs.md
@@ -320,11 +319,13 @@ git diff
 # 1. Check if using /execute-work
 # Progress updates automatically
 
-# 2. If manual workflow, update manually
-/update-progress
+# 2. If manual workflow, edit progress files directly
+#    (the /update-progress command was removed in v3.2.0)
 
 # 3. Verify progress files
 ls .project-management/output/progress/
+# DASHBOARD.md
+# daily-summary.md
 # current-status.md
 # completed.md
 # blockers.md

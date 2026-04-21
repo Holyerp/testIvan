@@ -402,6 +402,4 @@ User runs: /migrate-backlog
 - `input/backlog/phase-4-polish.md` (96 lines)
 - `input/backlog/future.md` (120 lines)
 
-**See:** `MIGRATION-COMPLETE.md` for full report
-
 **Last Updated:** 2026-04-20

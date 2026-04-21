@@ -60,7 +60,9 @@ Before ANY implementation, you MUST read and follow these rules:
 [2] Complete (slower - updates all progress files)
 
 ℹ️  Recommendation: Use "Phase Only" for faster execution.
-   You can run /update-progress later for complete tracking.
+   If you need the other progress files refreshed, either run
+   "Complete" on the next pass or edit them directly
+   (the /update-progress command was removed in v3.2.0).
 
    Complete mode updates:
    - Phase file (phase-N.md)
@@ -236,7 +238,8 @@ Story US-XXX is complete! Continue with remaining stories.
 
 {{If Progress Tracking Mode was "Phase Only":}}
 ℹ️  Note: Only phase file was updated during execution.
-   Run /update-progress for complete tracking (completed.md, current-status.md, blockers.md)
+   For complete tracking, run `/execute-work` again in Complete mode or
+   edit completed.md / current-status.md / blockers.md directly.
 
 📊 PHASE PROGRESS:
 
@@ -304,7 +307,7 @@ When DASHBOARD.md exists, it's automatically updated during work:
 - **Phase Only (Recommended):** Faster execution, updates only `phase-N.md`
   - Best for: Long phases with many stories
   - Time saved: ~10-30 seconds per story
-  - Run `/update-progress` later for complete tracking
+  - For complete tracking later: re-run in Complete mode, or edit progress files directly
 
 - **Complete:** Slower execution, updates ALL progress files
   - Updates: `phase-N.md`, `completed.md`, `current-status.md`

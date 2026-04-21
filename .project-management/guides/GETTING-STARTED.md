@@ -400,8 +400,8 @@ A mandatory pre-implementation phase where Claude analyzes requirements, creates
 /execute-work phase 1      # Automated phase execution
 /execute-work story US-001 # Single story execution
 /run-tests all             # Manual testing
-/update-progress           # Manual progress update
 /project-status            # Comprehensive status report
+# Open output/progress/DASHBOARD.md for live progress (auto-updated)
 ```
 
 ---
@@ -449,7 +449,7 @@ Before marking story complete:
 
 1. **Learn the commands** → See `COMMANDS-REFERENCE.md`
 2. **Understand workflows** → See `WORKFLOWS-BEST-PRACTICES.md`
-3. **Troubleshooting** → See `FAQ-TROUBLESHOOTING.md`
+3. **Troubleshooting** → See `TROUBLESHOOTING.md` (or `FAQ.md`)
 
 ---
 

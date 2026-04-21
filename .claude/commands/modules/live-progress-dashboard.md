@@ -2,7 +2,7 @@
 
 **Purpose:** Auto-update progress files during work execution for real-time visibility without running commands.
 
-**Used by:** `/execute-work`, `/update-progress`
+**Used by:** `/execute-work`
 
 ---
 
@@ -512,7 +512,7 @@ cp templates/dashboard-template.md output/progress/DASHBOARD.md
 ---
 
 **Related:**
-- Used by: `/execute-work`, `/update-progress`, `/migrate-to-modular`
+- Used by: `/execute-work`, `/migrate-to-modular` (legacy)
 - Backlog organization: `backlog-organization.md`
 
 ---
@@ -548,7 +548,5 @@ cp templates/dashboard-template.md output/progress/DASHBOARD.md
 - Velocity and timeline projections
 - Quality metrics section
 - Phase-by-phase breakdown
-
-**See:** `MIGRATION-COMPLETE.md` for full report
 
 **Last Updated:** 2026-04-20
