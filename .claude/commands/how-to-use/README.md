@@ -65,6 +65,10 @@ START HERE
     │   └─→ Open DASHBOARD.md (live) OR /project-status (report)
     │       └─→ [See: check-status.md]
     │
+    ├─ Framework docs feel out of sync / stale?
+    │   └─→ Use /audit-pm
+    │       └─→ [See: audit-pm.md]
+    │
     └─ Need to update documentation?
         └─→ Use /generate-docs
             └─→ [See: generate-docs.md]
@@ -87,6 +91,7 @@ START HERE
 | Execute bug fix | `/execute-work bug BUG-XXX` | [execute-work.md](./execute-work.md) | ~150 | varies |
 | Run tests manually | `/run-tests [type]` | [run-tests.md](./run-tests.md) | ~80 | varies |
 | Check project status | `/project-status` | [check-status.md](./check-status.md) | ~80 | 1 min |
+| Audit framework docs health | `/audit-pm` | [audit-pm.md](./audit-pm.md) | ~90 | 1-2 min |
 | Generate/update docs | `/generate-docs` | [generate-docs.md](./generate-docs.md) | ~100 | 2-3 min |
 
 ---
@@ -99,7 +104,7 @@ START HERE
 2. **For any command** - Read its quick guide (75-150 lines)
 3. **If details needed** - Read full command docs (200-450 lines in `../`)
 
-**Coverage:** All 11 slash commands have quick guides (v3.2+).
+**Coverage:** All 12 slash commands have quick guides (v3.2+).
 
 **Estimated token savings: 60-70% for common tasks**
 

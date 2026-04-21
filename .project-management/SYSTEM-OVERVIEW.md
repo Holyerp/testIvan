@@ -17,7 +17,7 @@ project-root/
 │
 ├── .claude/
 │   ├── README.md
-│   ├── commands/                               # Slash commands (15 total)
+│   ├── commands/                               # Slash commands (12 total)
 │   │   ├── init-project.md
 │   │   ├── process-client-docs.md
 │   │   ├── generate-docs.md
@@ -28,10 +28,16 @@ project-root/
 │   │   ├── add-bug.md
 │   │   ├── run-tests.md
 │   │   ├── project-status.md
+│   │   ├── audit-pm.md                         # framework health audit
 │   │   ├── migrate-to-modular.md               # legacy-only
 │   │   ├── COMMAND-TEMPLATE.md                 # meta: template for new commands
-│   │   ├── how-to-use/                         # 11 quick guides (~80-150 lines each)
-│   │   └── modules/                            # 22+ modular command internals
+│   │   ├── how-to-use/                         # 12 quick guides (~80-150 lines each)
+│   │   └── modules/                            # 26+ modular command internals
+│   ├── hooks/                                  # Validation + audit shell scripts
+│   │   ├── README.md
+│   │   ├── post-write-validations.sh           # file-size + backlog sync (PostToolUse)
+│   │   ├── stop-changelog-check.sh             # CHANGELOG coverage (Stop)
+│   │   └── audit-pm.sh                         # /audit-pm mechanical checks
 │   ├── rules/                                  # Coding + process rules
 │   │   ├── code-quality.md
 │   │   ├── testing.md
@@ -177,9 +183,10 @@ project-root/
 
 ## Command Count (v3.2)
 
-- **11 slash commands:** init-project, process-client-docs, generate-docs, execute-work, add-scope, add-backlog-requirement, promote-requirement, add-bug, run-tests, project-status, migrate-to-modular (legacy)
-- **11 how-to-use quick guides:** one per slash command
-- **22+ modules:** internal logic split by concern (init-project, execute-work, add-scope, run-tests, project-status, process-client-docs, live-progress, backlog-organization)
+- **12 slash commands:** init-project, process-client-docs, generate-docs, execute-work, add-scope, add-backlog-requirement, promote-requirement, add-bug, run-tests, project-status, audit-pm, migrate-to-modular (legacy)
+- **12 how-to-use quick guides:** one per slash command
+- **26+ modules:** internal logic split by concern (init-project, execute-work, add-scope, run-tests, project-status, process-client-docs, live-progress, backlog-organization)
+- **3 hook scripts:** post-write-validations.sh, stop-changelog-check.sh, audit-pm.sh
 - **7 rules:** code-quality, testing, git, database, documentation, permissions, stack-specific
 
 ---

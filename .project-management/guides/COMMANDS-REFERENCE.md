@@ -21,6 +21,7 @@
 | Promote future requirement | `/promote-requirement US-XXX --to-phase N` | Full docs only |
 | Run tests manually | `/run-tests [scope]` | Full docs only |
 | Check project status | `/project-status` | [How-to](../.claude/commands/how-to-use/check-status.md) |
+| Audit framework docs health | `/audit-pm` | [How-to](../.claude/commands/how-to-use/audit-pm.md) |
 | Update documentation | `/generate-docs` | [How-to](../.claude/commands/how-to-use/generate-docs.md) |
 
 **For detailed documentation:** See full command files in [../.claude/commands/](../.claude/commands/)
