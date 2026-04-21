@@ -1,12 +1,13 @@
-# Execute Work - Implementation Loop Module
+# Execute Work — Implementation Loop Module
 
 **Referenced by:** `execute-work.md` STEP 3
+**Companion:** `execute-work-progress-updates.md` (per-mode progress-file updates)
 
 ---
 
-## STEP 3: IMPLEMENTATION LOOP
+## STEP 3 — Implementation Loop
 
-**For each story in scope (phase, epic, or single story):**
+Repeat for each story in scope (phase, epic, or single story).
 
 ---
 
@@ -15,28 +16,29 @@
 **Display:**
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 Starting: US-XXX - [Story Title]
+🚀 Starting: US-XXX — [Story Title]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Story Points: [N]
-Epic: [Epic Name]
-Priority: [P0/P1/P2]
+Epic:         [Epic Name]
+Priority:     [P0/P1/P2]
 ```
 
-**Use TodoWrite tool to create task breakdown:**
+**Break down with TodoWrite:**
+
 ```javascript
 TodoWrite({
   todos: [
-    { content: "Read technical spec for US-XXX context", activeForm: "Reading technical spec", status: "in_progress" },
-    { content: "Implement task 1: [description]", activeForm: "Implementing task 1", status: "pending" },
-    { content: "Implement task 2: [description]", activeForm: "Implementing task 2", status: "pending" },
-    { content: "Write unit tests", activeForm: "Writing unit tests", status: "pending" },
-    { content: "Write integration tests", activeForm: "Writing integration tests", status: "pending" },
-    { content: "Write E2E tests", activeForm: "Writing E2E tests", status: "pending" },
-    { content: "Verify i18n translations", activeForm: "Verifying i18n translations", status: "pending" },  // if I18N-RULES.md exists
-    { content: "Run all tests and verify coverage", activeForm: "Running tests", status: "pending" },
-    { content: "Create git commit", activeForm: "Creating git commit", status: "pending" },
-    { content: "Update progress tracking", activeForm: "Updating progress", status: "pending" }
-  ]
+    { content: "Read technical spec for US-XXX context",   activeForm: "Reading technical spec",   status: "in_progress" },
+    { content: "Implement task 1: [description]",          activeForm: "Implementing task 1",      status: "pending" },
+    { content: "Implement task 2: [description]",          activeForm: "Implementing task 2",      status: "pending" },
+    { content: "Write unit tests",                          activeForm: "Writing unit tests",       status: "pending" },
+    { content: "Write integration tests",                   activeForm: "Writing integration tests", status: "pending" },
+    { content: "Write E2E tests",                           activeForm: "Writing E2E tests",        status: "pending" },
+    { content: "Verify i18n translations",                  activeForm: "Verifying i18n translations", status: "pending" },  // if I18N-RULES.md exists
+    { content: "Run all tests and verify coverage",         activeForm: "Running tests",            status: "pending" },
+    { content: "Create git commit",                         activeForm: "Creating git commit",      status: "pending" },
+    { content: "Update progress tracking",                  activeForm: "Updating progress",        status: "pending" },
+  ],
 })
 ```
 
@@ -44,127 +46,109 @@ TodoWrite({
 
 ### 3.2 Read Story Context
 
-- Re-read technical spec sections relevant to this story
-- Re-read coding standards
-- Understand acceptance criteria
-- Mark todo as completed, move to next
+- Re-read technical-spec sections relevant to this story.
+- Re-read coding standards.
+- Understand acceptance criteria.
+- Mark todo completed; move on.
 
 ---
 
 ### 3.3 Implement Tasks
 
-**For each task:**
-1. Mark task as "in_progress" in TodoWrite
-2. Read existing code files (use Read tool)
-3. Implement changes following:
-   - SOLID & DRY principles (code-quality.md)
-   - Technical spec patterns
-   - Project rules
-4. Mark task as "completed" in TodoWrite
-5. Move to next task
+For each task:
 
-**IMPORTANT:**
-- NEVER skip reading existing files
-- NEVER create over-engineered solutions
-- NEVER add unrequested features
-- ALWAYS follow existing patterns
+1. Mark as `in_progress`.
+2. Read existing code files (`Read` tool — never skip).
+3. Implement changes following:
+   - SOLID & DRY (`code-quality.md`)
+   - Technical-spec patterns
+   - Project rules
+4. Mark `completed`.
+
+**Non-negotiables:**
+- Never skip reading existing files.
+- No over-engineered solutions.
+- No unrequested features.
+- Always follow existing patterns.
 
 ---
 
 ### 3.4 Write Tests (MANDATORY)
 
-**Mark testing tasks as in_progress, then:**
+**Unit tests:**
+- All new functions / components.
+- Edge cases + error handling.
+- Co-located `*.test.ts` or `__tests__/unit/`.
 
-**1. Unit Tests:**
-- Test all new functions/components
-- Test edge cases
-- Test error handling
-- Co-locate with code or in `__tests__/unit/`
+**Integration tests** — all API endpoints must cover:
 
-**2. Integration Tests:**
-- Test API endpoints
-- **MANDATORY:** Test ALL status codes:
-  - 200/201 (success)
-  - 400 (validation error)
-  - 401 (unauthorized)
-  - 403 (forbidden)
-  - 404 (not found)
-  - 500 (server error)
-- Test database interactions
+| Code | Case |
+|------|------|
+| 200/201 | Success |
+| 400 | Validation error |
+| 401 | Unauthorized |
+| 403 | Forbidden |
+| 404 | Not found |
+| 500 | Server error |
 
-**3. E2E Tests (if applicable):**
-- Test critical user flows
-- Use Playwright
+Plus database interactions.
 
-**Test file naming:**
-- Unit: `ComponentName.test.tsx` or `function-name.test.ts`
+**E2E tests (if applicable):** critical user flows (Playwright).
+
+**File naming:**
+- Unit:        `ComponentName.test.tsx` / `function-name.test.ts`
 - Integration: `api-endpoint.integration.test.ts`
-- E2E: `user-flow.e2e.test.ts`
-
-**Mark each testing todo as completed after writing tests.**
+- E2E:         `user-flow.e2e.test.ts`
 
 ---
 
-### 3.5 Verify i18n (CONDITIONAL)
+### 3.5 Verify i18n (conditional)
 
-**IF `.project-management/rules/I18N-RULES.md` exists:**
+**Only if `.project-management/rules/I18N-RULES.md` exists:**
 
-**Mark i18n todo as in_progress, then:**
-1. Search for any hardcoded user-facing text
-2. Verify all text uses translation keys
-3. Check translation files exist for all configured languages
-4. If missing translations:
-   - Add translation keys
-   - Update translation JSON files
-5. Mark i18n todo as completed
+1. Search for hardcoded user-facing text.
+2. Verify all text uses translation keys.
+3. Check translation files exist for all configured languages.
+4. Add missing keys + update JSON files.
 
-**IF I18N-RULES.md does NOT exist:**
-- Skip this step entirely
-- Remove i18n todo from list
+**If I18N-RULES.md is absent:** skip entirely; remove the i18n todo from the list.
 
 ---
 
-### 3.6 Run Tests (MANDATORY - SECOND-TO-LAST STEP)
+### 3.6 Run Tests (MANDATORY — second-to-last step)
 
-**Mark "Run all tests" todo as in_progress**
+Mark "Run all tests" todo as `in_progress`. Display: `🧪 Running Tests for US-XXX...`
 
-**Display:** `🧪 Running Tests for US-XXX...`
+Execute:
+1. Vitest (unit + integration): `npm test`
+2. Playwright (E2E): `npm run test:e2e`
+3. Coverage: `npm run test:coverage` (must be ≥ 80%)
 
-**Execute:**
+Results block:
 
-1. **Run Vitest (Unit + Integration):** `npm test`
-2. **Run Playwright (E2E):** `npm run test:e2e`
-3. **Check Coverage:** `npm run test:coverage` (must be > 80%)
-
-**Display results:**
 ```
 📊 Test Results:
-✅ Unit Tests: [X]/[X] passed
-✅ Integration Tests: [Y]/[Y] passed
-✅ E2E Tests: [Z]/[Z] passed
-✅ Coverage: [XX]% (Target: 80%+)
-✅ API Status Codes: All tested (200/400/401/403/404/500)
-{{✅ i18n: All translations present}}
+✅ Unit Tests:         [X]/[X] passed
+✅ Integration Tests:  [Y]/[Y] passed
+✅ E2E Tests:          [Z]/[Z] passed
+✅ Coverage:           [XX]% (target 80%+)
+✅ API Status Codes:   all tested (200/400/401/403/404/500)
+{{✅ i18n: all translations present}}
 ```
 
-**See:** `modules/execute-work-quality-gates.md` for validation details
+Validation details: `execute-work-quality-gates.md`.
 
 ---
 
-### 3.7 Git Commit (AUTO - FINAL STEP)
+### 3.7 Git Commit (AUTO — final step)
 
-**Mark "Create git commit" todo as in_progress**
+Mark commit todo as `in_progress`. **CRITICAL:** follow `.claude/rules/git.md` — **NO AI credits!**
 
-**CRITICAL: Follow `.claude/rules/git.md` - NO AI CREDITS!**
-
-**Commit format:**
 ```bash
 git add .
-
 git commit -m "$(cat <<'EOF'
 {{type}}: implement US-XXX {{story title}}
 
-{{List of completed tasks}}
 - Task 1: {{description}}
 - Task 2: {{description}}
 
@@ -175,147 +159,75 @@ EOF
 )"
 ```
 
-**Commit types:** `feat:` | `fix:` | `refactor:` | `test:` | `docs:`
+Commit types: `feat:` · `fix:` · `refactor:` · `test:` · `docs:`.
 
-**ABSOLUTELY FORBIDDEN:**
+**Forbidden:**
 - ❌ "🤖 Generated with Claude Code"
 - ❌ "Co-Authored-By: Claude"
-- ❌ ANY AI attribution
+- ❌ any AI attribution
 
-**After commit:** `✅ Git commit created: [commit-hash]`
-
-Mark "Create git commit" todo as completed
+On success: `✅ Git commit created: [commit-hash]`. Mark todo completed.
 
 ---
 
 ### 3.8 Update Progress Tracking (AUTO)
 
-**Mark "Update progress tracking" todo as in_progress**
+Mark progress todo `in_progress`. Update behavior depends on the tracking mode selected in STEP 0:
 
-**Progress tracking depends on mode selected in STEP 0:**
+- **Phase Only (faster)** — updates only `output/phases/phase-N.md`.
+- **Complete (slower)** — updates phase file + `completed.md` + `current-status.md`; recalculates velocity.
 
----
+Full templates for both modes (file lists, update templates, display blocks): **`execute-work-progress-updates.md`**.
 
-#### Mode 1: Phase Only (Faster)
+**Never update `blockers.md` automatically** — blockers need human context; edit the file directly.
 
-**Update ONLY `.project-management/output/phases/phase-N.md`:**
-1. Find the story section
-2. Update status to "Completed"
-3. Add completion timestamp
-4. Add test metrics
-5. Add commit hash
-6. Update phase progress metrics
-
-**Display:**
-```
-📊 Progress Updated (Phase Only):
-- Phase N: {{completed_points}}/{{total_points}} points ({{percentage}}%)
-- Tests: {{total_tests}} passing
-- Coverage: {{coverage}}%
-
-ℹ️  For complete tracking later: re-run in Complete mode or edit progress files directly.
-```
-
----
-
-#### Mode 2: Complete (Slower - Full Update)
-
-**Update ALL progress files:**
-
-**1. Update Phase File (`.project-management/output/phases/phase-N.md`):**
-- Find the story section
-- Update status to "Completed"
-- Add completion timestamp, test metrics, commit hash
-- Update phase progress metrics
-
-**2. Update Completed Work (`.project-management/output/progress/completed.md`):**
-- Add to current week section (or create new week section)
-```markdown
-## Week {{WEEK_NUMBER}} ({{DATE_RANGE}})
-
-### Completed Stories
-- ✅ US-XXX: {{story_title}} ({{points}} points)
-  - Completed: {{DATE}}
-  - Tests: {{test_count}} passing
-  - Coverage: {{coverage}}%
-  - Commit: {{commit_hash}}
-```
-
-**3. Update Current Status (`.project-management/output/progress/current-status.md`):**
-- Recalculate overall completion percentage
-- Update phase progress
-- Recalculate velocity: `Story Points Completed / Weeks Elapsed`
-- Update test coverage metrics
-- Update timeline status
-
-**4. Skip Blockers File:**
-- **DO NOT** update `blockers.md` automatically
-- Blockers require manual input — edit `blockers.md` directly
-
-**Display:**
-```
-📊 Progress Updated (Complete):
-
-✅ PHASE FILE:
-- Phase N: {{completed_points}}/{{total_points}} points ({{percentage}}%)
-
-✅ COMPLETED WORK:
-- Added US-XXX to Week {{WEEK_NUMBER}}
-
-✅ CURRENT STATUS:
-- Overall Completion: {{old}}% → {{new}}% (+{{delta}}%)
-- Velocity: {{velocity}} points/week
-- Tests: {{total_tests}} passing
-- Coverage: {{coverage}}%
-
-ℹ️  Note: Blockers not updated (edit blockers.md directly when needed)
-```
-
----
-
-Mark "Update progress tracking" todo as completed
+Mark todo completed.
 
 ---
 
 ### 3.9 Story Completion
 
-**Display:**
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ US-XXX COMPLETED
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Story: {{story title}}
-Points: {{points}}
-Tests: {{tests_passed}}/{{tests_total}} passed
+Story:    {{story title}}
+Points:   {{points}}
+Tests:    {{tests_passed}}/{{tests_total}} passed
 Coverage: {{coverage}}%
-Commit: {{commit_hash}}
+Commit:   {{commit_hash}}
 Duration: {{duration}}
 ```
 
-**Clear TodoWrite for next story.**
+Clear TodoWrite for the next story.
 
 ---
 
 ### 3.10 Check Execution Mode
 
-**IF execution mode is "Paused":**
+**Paused:**
 ```
 ⏸️  Pause before next story
 
 Continue with next story?
-[Yes] - Continue
-[No] - Stop execution (can resume later)
-[Skip to Epic X] - Jump to specific epic
+[Yes]              — Continue
+[No]               — Stop (resume later with same command)
+[Skip to Epic X]   — Jump to specific epic
 ```
-**Wait for user response.**
+Wait for user.
 
-**IF execution mode is "Continuous":**
+**Continuous:**
 ```
 ▶️  Continuing with next story: US-YYY
 ```
 
-**Proceed to next story in scope (go back to 3.1).**
+Proceed to next story (go back to 3.1). When all stories in scope are done → STEP 4 (completion report).
 
 ---
 
-**Next Step:** Continue loop or proceed to STEP 4 (completion report) when all stories done
+**Version:** 3.2.0
+**Last Updated:** 2026-04-21 (split: progress-update templates moved to companion)
+**Related:**
+- `execute-work-quality-gates.md` — test/coverage validation
+- `execute-work-progress-updates.md` — per-mode progress-file templates
+- `execute-work-dashboard-events.md` + `-mechanics.md` — DASHBOARD auto-update
