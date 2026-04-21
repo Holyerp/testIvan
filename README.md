@@ -70,6 +70,14 @@ cp -r .claude /path/to/your/project/
 
 Without these, personal `settings.local.json` (may contain tokens), client-private docs, and constantly-regenerated progress files would leak into git.
 
+**One more one-time step — copy the permissions template so Claude stops asking about every file edit and shell command:**
+
+```bash
+cp .claude/settings.example.json .claude/settings.json
+```
+
+That template grants broad `Bash(*)` / `Edit(**)` / `Write(**)` permissions and sets `defaultMode: "acceptEdits"`, so `/execute-work`, `/init-project`, and the rest run end-to-end without prompting. Dangerous patterns (`rm -rf /`, `git push --force`, `git reset --hard`) stay blocked. If you want tighter control, see [.claude/rules/permissions.md](.claude/rules/permissions.md) §Option B. Commands themselves don't need to reference `settings.json` — the Claude Code harness auto-enforces it every session.
+
 ### 2. Initialize Git + Initial Commit
 
 If your project is not already a git repository, do this **before running any `/` commands**:
