@@ -23,5 +23,30 @@
     "ask": []
   },
   "defaultMode": "acceptEdits",
-  "_comment": "⚠️ IMPORTANT: Copy this to settings.json. Claude should NEVER modify settings.json automatically. See .claude/rules/permissions.md for details."
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/post-write-validations.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/stop-changelog-check.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "_comment": "⚠️ IMPORTANT: Copy this to settings.json. Claude should NEVER modify settings.json automatically. See .claude/rules/permissions.md for details. Hooks require jq + git; see .claude/hooks/*.sh for what they enforce (documentation.md §2.1 file-size limits + CHANGELOG reminder)."
 }
