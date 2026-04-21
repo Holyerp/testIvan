@@ -166,8 +166,8 @@ Claude: ✅ Added US-021: Export User Data
 
 | Issue | Solution | Reference |
 |-------|----------|-----------|
-| "Project not initialized" | Run `/init-project` first | [start-project.md](./start-project.md) |
-| "Phase number out of range" | Check existing phases with `/project-status` | [check-status.md](./check-status.md) |
+| "Project not initialized" | Run `/init-project` first | [init-project.md](./init-project.md) |
+| "Phase number out of range" | Check existing phases with `/project-status` | [project-status.md](./project-status.md) |
 | Wrong story ID format (US-5) | Use zero-padded format (US-005) | Full docs section "Arguments" |
 | Duplicate story title warning | Review existing stories, proceed or cancel | Full docs section "Error Handling" |
 

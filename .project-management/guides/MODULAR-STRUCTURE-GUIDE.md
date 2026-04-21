@@ -1,6 +1,6 @@
 # Modular File Structure Guide
 
-**Version:** 3.1.0
+**Version:** 3.2.0
 **What's New:** Organized backlog by phase + Live auto-updating dashboard
 
 ---
@@ -464,4 +464,4 @@ open .project-management/input/backlog/phase-1-foundation.md
 ---
 
 **Last Updated:** 2026-04-20
-**Version:** 3.1.0
+**Version:** 3.2.0

@@ -1,4 +1,4 @@
-# Check Project Status - Quick Guide
+# Project Status - Quick Guide
 
 **Use when:** Need quick overview of project health and progress
 **Command:** `/project-status`
@@ -157,7 +157,7 @@ Claude: Reading project data...
 
 | Issue | Solution | Reference |
 |-------|----------|-----------|
-| "No progress data" | Run `/init-project` first | [start-project.md](./start-project.md) |
+| "No progress data" | Run `/init-project` first | [init-project.md](./init-project.md) |
 | Velocity calculation missing | Need at least 2 completed stories | Full docs "Calculation" |
 | Blockers not showing | Update blockers.md manually | `.project-management/output/progress/blockers.md` |
 

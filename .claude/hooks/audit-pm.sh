@@ -194,8 +194,12 @@ check_links() {
 }
 
 tmp_broken=$(mktemp)
-for f in $(find .project-management .claude -name "*.md" -type f 2>/dev/null); do
-  check_links "$f" >> "$tmp_broken" 2>/dev/null
+# Skip templates/ (paths use {{placeholders}}, instantiated at copy time, not valid as-written)
+for f in $(find .project-management .claude -name "*.md" -type f 2>/dev/null \
+  | grep -vE '/(templates|client-input|examples)/'); do
+  check_links "$f" 2>/dev/null \
+    | grep -vE '\{\{.*\}\}|\$\{.*\}|\$[A-Z_]+' \
+    >> "$tmp_broken"
 done
 
 if [ -s "$tmp_broken" ]; then

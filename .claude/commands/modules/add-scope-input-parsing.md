@@ -362,5 +362,5 @@ US-[XXX] not found in any phase file. Available stories:
 
 ---
 
-**Version:** 3.1.0
+**Version:** 3.2.0
 **Last Updated:** 2026-04-20 (Modular structure support)

@@ -5,7 +5,7 @@ description: Generate comprehensive project status report showing progress, comp
 
 # Project Status
 
-**📖 Quick Start:** See [how-to-use/check-status.md](./how-to-use/check-status.md) for quick guide (~80 lines)
+**📖 Quick Start:** See [how-to-use/project-status.md](./how-to-use/project-status.md) for quick guide (~80 lines)
 
 Generate a comprehensive overview of the current project status.
 
@@ -397,7 +397,7 @@ Else → Delayed
 
 ---
 
-**Version:** 3.1.0
+**Version:** 3.2.0
 **Created:** 2026-03-27
 **Updated:** 2026-04-20 (Modular structure support)
 **Command Type:** Reporting & Analytics

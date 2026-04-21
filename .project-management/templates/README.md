@@ -184,7 +184,7 @@ Some files auto-update during command execution:
 
 **Created:** 2026-04-20
 **Maintained:** Yes
-**Version:** 3.1.0
+**Version:** 3.2.0
 
 **Template Coverage:**
 - ✅ Backlog templates (3)

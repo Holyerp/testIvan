@@ -116,7 +116,7 @@
 │   │   ├── add-backlog-requirement.md
 │   │   ├── add-bug.md
 │   │   ├── execute-phase.md
-│   │   ├── check-status.md
+│   │   ├── project-status.md
 │   │   ├── generate-documentation.md
 │   │   └── process-client-docs.md
 │   │

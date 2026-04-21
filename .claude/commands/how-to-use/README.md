@@ -63,7 +63,7 @@ START HERE
     │
     ├─ Need to check project status?
     │   └─→ Open DASHBOARD.md (live) OR /project-status (report)
-    │       └─→ [See: check-status.md]
+    │       └─→ [See: project-status.md]
     │
     ├─ Framework docs feel out of sync / stale?
     │   └─→ Use /audit-pm
@@ -90,7 +90,7 @@ START HERE
 | Execute phase/epic/story | `/execute-work [scope]` | [execute-work.md](./execute-work.md) | ~150 | varies |
 | Execute bug fix | `/execute-work bug BUG-XXX` | [execute-work.md](./execute-work.md) | ~150 | varies |
 | Run tests manually | `/run-tests [type]` | [run-tests.md](./run-tests.md) | ~80 | varies |
-| Check project status | `/project-status` | [check-status.md](./check-status.md) | ~80 | 1 min |
+| Check project status | `/project-status` | [project-status.md](./project-status.md) | ~80 | 1 min |
 | Audit framework docs health | `/audit-pm` | [audit-pm.md](./audit-pm.md) | ~90 | 1-2 min |
 | Generate/update docs | `/generate-docs` | [generate-docs.md](./generate-docs.md) | ~100 | 2-3 min |
 

@@ -364,12 +364,12 @@ git push
 - **Getting Started:** [GETTING-STARTED.md](GETTING-STARTED.md)
 - **Commands Reference:** [COMMANDS-REFERENCE.md](COMMANDS-REFERENCE.md)
 - **Workflows:** [WORKFLOWS-BEST-PRACTICES.md](WORKFLOWS-BEST-PRACTICES.md)
-- **Core Standards:** [../.CLAUDE.MD](../.CLAUDE.MD)
+- **Core Standards:** [../.CLAUDE.MD](../../.CLAUDE.MD)
 
 ### Support
 - **GitHub Issues:** Report bugs or request features
 - **Community:** Share experiences and tips
-- **Updates:** Check [../CHANGELOG.md](../CHANGELOG.md) for latest changes
+- **Updates:** Check [../CHANGELOG.md](../../CHANGELOG.md) for latest changes
 
 ---
 

@@ -514,7 +514,7 @@ When executing this command:
 
 ---
 
-**Version:** 3.1.0
+**Version:** 3.2.0
 **Created:** 2026-04-14
 **Last Updated:** 2026-04-20
 **Status:** ✅ Tested and Working

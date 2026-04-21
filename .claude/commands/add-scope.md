@@ -360,7 +360,7 @@ User: /add-scope add story 1 3
 
 ---
 
-**Version:** 3.1.0
+**Version:** 3.2.0
 **Updated:** 2026-04-20 (Modular structure support)
 
 **Note:** This is a condensed overview. For detailed implementation logic, see the module files linked above.

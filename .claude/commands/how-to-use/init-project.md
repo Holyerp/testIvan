@@ -191,7 +191,7 @@ Claude: [STEP 3-5: Generating...]
 |-------|----------|-----------|
 | "Input files not found" | Fill 4 input files OR run `/process-client-docs` | [process-client-docs.md](./process-client-docs.md) |
 | "Input files are empty" | Add content to scope.md and backlog.md minimum | `.project-management/README.md` |
-| "Project already initialized" | Use `/generate-docs` to regenerate docs instead | [generate-documentation.md](./generate-documentation.md) |
+| "Project already initialized" | Use `/generate-docs` to regenerate docs instead | [generate-docs.md](./generate-docs.md) |
 | Tech stack unclear | Specify in `input/technologies.md` before running | Full docs "Prerequisites" |
 
 ---

@@ -201,7 +201,7 @@ open output/progress/DASHBOARD.md
 | Execute phase work | `/execute-work phase N` | [How-to](../.claude/commands/how-to-use/execute-work.md) |
 | Fix a bug | `/execute-work bug BUG-XXX` | [How-to](../.claude/commands/how-to-use/execute-work.md) |
 | Promote future requirement | `/promote-requirement US-XXX --to-phase N` | See command docs |
-| Check project status | `/project-status` | [How-to](../.claude/commands/how-to-use/check-status.md) |
+| Check project status | `/project-status` | [How-to](../.claude/commands/how-to-use/project-status.md) |
 | Update documentation | `/generate-docs` | [How-to](../.claude/commands/how-to-use/generate-docs.md) |
 
 **📖 Full command documentation:** [guides/COMMANDS-REFERENCE.md](guides/COMMANDS-REFERENCE.md)

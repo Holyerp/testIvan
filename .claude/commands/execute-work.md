@@ -438,7 +438,7 @@ Context Read:
 
 ---
 
-**Version:** 3.1.0
+**Version:** 3.2.0
 **Created:** 2026-03-27
 **Updated:** 2026-04-20 (Modular structure support + DASHBOARD auto-updates)
 **Command Type:** Implementation Automation
