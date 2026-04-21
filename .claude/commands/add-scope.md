@@ -219,67 +219,7 @@ else if exists(".project-management/input/backlog.md"):
 
 ## Example Walkthrough
 
-### Adding a Phase at Position 2
-
-```
-User: /add-scope add phase 2
-
-STEP 0: Plan Mode
-→ Action: Add phase at position 2
-→ Current phases: 1, 2, 3
-→ Impact: Existing Phase 2 becomes Phase 3, Phase 3 becomes Phase 4
-→ Files affected: phase-2.md, phase-3.md, backlog.md, progress files
-
-STEP 1-3: Parse & Generate
-→ Prompt: Phase title?
-User: "Advanced Analytics"
-→ Prompt: Phase goal?
-User: "Implement analytics dashboard and reporting"
-→ Prompt: Duration estimate?
-User: "2-3 months"
-
-STEP 4: Preview
-Phase 2: Advanced Analytics
-Goal: Implement analytics dashboard and reporting
-Duration: 2-3 months
-
-Renumbering required:
-- Current Phase 2 → Phase 3
-- Current Phase 3 → Phase 4
-
-Files to modify:
-- Create phase-2.md
-- Rename phase-2.md → phase-3.md
-- Rename phase-3.md → phase-4.md
-- Update backlog.md (phase references)
-- Update progress files
-
-Proceed? [Yes / No / Revise]
-
-STEP 5: Execute (after Yes)
-✅ Created phase-2.md
-✅ Renumbered phase-2.md → phase-3.md
-✅ Renumbered phase-3.md → phase-4.md
-✅ Updated backlog.md
-✅ Updated progress files
-
-STEP 6: Integrity Checks
-✅ Phase numbering: Sequential (1, 2, 3, 4)
-✅ Epic numbering: Correct
-✅ Story IDs: Unique
-✅ Cross-references: Valid
-✅ Progress metrics: Updated
-
-STEP 7: Documentation
-Update PRD/tech-spec/architecture now?
-[Yes - run /generate-docs] / [No - I'll run manually later]
-
-STEP 8: Summary
-✅ Added Phase 2: Advanced Analytics
-✅ Renumbered 2 existing phases
-✅ Updated 5 files
-✅ All integrity checks passed
-```
+**Worked example** (add phase at position 2 with renumbering + integrity checks): see `add-scope-reference.md`.
 
 ---
 
@@ -294,57 +234,11 @@ STEP 8: Summary
 
 ---
 
-## 🔄 Backward Compatibility & Modular Structure Support
+## Structure Support (Modular + Legacy)
 
-**This command automatically detects and supports:**
+The command auto-detects whether the repo uses the **modular** backlog (`input/backlog/README.md`) or **monolithic** `input/backlog.md` and routes stories accordingly. Phase-routing rules, full side-effect list, and a routing example live in `add-scope-reference.md`.
 
-1. **Modular Backlog Structure (NEW):**
-   - Writes stories to correct phase file (e.g., `input/backlog/phase-1-foundation.md`)
-   - Updates master index (`input/backlog/README.md`) with recalculated statistics
-   - Updates DASHBOARD.md metrics if it exists
-   - Phase routing logic:
-     - P0 + foundation keywords → phase-1-foundation.md
-     - P0/P1 + core keywords → phase-2-core.md
-     - P1/P2 + advanced keywords → phase-3-advanced.md
-     - P2 + polish/bugs → phase-4-polish.md
-     - P3 or future keywords → future.md
-
-2. **Monolithic Backlog Structure (LEGACY):**
-   - Writes all stories to single `input/backlog.md`
-   - Still fully functional
-   - Consider running `/migrate-to-modular` to upgrade
-
-**Detection is automatic** - no user action needed!
-
-**See:** `modules/add-scope-input-parsing.md` for phase routing implementation details.
-
----
-
-## ✅ Modular Structure Support
-
-**Status:** ✅ Integrated (2026-04-20)
-
-**New Capabilities:**
-- ✅ Auto-detects modular vs monolithic backlog structure
-- ✅ Routes stories to correct phase-specific backlog file
-- ✅ Maintains README.md master index with updated statistics
-- ✅ Updates DASHBOARD.md when adding/editing stories
-- ✅ Fully backward compatible with legacy structure
-
-**Phase Routing Example:**
-```
-User: /add-scope add story 1 3
-→ Detects modular structure exists
-→ Determines story belongs to Phase 1
-→ Writes to input/backlog/phase-1-foundation.md (not backlog.md)
-→ Updates input/backlog/README.md statistics
-→ Updates output/progress/DASHBOARD.md metrics
-```
-
-**See:**
-- `COMMAND-STATUS.md` - Implementation tracking
-- `modules/backlog-organization.md` - Modular backlog structure
-- `modules/live-progress-dashboard.md` - DASHBOARD.md auto-updates
+Legacy monolithic projects remain fully supported — suggest `/migrate-to-modular` when convenient.
 
 ---
 
