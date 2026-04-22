@@ -164,7 +164,7 @@ Claude: Generating documentation...
 | Issue | Solution | Reference |
 |-------|----------|-----------|
 | "Input files not found" | Fill input files first | `.project-management/input/` folder |
-| "Input files empty" | Add content to scope.md and backlog.md | [start-project.md](./start-project.md) |
+| "Input files empty" | Add content to scope.md and backlog.md | [init-project.md](./init-project.md) |
 | Docs in wrong language | Add English enforcement to input files | `.project-management/README.md` language policy |
 | "No changes detected" | Command skips if input files unchanged since last generation | This is expected behavior |
 

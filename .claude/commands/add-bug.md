@@ -162,33 +162,7 @@ Ask user for:
    - Medium → 🟡 Medium Priority Bugs
    - Low → 🟢 Low Priority Bugs
 
-3. **Use standard format:**
-   ```markdown
-   ### BUG-XXX: [Bug Title]
-
-   **Status:** New
-   **Severity:** [Critical/High/Medium/Low]
-   **Reported:** [YYYY-MM-DD]
-   **Story Points:** [1-13]
-   **Affected Component:** [Component/File]
-   **Assigned to Phase:** Backlog
-
-   **Description:**
-   [Bug description]
-
-   **Reproduction Steps:**
-   1. Step 1
-   2. Step 2
-
-   **Expected Behavior:**
-   [Expected behavior]
-
-   **Actual Behavior:**
-   [Actual behavior]
-
-   **Additional Notes:**
-   [Notes if any]
-   ```
+3. **Bug format:** see the entry template in `add-bug-reference.md`.
 
 4. **Update summary section** (bug counts)
 
@@ -219,38 +193,7 @@ Do you want to assign this bug to a phase now?
 
 ### STEP 5: COMPLETION REPORT
 
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ BUG ADDED TO ROADMAP
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-BUG ID: BUG-006
-TITLE: User login fails with valid credentials
-SEVERITY: High
-STORY POINTS: 5
-STATUS: New
-
-ADDED TO:
-- bug-roadmap.md (High Priority section)
-{{- phase-2.md (if assigned)}}
-
-CURRENT BUG COUNTS:
-- Critical: {{X}}
-- High: {{X}}
-- Medium: {{X}}
-- Low: {{X}}
-- Total Open: {{X}}
-
-NEXT STEPS:
-{{If assigned to phase:}}
-1. Bug ready for execution: /execute-work bug BUG-006
-2. Or execute full phase: /execute-work phase {{N}}
-
-{{If in backlog:}}
-1. Triage and assign to phase when ready
-2. Check status: /project-status
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
+Print the completion-report template from `add-bug-reference.md` with the new bug's ID, title, severity, points, status, assigned-phase context, and updated counts.
 
 ---
 
@@ -270,57 +213,7 @@ Bug addition is COMPLETE when:
 
 ## Example Walkthrough
 
-```
-User: /add-bug
-
-Claude: [STEP 0: Plan Mode]
-        Reading bug-roadmap.md...
-        Current max ID: BUG-005
-        Next ID: BUG-006
-
-        Ready to gather bug information.
-        Proceed? [Yes/No/Revise]
-
-User: Yes
-
-Claude: [STEP 1: Gather Information]
-
-        Bug Title?
-
-User: Login fails with valid credentials
-
-Claude: Severity? [Critical/High/Medium/Low]
-
-User: High
-
-Claude: Affected Component/File?
-
-User: src/auth/LoginController.php
-
-[... continues gathering all information]
-
-Claude: [STEP 3: Adding to roadmap]
-        ✅ Added BUG-006 to High Priority section
-        ✅ Updated bug counts
-
-        [STEP 4: Phase Assignment]
-        Assign to phase now?
-        [1] Yes  [2] No
-
-User: 1
-
-Claude: Available phases:
-        [1] Phase 1: Foundation
-        [2] Phase 2: Core Features
-
-        Which phase?
-
-User: 2
-
-Claude: ✅ Assigned to Phase 2
-
-        [Shows completion report]
-```
+See the interactive-intake worked example in `add-bug-reference.md`.
 
 ---
 

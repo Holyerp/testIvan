@@ -37,88 +37,50 @@
 
 **Define the critical user flows that MUST have E2E tests in YOUR project:**
 
-### 1. {{CRITICAL_PATH_1_NAME}}
+### Example 1: {{CRITICAL_PATH_1_NAME}}
 
-**Flow:** {{DESCRIBE_FLOW}}
-
-**Example:** User registration → Email verification → Login
+**Flow:** {{DESCRIBE_FLOW}} (e.g., User registration → Email verification → Login)
 
 **Must test:**
 - ✅ Happy path (all steps succeed)
-- ✅ Email validation errors
-- ✅ Duplicate email handling
-- ✅ Email verification timeout
-- ✅ Invalid verification link
+- ✅ Validation errors
+- ✅ Edge cases (duplicates, timeouts, invalid inputs)
 
 **Test file location:** `{{TEST_FILE_PATH}}` (e.g., `tests/e2e/auth/registration.spec.ts`)
 
 ---
 
-### 2. {{CRITICAL_PATH_2_NAME}}
+### Example 2: {{CRITICAL_PATH_2_NAME}}
 
-**Flow:** {{DESCRIBE_FLOW}}
-
-**Example:** Product search → Add to cart → Checkout → Payment
+**Flow:** {{DESCRIBE_FLOW}} (e.g., Product search → Add to cart → Checkout → Payment)
 
 **Must test:**
 - ✅ Happy path (complete purchase)
 - ✅ Out of stock scenarios
-- ✅ Cart calculations (subtotal, tax, shipping, total)
+- ✅ Cart calculations (subtotal, tax, shipping)
 - ✅ Payment failures
-- ✅ Inventory deduction after purchase
+- ✅ Inventory updates
 
 **Test file location:** `{{TEST_FILE_PATH}}` (e.g., `tests/e2e/checkout/purchase-flow.spec.ts`)
 
 ---
 
-### 3. {{CRITICAL_PATH_3_NAME}}
+### Example 3: {{CRITICAL_PATH_3_NAME}}
 
-**Flow:** {{DESCRIBE_FLOW}}
-
-**Example:** Admin login → Create product → Publish
+**Flow:** {{DESCRIBE_FLOW}} (e.g., Admin login → Create product → Publish)
 
 **Must test:**
-- ✅ Happy path (product published successfully)
-- ✅ Permission checks (non-admin cannot access)
-- ✅ Validation errors (missing required fields)
-- ✅ Image upload handling
-- ✅ Product appears in public catalog
+- ✅ Happy path (product published)
+- ✅ Permission checks (non-admin denied)
+- ✅ Validation errors
+- ✅ Asset handling (images, files)
+- ✅ Public visibility
 
 **Test file location:** `{{TEST_FILE_PATH}}` (e.g., `tests/e2e/admin/product-management.spec.ts`)
 
 ---
 
-### 4. {{CRITICAL_PATH_4_NAME}}
-
-**Flow:** {{DESCRIBE_FLOW}}
-
-**Example:** Create order → Process payment → Send confirmation
-
-**Must test:**
-- ✅ Happy path (order confirmed)
-- ✅ Payment gateway integration
-- ✅ Email confirmation sent
-- ✅ Inventory updated
-- ✅ Order status tracking
-
-**Test file location:** `{{TEST_FILE_PATH}}` (e.g., `tests/e2e/orders/order-processing.spec.ts`)
-
----
-
-### 5. {{CRITICAL_PATH_5_NAME}}
-
-**Flow:** {{DESCRIBE_FLOW}}
-
-**Example:** Password reset → Email link → New password
-
-**Must test:**
-- ✅ Happy path (password changed)
-- ✅ Invalid email handling
-- ✅ Token expiration
-- ✅ Invalid token handling
-- ✅ Password requirements validation
-
-**Test file location:** `{{TEST_FILE_PATH}}` (e.g., `tests/e2e/auth/password-reset.spec.ts`)
+**Add more critical paths as needed for your project.**
 
 ---
 
@@ -157,8 +119,6 @@ const testData = {
 
 ## Custom Test Utilities
 
-### Project-Specific Test Helpers
-
 **Define custom helpers for YOUR project:**
 
 ```typescript
@@ -174,12 +134,10 @@ export async function loginAsTestUser() {
 // Example: Database cleanup
 export async function cleanupTestData() {
   await db.users.deleteMany({ email: { $regex: /test.*@example\.com/ } });
-  await db.products.deleteMany({ name: { $regex: /^Test/ } });
 }
 ```
 
 **Your custom helpers:**
-
 ```typescript
 // Add your project-specific test helpers here
 {{CUSTOM_TEST_HELPERS}}
@@ -196,7 +154,7 @@ export async function cleanupTestData() {
 | Service | Purpose | Test Strategy | Mock/Real |
 |---------|---------|---------------|-----------|
 | {{SERVICE_1}} | {{PURPOSE}} | {{STRATEGY}} | Mock |
-| {{SERVICE_2}} | {{PURPOSE}} | {{STRATEGY}} | Real (test environment) |
+| {{SERVICE_2}} | {{PURPOSE}} | {{STRATEGY}} | Real (test env) |
 
 **Example:**
 
@@ -212,8 +170,6 @@ export async function cleanupTestData() {
 
 **Define performance benchmarks for YOUR project:**
 
-### API Endpoints
-
 | Endpoint | Max Response Time | Concurrent Users | Success Rate |
 |----------|-------------------|------------------|--------------|
 | {{ENDPOINT_1}} | {{TIME}}ms | {{USERS}} | 99%+ |
@@ -226,22 +182,6 @@ export async function cleanupTestData() {
 | GET /api/products | 200ms | 100 | 99.9% |
 | POST /api/orders | 500ms | 50 | 99.5% |
 
-### Load Test Scenarios
-
-```typescript
-// Example: Load test for checkout flow
-describe('Load Test: Checkout', () => {
-  it('should handle 100 concurrent checkouts', async () => {
-    const results = await Promise.all(
-      Array(100).fill(null).map(() => simulateCheckout())
-    );
-
-    const successRate = results.filter(r => r.success).length / 100;
-    expect(successRate).toBeGreaterThan(0.99);
-  });
-});
-```
-
 ---
 
 ## Security Test Requirements
@@ -249,7 +189,6 @@ describe('Load Test: Checkout', () => {
 ### Authentication Tests
 
 **Project-specific auth tests:**
-
 - [ ] Brute force protection (rate limiting)
 - [ ] JWT token expiration
 - [ ] Refresh token rotation
@@ -308,13 +247,11 @@ describe('Load Test: Checkout', () => {
 - [ ] Response time benchmarks met
 - [ ] Load tests passed
 - [ ] Memory leaks checked
-- [ ] Database query optimization verified
 
 ### Security Tests
 - [ ] Authentication tests passed
 - [ ] Authorization tests passed
 - [ ] Input validation tests passed
-- [ ] Security headers configured
 
 ---
 

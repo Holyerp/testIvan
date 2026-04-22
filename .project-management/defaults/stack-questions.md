@@ -285,7 +285,7 @@
 
 Claude will:
 1. Read `.project-management/input/scope.md`
-2. Read `.project-management/input/backlog.md`
+2. Read `.project-management/input/backlog/README.md` (plus phase files as needed)
 3. Read `.project-management/input/constraints.md`
 4. Analyze project requirements
 5. Suggest optimal tech stack based on:

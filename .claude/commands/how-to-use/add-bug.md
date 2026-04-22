@@ -237,7 +237,7 @@ Claude: ✅ BUG-008 ADDED
 
 | Issue | Solution | Reference |
 |-------|----------|-----------|
-| "Roadmap not found" | Run `/init-project` first, or create roadmap manually | [start-project.md](./start-project.md) |
+| "Roadmap not found" | Run `/init-project` first, or create roadmap manually | [init-project.md](./init-project.md) |
 | File not found (--from) | Check file path, ensure file exists | Full docs "Arguments" |
 | Unclear severity | Critical=system down, High=major broken, Medium=minor issue, Low=cosmetic | Full docs "STEP 1" |
 | Missing required fields | Must provide: title, severity, component, description, steps, expected, actual | Full docs "STEP 1" |

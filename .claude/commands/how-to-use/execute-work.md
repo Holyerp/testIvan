@@ -58,7 +58,7 @@ Progress Tracking Mode:
 [2] Complete (slower - updates all progress files)
 ```
 
-**Recommendation:** Use "Phase Only" for faster execution. Run `/update-progress` later for complete tracking.
+**Recommendation:** Use "Phase Only" for faster execution. For complete tracking later, re-run in Complete mode or edit the progress files directly.
 
 **Time difference:** Complete mode adds ~10-30 seconds per story.
 
@@ -231,10 +231,9 @@ Claude: 🚀 Starting implementation...
 
 **If you chose "Phase Only" tracking:**
 
-Run this to update all progress files:
-```bash
-/update-progress
-```
+Re-run `/execute-work` in Complete mode next time, or edit the progress files
+(`completed.md`, `current-status.md`, `blockers.md`) directly. The `/update-progress`
+command was removed in v3.2.0.
 
 **Check overall status:**
 ```bash

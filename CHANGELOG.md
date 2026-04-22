@@ -7,6 +7,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.2.0] - 2026-04-21
+
+### Removed
+- **`/update-progress` command** — DASHBOARD.md auto-updates during `/execute-work` cover its role; manual edits to progress files are done directly. This removes a long-stale PENDING integration.
+
+### Added
+- **`/audit-pm` command** — framework health audit that scans for version drift, broken links, stale references, file-size violations, legacy artifacts, and how-to-use coverage gaps. Two-layer design: `.claude/hooks/audit-pm.sh` runs deterministic checks; the slash command layers judgement calls on top and produces a prioritized 🔴/🟠/🟡/🟢 report.
+- **Validation hooks** — `.claude/hooks/post-write-validations.sh` (PostToolUse, Write|Edit) enforces documentation.md §2.1 file-size limits and reminds about backlog README sync; `.claude/hooks/stop-changelog-check.sh` (Stop) warns when unpushed commits don't touch CHANGELOG. Wired into `.claude/settings.example.json`.
+- **`/migrate-to-modular` how-to-use guide** — brings how-to-use coverage to 12/12 commands.
+- **Meta-repo migrated to modular backlog** — the framework now dogfoods its own `input/backlog/` split (phase-1..4 + future + README) plus `output/progress/` live files (DASHBOARD, daily-summary, weekly-report, current-status, completed, blockers).
+- **Formal CHANGELOG entries** for 3.1 and 3.2 (previously missing).
+
+### Fixed
+- **Broken `FAQ-TROUBLESHOOTING.md` links** — 8 references across 5 files now point at the correct `guides/FAQ.md` / `guides/TROUBLESHOOTING.md`.
+- **Broken relative paths in guides** — 42 `[text](../path)` links in FAQ/TROUBLESHOOTING/COMMANDS-REFERENCE corrected to `../../path` (they resolved to `.project-management/.claude/...` instead of the root `.claude/`).
+- **Stale how-to-use references** — `./start-project.md`, `./generate-documentation.md`, `./check-status.md` renamed references updated after the file renames.
+- **Dead references removed** — `MIGRATION-COMPLETE.md` and `test-migration/` (never existed on disk).
+- **Version strings unified** — root README, `.project-management/README.md`, and CHANGELOG now agree on v3.2.0 as current. All `**Version:** 3.1.0` strings across 10 files bumped to 3.2.0.
+- **Audit script refinement** — skips `templates/`, `examples/`, `client-input/`, `COMMAND-TEMPLATE.md`, and strips fenced code blocks before link extraction; filters inline-code backlog mentions and historical/migration context when flagging legacy command references.
+
+### Changed
+- **`/migrate-to-modular` repositioned** — marked legacy-only in primary docs. New projects use `/init-project` / `/process-client-docs` (direct modular generation).
+- **~20 `/update-progress` references scrubbed** across docs, modules, and how-to-use guides; readers now routed to DASHBOARD.md or direct file edits.
+- **how-to-use guide renames** — `check-status.md` → `project-status.md`; four other legacy names fixed earlier in this release for command-name parity.
+- **Oversized modules split** (4 modules > 400 lines → 8 modules ≤ 280 lines): `execute-work-dashboard-update`, `live-progress-dashboard`, `init-project-structure-setup`, `add-scope-readme-update`.
+- **Duplicate docs trimmed** — `guides/WORKFLOWS-BEST-PRACTICES.md` reduced from 341 → 97 lines (pointer file); `USER-GUIDE.md` retired; `SYSTEM-OVERVIEW.md` narrowed to flat file map (388 → 187 lines).
+- **FAQ vs TROUBLESHOOTING boundary sharpened** — each file now has a "When to Read This File" table distinguishing "How do I…?" from "Why doesn't X work?".
+- **`.claude/commands/how-to-use/README.md`** — removed the `/update-progress` row from the helper-commands table.
+
+---
+
+## [3.1.0] - 2026-04-20
+
+### Added
+- **Modular backlog structure** — `input/backlog/` split by phase (< 200 lines each) replacing monolithic `backlog.md`.
+- **Live DASHBOARD.md** — `output/progress/DASHBOARD.md` auto-updates during `/execute-work` (real-time progress without running commands).
+- **Daily and weekly summary files** — `daily-summary.md`, `weekly-report.md` under `output/progress/`.
+- **`/migrate-to-modular` command** — one-shot migration from monolithic to modular structure for existing projects.
+- **Direct modular generation** — `/init-project` and `/process-client-docs` produce the modular layout directly.
+- **Modular structure guide** — `guides/MODULAR-STRUCTURE-GUIDE.md`.
+- **Supporting modules** — `backlog-organization.md`, `live-progress-dashboard.md`, `execute-work-dashboard-update.md`, `add-scope-readme-update.md`, `init-project-structure-setup.md`.
+
+### Changed
+- **`/project-status`, `/add-scope`, `/execute-work`** integrated with modular structure (auto-detect monolithic vs modular, read only the relevant phase file).
+- **~69% average token savings per command** (project-status, add-scope, execute-work).
+
+---
+
 ## [Unreleased]
 
 ### Added
@@ -113,8 +161,8 @@ Complete overhaul from sprint-based to phase-based planning with full automation
 
 #### Workflow
 - **Plan mode is now mandatory** - Cannot skip planning phase
-- **Tests run automatically** - Before commits (predzadnji step)
-- **Commits created automatically** - After tests pass (zadnji step)
+- **Tests run automatically** - Before commits (second-to-last step)
+- **Commits created automatically** - After tests pass (final step)
 - **Progress updated automatically** - Real-time phase tracking
 
 #### Documentation
@@ -216,6 +264,8 @@ Complete overhaul from sprint-based to phase-based planning with full automation
 
 ---
 
+[3.2.0]: https://github.com/nnikolic/claude_repo/compare/v3.1.0...v3.2.0
+[3.1.0]: https://github.com/nnikolic/claude_repo/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/nnikolic/claude_repo/compare/v2.0.0...v3.0.0
 [2.0.0]: https://github.com/nnikolic/claude_repo/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/nnikolic/claude_repo/releases/tag/v1.0.0

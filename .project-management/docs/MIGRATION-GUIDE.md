@@ -135,7 +135,7 @@ Update `.project-management/input/backlog.md` to assign epics to phases:
 → Manual implementation
 → Manual testing (npm test)
 → Manual git commit
-→ /update-progress
+→ /update-progress        (historical; command removed in v3.2.0)
 ```
 
 ### New Workflow
@@ -155,6 +155,7 @@ Update `.project-management/input/backlog.md` to assign epics to phases:
 
 ### Removed Commands
 - ❌ `/plan-sprint N` → Use `/execute-work phase N` instead
+- ❌ `/update-progress` (removed in v3.2.0) → Progress is auto-tracked by `/execute-work`; live view is `output/progress/DASHBOARD.md`
 
 ### New Commands
 - ✅ `/execute-work phase/epic/story` - Automated execution with plan mode
@@ -162,7 +163,6 @@ Update `.project-management/input/backlog.md` to assign epics to phases:
 
 ### Updated Commands
 - ✅ `/init-project` - Now includes stack & i18n configuration
-- ✅ `/update-progress` - Now works with phases instead of sprints
 - ✅ `/project-status` - Shows phase progress instead of sprint progress
 
 ### Unchanged Commands

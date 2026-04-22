@@ -13,7 +13,6 @@ This folder contains Claude Code configuration files for the project management 
 │   ├── execute-work.md
 │   ├── generate-docs.md
 │   ├── project-status.md
-│   ├── update-progress.md
 │   ├── process-client-docs.md
 │   └── modules/          # Modular command components
 │

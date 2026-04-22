@@ -50,7 +50,7 @@ Claude will:
 2. Extract requirements, features, and goals
 3. Generate/update:
    - `../input/scope.md` - Project vision, goals, objectives
-   - `../input/backlog.md` - Features and user stories
+   - `../input/backlog/` (modular structure) - Features and user stories
    - `../input/technologies.md` - Suggested tech stack (if mentioned)
    - `../input/constraints.md` - Timeline, budget (if mentioned)
 
@@ -118,7 +118,7 @@ You can:
 ### 4. Review Before Init
 After processing:
 1. Check `../input/scope.md` - Is vision clear?
-2. Check `../input/backlog.md` - Are features complete?
+2. Check `../input/backlog/` (modular structure) - Are features complete?
 3. Edit and refine as needed
 4. Then run `/init-project`
 
@@ -148,7 +148,7 @@ After processing:
 
 # 3. Review generated files
 # Edit ../input/scope.md (add missing info)
-# Edit ../input/backlog.md (adjust priorities)
+# Edit ../input/backlog/phase-*.md (adjust priorities)
 
 # 4. Initialize project
 /init-project
@@ -224,7 +224,7 @@ Questions:
 **Issue: Claude missed some requirements**
 - Add more specific documents
 - Re-run `/process-client-docs` (it will merge info)
-- Manually edit `../input/backlog.md` to add missing items
+- Manually edit `../input/backlog/` (modular structure) to add missing items
 
 **Issue: Generated files are too vague**
 - Provide more detailed client documents
@@ -232,7 +232,7 @@ Questions:
 - Edit generated files manually
 
 **Issue: Wrong priorities assigned**
-- Edit `../input/backlog.md` and change P0/P1/P2 priorities
+- Edit `../input/backlog/` (modular structure) and change P0/P1/P2 priorities
 - Claude infers priorities from emphasis in documents
 
 **Issue: Can't read a file format**

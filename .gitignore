@@ -7,6 +7,8 @@
 ###> claude settings ###
 # User-specific Claude permissions (use settings.example.json as template)
 .claude/settings.local.json
+# Ignore main settings.json since it auto-updates (use settings.example.json as template)
+.claude/settings.json
 ###< claude settings ###
 
 ###> project management ###

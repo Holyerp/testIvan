@@ -12,6 +12,8 @@
 ## 🎯 What It Does
 
 Creates complete project structure:
+- ✅ Configures project structure (monorepo or single app)
+- ✅ Sets up workspace (if monorepo with pnpm + Turborepo)
 - ✅ Generates Phase 1 plan (Foundation)
 - ✅ Generates PRD (Product Requirements Document)
 - ✅ Generates Technical Specification
@@ -57,7 +59,27 @@ Creates complete project structure:
 
 **Only proceeds after you approve the plan.**
 
-### STEP 1: Tech Stack Selection
+### STEP 1: Project Structure Selection
+
+Claude asks what type of project:
+```
+[1] Backend Only
+[2] Backend + Mobile App (Monorepo) ⭐ RECOMMENDED
+[3] Backend + Web + Mobile (Full Monorepo)
+[4] Web Only
+```
+
+**If you choose option 2 (Backend + Mobile):**
+- Creates `apps/backend/` and `apps/mobile/`
+- Creates `packages/shared-types/`, `packages/api-client/`, `packages/shared-utils/`
+- Sets up pnpm workspace + Turborepo
+- Generates package.json for each app/package
+
+**If you choose option 1 or 4 (single app):**
+- Creates standard single-app structure
+- No workspace configuration needed
+
+### STEP 2: Tech Stack Selection
 
 Claude asks about:
 - **Backend framework** (e.g., Laravel, Node.js, Django)
@@ -67,7 +89,7 @@ Claude asks about:
 
 **Or auto-detects** if `technologies.md` already specifies stack.
 
-### STEP 2: i18n Configuration (Optional)
+### STEP 3: i18n Configuration (Optional)
 
 If project requires multiple languages:
 - Claude asks which languages to support
@@ -76,7 +98,7 @@ If project requires multiple languages:
 
 **Skip** if single-language project.
 
-### STEP 3: Generate Documentation
+### STEP 4: Generate Documentation
 
 Claude generates:
 1. **PRD** (`output/docs/prd.md`)
@@ -169,7 +191,7 @@ Claude: [STEP 3-5: Generating...]
 |-------|----------|-----------|
 | "Input files not found" | Fill 4 input files OR run `/process-client-docs` | [process-client-docs.md](./process-client-docs.md) |
 | "Input files are empty" | Add content to scope.md and backlog.md minimum | `.project-management/README.md` |
-| "Project already initialized" | Use `/generate-docs` to regenerate docs instead | [generate-documentation.md](./generate-documentation.md) |
+| "Project already initialized" | Use `/generate-docs` to regenerate docs instead | [generate-docs.md](./generate-docs.md) |
 | Tech stack unclear | Specify in `input/technologies.md` before running | Full docs "Prerequisites" |
 
 ---

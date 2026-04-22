@@ -15,6 +15,8 @@ This folder contains **project-specific rules** that extend the core `.CLAUDE.MD
 └── TESTING-RULES.md      # CONDITIONAL - Project-specific testing (397 lines)
 ```
 
+**Note:** Documentation standards have been moved to `.claude/rules/documentation.md` for global enforcement.
+
 ---
 
 ## 🎯 Modular Rules Pattern
@@ -100,7 +102,7 @@ These files follow the **"enable by configuration"** pattern:
 
 ```
 1. Project Planning (.project-management/)
-   ├── input/scope.md, input/backlog.md
+   ├── input/scope.md, input/backlog/
    └── output/docs/technical-spec.md
 
 2. Core Standards (.CLAUDE.MD)
@@ -149,13 +151,15 @@ Claude checks:
 | File | Lines | Status |
 |------|-------|--------|
 | `.CLAUDE.MD` | 179 | ✅ Under 200 |
-| `code-quality.md` | 199 | ✅ Under 200 |
-| `testing.md` | 87 | ✅ Under 200 |
-| `git.md` | 105 | ✅ Under 200 |
-| `database.md` | 139 | ✅ Under 200 |
-| `stack-specific.md` | 166 | ✅ Under 200 |
+| `.claude/rules/code-quality.md` | 199 | ✅ Under 200 |
+| `.claude/rules/documentation.md` | ~400 | ℹ️ Reference guide |
+| `.claude/rules/testing.md` | 87 | ✅ Under 200 |
+| `.claude/rules/git.md` | 105 | ✅ Under 200 |
+| `.claude/rules/database.md` | 139 | ✅ Under 200 |
+| `.claude/rules/stack-specific.md` | 166 | ✅ Under 200 |
 | `project-rules.md` | 153 | ✅ Under 200 |
-| **Total** | **1,028** | ✅ All under 200 |
+| **Total (core)** | **1,028** | ✅ All under 200 |
+| **Total (with docs guide)** | **~1,428** | ✅ Complete |
 
 ### CONDITIONAL Files (read only when enabled)
 
