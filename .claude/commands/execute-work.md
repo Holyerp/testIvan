@@ -27,6 +27,7 @@ Execute implementation of a phase, epic, or individual story with full automatio
 **🔧 CRITICAL RULES** — read before any implementation:
 - `.claude/rules/code-quality.md` — SOLID & DRY (mandatory)
 - `.claude/rules/testing.md` — Testing requirements, API status matrix, coverage targets
+- `.claude/rules/api-documentation.md` — API schema validation + matching docs (STRICT for public endpoints, SOFT for `@internal`)
 - `.claude/rules/git.md` — Commit format (NO AI credits), conventional commits
 - `.CLAUDE.MD` — Core standards and workflow
 
@@ -96,12 +97,13 @@ Execution Mode: [Continuous / Paused]
 4. Implement following `.claude/rules/code-quality.md` (SOLID & DRY).
 5. Write tests following `.claude/rules/testing.md` (unit + integration + E2E + all API status codes 200/400/401/403/404/500).
 6. Verify i18n (if `.project-management/rules/I18N-RULES.md` exists).
-7. **Second-to-last step:** run tests (see `modules/execute-work-quality-gates.md`); auto-update DASHBOARD "Quality Metrics".
-8. **Final step:** git commit per `.claude/rules/git.md` (NO AI credits). Bug commits reference `BUG-XXX`.
-9. Update progress tracking (phase file + DASHBOARD auto-update + completed.md / daily-summary.md per Complete mode).
-10. Check execution mode; continue or pause.
+7. **If the story added/changed any HTTP endpoint:** verify `.claude/rules/api-documentation.md` — schema validation in code, typed response, doc block per `documentation.md` §6.1, drift check against tests. STRICT for public endpoints; `@internal`-tagged endpoints follow SOFT tier.
+8. **Second-to-last step:** run tests (see `modules/execute-work-quality-gates.md`); auto-update DASHBOARD "Quality Metrics".
+9. **Final step:** git commit per `.claude/rules/git.md` (NO AI credits). Bug commits reference `BUG-XXX`.
+10. Update progress tracking (phase file + DASHBOARD auto-update + completed.md / daily-summary.md per Complete mode).
+11. Check execution mode; continue or pause.
 
-**Quality gate:** tests pass, coverage ≥ 80%, all API codes tested, i18n complete.
+**Quality gate:** tests pass, coverage ≥ 80%, all API codes tested, i18n complete, API docs match implementation (when endpoints touched).
 
 **Auto-update triggers (modular only):** story started → Currently Working On; tests run → Quality Metrics; story completed → Today's Progress + Recently Completed + progress %; phase completed → Phase Breakdown.
 

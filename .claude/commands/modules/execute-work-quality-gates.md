@@ -12,7 +12,7 @@
 
 ### Validation Checks
 
-**IF ANY test failed OR coverage < 80% OR i18n missing (when required):**
+**IF ANY test failed OR coverage < 80% OR i18n missing (when required) OR API docs gate failed (when endpoints touched):**
 
 **Display:**
 ```
@@ -22,6 +22,7 @@ Issues:
 - [List failed tests]
 - [Coverage: XX% (need 80%+)]
 - [Missing i18n translations: ...]
+- [API docs gate: missing schema / missing doc block / drift between code and doc]
 
 🔧 Fixing issues...
 ```
@@ -57,7 +58,12 @@ Issues:
    - Check coverage report
    - Verify all status codes tested
 
-6. **REPEAT** until ALL tests pass AND coverage > 80% AND i18n complete
+6. **Verify API documentation gate** (only if story touched any HTTP endpoint)
+   - Per `.claude/rules/api-documentation.md`: schema validation in code, typed response, doc block per `documentation.md` §6.1, drift check
+   - STRICT for public endpoints; SOFT for `@internal`-tagged handlers
+   - Mismatch between schema / response type / docs / tests is a blocker — fix before continuing
+
+7. **REPEAT** until ALL tests pass AND coverage > 80% AND i18n complete AND API docs gate clean
 
 ---
 
@@ -68,6 +74,7 @@ Issues:
 - ✅ Coverage > 80%
 - ✅ All API status codes tested (200/400/401/403/404/500)
 - ✅ i18n translations present (if required)
+- ✅ API documentation gate clean (if endpoints touched) — see `.claude/rules/api-documentation.md`
 - ✅ SOLID & DRY principles followed
 - ✅ No linting errors
 
@@ -86,6 +93,7 @@ All checks completed:
 ✅ Coverage: {{XX}}% (Target: 80%+)
 ✅ API Status Codes: All tested
 {{✅ i18n: All languages present}}
+{{✅ API Docs Gate: schema + typed response + doc block aligned}}
 ✅ Code Quality: SOLID & DRY compliant
 ```
 
@@ -121,9 +129,22 @@ All checks completed:
 
 ### Documentation
 - [ ] Tech spec consulted
-- [ ] API docs updated (if API changes)
 - [ ] README updated (if user-facing changes)
 - [ ] Comments added for complex logic
+
+### API Documentation Gate (Conditional — only if HTTP endpoints touched)
+Ref: `.claude/rules/api-documentation.md`
+
+**Public / client-facing endpoints (STRICT):**
+- [ ] Request body / params / query validated by schema (Zod/Joi/etc.) at handler boundary
+- [ ] Response shape declared as typed interface
+- [ ] Doc block exists per `.claude/rules/documentation.md` §6.1 (or OpenAPI entry if project uses it)
+- [ ] All status codes from `.claude/rules/testing.md` matrix documented
+- [ ] No drift: field names + status codes match between schema, response type, docs, tests
+
+**Internal endpoints (SOFT — handler tagged `@internal`):**
+- [ ] `@internal` JSDoc/TSDoc tag present, explains caller + input/output
+- [ ] Handler guarded against malformed input
 
 ### Security
 - [ ] No secrets committed

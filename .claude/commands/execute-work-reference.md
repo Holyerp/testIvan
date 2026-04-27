@@ -84,6 +84,7 @@ A story moves to Completed only when:
 - [ ] Coverage ≥ 80%
 - [ ] All API status codes covered: 200/400/401/403/404/500
 - [ ] i18n translations added (if required)
+- [ ] API documentation gate clean if endpoints touched (`.claude/rules/api-documentation.md`): schema validation, typed response, doc block per `documentation.md` §6.1, no drift between code/docs/tests
 - [ ] SOLID & DRY principles followed
 - [ ] Git commit created (no AI credits)
 - [ ] Progress tracking updated (at least phase file)
