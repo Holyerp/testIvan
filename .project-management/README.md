@@ -223,7 +223,7 @@ open output/progress/DASHBOARD.md
 ### User Guides
 - **[Getting Started](guides/GETTING-STARTED.md)** - Detailed onboarding guide
 - **[Commands Reference](guides/COMMANDS-REFERENCE.md)** - All slash commands explained
-- **[Workflows & Best Practices](guides/WORKFLOWS-BEST-PRACTICES.md)** - Advanced workflow patterns
+- **[Quick Reference & Document Index](guides/WORKFLOWS-BEST-PRACTICES.md)** - Jumping-off page that points to canonical workflow + best-practice docs
 - **[FAQ](guides/FAQ.md)** - Frequently asked questions
 - **[Troubleshooting](guides/TROUBLESHOOTING.md)** - Common issues and solutions
 

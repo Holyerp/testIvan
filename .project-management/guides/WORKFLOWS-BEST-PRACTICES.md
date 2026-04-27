@@ -1,9 +1,11 @@
-# Workflows & Best Practices — Pointers
+# Quick Reference & Document Index
 
 **Version:** 3.2.0
-**Last Updated:** 2026-04-21
+**Last Updated:** 2026-04-27
 
-This is an index only. Canonical content lives elsewhere — follow the links.
+A short jumping-off page that points to the canonical docs and surfaces the most-used rules of thumb in one place. Not a content duplicate of `docs/WORKFLOWS.md` or `docs/BEST-PRACTICES.md` — those hold the full material; this file just helps you reach them quickly and keeps a few one-glance tables (Quick Rules, Phase Structure TL;DR, Rules Reference) handy.
+
+Filename is preserved (`WORKFLOWS-BEST-PRACTICES.md`) because many other docs link to it.
 
 ---
 
