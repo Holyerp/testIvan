@@ -1,5 +1,7 @@
 # Claude Project Management System
 
+**Version:** 3.2.0
+
 **Reusable project management framework for Claude-assisted development.**
 
 A comprehensive system that provides structured planning, phase management, automated execution, documentation standards, and progress tracking for AI-assisted software projects with a single developer + AI tools workflow.
@@ -188,7 +190,7 @@ Open: .project-management/output/progress/DASHBOARD.md
 
 ### Scope Management
 - `/add-scope add phase|epic|story` - Add or edit phases, epics, stories in active development
-- `/add-backlog-requirement story|epic` - Add requirements to future backlog (Version 2.0, 3.0)
+- `/add-backlog-requirement story|epic` - Add requirements to future backlog (post-launch product versions)
 - `/promote-requirement US-XXX --to-phase N` - Move future requirement to active phase
 - `/add-bug` - Add bugs to roadmap for tracking and execution
 
