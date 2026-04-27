@@ -28,6 +28,8 @@ Execute implementation of a phase, epic, or individual story with full automatio
 - `.claude/rules/code-quality.md` — SOLID & DRY (mandatory)
 - `.claude/rules/testing.md` — Testing requirements, API status matrix, coverage targets
 - `.claude/rules/api-documentation.md` — API schema validation + matching docs (STRICT for public endpoints, SOFT for `@internal`)
+- `.claude/rules/api-first.md` — Frontend (web/mobile) cannot start until API contract is verified; gaps block & file backend work
+- `.claude/rules/screen-driven-backlog.md` — Web/mobile stories = 1 screen + listed API endpoints (wizard exception)
 - `.claude/rules/git.md` — Commit format (NO AI credits), conventional commits
 - `.CLAUDE.MD` — Core standards and workflow
 
@@ -72,6 +74,12 @@ else if exists(".project-management/input/backlog.md"):
 
 **1C. Analyze & plan** — create a detailed plan with estimates, risks, success criteria. Wait for user approval (`Yes / No / Revise`).
 
+**1D. API contract verification (frontend stories only)** — if the story is web or mobile per `.claude/rules/screen-driven-backlog.md`, run the Phase A checklist from `.claude/rules/api-first.md` §3 *before* exiting plan mode:
+- List every screen the story touches (wizard = enumerate steps)
+- For each screen, list every API endpoint it calls (method + path)
+- For each endpoint, confirm doc exists, request schema covers UI inputs, response shape covers UI outputs, error states are distinguishable, auth matches
+- **Result:** ✅ contract complete (proceed to STEP 2) **OR** ⚠️ gaps documented → mark story `Blocked by: <backend story/bug>`, file the backend work via `/add-scope` or bug roadmap, and **do not exit plan mode for this story**. Move on to other stories or return to user.
+
 **For bugs:** read `output/bugs/bug-roadmap.md`, analyze affected component, plan fix with root-cause analysis + regression-test requirements.
 
 **Output:** approved plan + detected `structure_type`.
@@ -94,14 +102,15 @@ Execution Mode: [Continuous / Paused]
 1. Break down with TodoWrite.
 2. Auto-update `DASHBOARD.md` → "Currently Working On" *(modular only)*.
 3. Read context (story from phase backlog / bug from bug-roadmap).
-4. Implement following `.claude/rules/code-quality.md` (SOLID & DRY).
-5. Write tests following `.claude/rules/testing.md` (unit + integration + E2E + all API status codes 200/400/401/403/404/500).
-6. Verify i18n (if `.project-management/rules/I18N-RULES.md` exists).
-7. **If the story added/changed any HTTP endpoint:** verify `.claude/rules/api-documentation.md` — schema validation in code, typed response, doc block per `documentation.md` §6.1, drift check against tests. STRICT for public endpoints; `@internal`-tagged endpoints follow SOFT tier.
-8. **Second-to-last step:** run tests (see `modules/execute-work-quality-gates.md`); auto-update DASHBOARD "Quality Metrics".
-9. **Final step:** git commit per `.claude/rules/git.md` (NO AI credits). Bug commits reference `BUG-XXX`.
-10. Update progress tracking (phase file + DASHBOARD auto-update + completed.md / daily-summary.md per Complete mode).
-11. Check execution mode; continue or pause.
+4. **For frontend (web/mobile) stories:** before implementation, re-confirm Phase A from `.claude/rules/api-first.md` is still ✅ — endpoints exist, docs match, schema covers UI inputs/outputs, error states distinguishable. If any contract gap is detected now (backend changed, doc drifted), STOP, file backend gap, mark story Blocked. Do not stub the frontend.
+5. Implement following `.claude/rules/code-quality.md` (SOLID & DRY).
+6. Write tests following `.claude/rules/testing.md` (unit + integration + E2E + all API status codes 200/400/401/403/404/500).
+7. Verify i18n (if `.project-management/rules/I18N-RULES.md` exists).
+8. **If the story added/changed any HTTP endpoint:** verify `.claude/rules/api-documentation.md` — schema validation in code, typed response, doc block per `documentation.md` §6.1, drift check against tests. STRICT for public endpoints; `@internal`-tagged endpoints follow SOFT tier.
+9. **Second-to-last step:** run tests (see `modules/execute-work-quality-gates.md`); auto-update DASHBOARD "Quality Metrics".
+10. **Final step:** git commit per `.claude/rules/git.md` (NO AI credits). Bug commits reference `BUG-XXX`.
+11. Update progress tracking (phase file + DASHBOARD auto-update + completed.md / daily-summary.md per Complete mode).
+12. Check execution mode; continue or pause.
 
 **Quality gate:** tests pass, coverage ≥ 80%, all API codes tested, i18n complete, API docs match implementation (when endpoints touched).
 

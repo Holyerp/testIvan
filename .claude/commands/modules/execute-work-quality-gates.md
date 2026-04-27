@@ -132,6 +132,16 @@ All checks completed:
 - [ ] README updated (if user-facing changes)
 - [ ] Comments added for complex logic
 
+### Frontend (Web/Mobile) Gate (Conditional — only if story is a frontend story)
+Refs: `.claude/rules/api-first.md`, `.claude/rules/screen-driven-backlog.md`
+
+- [ ] Story scoped to one screen (or wizard with all steps enumerated)
+- [ ] Story title follows `Screen — Action` pattern
+- [ ] **API Endpoints Used** table present (method + path + purpose + doc reference)
+- [ ] Phase A contract verification ✅ — every UI input maps to request schema, every UI output maps to response shape, error states distinguishable, auth matches
+- [ ] If gaps were found at plan time: backend story/bug filed, frontend resumed only after gap closed
+- [ ] No invented response shapes, no stubs masking missing fields
+
 ### API Documentation Gate (Conditional — only if HTTP endpoints touched)
 Ref: `.claude/rules/api-documentation.md`
 

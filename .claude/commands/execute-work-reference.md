@@ -85,6 +85,8 @@ A story moves to Completed only when:
 - [ ] All API status codes covered: 200/400/401/403/404/500
 - [ ] i18n translations added (if required)
 - [ ] API documentation gate clean if endpoints touched (`.claude/rules/api-documentation.md`): schema validation, typed response, doc block per `documentation.md` §6.1, no drift between code/docs/tests
+- [ ] **Frontend stories only:** API contract verified per `.claude/rules/api-first.md` Phase A (or story was Blocked and resumed only after backend gap closed)
+- [ ] **Frontend stories only:** story scoped to one screen (or wizard with steps enumerated) per `.claude/rules/screen-driven-backlog.md`; API endpoints table present
 - [ ] SOLID & DRY principles followed
 - [ ] Git commit created (no AI credits)
 - [ ] Progress tracking updated (at least phase file)
