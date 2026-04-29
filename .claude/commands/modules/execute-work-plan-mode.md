@@ -147,7 +147,7 @@ US-XXX: [Title] (P0, 5 points)
 
 ✅ SUCCESS CRITERIA:
 - All tests passing (unit, integration, E2E)
-- Coverage > 80%
+- Coverage ≥ 80%
 - All API status codes tested (200/400/401/403/404/500)
 {{- i18n translations added (if I18N-RULES.md exists)}}
 - SOLID & DRY principles followed

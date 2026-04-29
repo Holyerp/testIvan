@@ -134,7 +134,7 @@ If you passed only one of the two, Claude asks only for the missing one.
 2. **Read Story Context** - Gets details from technical spec
 3. **Implement** - Writes code following SOLID & DRY principles
 4. **Write Tests** - Unit, integration, E2E tests
-5. **Run Tests** - Must pass, coverage > 80%
+5. **Run Tests** - Must pass, coverage ≥ 80%
 6. **Verify i18n** - If I18N-RULES.md exists
 7. **Git Commit** - Auto-commit (NO AI attribution)
 8. **Update Progress** - Phase file or all progress files
@@ -146,7 +146,7 @@ If you passed only one of the two, Claude asks only for the missing one.
 - ✅ All tasks implemented
 - ✅ All tests written (unit, integration, E2E)
 - ✅ All tests passing
-- ✅ Coverage > 80%
+- ✅ Coverage ≥ 80%
 - ✅ All API status codes tested (200/400/401/403/404/500)
 - ✅ i18n translations added (if required)
 - ✅ SOLID & DRY principles followed

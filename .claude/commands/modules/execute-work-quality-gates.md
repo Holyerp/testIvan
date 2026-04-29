@@ -63,7 +63,7 @@ Issues:
    - STRICT for public endpoints; SOFT for `@internal`-tagged handlers
    - Mismatch between schema / response type / docs / tests is a blocker — fix before continuing
 
-7. **REPEAT** until ALL tests pass AND coverage > 80% AND i18n complete AND API docs gate clean
+7. **REPEAT** until ALL tests pass AND coverage ≥ 80% AND i18n complete AND API docs gate clean
 
 ---
 
@@ -71,7 +71,7 @@ Issues:
 
 **Story is NOT complete until:**
 - ✅ All tests passing (unit, integration, E2E)
-- ✅ Coverage > 80%
+- ✅ Coverage ≥ 80%
 - ✅ All API status codes tested (200/400/401/403/404/500)
 - ✅ i18n translations present (if required)
 - ✅ API documentation gate clean (if endpoints touched) — see `.claude/rules/api-documentation.md`
@@ -116,7 +116,7 @@ All checks completed:
 
 ### Testing
 - [ ] All tests passing (unit, integration, e2e)
-- [ ] Coverage > 80%
+- [ ] Coverage ≥ 80%
 - [ ] All API codes tested (200/400/401/403/404/500)
 - [ ] Edge cases covered
 - [ ] Error scenarios tested

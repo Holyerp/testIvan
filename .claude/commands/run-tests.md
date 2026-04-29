@@ -106,9 +106,9 @@ Execute manual testing with comprehensive reporting and analysis.
 **Verify quality gates:**
 
 **Code Coverage:**
-- [ ] Overall coverage > 80%
-- [ ] Branch coverage > 75%
-- [ ] Function coverage > 85%
+- [ ] Overall coverage ≥ 80%
+- [ ] Branch coverage ≥ 75%
+- [ ] Function coverage ≥ 85%
 
 **API Testing (Integration):**
 - [ ] All endpoints have tests
