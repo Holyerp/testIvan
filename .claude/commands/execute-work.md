@@ -20,6 +20,14 @@ Execute implementation of a phase, epic, or individual story with full automatio
 /execute-work bug BUG-XXX      # Execute bug fix for BUG-XXX
 ```
 
+**Optional:** pass mode preferences inline to skip the prompt (positional digits OR named flags; see STEP 0 for the full mapping):
+
+```bash
+/execute-work story US-MOB-023 1 2                              # Continuous + Complete
+/execute-work phase 1 --mode=continuous --tracking=phase-only   # named flags
+/execute-work epic EPIC-3 2                                     # Paused; will ask for tracking
+```
+
 ---
 
 ## 📋 YOUR TASK — MANDATORY WORKFLOW
@@ -37,25 +45,65 @@ Execute implementation of a phase, epic, or individual story with full automatio
 
 ### STEP 0 — Parse arguments & mode selection
 
-**Parse the command argument:**
+**Parse the scope argument:**
 - `phase N` → all epics + stories in Phase N
 - `epic EPIC-X` → all stories in Epic X
 - `story US-XXX` → single story
 - `bug BUG-XXX` → bug fix flow
 
-**Ask the user for two modes:**
+**Parse optional inline mode arguments** — both formats are supported (and may be mixed):
+
+**Positional digits** (after the scope): `<execMode> <trackingMode>` where each digit is `1` or `2`.
+
+```
+/execute-work story US-MOB-023 1 2     # Continuous + Complete
+/execute-work phase 1 1                # Continuous; tracking missing → ask
+/execute-work epic EPIC-3 2 1          # Paused + Phase Only
+```
+
+**Named flags** (any position after the scope):
+
+```
+/execute-work story US-MOB-023 --mode=continuous --tracking=complete
+/execute-work phase 1 --mode=c                          # alias: c|continuous, p|paused
+/execute-work phase 1 --tracking=p                      # alias: p|phase-only, c|complete
+/execute-work story US-XXX --mode=paused --tracking=p   # mixed forms allowed
+```
+
+**Mapping table:**
+
+| Input | Execution Mode | Tracking Mode |
+|-------|----------------|---------------|
+| `1` / `--mode=1` / `--mode=c` / `--mode=continuous` | Continuous | — |
+| `2` / `--mode=2` / `--mode=p` / `--mode=paused` | Paused | — |
+| `1` / `--tracking=1` / `--tracking=p` / `--tracking=phase` / `--tracking=phase-only` | — | Phase Only |
+| `2` / `--tracking=2` / `--tracking=c` / `--tracking=complete` | — | Complete |
+
+> **Positional disambiguation:** if exactly two trailing digits are present, the first is Execution Mode and the second is Tracking Mode. If only one trailing digit is present, treat it as Execution Mode (the more user-facing choice). Named flags always take precedence over positional values when both are supplied.
+
+**Prompt only for what is missing.** If both modes were supplied (positional or named), proceed silently — do **not** show the menu. If one was supplied, ask only for the other. If none were supplied, show the full menu below.
 
 ```
 Execution Mode:
-[1] Continuous (no pauses between stories)
-[2] Paused (wait for approval after each story)
+[1] Continuous (fresh sub-agent per story — clean context, auto-reset between stories)
+[2] Paused (in-line execution — wait for approval after each story; user controls context manually)
 
 Progress Tracking Mode:
 [1] Phase Only (faster — updates only phase file)
 [2] Complete (slower — updates all progress files)
 ```
 
+After resolving both modes, **echo the resolved choices** so the user can spot a misparse:
+
+```
+Resolved modes:
+  Execution:  Continuous (sub-agent dispatch)
+  Tracking:   Complete
+```
+
 Store both choices. For trade-offs, see `execute-work-reference.md` → Execution Modes.
+
+**Why this matters:** Continuous mode dispatches each story into a fresh sub-agent so the orchestrator never accumulates story-by-story context. The orchestrator keeps only structured summaries. This is the recommended mode for any phase/epic with 3+ stories.
 
 ---
 
@@ -97,7 +145,32 @@ Execution Mode: [Continuous / Paused]
 
 ### STEP 3 — Implementation loop
 
-**For each story/bug** (detailed workflow in `modules/execute-work-implementation.md`):
+**Branch by execution mode** — the per-story workflow is the same; only the dispatch wrapper differs.
+
+#### STEP 3-A — Continuous mode (sub-agent dispatch, RECOMMENDED)
+
+For each story/bug in scope:
+
+1. **Display:** `🚀 Dispatching US-XXX in fresh sub-agent (clean context)...`
+2. **Auto-update `DASHBOARD.md`** → "Currently Working On" *(modular only — orchestrator does this BEFORE dispatch so DASHBOARD reflects current work even while sub-agent runs)*.
+3. **Dispatch via Agent tool** with `subagent_type="general-purpose"` and the per-story prompt from `modules/execute-work-implementation.md` § A (Sub-agent Prompt Template). Pass:
+   - Story ID, title, phase/epic
+   - Absolute path to story file (e.g., `.project-management/output/phases/phase-N.md`)
+   - Tracking mode (Phase Only / Complete)
+   - Execution context (modular vs monolithic backlog)
+4. **Sub-agent executes the full per-story workflow in its own clean context** — reads rules, implements, writes tests, runs tests (≥80% coverage, all API codes), verifies i18n + API docs, updates progress files, creates git commit. Returns a structured JSON summary.
+5. **Orchestrator parses summary:**
+   - `status: "completed"` → display story summary block, log, proceed to next story
+   - `status: "blocked"` → display blocker reason, ask user `[Continue with next story / Skip / Abort]`
+6. **Orchestrator keeps ONLY the summary** (~1KB) — no story-level work bleeds into the next dispatch. This is the auto-reset.
+
+When all stories in scope are dispatched and summaries collected → STEP 4.
+
+#### STEP 3-B — Paused mode (in-line execution, manual control)
+
+For each story/bug in scope, the orchestrator itself executes the per-story workflow (no sub-agent). This is the legacy behavior — the orchestrator's context accumulates, and the user can hit `/clear` manually between stories if needed.
+
+Workflow per story (detailed in `modules/execute-work-implementation.md` § B):
 
 1. Break down with TodoWrite.
 2. Auto-update `DASHBOARD.md` → "Currently Working On" *(modular only)*.
@@ -110,9 +183,11 @@ Execution Mode: [Continuous / Paused]
 9. **Second-to-last step:** run tests (see `modules/execute-work-quality-gates.md`); auto-update DASHBOARD "Quality Metrics".
 10. **Final step:** git commit per `.claude/rules/git.md` (NO AI credits). Bug commits reference `BUG-XXX`.
 11. Update progress tracking (phase file + DASHBOARD auto-update + completed.md / daily-summary.md per Complete mode).
-12. Check execution mode; continue or pause.
+12. Pause and ask user `[Yes / No / Skip to Epic X]`.
 
-**Quality gate:** tests pass, coverage ≥ 80%, all API codes tested, i18n complete, API docs match implementation (when endpoints touched).
+#### Common quality gate (both modes)
+
+Tests pass, coverage ≥ 80%, all API codes tested, i18n complete, API docs match implementation (when endpoints touched). The same gate applies whether the work is done by orchestrator (Paused) or sub-agent (Continuous).
 
 **Auto-update triggers (modular only):** story started → Currently Working On; tests run → Quality Metrics; story completed → Today's Progress + Recently Completed + progress %; phase completed → Phase Breakdown.
 
@@ -138,8 +213,8 @@ Template and full field list: `execute-work-reference.md` → Completion Report 
 | Module | Covers |
 |--------|--------|
 | `modules/execute-work-plan-mode.md` | STEP 1 plan mode workflow |
-| `modules/execute-work-implementation.md` | STEP 3 implementation loop |
-| `modules/execute-work-quality-gates.md` | Test + coverage validation |
+| `modules/execute-work-implementation.md` | § A sub-agent prompt template (Continuous), § B in-line workflow (Paused) |
+| `modules/execute-work-quality-gates.md` | Test + coverage validation (same gates for both modes) |
 | `modules/execute-work-dashboard-events.md` | DASHBOARD auto-update triggers |
 | `modules/execute-work-dashboard-mechanics.md` | DASHBOARD update internals |
 | `execute-work-reference.md` | Modes, quality gates, error handling, examples |
@@ -167,7 +242,7 @@ Auto-detects modular vs monolithic backlog — no user action needed. See `execu
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Created:** 2026-03-27
-**Updated:** 2026-04-21 (split: reference moved to execute-work-reference.md)
+**Updated:** 2026-04-29 (Continuous mode dispatches each story to a fresh sub-agent for auto-context-reset; Paused mode unchanged)
 **Command Type:** Implementation Automation

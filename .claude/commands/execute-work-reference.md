@@ -8,10 +8,20 @@ Companion to `execute-work.md`. Holds the long-tail material (modes, templates, 
 
 ### 1. Execution Mode (Continuous vs Paused)
 
-- **Continuous** — auto-continues to next story without pausing.
-- **Paused** — waits for approval after each story.
+| Mode | Dispatch | Context behavior | Use when |
+|------|----------|------------------|----------|
+| **Continuous** (recommended for 3+ stories) | Each story dispatched into a fresh sub-agent via the `Agent` tool with the prompt template in `modules/execute-work-implementation.md` § A. Orchestrator keeps only structured JSON summaries. | **Auto-context-reset between stories.** Sub-agents have clean contexts; orchestrator never accumulates story-by-story work. | Well-understood phases/epics. Long runs. Anytime context drift between stories is a concern. |
+| **Paused** | Orchestrator executes the workflow in `modules/execute-work-implementation.md` § B in-line. Asks `[Yes / No / Skip to Epic X]` after each story. | Orchestrator's context accumulates. User manages context manually (e.g., `/clear` between stories if needed). | Short runs (1–2 stories). Phases where the user wants checkpoints, may change direction, or needs to step in. |
 
-Pick Continuous for well-understood phases; Paused for complex phases where you want human checkpoints.
+**Sub-agent trade-offs (Continuous mode):**
+- ✅ Clean context per story — agent never mixes patterns/state from US-001 into US-002
+- ✅ Lower orchestrator token usage (only summaries retained)
+- ✅ Same quality gates enforced — sub-agent must pass tests, coverage ≥80%, API docs, i18n before returning `completed`
+- ❌ Sub-agent cannot ask the user mid-work — every decision is autonomous
+- ❌ Small per-story overhead — each sub-agent re-reads rule files (acceptable cost for the reset)
+- ⚠️ If a sub-agent returns `status: "blocked"`, orchestrator surfaces the blocker and asks user `[Continue / Skip / Abort]`
+
+**When sub-agent autonomy is too risky** (very ambiguous story, exploratory bug fix, schema-altering migration): use Paused mode and walk the orchestrator through the work yourself.
 
 ### 2. Progress Tracking Mode
 
@@ -129,11 +139,14 @@ Detection is automatic; no user action.
 
 ## Example Execution Trace
 
+### Continuous mode (sub-agent dispatch)
+
 ```
 user: /execute-work phase 1
 
 Claude: Execution Mode?
-        [1] Continuous  [2] Paused
+        [1] Continuous (fresh sub-agent per story — clean context, auto-reset)
+        [2] Paused (in-line execution — manual checkpoints)
 user:   1
 
 Claude: Progress Tracking Mode?
@@ -148,15 +161,40 @@ user:   Yes
 
 Claude: 🚀 [EXITING PLAN MODE — ENTERING IMPLEMENTATION MODE]
 
-        🚀 Starting US-001: Project Setup
-        [implements → writes tests → runs tests ✅ → commits]
-        ✅ US-001 COMPLETED
+        🚀 Dispatching US-001 in fresh sub-agent (clean context)...
+        [orchestrator delegates via Agent tool; sub-agent reads rules,
+         implements, tests, commits — all in its own context]
+        [sub-agent returns JSON summary]
+        ✅ US-001 COMPLETED — tests 24/24, coverage 87%, commit abc1234
 
-        ▶️  Continuing with US-002…
-        [repeat for each story]
+        🚀 Dispatching US-002 in fresh sub-agent (clean context)...
+        [no leftover context from US-001 — that's the auto-reset]
+        ✅ US-002 COMPLETED — tests 18/18, coverage 84%, commit def5678
 
         🎉 Phase 1 — COMPLETED
-        [completion report]
+        [completion report based on collected JSON summaries]
+```
+
+### Paused mode (in-line, manual control)
+
+```
+user: /execute-work phase 1
+…
+Claude: Execution Mode?
+user:   2
+
+…[plan mode, approval, etc. — same as above]…
+
+Claude: 🚀 Starting US-001: Project Setup
+        [orchestrator implements → writes tests → runs tests ✅ → commits]
+        ✅ US-001 COMPLETED
+
+        ⏸️  Pause before next story
+        Continue? [Yes/No/Skip to Epic X]
+user:   Yes
+
+Claude: 🚀 Starting US-002…
+        [repeat]
 ```
 
 ---
@@ -172,5 +210,6 @@ Claude: 🚀 [EXITING PLAN MODE — ENTERING IMPLEMENTATION MODE]
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Created:** 2026-04-21 (split from `execute-work.md`)
+**Updated:** 2026-04-29 (Continuous mode now dispatches per-story sub-agents for auto-context-reset; Paused mode unchanged)

@@ -34,24 +34,48 @@ Fully automated implementation workflow:
 /execute-work story US-005
 ```
 
+### Skip the mode prompt
+
+Pass mode preferences inline and Claude won't ask:
+
+```bash
+# Positional digits — first = Execution Mode, second = Tracking Mode
+/execute-work story US-MOB-023 1 2     # Continuous + Complete
+/execute-work phase 1 2 1              # Paused + Phase Only
+
+# Named flags (any order)
+/execute-work story US-005 --mode=continuous --tracking=phase-only
+/execute-work phase 1 --mode=c --tracking=c            # short aliases (c/p)
+
+# Partial — Claude asks only for what's missing
+/execute-work phase 1 1                # Continuous; will ask for tracking
+/execute-work epic EPIC-3 --tracking=complete   # asks for execution mode
+```
+
+**Aliases:** `--mode=` accepts `1|c|continuous|2|p|paused`. `--tracking=` accepts `1|p|phase|phase-only|2|c|complete`. Named flags override positional values when both are supplied.
+
 ---
 
 ## 🎮 Execution Modes
 
 ### Mode 1: Continuous vs Paused
 
-Claude asks at start:
+Claude asks at start (unless `--mode=` or a positional digit was passed inline — see "Skip the mode prompt" above):
 ```
 Execution Mode:
-[1] Continuous - Auto-continues to next story without pausing
-[2] Paused - Wait for approval after each story
+[1] Continuous - Fresh sub-agent per story (clean context, auto-reset between stories)
+[2] Paused - In-line execution; waits for approval after each story
 ```
 
-**Recommendation:** Use Continuous for trusted, well-defined work.
+**Recommendation:** Use Continuous for any phase/epic with 3+ stories.
+
+**Why Continuous now uses sub-agents:** Each story runs in a fresh sub-agent with a clean context. The orchestrator only keeps a structured summary per completed story — no context drift, no leftover state from US-001 contaminating US-002. The sub-agent must still pass every quality gate (tests, coverage ≥80%, API docs, i18n, git commit) before returning `completed`.
+
+**When to prefer Paused:** Short runs (1–2 stories), exploratory bug fixes, or anything where you want to step in mid-work. Sub-agents cannot ask you questions — every decision is autonomous.
 
 ### Mode 2: Progress Tracking
 
-Claude asks at start:
+Claude asks at start (unless `--tracking=` or a positional digit was passed inline):
 ```
 Progress Tracking Mode:
 [1] Phase Only (faster - updates only phase file)
@@ -95,13 +119,16 @@ Progress Tracking Mode:
 
 ### STEP 1: Choose Execution Modes
 
-After plan approval:
+After plan approval, Claude resolves the two modes. **If you passed them inline (positional digits or `--mode=` / `--tracking=` flags), this step is silent — Claude just echoes the resolved choices and moves on.** Otherwise, it asks:
+
 1. Select **Execution Mode** (Continuous / Paused)
 2. Select **Progress Tracking** (Phase Only / Complete)
 
+If you passed only one of the two, Claude asks only for the missing one.
+
 ### STEP 2: Implementation Loop
 
-**For each story in scope:**
+**For each story in scope** (work happens inside a fresh sub-agent in Continuous mode, or in-line in Paused mode — same gates either way):
 
 1. **TodoWrite Breakdown** - Creates task list for story
 2. **Read Story Context** - Gets details from technical spec
@@ -111,7 +138,7 @@ After plan approval:
 6. **Verify i18n** - If I18N-RULES.md exists
 7. **Git Commit** - Auto-commit (NO AI attribution)
 8. **Update Progress** - Phase file or all progress files
-9. **Continue/Pause** - Based on execution mode
+9. **Return summary (Continuous) / Pause for approval (Paused)**
 
 ### STEP 3: Quality Gates
 
@@ -139,7 +166,29 @@ Shows:
 
 ---
 
-## 🔍 Example Walkthrough
+## 🔍 Example Walkthroughs
+
+### Walkthrough A — inline modes (no prompts)
+
+```
+You: /execute-work story US-MOB-023 1 2
+
+Claude: Resolved modes:
+          Execution: Continuous (sub-agent dispatch)
+          Tracking:  Complete
+
+        [STEP 0: Plan Mode]
+        [shows plan for US-MOB-023]
+        Proceed? [Yes/No/Revise]
+
+You: Yes
+
+Claude: 🚀 Dispatching US-MOB-023 in fresh sub-agent (clean context)...
+        [sub-agent runs full per-story workflow]
+        ✅ US-MOB-023 COMPLETED — tests 14/14, coverage 86%, commit a1b2c3d
+```
+
+### Walkthrough B — full menu (no inline args)
 
 ```
 You: /execute-work phase 1
@@ -179,8 +228,12 @@ Claude: [Progress Tracking?]
 You: 1
 
 Claude: 🚀 Starting implementation...
-        Execution Mode: Continuous
+        Execution Mode: Continuous (sub-agent dispatch)
         Progress Tracking: Phase Only
+
+        Each story below is dispatched into a fresh sub-agent.
+        The orchestrator keeps only the JSON summary per story —
+        no story-level context bleeds between dispatches (auto-reset).
 
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         🚀 US-001: Project Setup
@@ -249,12 +302,11 @@ command was removed in v3.2.0.
 
 ## 📚 Full Documentation
 
-**This is a quick guide (150 lines).**
+**This is a quick guide.**
 
-For complete details, see: [`.claude/commands/execute-work.md`](../execute-work.md) (291 lines)
+For complete details, see: [`.claude/commands/execute-work.md`](../execute-work.md) (orchestrator + STEP 0 inline-args parsing).
 
-Includes:
-- Detailed implementation loop
-- Quality gate validation procedures
-- Error handling and recovery
-- Module references for plan mode, implementation, and quality gates
+Related modules:
+- `modules/execute-work-implementation.md` — § A sub-agent prompt template (Continuous), § B in-line workflow (Paused)
+- `modules/execute-work-quality-gates.md` — quality gates (same for both modes)
+- `execute-work-reference.md` — modes, trade-offs, error handling, full execution traces
