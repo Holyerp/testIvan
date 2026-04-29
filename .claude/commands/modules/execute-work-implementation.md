@@ -2,6 +2,7 @@
 
 **Referenced by:** `execute-work.md` STEP 3
 **Companion:** `execute-work-progress-updates.md` (per-mode progress-file updates)
+**File-size class:** technical-spec (≤ 600 lines per `.claude/rules/documentation.md` §2.1). This module holds two prompt templates plus orchestrator handling, so it exceeds the 300-line "templates" target by design — the alternative is a four-way split that fragments closely-coupled logic.
 
 This module has **two sections**:
 
@@ -223,7 +224,7 @@ This keeps the framework usable even if `general-purpose` is reconfigured or una
 
 ## § B — In-line Workflow (Paused mode)
 
-Used directly by the orchestrator when the user selected Paused. The orchestrator's context accumulates across stories — the user manages context manually (e.g., `/clear` between stories if it grows too large).
+Used directly by the orchestrator when the user selected Paused. The orchestrator's context accumulates across stories within the run. If the context grows too large, the user can stop at the next pause (`[No]`) and start a fresh `/execute-work` invocation — running `/clear` mid-run wipes the approved plan and abandons the in-progress story, so it is not a recommended way to "free up context."
 
 Repeat for each story in scope.
 
@@ -439,8 +440,8 @@ When all stories in scope are done → STEP 4 (completion report).
 
 ---
 
-**Version:** 3.3.1
-**Last Updated:** 2026-04-29 (3.3.0: added § A sub-agent prompt template; 3.3.1: autonomy boundary, gate-evidence JSON contract, bug-flow branch, dispatch fallback § A.3, orchestrator-side DASHBOARD reconciliation, project-detected test commands)
+**Version:** 3.3.2
+**Last Updated:** 2026-04-29 (3.3.0 § A template; 3.3.1 review-blocker/major fixes; 3.3.2 file-size-class header note, /clear guidance corrected)
 **Related:**
 - `execute-work-quality-gates.md` — test/coverage validation (same gates for both § A and § B)
 - `execute-work-progress-updates.md` — per-mode progress-file templates

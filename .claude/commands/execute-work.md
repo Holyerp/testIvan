@@ -70,16 +70,18 @@ Execute implementation of a phase, epic, or individual story with full automatio
 /execute-work story US-XXX --mode=paused --tracking=p   # mixed forms allowed
 ```
 
-**Mapping table:**
+**Mapping table** — values are organized by axis (the two axes are independent; the digit `1` means different things on each axis):
 
-| Input | Execution Mode | Tracking Mode |
-|-------|----------------|---------------|
-| `1` / `--mode=1` / `--mode=c` / `--mode=continuous` | Continuous | — |
-| `2` / `--mode=2` / `--mode=p` / `--mode=paused` | Paused | — |
-| `1` / `--tracking=1` / `--tracking=p` / `--tracking=phase` / `--tracking=phase-only` | — | Phase Only |
-| `2` / `--tracking=2` / `--tracking=c` / `--tracking=complete` | — | Complete |
+| Axis | Resolves to | Accepted values |
+|------|-------------|-----------------|
+| Execution Mode (`--mode=` flag, or 1st positional digit) | Continuous | `1`, `c`, `continuous` |
+| Execution Mode | Paused | `2`, `p`, `paused` |
+| Tracking Mode (`--tracking=` flag, or 2nd positional digit) | Phase Only | `1`, `p`, `phase`, `phase-only` |
+| Tracking Mode | Complete | `2`, `c`, `complete` |
 
 > **Positional disambiguation:** if exactly two trailing digits are present, the first is Execution Mode and the second is Tracking Mode. If only one trailing digit is present, treat it as Execution Mode (the more user-facing choice). Named flags always take precedence over positional values when both are supplied.
+
+> **Why `c` and `p` swap meaning per axis:** on Execution Mode, `c` = Continuous and `p` = Paused. On Tracking Mode, `c` = Complete and `p` = Phase Only. The aliases match the first letter of the resolved value on each axis. If you find this confusing, use the long form (`continuous`, `complete`) instead.
 
 **Edge-case rules** — when input violates the format, reject and re-prompt the menu (do NOT silently guess):
 
@@ -277,7 +279,7 @@ Auto-detects modular vs monolithic backlog — no user action needed. See `execu
 
 ---
 
-**Version:** 3.3.1
+**Version:** 3.3.2
 **Created:** 2026-03-27
-**Updated:** 2026-04-29 (3.3.0: Continuous mode sub-agent dispatch; 3.3.1: review fixes — autonomy boundary, gate-evidence JSON, bug-flow branch, edge-case parsing, dispatch fallback, DASHBOARD reconciliation, coverage ≥ 80% alignment)
+**Updated:** 2026-04-29 (3.3.0 sub-agent dispatch; 3.3.1 review-blocker/major fixes; 3.3.2 minor polish — alias table reorganized by axis with disambiguation note, expanded Error Handling, /clear guidance corrected for Paused mode)
 **Command Type:** Implementation Automation
