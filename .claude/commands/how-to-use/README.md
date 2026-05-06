@@ -65,6 +65,10 @@ START HERE
     │   └─→ Open DASHBOARD.md (live) OR /project-status (report)
     │       └─→ [See: project-status.md]
     │
+    ├─ Need to estimate total AI-agent hours for the backlog?
+    │   └─→ Use /estimate-ai-hours
+    │       └─→ [See: estimate-ai-hours.md]
+    │
     ├─ Framework docs feel out of sync / stale?
     │   └─→ Use /audit-pm
     │       └─→ [See: audit-pm.md]
@@ -91,6 +95,7 @@ START HERE
 | Execute bug fix | `/execute-work bug BUG-XXX` | [execute-work.md](./execute-work.md) | ~150 | varies |
 | Run tests manually | `/run-tests [type]` | [run-tests.md](./run-tests.md) | ~80 | varies |
 | Check project status | `/project-status` | [project-status.md](./project-status.md) | ~80 | 1 min |
+| Estimate total AI-agent hours | `/estimate-ai-hours` | [estimate-ai-hours.md](./estimate-ai-hours.md) | ~120 | <1 min |
 | Audit framework docs health | `/audit-pm` | [audit-pm.md](./audit-pm.md) | ~90 | 1-2 min |
 | Generate/update docs | `/generate-docs` | [generate-docs.md](./generate-docs.md) | ~100 | 2-3 min |
 

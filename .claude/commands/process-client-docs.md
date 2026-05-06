@@ -133,7 +133,7 @@ Emit the standard summary (full template in `process-client-docs-reference.md`):
 - Extracted info — project overview, epic/story totals, priorities breakdown, tech, constraints
 - Files generated (listed with line counts)
 - **Ambiguities flagged** for client clarification
-- Next steps (review → clarify → `/init-project`)
+- Next steps (review → clarify → `/estimate-ai-hours` → `/init-project`)
 
 ---
 

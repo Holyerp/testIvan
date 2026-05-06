@@ -117,7 +117,8 @@ Constraints:
 1. Review generated files for accuracy
 2. Verify all phase files are < 200 lines
 3. Clarify ambiguous items with client
-4. Run /init-project to generate documentation
+4. Run /estimate-ai-hours for an immediate AI rapid-dev hours estimate of the scope
+5. Run /init-project to generate documentation
 
 💡 Modular backlog structure generated automatically — no need to run /migrate-to-modular.
 ```
@@ -184,7 +185,8 @@ Claude (STEP 4): [shows summary block]
                  🎯 NEXT STEPS:
                  1. Review generated files
                  2. Ask client about the 3 items above
-                 3. Run /init-project
+                 3. Run /estimate-ai-hours for AI rapid-dev hours estimate
+                 4. Run /init-project
 ```
 
 ---
