@@ -140,5 +140,7 @@ In every web/mobile feature phase, this rule applies.
 - `.claude/rules/api-first.md` — uses the API endpoint table from §3 to gate frontend implementation start
 - `.claude/rules/documentation-templates.md` §1.1 — base user-story format that frontend stories extend
 - `.claude/rules/api-documentation.md` — what the linked endpoint docs must contain
+- `.claude/rules/screen-inventory.md` — consolidated screen map (web CMS / mobile) that derives its API columns from the tables defined here
 - `.claude/commands/add-scope.md` — slash command that enforces this template when adding frontend stories
 - `.claude/commands/process-client-docs.md` — extracts screens from designs and generates screen-driven stories
+- `.claude/commands/screen-map.md` — refreshes the consolidated screen map from these stories

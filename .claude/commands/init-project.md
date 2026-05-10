@@ -188,6 +188,26 @@ All documentation generated must follow:
 
 ---
 
+### STEP 6.5: SCREEN INVENTORY (CONDITIONAL — only if project has a UI)
+
+**Per `.claude/rules/screen-inventory.md`:** scaffold the screen map artifact when the project includes a frontend.
+
+**Trigger logic:**
+- Project type from STEP 0:
+  - `[1] Backend Only` → **skip this step**
+  - `[2] Backend + Mobile App` → **scaffold** for mobile
+  - `[3] Backend + Web + Mobile` → **scaffold** for both
+  - `[4] Web Only` → **scaffold** for web
+
+**Action when triggered:**
+1. Create directory `.project-management/input/screens/`.
+2. Copy `.project-management/templates/screen-map-template.md` to `.project-management/input/screens/screen-map.md`.
+3. Substitute placeholders: `{{PROJECT_NAME}}`, `{{VERSION}}` (= `0.1.0`), `{{DATE}}` (= today), `{{STATUS}}` (= `Draft`).
+4. Leave the screen entries as template placeholders — they will be filled in during `/process-client-docs` (which knows about designs) or hand-curated by the team. The first `/screen-map` run after stories exist will derive the API columns automatically.
+5. Inform the user in the STEP 7 summary that the screen map was scaffolded and where to find it.
+
+---
+
 ### STEP 7: SUMMARY REPORT
 
 Render the comprehensive summary to the user using the template in `init-project-reference.md`. Substitute actual values for tech stack, i18n status, epic/story/point totals, per-phase breakdown, and next-step commands.
