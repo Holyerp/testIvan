@@ -158,6 +158,11 @@ All generated documentation must follow:
 
 ## Guidelines
 
+### Anonymize Personal Information (Mandatory)
+- Personal names from input files MUST NOT appear in generated PRD / technical spec / architecture / progress files.
+- Replace with role labels (`the PM`, `the tech lead`, `the designer`, `the client`, `the stakeholder`) and source-context phrases (`per our call`, `agreed in the planning meeting`, `per stakeholder feedback`).
+- Full rule: `.claude/rules/anonymization.md` — includes role-mapping table, before/after examples, and edge cases.
+
 ### Be Comprehensive
 - Don't leave placeholders or TODOs
 - Fill in all sections completely

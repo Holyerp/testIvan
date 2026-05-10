@@ -115,6 +115,8 @@ All documentation generated must follow:
 
 **🌍 CRITICAL: Generate ALL documentation in English only. No exceptions.**
 
+**🔒 Anonymization (mandatory):** Personal names from input docs MUST NOT appear in generated PRD / technical spec / architecture. Replace with role labels (`the PM`, `the tech lead`, `the client`, `the stakeholder`) and source-context phrases (`per our call`, `agreed in the planning meeting`). Full rule: `.claude/rules/anonymization.md`.
+
 **Generate initial documentation in `.project-management/output/docs/`:**
 
 **1. `prd.md` - Product Requirements Document**
