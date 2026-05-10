@@ -167,6 +167,18 @@ Ref: `.claude/rules/api-documentation.md` + `.claude/rules/api-versioning.md`
 - [ ] Handler guarded against malformed input
 - [ ] Even for internal endpoints, the change-propagation gate (`.claude/rules/api-versioning.md` §5) still applies to internal callers
 
+### Error Handling & Logging Gate (Conditional — only if handler / service / logger config touched)
+Ref: `.claude/rules/error-handling-and-logging.md`
+
+- [ ] All thrown errors are `AppError` subclasses (or known library errors mapped at the single boundary)
+- [ ] Error responses follow the canonical envelope (`success: false`, `error`, `code`)
+- [ ] Every new error `code` is `SCREAMING_SNAKE_CASE` and listed in the endpoint doc (per `.claude/rules/enums-and-constants.md`)
+- [ ] No `catch` block silently swallows; either visible recovery or `log + rethrow`
+- [ ] Structured logger used (no `console.log` in production paths); single log at the boundary, not duplicated across layers
+- [ ] No PII / secrets / full auth/payment bodies logged; redaction config covers any new sensitive keys (per `.claude/rules/anonymization.md`)
+- [ ] `request_id` propagated through async boundaries and returned in `X-Request-Id` response header
+- [ ] Tests cover every error path produced by this change (status, `code`, envelope); redaction config has a test
+
 ### Security
 - [ ] No secrets committed
 - [ ] No security vulnerabilities
