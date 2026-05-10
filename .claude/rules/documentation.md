@@ -220,29 +220,9 @@ After:
 
 ### 4.4 Commit Messages
 
-**Format:**
-```
-type: short summary (max 50 chars)
+See `.claude/rules/git.md` for the canonical commit message format, multi-line HEREDOC pattern, and the full list of conventional commit types.
 
-Longer description explaining:
-- What changed
-- Why it changed
-- Any breaking changes
-- Related issue/story references
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-Co-Authored-By: Claude <noreply@anthropic.com>
-```
-
-**Types:**
-- `feat:` New feature
-- `fix:` Bug fix
-- `docs:` Documentation changes
-- `chore:` Maintenance (deps, config)
-- `refactor:` Code restructuring
-- `test:` Test additions/changes
-- `perf:` Performance improvements
+> **Important:** Per `.claude/rules/git.md`, AI attribution lines (`Generated with Claude Code`, `Co-Authored-By: Claude`) MUST NOT be included in commit messages.
 
 ---
 

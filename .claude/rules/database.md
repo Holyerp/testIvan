@@ -1,5 +1,7 @@
 # Database Schema Changes & Migrations
 
+**Related:** `.claude/rules/stack-specific.md` covers complementary database guidelines (connection pooling, parameterized queries, transactions, indexing).
+
 ## Migration-Based Workflow
 
 **For SQL databases with Prisma or similar ORMs.**

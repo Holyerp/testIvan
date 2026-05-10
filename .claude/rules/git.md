@@ -7,6 +7,7 @@ Use **conventional commits** format:
 - `feat:` new feature
 - `fix:` bug fix
 - `refactor:` code refactoring
+- `perf:` performance improvements
 - `docs:` documentation changes
 - `test:` test additions/modifications
 - `chore:` maintenance tasks

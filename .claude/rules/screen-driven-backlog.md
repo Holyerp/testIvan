@@ -49,33 +49,25 @@ The first half (before `—`) names the screen exactly as it appears in the desi
 
 ## 3. Required Story Fields (frontend stories only)
 
-In addition to the standard fields from `.claude/rules/documentation.md` §4.1, every frontend story must include:
+Frontend stories **extend** the base user-story format from `.claude/rules/documentation.md` §4.1 — do not redefine those fields here. Apply the §4.1 template, then add the four mandatory fields below. The story title also follows the `ScreenName — Short Action` pattern (see §2 above).
+
+**Additional mandatory fields for frontend stories:**
+
+- `**Type:** Frontend (Web / Mobile / Both)`
+- `**Screen:** ScreenName` *(or for a wizard: `ScreenName step 1 → step 2 → step 3`, with each step named)*
+- `**API Endpoints Used:**` — table with columns `Method | Path | Purpose | Doc reference`
+- `**API contract status:** ✅ Verified` *or* `⚠️ Gaps (link to backend story or bug)`
+
+**Example of the API endpoints table:**
 
 ```markdown
-### US-XXX: ScreenName — Short Action
-**Priority:** P0 | P1 | P2
-**Type:** Frontend (Web / Mobile / Both)
-**Screen:** ScreenName
-  (or for wizard: ScreenName step 1 → step 2 → step 3, with names of each)
-
-**Story:** As a [user type], I want to [action] so that [benefit].
-
-**Acceptance Criteria:**
-- [ ] Criterion 1
-- [ ] Criterion 2
-- ...
-
 **API Endpoints Used:**
 | Method | Path | Purpose | Doc reference |
 |--------|------|---------|---------------|
 | GET    | /api/v1/products/:id | Load product detail | docs/api/products.md §GET /products/:id |
 | POST   | /api/v1/cart/items   | Add to cart         | docs/api/cart.md §POST /cart/items |
 
-**API contract status:** ✅ Verified / ⚠️ Gaps (link to backend story or bug)
-
-**Estimate:** X story points
-**Dependencies:** US-XXX, T-XXX, BUG-XXX (any backend dependency goes here)
-**Status:** Todo | In Progress | Blocked | Completed
+**API contract status:** ✅ Verified
 ```
 
 Notes on the table:

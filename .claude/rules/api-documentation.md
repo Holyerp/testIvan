@@ -60,12 +60,7 @@ app.post('/api/users', (req, res) => {
 
 ### 2.2 Typed response shape
 
-The response body must have a declared TypeScript type (or the equivalent in the project's stack). Untyped `res.json(anything)` is forbidden in handlers. Follow the response format from `.claude/rules/stack-specific.md`:
-
-```typescript
-// Success: { "success": true, "data": {...} }
-// Error:   { "success": false, "error": "message", "code": "CODE" }
-```
+The response body must have a declared TypeScript type (or the equivalent in the project's stack). Untyped `res.json(anything)` is forbidden in handlers. Follow the canonical response envelope (`{ success, data }` / `{ success, error, code }`) defined in `.claude/rules/stack-specific.md` §"Node.js Backend".
 
 ```typescript
 interface CreateUserResponse {
