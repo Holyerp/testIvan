@@ -81,4 +81,4 @@ Rule: [`.claude/rules/testing.md`](../../rules/testing.md)
 
 ---
 
-**Part of:** Claude Project Management System v3.2
+**Part of:** Claude Project Management System v3.3

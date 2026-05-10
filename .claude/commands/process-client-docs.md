@@ -183,7 +183,7 @@ Full checklist + common pitfalls: `process-client-docs-reference.md`.
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Created:** 2026-03-27
 **Updated:** 2026-04-21 (split: templates + summary moved to process-client-docs-reference.md)
 **Command Type:** Requirements Engineering

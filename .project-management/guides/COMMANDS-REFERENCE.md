@@ -2,7 +2,7 @@
 
 **Quick reference and navigation guide for all Claude Project Management System commands.**
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Last Updated:** 2026-04-21
 
 ---
@@ -247,8 +247,8 @@ Tests or docs?
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Last Updated:** 2026-04-21
-**Part of:** Claude Project Management System v3.2
+**Part of:** Claude Project Management System v3.3
 
 **Note:** This is a quick reference. For detailed command documentation, see individual command files in `../.claude/commands/`.

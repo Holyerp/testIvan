@@ -1,6 +1,6 @@
 # Backlog — Master Index
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Last Updated:** 2026-04-21
 **Structure:** Modular (split by phase, < 200 lines each)
 

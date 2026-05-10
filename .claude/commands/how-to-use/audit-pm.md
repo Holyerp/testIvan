@@ -118,4 +118,4 @@ Rule source: [`.claude/rules/documentation.md`](../../rules/documentation.md) §
 
 ---
 
-**Part of:** Claude Project Management System v3.2
+**Part of:** Claude Project Management System v3.3

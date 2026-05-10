@@ -157,7 +157,7 @@ Full detail (position bounds, content-field requirements, edit-reference lookup,
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Last Updated:** 2026-04-21 (split: prompts + validation moved to companion)
 **Related:**
 - `backlog-organization.md` — modular backlog structure spec

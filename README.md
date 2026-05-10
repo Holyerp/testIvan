@@ -1,6 +1,6 @@
 # Claude Project Management System
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 
 **Reusable project management framework for Claude-assisted development.**
 
@@ -361,20 +361,40 @@ This is a personal project management system. Feel free to fork and adapt to you
 
 ---
 
-**Version:** 3.2.0 (Direct Modular Generation + Cleanup)
-**Updated:** 2026-04-21
+**Version:** 3.3.0 (Rules Expansion + Cross-Layer Conventions)
+**Updated:** 2026-05-11
 
 ---
 
-## 🆕 What's New in v3.2.0
+## 🆕 What's New in v3.3.0
 
-**Cleanup & correctness:**
-- ✅ **`/update-progress` removed** — DASHBOARD.md auto-update during `/execute-work` replaces it
-- ✅ **Meta-repo self-hosted on modular structure** — the framework's own backlog is now split by phase
-- ✅ **Broken FAQ/troubleshooting links fixed** across all docs
-- ✅ **Dead references removed** (MIGRATION-COMPLETE.md, test-migration/)
-- ✅ **Version strings unified** across all top-level docs
-- ✅ **`/migrate-to-modular` marked legacy-only** (`/init-project` and `/process-client-docs` generate modular directly)
+**6 new specialized rules** for backend/frontend/mobile safety:
+- ✅ **`anonymization.md`** — personal names from input docs → role labels in every generated artifact
+- ✅ **`enums-and-constants.md`** — `SCREAMING_SNAKE_CASE` wire format across DB ↔ backend ↔ frontend ↔ mobile (zero mapping with Prisma + TS + Zod)
+- ✅ **`api-versioning.md`** — `/api/v{N}/` path versioning + mandatory change-propagation gate (docs + Zod + ALL tests + consumer code in same PR)
+- ✅ **`error-handling-and-logging.md`** — typed errors at single boundary, structured logs, NO PII / secrets
+- ✅ **`security-and-auth.md`** — default-deny middleware, IDOR check, cookie sessions, audit log, security headers
+- ✅ **`screen-inventory.md`** + **`/screen-map`** — consolidated screen map (web CMS / mobile / web+admin) with API columns derived from frontend stories
+
+**Quality gates wired into `/execute-work`:**
+- ✅ API Documentation Gate now includes versioning subsection
+- ✅ Error Handling & Logging Gate (11 checklist items)
+- ✅ Security & Auth Gate (11 checklist items)
+- ✅ Screen-map auto-refresh after frontend story completion
+
+**Refactors:**
+- ✅ `documentation.md` split into 3 focused files (core / templates / extras)
+- ✅ `permissions.md` split into 3 focused files (core / patterns / examples)
+- ✅ All 20 rule files now ≤ 200 lines
+- ✅ AI-attribution conflict resolved (was in `documentation.md` §4.4, contradicted `git.md`)
+
+## What Was New in v3.2.0
+
+- `/update-progress` removed (DASHBOARD auto-updates during `/execute-work` replace it)
+- Meta-repo self-hosted on modular structure
+- Broken FAQ/troubleshooting links fixed across all docs
+- Dead references removed (MIGRATION-COMPLETE.md, test-migration/)
+- `/migrate-to-modular` marked legacy-only
 
 For the full version history and feature-by-feature detail, see [CHANGELOG.md](CHANGELOG.md).
 

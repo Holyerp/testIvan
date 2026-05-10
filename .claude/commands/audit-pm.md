@@ -228,4 +228,4 @@ Copy `.claude/commands/audit-pm.md` + `.claude/hooks/audit-pm.sh` into any proje
 
 **Version:** 1.0.0
 **Created:** 2026-04-21
-**Part of:** Claude Project Management System v3.2
+**Part of:** Claude Project Management System v3.3

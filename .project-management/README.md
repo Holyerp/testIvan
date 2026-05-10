@@ -1,6 +1,6 @@
 # Claude Project Management System
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Created:** 2026-03-24
 **Updated:** 2026-04-20 (Direct Modular Generation)
 **Purpose:** Autonomous project planning, documentation, and progress tracking system for Claude Code
@@ -282,7 +282,15 @@ Before starting your project:
 
 ## 📜 Version History
 
-**v3.2.0 (Current — 2026-04-21)**
+**v3.3.0 (Current — 2026-05-11)**
+- 6 new specialized rules: `anonymization`, `enums-and-constants`, `api-versioning`, `error-handling-and-logging`, `security-and-auth`, `screen-inventory`
+- New `/screen-map` slash command + template (consolidated screen view for web CMS / mobile)
+- Quality gates in `/execute-work` extended (API versioning subsection + Error Handling & Logging Gate + Security & Auth Gate + post-completion screen-map refresh)
+- `documentation.md` split into 3 focused files; `permissions.md` split into 3
+- All 20 rule files ≤ 200 lines
+- AI-attribution conflict in `documentation.md` §4.4 resolved (now defers to `git.md` prohibition)
+
+**v3.2.0 (2026-04-21)**
 - Removed `/update-progress` (DASHBOARD auto-update replaces it)
 - Meta-repo self-hosted on modular structure
 - Broken `FAQ-TROUBLESHOOTING.md` links fixed across all docs

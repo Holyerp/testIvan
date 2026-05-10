@@ -69,4 +69,4 @@ Related: [`.claude/commands/add-backlog-requirement.md`](../add-backlog-requirem
 
 ---
 
-**Part of:** Claude Project Management System v3.2
+**Part of:** Claude Project Management System v3.3

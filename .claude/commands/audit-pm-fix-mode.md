@@ -41,7 +41,7 @@ Group 1 — Version drift (5 files)
     - .project-management/guides/FAQ.md           → 3.1.0
     - .project-management/docs/ARCHITECTURE.md    → 3.0.0
     - ...
-  Action: replace_all "**Version:** X.Y.Z" → "**Version:** 3.2.0"
+  Action: replace_all "**Version:** X.Y.Z" → "**Version:** 3.3.0"
 
 Group 2 — Legacy directory removal
   - .project-management/output/sprints/ (empty, v2.0 artifact)

@@ -254,7 +254,7 @@ Legacy monolithic projects remain fully supported — suggest `/migrate-to-modul
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Updated:** 2026-04-20 (Modular structure support)
 
 **Note:** This is a condensed overview. For detailed implementation logic, see the module files linked above.

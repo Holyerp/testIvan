@@ -254,6 +254,6 @@ Migration date: 2026-04-20.
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Last Updated:** 2026-04-27
 **Status:** ✅ Active reference for `/migrate-to-modular`

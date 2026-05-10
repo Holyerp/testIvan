@@ -191,5 +191,5 @@ Claude (STEP 4): [shows summary block]
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Created:** 2026-04-21 (split from `process-client-docs.md`)

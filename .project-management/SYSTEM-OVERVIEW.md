@@ -1,6 +1,6 @@
 # System Overview — File Map
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Last Updated:** 2026-04-21
 **Purpose:** Flat, one-page index of every file in the framework — what it is, where it lives, who updates it. For workflow explanations, see [README.md](README.md) or [INTEGRATION-GUIDE.md](INTEGRATION-GUIDE.md).
 
@@ -191,4 +191,4 @@ project-root/
 
 ---
 
-**Part of:** Claude Project Management System v3.2
+**Part of:** Claude Project Management System v3.3
