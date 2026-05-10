@@ -58,15 +58,40 @@ AUTONOMY BOUNDARY — you may NOT do any of the following:
 MANDATORY WORKFLOW — every step must complete before you return.
 ═══════════════════════════════════════════════════════════════
 
-STEP 1 — Read context (do not skip any):
+STEP 1 — Read context (do not skip any applicable file):
+
+  Always:
   - {{Unit file}} — only the section for {{UNIT_ID}}
   - .claude/rules/code-quality.md
   - .claude/rules/testing.md
   - .claude/rules/git.md
-  - .claude/rules/api-documentation.md          (if unit touches an HTTP endpoint)
-  - .claude/rules/api-first.md                  (if frontend story)
-  - .claude/rules/screen-driven-backlog.md      (if frontend story)
-  - .project-management/rules/I18N-RULES.md     (if file exists)
+  - .claude/rules/stack-specific.md
+  - .claude/rules/documentation-templates.md
+  - .CLAUDE.MD
+
+  If unit touches an HTTP endpoint (handler / service / route file):
+  - .claude/rules/api-documentation.md
+  - .claude/rules/api-versioning.md             (versioning + change-propagation gate: docs + schemas + ALL related tests + consumer code in same PR)
+  - .claude/rules/error-handling-and-logging.md (typed errors, canonical envelope, structured logs, no PII/secrets)
+  - .claude/rules/security-and-auth.md          (default-deny middleware, resource-level/IDOR, cookie session config, security headers, audit log)
+
+  If unit touches a data model / migration / enum:
+  - .claude/rules/database.md
+  - .claude/rules/enums-and-constants.md        (SCREAMING_SNAKE_CASE wire format across all layers)
+
+  If frontend story (Type: Frontend per .claude/rules/screen-driven-backlog.md):
+  - .claude/rules/api-first.md                  (Phase A contract verification before any frontend code)
+  - .claude/rules/screen-driven-backlog.md      (one-screen-per-story + API endpoints table)
+  - .claude/rules/screen-inventory.md           (if input/screens/screen-map.md exists — derives API cols from this story's table on completion)
+
+  If unit generates any artifact that may carry input-document content
+  (PRD, scope, backlog edits, status, technical spec, ADR):
+  - .claude/rules/anonymization.md              (replace personal names with role labels: the PM, the client, the stakeholder)
+
+  If i18n is in scope:
+  - .project-management/rules/I18N-RULES.md     (only if file exists)
+
+  Workflow / orchestration:
   - .claude/commands/modules/execute-work-implementation.md § B (workflow detail)
   - .claude/commands/modules/execute-work-quality-gates.md
   - .claude/commands/modules/execute-work-progress-updates.md
@@ -110,6 +135,15 @@ STEP 8 — Update progress files per execute-work-progress-updates.md and tracki
       Do NOT touch phase-N.md or completed.md for bug fixes (bugs are
       tracked separately).
 
+  Screen-map refresh signal (DO NOT run /screen-map yourself):
+  - If unit_type == "story" AND the story is a frontend story
+    (Type: Frontend per .claude/rules/screen-driven-backlog.md)
+    AND .project-management/input/screens/screen-map.md exists,
+    set "screen_map_refresh_needed": true in the JSON return.
+    The orchestrator (running outside the sub-agent's clean context)
+    will invoke /screen-map after dispatch returns. The sub-agent
+    must NOT invoke /screen-map itself.
+
 STEP 9 — Git commit per .claude/rules/git.md:
   - Conventional commit (feat: / fix: / refactor: / test: / docs:)
   - Bug commits use "fix:" and reference BUG-XXX in the body
@@ -142,6 +176,7 @@ On success:
   "commit_hash":         "abc1234",
   "files_touched":       ["path/to/file.ts", ...],
   "duration_estimate":   "Xm",
+  "screen_map_refresh_needed": true | false,    # true if frontend story AND screen-map.md exists
   "blockers":            []
 }
 
@@ -184,6 +219,8 @@ After the sub-agent returns, the orchestrator MUST:
    - `commit_hash` is missing or empty.
 
 3. **`status: "completed"` (validated)** → display the standard unit-completion block (see § B 3.9 template, adapted for stories vs bugs), log the summary, proceed to dispatch the next unit.
+
+   3a. **Screen-map refresh (frontend stories).** If the sub-agent returned `"screen_map_refresh_needed": true`, the orchestrator invokes `/screen-map` (skill) BEFORE dispatching the next unit. This regenerates the API columns and Status in `input/screens/screen-map.md` from the latest stories — keeps the consolidated screen view in sync with the backlog. If `/screen-map` reports drift items in its summary, the orchestrator surfaces them in the unit-completion block but does NOT block the run.
 
 4. **`status: "blocked"`** → display blocker reason(s) and `recommended_next`. Run reconciliation (step 5). Then ask user `[Continue with next unit / Skip to next epic / Abort run]`. If `recommended_next` proposes filing a backend story, the orchestrator (NOT the sub-agent) does so via `/add-scope` or by appending to the bug roadmap, after user confirmation.
 
@@ -399,6 +436,8 @@ Mark progress todo `in_progress`. Update behavior depends on the tracking mode s
 Full templates for both modes (file lists, update templates, display blocks): **`execute-work-progress-updates.md`**.
 
 **Never update `blockers.md` automatically** — blockers need human context; edit the file directly.
+
+**Screen-map refresh (frontend stories only).** If the completed unit is a frontend story (Type: Frontend per `.claude/rules/screen-driven-backlog.md`) AND `.project-management/input/screens/screen-map.md` exists, invoke `/screen-map` after the progress files are updated. The command regenerates the API endpoint columns and Status field in the screen map from the latest stories. If `/screen-map` reports drift items, display them in the unit-completion summary but do NOT block — drift is informational. Skip the refresh if the story is backend-only / bug / story without a `**Screen:**` field, OR if the screen-map file does not exist (project is API-only / simple SPA per `.claude/rules/screen-inventory.md` §1).
 
 Mark todo completed.
 

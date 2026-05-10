@@ -32,14 +32,33 @@ Execute implementation of a phase, epic, or individual story with full automatio
 
 ## 📋 YOUR TASK — MANDATORY WORKFLOW
 
-**🔧 CRITICAL RULES** — read before any implementation:
+**🔧 CRITICAL RULES** — read before any implementation. Grouped by stage; conditional rules in italics:
+
+**Always (every story / bug):**
 - `.claude/rules/code-quality.md` — SOLID & DRY (mandatory)
-- `.claude/rules/testing.md` — Testing requirements, API status matrix, coverage targets
-- `.claude/rules/api-documentation.md` — API schema validation + matching docs (STRICT for public endpoints, SOFT for `@internal`)
-- `.claude/rules/api-first.md` — Frontend (web/mobile) cannot start until API contract is verified; gaps block & file backend work
-- `.claude/rules/screen-driven-backlog.md` — Web/mobile stories = 1 screen + listed API endpoints (wizard exception)
+- `.claude/rules/testing.md` — Testing requirements, API status matrix (200/400/401/403/404/500), coverage targets
 - `.claude/rules/git.md` — Commit format (NO AI credits), conventional commits
+- `.claude/rules/stack-specific.md` — Middleware, response envelope, Zod env schema, performance patterns
+- `.claude/rules/documentation-templates.md` — Templates for user stories, tasks, bugs, endpoint docs
 - `.CLAUDE.MD` — Core standards and workflow
+
+**For any handler / service / API change** (HTTP endpoint touched):
+- `.claude/rules/api-documentation.md` — Schema validation in code + matching docs (STRICT public, SOFT `@internal`)
+- `.claude/rules/api-versioning.md` — `/api/v{N}/` versioning + mandatory change-propagation (docs, schemas, ALL related tests, consumer code in same PR)
+- `.claude/rules/error-handling-and-logging.md` — Typed errors at single boundary, canonical envelope, `SCREAMING_SNAKE_CASE` codes, structured logging, NO PII / secrets in logs
+- `.claude/rules/security-and-auth.md` — Default-deny middleware (requireAuth/requireRole), resource-level (IDOR), bcrypt, cookie session config, security headers, audit log
+
+**For data model / DB change:**
+- `.claude/rules/database.md` — Migration-based workflow (Prisma `migrate`, never `db push` in prod)
+- `.claude/rules/enums-and-constants.md` — `SCREAMING_SNAKE_CASE` wire format across DB / backend / frontend / mobile; one source of truth per enum
+
+**For frontend (web/mobile) stories:**
+- `.claude/rules/api-first.md` — Phase A contract verification before any frontend code; gaps block & file backend work
+- `.claude/rules/screen-driven-backlog.md` — One screen per story (wizard exception), `**Screen:**` + `**API Endpoints Used:**` table mandatory
+- *`.claude/rules/screen-inventory.md`* — If project is web CMS / mobile / web-with-admin: screen-map refreshed on story completion (per STEP 3-A.4 / 3-B.11 below)
+
+**For any artifact that may carry input-document content** (PRD, scope, backlog, technical spec, status reports):
+- `.claude/rules/anonymization.md` — Personal names from input docs → role labels (`the PM`, `the client`, `the stakeholder`); never leak names into committed artifacts
 
 ---
 
@@ -211,15 +230,19 @@ Workflow per story (detailed in `modules/execute-work-implementation.md` § B):
 
 1. Break down with TodoWrite.
 2. Auto-update `DASHBOARD.md` → "Currently Working On" *(modular only)*.
-3. Read context (story from phase backlog / bug from bug-roadmap).
+3. Read context (story from phase backlog / bug from bug-roadmap). Load all applicable rules per the CRITICAL RULES list above — `modules/execute-work-implementation.md` § A.1 STEP 1 enumerates the conditional reading list.
 4. **For frontend (web/mobile) stories:** before implementation, re-confirm Phase A from `.claude/rules/api-first.md` is still ✅ — endpoints exist, docs match, schema covers UI inputs/outputs, error states distinguishable. If any contract gap is detected now (backend changed, doc drifted), STOP, file backend gap, mark story Blocked. Do not stub the frontend.
-5. Implement following `.claude/rules/code-quality.md` (SOLID & DRY).
+5. Implement following `.claude/rules/code-quality.md` (SOLID & DRY). For data-model / enum work also apply `.claude/rules/enums-and-constants.md` (SCREAMING_SNAKE_CASE wire format across DB / backend / frontend / mobile) and `.claude/rules/database.md` (migration-based workflow). For artifacts that may carry input-document content apply `.claude/rules/anonymization.md` (replace names with role labels).
 6. Write tests following `.claude/rules/testing.md` (unit + integration + E2E + all API status codes 200/400/401/403/404/500).
 7. Verify i18n (if `.project-management/rules/I18N-RULES.md` exists).
-8. **If the story added/changed any HTTP endpoint:** verify `.claude/rules/api-documentation.md` — schema validation in code, typed response, doc block per `documentation-templates.md` §2.1, drift check against tests. STRICT for public endpoints; `@internal`-tagged endpoints follow SOFT tier.
+8. **If the story added/changed any HTTP endpoint:** run the complete API quality gate stack from `modules/execute-work-quality-gates.md`:
+   - `.claude/rules/api-documentation.md` — schema validation in code, typed response, doc block per `documentation-templates.md` §2.1, drift check (STRICT for public endpoints, SOFT for `@internal`)
+   - `.claude/rules/api-versioning.md` — `/api/v{N}/` path correct; if change is breaking, new major version + deprecation headers on old version; ALL tests touching this endpoint re-run and pass; Zod request + response schemas updated in same commit; consumer code (FE / mobile) updated
+   - `.claude/rules/error-handling-and-logging.md` — typed errors only, canonical envelope, SCREAMING_SNAKE_CASE codes, structured logger used, redaction config covers any new sensitive keys, request_id propagated
+   - `.claude/rules/security-and-auth.md` — default-deny middleware applied, resource-level/IDOR check present, no plaintext password/token in logs or fixtures, cookie config (httpOnly/secure/sameSite/secrets) correct, security headers (CSP/HSTS/…) set, audit events emitted, npm audit clean
 9. **Second-to-last step:** run tests (see `modules/execute-work-quality-gates.md`); auto-update DASHBOARD "Quality Metrics".
 10. **Final step:** git commit per `.claude/rules/git.md` (NO AI credits). Bug commits reference `BUG-XXX`.
-11. Update progress tracking (phase file + DASHBOARD auto-update + completed.md / daily-summary.md per Complete mode).
+11. Update progress tracking (phase file + DASHBOARD auto-update + completed.md / daily-summary.md per Complete mode). **For frontend stories (Type: Frontend) with an existing `input/screens/screen-map.md`:** invoke `/screen-map` to refresh the derived API columns + Status; drift items surface in the completion summary but do not block (per `modules/execute-work-implementation.md` § B 3.8 and `modules/execute-work-dashboard-events.md` §3.8).
 12. Pause and ask user `[Yes / No / Skip to Epic X]`.
 
 #### Common quality gate (both modes)
