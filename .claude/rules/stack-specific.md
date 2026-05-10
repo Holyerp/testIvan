@@ -163,4 +163,8 @@ app.post<{}, CreateUserResponse, CreateUserRequest>(
 
 ---
 
+**Related:** `.claude/rules/enums-and-constants.md` — cross-layer naming convention for status/state enums, error codes, and event types (wire format: `SCREAMING_SNAKE_CASE`).
+
+---
+
 **Note:** Customize based on your stack. Remove what doesn't apply.

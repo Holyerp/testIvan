@@ -85,6 +85,7 @@ Every public endpoint must have a doc block matching the template in `.claude/ru
 - Request body example (JSON, realistic values)
 - Response example for the success status code
 - Error responses — at minimum 400, 401, 403, 404, 500 (the matrix from `.claude/rules/testing.md`)
+- For any enum-typed field in request or response, **list the allowed values** (e.g., `status: "ACTIVE" | "PENDING_REVIEW" | "CANCELLED"`) — per `.claude/rules/enums-and-constants.md`
 - Rate limiting note (if applicable)
 
 Doc location: project's chosen API doc directory (e.g., `docs/api/`, or co-located `.md` next to the handler). One endpoint per doc block. If the project uses **OpenAPI/Swagger**, `openapi.yaml` is the source of truth and the Markdown can be generated from it; the gate then verifies the OpenAPI entry exists, not the Markdown.
