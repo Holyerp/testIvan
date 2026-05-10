@@ -179,11 +179,20 @@ Ref: `.claude/rules/error-handling-and-logging.md`
 - [ ] `request_id` propagated through async boundaries and returned in `X-Request-Id` response header
 - [ ] Tests cover every error path produced by this change (status, `code`, envelope); redaction config has a test
 
-### Security
-- [ ] No secrets committed
-- [ ] No security vulnerabilities
-- [ ] Input validation present
-- [ ] OWASP Top 10 checked
+### Security & Auth Gate
+Ref: `.claude/rules/security-and-auth.md`
+
+- [ ] New route uses `requireAuth` (and `requireRole` if applicable), unless explicitly public-allowlisted (default deny)
+- [ ] Resource-level ownership/role check present where path/body refers to a resource (IDOR prevention)
+- [ ] No plaintext password, token, or session value in logs, error responses, or test fixtures
+- [ ] Zod validates body / params / query at handler boundary
+- [ ] Cookie config: `httpOnly: true`, `secure` in prod, `sameSite` set, `maxAge` set, `secrets: [env.SESSION_SECRET]`
+- [ ] Security headers present (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy)
+- [ ] New env vars validated by Zod env schema and added to `.env.example`
+- [ ] Auth-route changes covered by tests: 401, 403, resource-level (IDOR), rate-limit
+- [ ] Security events emitted to audit log (login success/failure, role change, permission denial) per §7.1
+- [ ] `npm audit` clean — no new `high`/`critical` advisories
+- [ ] No secrets committed; OWASP Top 10 considerations reviewed
 
 ---
 

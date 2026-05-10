@@ -166,6 +166,7 @@ app.post<{}, CreateUserResponse, CreateUserRequest>(
 **Related:**
 - `.claude/rules/enums-and-constants.md` — cross-layer naming for enums, error codes, event types (wire format: `SCREAMING_SNAKE_CASE`)
 - `.claude/rules/error-handling-and-logging.md` — error envelope, taxonomy, structured logging, PII redaction
+- `.claude/rules/security-and-auth.md` — cookie-session config, bcrypt rules, default-deny middleware, security headers, audit logging
 
 ---
 

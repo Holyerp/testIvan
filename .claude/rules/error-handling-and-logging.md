@@ -193,7 +193,7 @@ When catching, decide: recover or propagate? If propagate, log at `error` level 
 - `.claude/rules/api-documentation.md` — every error response MUST be documented per endpoint
 - `.claude/rules/api-versioning.md` — adding/removing error codes follows the change-propagation gate
 - `.claude/rules/testing.md` — status-code matrix; every error path tested
-- `.claude/rules/code-quality.md` — Dependency Inversion (inject the logger)
+- `.claude/rules/code-quality.md` (Dependency Inversion — inject the logger) — `.claude/rules/security-and-auth.md` (security event audit log: login, role change, permission denial)
 
 ---
 
