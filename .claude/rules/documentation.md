@@ -1,8 +1,13 @@
 # Documentation Rules
 
-**Version:** 1.0
-**Last Updated:** 2026-04-20
+**Version:** 1.1
+**Last Updated:** 2026-05-10
 **Status:** Active
+
+Core documentation rules: language, file-size limits, writing style, and the quality checklist. See companion files for templates and extras:
+
+- **`.claude/rules/documentation-templates.md`** — User Stories, Technical Tasks, Bug Reports, API Endpoint templates
+- **`.claude/rules/documentation-extras.md`** — Code Comments, Diagrams, Tools, Good/Bad Examples
 
 ---
 
@@ -151,215 +156,12 @@ After:
 
 ---
 
-## 4. Specific Document Types
-
-### 4.1 User Stories (US-XXX)
-
-**Format:**
-```markdown
-### US-001: Short Descriptive Title
-**Priority:** P0 | P1 | P2
-**Story:** As a [user type], I want to [action] so that [benefit].
-
-**Acceptance Criteria:**
-- [ ] Criterion 1 (testable)
-- [ ] Criterion 2 (testable)
-- [ ] Criterion 3 (testable)
-
-**Estimate:** X story points
-**Dependencies:** US-XXX, T-XXX
-**Status:** Todo | In Progress | Completed | Blocked
-```
-
-**Rules:**
-- Title: Max 50 characters
-- Story: Single sentence, clear user value
-- Acceptance criteria: 3-7 testable items
-- Each criterion starts with a verb
-- Use present tense
-
-### 4.2 Technical Tasks (T-XXX)
-
-**Format:**
-```markdown
-### T-001: Short Task Title
-**Priority:** P0 | P1 | P2
-**Description:** Brief explanation of what needs to be done.
-
-**Tasks:**
-- [ ] Subtask 1
-- [ ] Subtask 2
-- [ ] Subtask 3
-
-**Estimate:** X story points
-**Dependencies:** T-XXX, US-XXX
-**Status:** Todo | In Progress | Completed
-```
-
-### 4.3 Bug Reports (BUG-XXX)
-
-**Format:**
-```markdown
-### BUG-001: Short Bug Description
-**Priority:** P0 (Critical) | P1 (High) | P2 (Medium)
-**Reported:** YYYY-MM-DD
-**Reporter:** Name or user ID
-
-**Steps to Reproduce:**
-1. Step 1
-2. Step 2
-3. Step 3
-
-**Expected Result:** What should happen
-**Actual Result:** What actually happens
-**Environment:** OS, browser, version
-
-**Status:** Open | In Progress | Fixed | Cannot Reproduce
-**Fix ETA:** YYYY-MM-DD
-```
-
-### 4.4 Commit Messages
-
-See `.claude/rules/git.md` for the canonical commit message format, multi-line HEREDOC pattern, and the full list of conventional commit types.
-
-> **Important:** Per `.claude/rules/git.md`, AI attribution lines (`Generated with Claude Code`, `Co-Authored-By: Claude`) MUST NOT be included in commit messages.
-
----
-
-## 5. Code Comments
-
-### 5.1 When to Comment
-
-**DO comment:**
-- ✅ Complex algorithms or business logic
-- ✅ Non-obvious decisions ("Why" not "What")
-- ✅ Workarounds or temporary solutions
-- ✅ Public API functions (JSDoc/TSDoc)
-- ✅ Regular expressions
-- ✅ Configuration values with impact
-
-**DON'T comment:**
-- ❌ Obvious code (`x = x + 1; // increment x`)
-- ❌ Bad code (refactor it instead)
-- ❌ Outdated comments (keep them updated or remove)
-
-### 5.2 Comment Style
-
-**TypeScript/JavaScript (JSDoc):**
-```typescript
-/**
- * Calculate total price with tax.
- *
- * @param basePrice - Price before tax in dollars
- * @param taxRate - Tax rate as decimal (e.g., 0.08 for 8%)
- * @returns Total price including tax, rounded to 2 decimals
- *
- * @example
- * ```ts
- * calculateTotal(100, 0.08); // Returns 108.00
- * ```
- */
-function calculateTotal(basePrice: number, taxRate: number): number {
-  return Math.round((basePrice * (1 + taxRate)) * 100) / 100;
-}
-```
-
-**Inline comments:**
-```typescript
-// Use binary search for better performance (O(log n) vs O(n))
-const index = binarySearch(sortedArray, target);
-```
-
----
-
-## 6. API Documentation
-
-### 6.1 Endpoint Documentation
-
-**Every API endpoint MUST document:**
-
-```markdown
-### POST /api/v1/users/signup
-
-**Description:** Create a new user account.
-
-**Authentication:** None (public endpoint)
-
-**Request Body:**
-```json
-{
-  "email": "user@example.com",
-  "password": "SecurePass123",
-  "name": "John Doe"
-}
-```
-
-**Response (201 Created):**
-```json
-{
-  "user": {
-    "id": "uuid",
-    "email": "user@example.com",
-    "name": "John Doe"
-  },
-  "token": "jwt_token_here"
-}
-```
-
-**Error Responses:**
-- `400 Bad Request` - Invalid input (email format, weak password)
-- `409 Conflict` - Email already exists
-- `500 Internal Server Error` - Server error
-
-**Rate Limiting:** 5 requests per 15 minutes per IP
-```
-
----
-
-## 7. Diagrams and Visual Aids
-
-### 7.1 ASCII Diagrams
-
-**Use ASCII art for:**
-- System architecture
-- Data flow
-- Component relationships
-- Database schemas
-
-**Example:**
-```
-┌─────────────┐         ┌──────────────┐
-│   Client    │────────>│   Backend    │
-│   (React)   │<────────│  (Node.js)   │
-└─────────────┘         └──────┬───────┘
-                               │
-                               ▼
-                        ┌──────────────┐
-                        │  PostgreSQL  │
-                        └──────────────┘
-```
-
-### 7.2 Mermaid Diagrams (Optional)
-
-For complex flows, use Mermaid:
-
-```mermaid
-graph TD
-    A[User] -->|POST /signup| B[API]
-    B --> C{Valid?}
-    C -->|Yes| D[Create User]
-    C -->|No| E[Return 400]
-    D --> F[Return 201]
-```
-
----
-
-## 8. Quality Checklist
+## 4. Quality Checklist
 
 **Before committing documentation:**
 
 - [ ] **Language:** All text in English
-- [ ] **File size:** Within limits (see section 2.1)
+- [ ] **File size:** Within limits (see §2.1)
 - [ ] **Header:** Includes version, date, status
 - [ ] **Grammar:** No typos, proper punctuation
 - [ ] **Links:** All internal links work
@@ -371,84 +173,13 @@ graph TD
 
 ---
 
-## 9. Tools and Validation
-
-### 9.1 Recommended Tools
-
-**Markdown linting:**
-```bash
-# Install markdownlint
-npm install -g markdownlint-cli
-
-# Run linter
-markdownlint .project-management/**/*.md
-```
-
-**Spell checking:**
-```bash
-# Install cspell
-npm install -g cspell
-
-# Check spelling
-cspell "**/*.md"
-```
-
-**Line count check:**
-```bash
-# Check file sizes
-wc -l .project-management/input/backlog/*.md
-```
-
-### 9.2 Pre-commit Hook (Optional)
-
-```bash
-#!/bin/bash
-# .git/hooks/pre-commit
-
-# Check documentation file sizes
-for file in .project-management/input/backlog/*.md; do
-  lines=$(wc -l < "$file")
-  if [ "$lines" -gt 200 ]; then
-    echo "ERROR: $file exceeds 200 lines ($lines lines)"
-    exit 1
-  fi
-done
-```
-
----
-
-## 10. Examples
-
-### 10.1 Good Documentation
-
-✅ **Clear, concise, English:**
-```markdown
-## User Authentication
-
-The system uses JWT tokens for authentication. After successful login,
-the server returns a token valid for 24 hours. The client stores this
-token and includes it in the Authorization header for subsequent requests.
-```
-
-### 10.2 Bad Documentation
-
-❌ **Vague, mixed language, passive voice:**
-```markdown
-## Autentifikacija korisnika
-
-Token se koristi za auth. Možda će biti valid 24h ili više, zavisi.
-User bi trebalo da ga stavi u header nekako.
-```
-
----
-
 ## Summary
 
 **Key Rules:**
 1. ✅ **English only** for all documentation
 2. ✅ **File size limits** strictly enforced (< 200 lines for backlogs)
 3. ✅ **Clear structure** with headers, TOC, metadata
-4. ✅ **Professional tone** - active voice, present tense
+4. ✅ **Professional tone** — active voice, present tense
 5. ✅ **Code examples** always syntax-highlighted
 6. ✅ **Consistent formatting** across all docs
 
@@ -461,7 +192,5 @@ User bi trebalo da ga stavi u header nekako.
 
 ---
 
-**Version:** 1.0
-**Created:** 2026-04-20
 **Maintained By:** Development Team
 **Status:** ✅ Active

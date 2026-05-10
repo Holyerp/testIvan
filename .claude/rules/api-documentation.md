@@ -2,7 +2,7 @@
 
 **MANDATORY: Every API endpoint MUST have request/response schema validation in code AND matching documentation before the story is marked complete.**
 
-This rule fires whenever a story adds, modifies, removes, or renames an HTTP endpoint (REST, RPC, or webhook handler). It works alongside `.claude/rules/testing.md` (status-code matrix) and `.claude/rules/documentation.md` §6 (endpoint doc template) — those define the *what*; this file defines *when it blocks completion* and *how to verify it*.
+This rule fires whenever a story adds, modifies, removes, or renames an HTTP endpoint (REST, RPC, or webhook handler). It works alongside `.claude/rules/testing.md` (status-code matrix) and `.claude/rules/documentation-templates.md` §2 (endpoint doc template) — those define the *what*; this file defines *when it blocks completion* and *how to verify it*.
 
 ---
 
@@ -77,7 +77,7 @@ app.post<{}, CreateUserResponse, CreateUserRequest>(
 
 ### 2.3 Documentation present and matching
 
-Every public endpoint must have a doc block matching the template in `.claude/rules/documentation.md` §6.1. Required fields:
+Every public endpoint must have a doc block matching the template in `.claude/rules/documentation-templates.md` §2.1. Required fields:
 
 - HTTP method + path
 - Description (one sentence)
@@ -154,7 +154,7 @@ In all other cases involving HTTP handlers, this rule applies.
 Public endpoint:
 - [ ] Request schema (Zod/Joi/etc.) validates body, params, query at boundary
 - [ ] Response shape declared as typed interface
-- [ ] Doc block exists per `.claude/rules/documentation.md` §6.1
+- [ ] Doc block exists per `.claude/rules/documentation-templates.md` §2.1
 - [ ] All status codes from `.claude/rules/testing.md` matrix documented
 - [ ] Field names match between schema, response type, docs, tests
 - [ ] Tests cover every documented status code
@@ -168,6 +168,6 @@ Internal endpoint:
 
 **Related:**
 - `.claude/rules/testing.md` — status-code matrix (200/400/401/403/404/500)
-- `.claude/rules/documentation.md` §6 — endpoint doc template
+- `.claude/rules/documentation-templates.md` §2 — endpoint doc template
 - `.claude/rules/stack-specific.md` — `validateBody(schema)` middleware, response format, env Zod schema
 - `.claude/commands/modules/execute-work-quality-gates.md` — where this gate is enforced inside `/execute-work`

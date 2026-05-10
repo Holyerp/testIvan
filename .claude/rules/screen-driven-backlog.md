@@ -4,7 +4,7 @@
 
 This rule applies whenever a backlog phase is built or extended for a frontend (web SPA, web SSR, iOS, Android, React Native, Flutter, Expo). It governs *how stories are written*. Backend, infra, and shared-library stories are unaffected.
 
-It works alongside `.claude/rules/api-first.md` (which gates *when frontend implementation can start* against API contract verification) and `.claude/rules/documentation.md` §4.1 (the canonical user-story format).
+It works alongside `.claude/rules/api-first.md` (which gates *when frontend implementation can start* against API contract verification) and `.claude/rules/documentation-templates.md` §1.1 (the canonical user-story format).
 
 ---
 
@@ -49,7 +49,7 @@ The first half (before `—`) names the screen exactly as it appears in the desi
 
 ## 3. Required Story Fields (frontend stories only)
 
-Frontend stories **extend** the base user-story format from `.claude/rules/documentation.md` §4.1 — do not redefine those fields here. Apply the §4.1 template, then add the four mandatory fields below. The story title also follows the `ScreenName — Short Action` pattern (see §2 above).
+Frontend stories **extend** the base user-story format from `.claude/rules/documentation-templates.md` §1.1 — do not redefine those fields here. Apply the §1.1 template, then add the four mandatory fields below. The story title also follows the `ScreenName — Short Action` pattern (see §2 above).
 
 **Additional mandatory fields for frontend stories:**
 
@@ -138,7 +138,7 @@ In every web/mobile feature phase, this rule applies.
 
 **Related:**
 - `.claude/rules/api-first.md` — uses the API endpoint table from §3 to gate frontend implementation start
-- `.claude/rules/documentation.md` §4.1 — base user-story format that frontend stories extend
+- `.claude/rules/documentation-templates.md` §1.1 — base user-story format that frontend stories extend
 - `.claude/rules/api-documentation.md` — what the linked endpoint docs must contain
 - `.claude/commands/add-scope.md` — slash command that enforces this template when adding frontend stories
 - `.claude/commands/process-client-docs.md` — extracts screens from designs and generates screen-driven stories

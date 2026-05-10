@@ -216,7 +216,7 @@ Workflow per story (detailed in `modules/execute-work-implementation.md` § B):
 5. Implement following `.claude/rules/code-quality.md` (SOLID & DRY).
 6. Write tests following `.claude/rules/testing.md` (unit + integration + E2E + all API status codes 200/400/401/403/404/500).
 7. Verify i18n (if `.project-management/rules/I18N-RULES.md` exists).
-8. **If the story added/changed any HTTP endpoint:** verify `.claude/rules/api-documentation.md` — schema validation in code, typed response, doc block per `documentation.md` §6.1, drift check against tests. STRICT for public endpoints; `@internal`-tagged endpoints follow SOFT tier.
+8. **If the story added/changed any HTTP endpoint:** verify `.claude/rules/api-documentation.md` — schema validation in code, typed response, doc block per `documentation-templates.md` §2.1, drift check against tests. STRICT for public endpoints; `@internal`-tagged endpoints follow SOFT tier.
 9. **Second-to-last step:** run tests (see `modules/execute-work-quality-gates.md`); auto-update DASHBOARD "Quality Metrics".
 10. **Final step:** git commit per `.claude/rules/git.md` (NO AI credits). Bug commits reference `BUG-XXX`.
 11. Update progress tracking (phase file + DASHBOARD auto-update + completed.md / daily-summary.md per Complete mode).

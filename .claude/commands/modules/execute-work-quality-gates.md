@@ -59,7 +59,7 @@ Issues:
    - Verify all status codes tested
 
 6. **Verify API documentation gate** (only if story touched any HTTP endpoint)
-   - Per `.claude/rules/api-documentation.md`: schema validation in code, typed response, doc block per `documentation.md` §6.1, drift check
+   - Per `.claude/rules/api-documentation.md`: schema validation in code, typed response, doc block per `documentation-templates.md` §2.1, drift check
    - STRICT for public endpoints; SOFT for `@internal`-tagged handlers
    - Mismatch between schema / response type / docs / tests is a blocker — fix before continuing
 
@@ -148,7 +148,7 @@ Ref: `.claude/rules/api-documentation.md`
 **Public / client-facing endpoints (STRICT):**
 - [ ] Request body / params / query validated by schema (Zod/Joi/etc.) at handler boundary
 - [ ] Response shape declared as typed interface
-- [ ] Doc block exists per `.claude/rules/documentation.md` §6.1 (or OpenAPI entry if project uses it)
+- [ ] Doc block exists per `.claude/rules/documentation-templates.md` §2.1 (or OpenAPI entry if project uses it)
 - [ ] All status codes from `.claude/rules/testing.md` matrix documented
 - [ ] No drift: field names + status codes match between schema, response type, docs, tests
 

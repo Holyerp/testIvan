@@ -65,7 +65,7 @@ For each frontend story, before exiting plan mode:
 
 - [ ] List every screen the story touches (1 unless wizard — see `.claude/rules/screen-driven-backlog.md`)
 - [ ] For each screen, list every API endpoint it calls (method + path)
-- [ ] For each endpoint, locate its doc block (`.claude/rules/documentation.md` §6.1) or OpenAPI entry
+- [ ] For each endpoint, locate its doc block (`.claude/rules/documentation-templates.md` §2.1) or OpenAPI entry
 - [ ] Field-by-field check: every UI input → request schema; every UI output → response shape
 - [ ] Distinguishable error states → distinguishable status codes / error codes
 - [ ] Auth requirements match
