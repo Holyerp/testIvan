@@ -194,7 +194,7 @@ For each unit (story or bug) in scope:
 
 1. **Display:** `🚀 Dispatching {{UNIT_ID}} in fresh sub-agent (clean context)...`
 2. **Auto-update `DASHBOARD.md`** → "Currently Working On" *(modular only — orchestrator does this BEFORE dispatch so DASHBOARD reflects current work even while sub-agent runs)*.
-3. **Dispatch via Agent tool** with `subagent_type="general-purpose"` and the per-unit prompt from `modules/execute-work-implementation.md` § A (Sub-agent Prompt Template). Pass:
+3. **Dispatch via Agent tool** with `subagent_type="general-purpose"` and the per-unit prompt from `modules/execute-work-implementation-continuous.md` §1 (Sub-agent Prompt Template). Pass:
    - Unit ID, title, type (story | bug), phase/epic (n/a for bugs)
    - Absolute path to unit file:
      - Stories → `.project-management/output/phases/phase-N.md`
@@ -202,11 +202,11 @@ For each unit (story or bug) in scope:
    - Tracking mode (Phase Only / Complete)
    - Execution context (modular vs monolithic backlog)
 4. **Sub-agent executes the full per-unit workflow in its own clean context** — reads rules, implements, writes tests, runs tests (≥80% coverage, all API codes), verifies i18n + API docs + frontend contract, updates progress files, creates git commit. Returns a structured JSON summary.
-5. **Orchestrator processes the response** per `modules/execute-work-implementation.md` § A.2:
+5. **Orchestrator processes the response** per `modules/execute-work-implementation-continuous.md` §2:
    - Validate gate-evidence fields (`quality_gates_passed`, `frontend_contract`, `linter`, `coverage`, `commit_hash`). Re-classify as `blocked` if validation fails.
    - On validated `status: "completed"` → display unit summary block, log, proceed to next unit.
-   - On `status: "blocked"` (whether sub-agent returned it or orchestrator re-classified) → reconcile DASHBOARD per § A.2 step 5, display blocker reason and `recommended_next`, ask user `[Continue with next unit / Skip to next epic / Abort run]`. If `recommended_next` proposes filing backend work, the **orchestrator** does it via `/add-scope` or by appending to the bug roadmap, after user confirmation — the sub-agent never files anything itself.
-6. **Dispatch failure handling** — if the `Agent` tool itself errors (unknown subagent_type, tool refused, sub-agent crashed without producing JSON): fall back to STEP 3-B (in-line) for this unit, per `modules/execute-work-implementation.md` § A.3. After two consecutive dispatch failures, fall back for the remainder of the run.
+   - On `status: "blocked"` (whether sub-agent returned it or orchestrator re-classified) → reconcile DASHBOARD per `execute-work-implementation-continuous.md` §2 step 5, display blocker reason and `recommended_next`, ask user `[Continue with next unit / Skip to next epic / Abort run]`. If `recommended_next` proposes filing backend work, the **orchestrator** does it via `/add-scope` or by appending to the bug roadmap, after user confirmation — the sub-agent never files anything itself.
+6. **Dispatch failure handling** — if the `Agent` tool itself errors (unknown subagent_type, tool refused, sub-agent crashed without producing JSON): fall back to STEP 3-B (in-line) for this unit, per `modules/execute-work-implementation-continuous.md` §3. After two consecutive dispatch failures, fall back for the remainder of the run.
 7. **Orchestrator keeps ONLY the summary** (~1KB) — no unit-level work bleeds into the next dispatch. This is the auto-reset.
 
 When all units in scope are dispatched and summaries collected → STEP 4.
@@ -216,21 +216,21 @@ When all units in scope are dispatched and summaries collected → STEP 4.
 | Event | Fired by | When |
 |-------|----------|------|
 | EVENT 1 — Currently Working On | Orchestrator (step 2 above) | Before each dispatch |
-| EVENT 2 — Quality Metrics | Sub-agent (in § A STEP 7) | After tests pass |
-| EVENT 3 — Story Completed | Sub-agent (in § A STEP 8) | Only on `status:"completed"` |
+| EVENT 2 — Quality Metrics | Sub-agent (continuous §1 STEP 7) | After tests pass |
+| EVENT 3 — Story Completed | Sub-agent (continuous §1 STEP 8) | Only on `status:"completed"` |
 | EVENT 4 — Phase Completed | Orchestrator | After last unit in scope, in STEP 4 |
-| EVENT 5 — Bug Fixed | Sub-agent (in § A STEP 8) | Only on `status:"completed"` for bugs |
-| Reconciliation (revert "Working On") | Orchestrator (per § A.2 step 5) | On blocked / dispatch failure / malformed JSON |
+| EVENT 5 — Bug Fixed | Sub-agent (continuous §1 STEP 8) | Only on `status:"completed"` for bugs |
+| Reconciliation (revert "Working On") | Orchestrator (per `execute-work-implementation-continuous.md` §2 step 5) | On blocked / dispatch failure / malformed JSON |
 
 #### STEP 3-B — Paused mode (in-line execution, manual control)
 
 For each story/bug in scope, the orchestrator itself executes the per-story workflow (no sub-agent). This is the legacy behavior — the orchestrator's context accumulates, and the user can hit `/clear` manually between stories if needed.
 
-Workflow per story (detailed in `modules/execute-work-implementation.md` § B):
+Workflow per story (detailed in `modules/execute-work-implementation-paused.md`):
 
 1. Break down with TodoWrite.
 2. Auto-update `DASHBOARD.md` → "Currently Working On" *(modular only)*.
-3. Read context (story from phase backlog / bug from bug-roadmap). Load all applicable rules per the CRITICAL RULES list above — `modules/execute-work-implementation.md` § A.1 STEP 1 enumerates the conditional reading list.
+3. Read context (story from phase backlog / bug from bug-roadmap). Load all applicable rules per the CRITICAL RULES list above — `modules/execute-work-implementation-continuous.md` §1 STEP 1 enumerates the conditional reading list.
 4. **For frontend (web/mobile) stories:** before implementation, re-confirm Phase A from `.claude/rules/api-first.md` is still ✅ — endpoints exist, docs match, schema covers UI inputs/outputs, error states distinguishable. If any contract gap is detected now (backend changed, doc drifted), STOP, file backend gap, mark story Blocked. Do not stub the frontend.
 5. Implement following `.claude/rules/code-quality.md` (SOLID & DRY). For data-model / enum work also apply `.claude/rules/enums-and-constants.md` (SCREAMING_SNAKE_CASE wire format across DB / backend / frontend / mobile) and `.claude/rules/database.md` (migration-based workflow). For artifacts that may carry input-document content apply `.claude/rules/anonymization.md` (replace names with role labels).
 6. Write tests following `.claude/rules/testing.md` (unit + integration + E2E + all API status codes 200/400/401/403/404/500).
@@ -242,7 +242,7 @@ Workflow per story (detailed in `modules/execute-work-implementation.md` § B):
    - `.claude/rules/security-and-auth.md` — default-deny middleware applied, resource-level/IDOR check present, no plaintext password/token in logs or fixtures, cookie config (httpOnly/secure/sameSite/secrets) correct, security headers (CSP/HSTS/…) set, audit events emitted, npm audit clean
 9. **Second-to-last step:** run tests (see `modules/execute-work-quality-gates.md`); auto-update DASHBOARD "Quality Metrics".
 10. **Final step:** git commit per `.claude/rules/git.md` (NO AI credits). Bug commits reference `BUG-XXX`.
-11. Update progress tracking (phase file + DASHBOARD auto-update + completed.md / daily-summary.md per Complete mode). **For frontend stories (Type: Frontend) with an existing `input/screens/screen-map.md`:** invoke `/screen-map` to refresh the derived API columns + Status; drift items surface in the completion summary but do not block (per `modules/execute-work-implementation.md` § B 3.8 and `modules/execute-work-dashboard-events.md` §3.8).
+11. Update progress tracking (phase file + DASHBOARD auto-update + completed.md / daily-summary.md per Complete mode). **For frontend stories (Type: Frontend) with an existing `input/screens/screen-map.md`:** invoke `/screen-map` to refresh the derived API columns + Status; drift items surface in the completion summary but do not block (per `modules/execute-work-implementation-paused.md` §3.8 and `modules/execute-work-dashboard-events.md` §3.8).
 12. Pause and ask user `[Yes / No / Skip to Epic X]`.
 
 #### Common quality gate (both modes)
@@ -273,7 +273,9 @@ Template and full field list: `execute-work-reference.md` → Completion Report 
 | Module | Covers |
 |--------|--------|
 | `modules/execute-work-plan-mode.md` | STEP 1 plan mode workflow |
-| `modules/execute-work-implementation.md` | § A sub-agent prompt template (Continuous), § B in-line workflow (Paused) |
+| `modules/execute-work-implementation.md` | Parent overview of both modes + section index |
+| `modules/execute-work-implementation-continuous.md` | Sub-agent prompt template + orchestrator handling (Continuous mode) |
+| `modules/execute-work-implementation-paused.md` | In-line workflow §3.1–§3.10 (Paused mode) |
 | `modules/execute-work-quality-gates.md` | Test + coverage validation (same gates for both modes) |
 | `modules/execute-work-dashboard-events.md` | DASHBOARD auto-update triggers |
 | `modules/execute-work-dashboard-mechanics.md` | DASHBOARD update internals |
@@ -283,26 +285,13 @@ Template and full field list: `execute-work-reference.md` → Completion Report 
 
 ## Mandatory Requirements (summary)
 
-1. **Plan mode is mandatory** — no implementation without approval.
-2. **Tests are mandatory** — story is not done until tests pass.
-3. **Coverage ≥ 80%** — enforced before completion.
-4. **All API status codes tested** — 200/400/401/403/404/500.
-5. **i18n compliance** — if `I18N-RULES.md` exists, translations are mandatory.
-6. **Git conventions** — NO AI credits; conventional commits.
-7. **SOLID & DRY** — per `.claude/rules/code-quality.md`.
-8. **TodoWrite** — used for task breakdown and tracking.
+1. Plan mode mandatory — no implementation without approval. 2. Tests mandatory — story is not done until tests pass. 3. Coverage ≥ 80%. 4. All API status codes tested (200/400/401/403/404/500). 5. i18n if `I18N-RULES.md` exists. 6. Git conventions — NO AI credits, conventional commits. 7. SOLID & DRY per `.claude/rules/code-quality.md`. 8. TodoWrite for task breakdown.
 
-Full quality-gate checklist + error handling: `execute-work-reference.md`.
+Full quality-gate checklist + error handling: `execute-work-reference.md`. Auto-detects modular vs monolithic backlog (no user action) — see `execute-work-reference.md` → Backward Compatibility for trade-offs.
 
 ---
 
-## Backward Compatibility
-
-Auto-detects modular vs monolithic backlog — no user action needed. See `execute-work-reference.md` → Backward Compatibility for the trade-offs (token usage, DASHBOARD availability, auto-update scope).
-
----
-
-**Version:** 3.3.2
+**Version:** 3.3.3
 **Created:** 2026-03-27
-**Updated:** 2026-04-29 (3.3.0 sub-agent dispatch; 3.3.1 review-blocker/major fixes; 3.3.2 minor polish — alias table reorganized by axis with disambiguation note, expanded Error Handling, /clear guidance corrected for Paused mode)
+**Updated:** 2026-05-11 (3.3.3 split implementation module into continuous + paused companions; CRITICAL RULES list expanded to cover v3.3 additions; screen-map refresh wired into post-completion)
 **Command Type:** Implementation Automation

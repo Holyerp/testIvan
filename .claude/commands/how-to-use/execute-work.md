@@ -307,6 +307,8 @@ command was removed in v3.2.0.
 For complete details, see: [`.claude/commands/execute-work.md`](../execute-work.md) (orchestrator + STEP 0 inline-args parsing).
 
 Related modules:
-- `modules/execute-work-implementation.md` — § A sub-agent prompt template (Continuous), § B in-line workflow (Paused)
+- `modules/execute-work-implementation.md` — parent overview + section index
+- `modules/execute-work-implementation-continuous.md` — sub-agent prompt template (Continuous mode)
+- `modules/execute-work-implementation-paused.md` — in-line workflow (Paused mode)
 - `modules/execute-work-quality-gates.md` — quality gates (same for both modes)
 - `execute-work-reference.md` — modes, trade-offs, error handling, full execution traces
