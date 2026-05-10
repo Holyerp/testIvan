@@ -2,7 +2,7 @@
 
 **MANDATORY: Every API endpoint MUST have request/response schema validation in code AND matching documentation before the story is marked complete.**
 
-This rule fires whenever a story adds, modifies, removes, or renames an HTTP endpoint (REST, RPC, or webhook handler). It works alongside `.claude/rules/testing.md` (status-code matrix) and `.claude/rules/documentation-templates.md` §2 (endpoint doc template) — those define the *what*; this file defines *when it blocks completion* and *how to verify it*.
+This rule fires whenever a story adds, modifies, removes, or renames an HTTP endpoint (REST, RPC, or webhook handler). It works alongside `.claude/rules/testing.md` (status-code matrix), `.claude/rules/documentation-templates.md` §2 (endpoint doc template), and `.claude/rules/api-versioning.md` (version bumps + change-propagation gate) — those define the *what*; this file defines *when it blocks completion* and *how to verify it*.
 
 ---
 
@@ -169,6 +169,8 @@ Internal endpoint:
 
 **Related:**
 - `.claude/rules/testing.md` — status-code matrix (200/400/401/403/404/500)
+- `.claude/rules/api-versioning.md` — version-bump policy + mandatory change-propagation (docs + schemas + tests + consumers)
 - `.claude/rules/documentation-templates.md` §2 — endpoint doc template
 - `.claude/rules/stack-specific.md` — `validateBody(schema)` middleware, response format, env Zod schema
+- `.claude/rules/enums-and-constants.md` — wire format and required listing of allowed enum values
 - `.claude/commands/modules/execute-work-quality-gates.md` — where this gate is enforced inside `/execute-work`

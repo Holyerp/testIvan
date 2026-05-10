@@ -84,4 +84,6 @@ describe('POST /api/users', () => {
 
 ---
 
-**Related:** See `.project-management/rules/project-rules.md` for project-specific testing requirements.
+**Related:**
+- `.claude/rules/api-versioning.md` §5.3 — when an endpoint changes, **all tests** touching it must re-run and pass (not just new tests)
+- `.project-management/rules/project-rules.md` for project-specific testing requirements

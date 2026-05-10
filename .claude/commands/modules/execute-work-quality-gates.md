@@ -143,18 +143,29 @@ Refs: `.claude/rules/api-first.md`, `.claude/rules/screen-driven-backlog.md`
 - [ ] No invented response shapes, no stubs masking missing fields
 
 ### API Documentation Gate (Conditional — only if HTTP endpoints touched)
-Ref: `.claude/rules/api-documentation.md`
+Ref: `.claude/rules/api-documentation.md` + `.claude/rules/api-versioning.md`
 
 **Public / client-facing endpoints (STRICT):**
+- [ ] Endpoint under `/api/v{N}/...` (per `.claude/rules/api-versioning.md` §2)
 - [ ] Request body / params / query validated by schema (Zod/Joi/etc.) at handler boundary
 - [ ] Response shape declared as typed interface
 - [ ] Doc block exists per `.claude/rules/documentation-templates.md` §2.1 (or OpenAPI entry if project uses it)
 - [ ] All status codes from `.claude/rules/testing.md` matrix documented
+- [ ] Allowed enum values listed in doc for any enum-typed field (per `.claude/rules/enums-and-constants.md`)
 - [ ] No drift: field names + status codes match between schema, response type, docs, tests
+
+**If the change modifies an existing endpoint (per `.claude/rules/api-versioning.md` §5):**
+- [ ] Doc updated in the same commit (request/response examples, status codes, "Last Updated")
+- [ ] Zod request + response schemas updated (single source of truth, not duplicated)
+- [ ] **ALL tests touching this endpoint re-run** and pass — not just new tests. Use `grep -rln "<path>\|<handlerName>" tests/` to find them.
+- [ ] No test was "fixed" by mirroring the new shape without confirming the change is non-breaking per §3.2
+- [ ] If breaking change (§3.1) → new major version path (`v{N+1}`), old version doc marked Deprecated with sunset date, `Deprecation: true` + `Sunset` headers emitted on old version
+- [ ] In-repo consumer code (frontend / mobile) updated for new shape
 
 **Internal endpoints (SOFT — handler tagged `@internal`):**
 - [ ] `@internal` JSDoc/TSDoc tag present, explains caller + input/output
 - [ ] Handler guarded against malformed input
+- [ ] Even for internal endpoints, the change-propagation gate (`.claude/rules/api-versioning.md` §5) still applies to internal callers
 
 ### Security
 - [ ] No secrets committed
