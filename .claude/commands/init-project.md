@@ -25,20 +25,35 @@ All documentation generated must follow:
 **📖 See:** `modules/init-project-structure-setup.md` for detailed structure configuration
 
 **Summary:**
-1. Ask user to choose project type:
-   - [1] Backend Only
-   - [2] Backend + Mobile App (Monorepo) ⭐ RECOMMENDED
-   - [3] Backend + Web + Mobile (Full Monorepo)
-   - [4] Web Only
-2. Based on selection, create appropriate folder structure
-3. For monorepo (options 2-3):
-   - Create `apps/` directory with backend/mobile/web
+
+1. **Ask via AskUserQuestion** (gating, no Skip):
+
+   ```
+   question: "What project structure?"
+   header: "Project type"
+   skippable: false
+   options:
+     - label: "Backend + Mobile (Recommended)"
+       description: "Monorepo with apps/backend + apps/mobile. Best for SaaS with iOS/Android client."
+     - label: "Backend Only"
+       description: "API-only service. No frontend code in this repo."
+     - label: "Backend + Web + Mobile"
+       description: "Full monorepo: apps/backend + apps/web + apps/mobile."
+     - label: "Web Only"
+       description: "Single web app (SPA / SSR). No backend in this repo."
+   ```
+
+2. Based on selection, create appropriate folder structure (see `modules/init-project-structure-setup.md` for monorepo scaffolding).
+
+3. For monorepo selections (Backend + Mobile, Backend + Web + Mobile):
+   - Create `apps/` directory with backend/mobile/web subdirectories
    - Create `packages/` for shared code (types, utils, api-client)
    - Setup pnpm workspace + Turborepo
    - Create package.json files for each app/package
-4. Update `.gitignore` for monorepo structure
 
-**Output:** Project structure created, ready for tech stack configuration
+4. Update `.gitignore` for monorepo structure.
+
+**Output:** Project structure created, ready for tech stack configuration.
 
 ---
 
@@ -47,12 +62,23 @@ All documentation generated must follow:
 **📖 See:** `modules/init-project-stack-selection.md` for detailed stack configuration
 
 **Summary:**
-1. Ask user to choose configuration method ([1] Default / [2] AI / [3] Custom)
-2. Process selection:
-   - **Default:** Copy default-stack.md to technologies.md
-   - **AI:** Analyze project needs, generate recommendation
-   - **Custom:** Interactive questions, generate custom stack
-3. Display stack summary
+
+1. **Ask via AskUserQuestion** (gating, no Skip):
+
+   ```
+   question: "Tech stack approach?"
+   header: "Stack"
+   skippable: false
+   options:
+     - label: "Default (Recommended)"
+       description: "React Router 7 + Prisma + Postgres + Zod. Battle-tested defaults from .claude/rules/stack-specific.md."
+     - label: "AI suggests"
+       description: "Claude proposes a stack based on input/scope.md and constraints.md. You approve or revise."
+     - label: "Custom"
+       description: "You pick each layer (backend / database / frontend / styling / testing / build / deploy)."
+   ```
+
+2. Based on selection, configure stack files (see `modules/init-project-stack-selection.md`). Custom flow invokes a sequence of layer-by-layer AskUserQuestion calls.
 
 **Output:** `technologies.md` configured with chosen tech stack
 
