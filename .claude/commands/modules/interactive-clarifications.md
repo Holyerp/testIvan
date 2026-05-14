@@ -14,6 +14,9 @@ Upstream extraction logic emits a list of clarification questions in this schema
 - id: Q-001                     # sequential, zero-padded
   category: authentication      # 1–12 chars, kebab-case (used as header chip)
   priority: P0                  # P0 / P1 / P2
+  skippable: true               # OPTIONAL — default true. Set false for gating
+                                # questions where the command cannot proceed
+                                # without a choice (project type, scope type, …).
   question: "Authentication strategy — JWT or cookie sessions?"
   default: "cookie sessions"    # recommended fallback if skipped
   impact: "Affects Phase 1 estimates (US-001, US-003, US-004)"
@@ -32,6 +35,7 @@ Constraints:
 - `options` length: minimum 2, maximum 3. The loop always appends a 4th `Skip — answer later` option.
 - `category` becomes the AskUserQuestion `header` field — truncate to 12 chars.
 - Multi-select is not used (previews + multi-select don't combine — single-select only).
+- `skippable` (optional, default `true`): when `false`, the loop omits the `Skip — answer later` option. Use only for questions that gate downstream work (e.g. project type). Default behavior (`true`) is the existing `/process-client-docs` behavior — Skip is always available.
 
 ---
 
@@ -75,15 +79,22 @@ AskUserQuestion({
     header: "{{entry.category | truncate(12)}}",
     multiSelect: false,
     options: [
-      ...entry.options,            // up to 3
-      {
-        label: "Skip — answer later",
-        description: "Log this question to input/open-questions.md and continue. Resolve later with /resolve-questions."
-      }
+      ...entry.options,                              // up to 3
+      ...(entry.skippable !== false                  // omit Skip if skippable === false
+        ? [{
+            label: "Skip — answer later",
+            description: "Log this question to input/open-questions.md and continue. Resolve later with /resolve-questions."
+          }]
+        : [])
     ]
   }]
 })
 ```
+
+**Skip semantics:**
+
+- When `entry.skippable` is omitted or `true` (default), the loop appends `Skip — answer later`. On skip, run STEP D (persist to `open-questions.md`).
+- When `entry.skippable` is `false` (gating question), the loop does NOT append Skip. The user must select an option (or use AskUserQuestion's native `Other` for free-text). If the AskUserQuestion tool itself fails, fall back to `entry.default` and emit a warning to the STEP G summary — never block indefinitely.
 
 **Recommended-option flag:** if the schema includes a `default`, mark the matching option's label with ` (Recommended)` per the AskUserQuestion tool convention. Place that option first.
 
