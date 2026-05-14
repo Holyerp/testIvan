@@ -53,9 +53,18 @@ cp -r .claude /path/to/your/project/
 **Also merge these `.gitignore` entries into your project's existing `.gitignore`** (don't overwrite — your project already has language/framework-specific patterns):
 
 ```gitignore
-# Claude settings: keep out of git (use settings.example.json as template)
-.claude/settings.json
+###> editors ###
+/.idea
+.DS_Store
+.vscode
+###< editors ###
+
+###> claude settings ###
+# User-specific Claude permissions (use settings.example.json as template)
 .claude/settings.local.json
+# Ignore main settings.json since it auto-updates (use settings.example.json as template)
+.claude/settings.json
+###< claude settings ###
 
 # Client docs (privacy)
 .project-management/client-input/*
