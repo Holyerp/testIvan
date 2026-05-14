@@ -75,6 +75,14 @@ Navigable index of the 20 rule files in `.claude/rules/`. Rules are loaded by Cl
 |------|-------|---------|
 | [`anonymization.md`](anonymization.md) | Replace personal names from input docs with role labels (`the PM`, `the client`, `the stakeholder`) and source-context phrases. Drop personal contact details entirely | Any command generating PRD / backlog / spec / status / progress files from client docs |
 
+### When a command produces open clarification questions
+
+This is not a rule file but a reusable module — listed here so it's discoverable next to the rules it works with.
+
+| File | Topic | Trigger |
+|------|-------|---------|
+| [`../commands/modules/interactive-clarifications.md`](../commands/modules/interactive-clarifications.md) | Reusable interactive Q&A loop. For each clarification: `AskUserQuestion` with options + Skip. Skipped questions persist to `input/open-questions.md` for `/resolve-questions`. Free-text answers anonymized per `anonymization.md`. | Any PM command that surfaces clarification questions: `/process-client-docs` (active), `/init-project` / `/add-scope` / `/execute-work` / `/add-bug` (planned integration). |
+
 ---
 
 ## Cross-Reference Map (which rule references which)

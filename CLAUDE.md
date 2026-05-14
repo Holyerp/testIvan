@@ -65,6 +65,7 @@ Provides: Planning, phases, client doc processing, standards, progress tracking,
 **Execution:** `/execute-work phase/epic/story` (with automatic plan mode, testing, commits)
 **Testing:** `/run-tests all/unit/integration/e2e/coverage/story`
 **Implementation:** TodoWrite (break down stories, only ONE task `in_progress`)
+**Open questions:** `/process-client-docs` runs an interactive Q&A gate (STEP 5) — skipped questions persist to `input/open-questions.md`; resume with `/resolve-questions [--priority Px | Q-NNN]`. Pattern lives in `.claude/commands/modules/interactive-clarifications.md` for future commands.
 
 ---
 

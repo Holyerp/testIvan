@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- **Interactive clarification gate (`/process-client-docs` STEP 5)** — after extraction, the command no longer dumps a flat "Items Needing Clarification" list. It runs `AskUserQuestion` for each open question one-by-one with concrete option buttons + an explicit `Skip — answer later` option. The previous Blocker/Important/Nice-to-know taxonomy is now formalized as P0/P1/P2 priorities.
+- **`.claude/commands/modules/interactive-clarifications.md`** — reusable Q&A loop (STEPS A–G: schema, AskUserQuestion call shape, skip handling, free-text anonymization, answer-application to artefacts). Documented integration targets: `/init-project`, `/add-scope`, `/execute-work`, `/add-bug` (deferred).
+- **`.project-management/templates/open-questions-template.md`** — schema for the new `input/open-questions.md` (per-question block with Status, Priority, Category, Asked During, Skipped count, Question, Default, Impact, Options Presented, Notes). Resolved questions move to a `## Resolved Questions` archive section.
+- **`/resolve-questions` command** (`.claude/commands/resolve-questions.md` + `resolve-questions-reference.md`) — re-runs the interactive loop on still-Open entries in `input/open-questions.md`. Filters: `--priority P0|P1|P2` or single `Q-NNN`. Updates artefacts referenced by `applies_to` paths and moves answered entries to the Resolved archive.
+- **Structured clarification schema** in `modules/extraction-by-section.md` and `modules/extraction-quality-output.md` — replaces free-text bullets with YAML schema (id, category, priority, question, default, impact, options, applies_to, notes) that feeds the interactive loop. `<!-- TBD: Q-NNN -->` markers inserted into target artefacts during STEP 3 are replaced when answers come in.
+
+### Changed
+
+- **`process-client-docs.md` STEP 4 summary** — clarification section now shows counts by priority (P0/P1/P2) and forwards to STEP 5 (the interactive gate) rather than printing the full list. Final next-steps (STEP 6) updated to suggest `/resolve-questions --priority P0` if blockers remain.
+- **Free-text answer handling** — `Other` answers in the interactive loop pass through `.claude/rules/anonymization.md` §3–4 before being persisted to `open-questions.md` or downstream artefacts.
+
+---
+
 ## [3.3.0] - 2026-05-11
 
 ### Added

@@ -108,19 +108,29 @@ Constraints:
 ✅ input/technologies.md
 ✅ input/constraints.md
 
-⚠️  NEEDS CLARIFICATION:
-- {{ambiguous_item_1}}
-- {{question_for_client_1}}
-- {{assumption_needing_validation_1}}
+⚠️  CLARIFICATION QUESTIONS IDENTIFIED:
+- Total:        {{total_questions}}
+- P0 Blocker:   {{p0_count}}
+- P1 Important: {{p1_count}}
+- P2 Nice:      {{p2_count}}
+(Full text + options will be presented one-by-one in STEP 5 — interactive Q&A.)
 
-🎯 NEXT STEPS:
-1. Review generated files for accuracy
-2. Verify all phase files are < 200 lines
-3. Clarify ambiguous items with client
-4. Run /estimate-ai-hours for an immediate AI rapid-dev hours estimate of the scope
-5. Run /init-project to generate documentation
+🎯 PROCEEDING TO STEP 5 — Interactive Clarification Gate
+   (See modules/interactive-clarifications.md. Skip option always available.
+    Skipped questions land in input/open-questions.md and can be resumed
+    later via /resolve-questions.)
 
 💡 Modular backlog structure generated automatically — no need to run /migrate-to-modular.
+```
+
+After STEP 5 completes, the final next-steps block (STEP 6 in `process-client-docs.md`) shows:
+
+```
+NEXT STEPS:
+1. Review files in .project-management/input/
+2. If any P0 questions remain Open → /resolve-questions --priority P0
+3. /estimate-ai-hours for an immediate AI rapid-dev hours estimate
+4. /init-project to generate PRD, technical spec, and sprint structure
 ```
 
 ---

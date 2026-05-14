@@ -145,27 +145,35 @@ Create an online marketplace connecting local artisans with customers
 
 ## Handling Ambiguities
 
-### Flag Unclear Requirements
+### Flag Unclear Requirements (structured schema — consumed by interactive Q&A)
 
-**When requirements are unclear:**
-```markdown
-## ⚠️ NEEDS CLARIFICATION
+Each ambiguity MUST be emitted in the schema below — it feeds `modules/interactive-clarifications.md` STEP A. **Do not** write free-text bullets anymore: the structured form drives the interactive loop and persists cleanly to `input/open-questions.md` when skipped.
 
-1. **Payment Gateway**
-   - Document mentions "payment processing" but doesn't specify gateway
-   - **Assumption:** Using Stripe (industry standard)
-   - **Question for client:** Confirm Stripe or specify alternative?
+**Priority mapping (taxonomy):**
+- **P0 (Blocker)** — Cannot finalize current phase planning without an answer. Affects estimates, architecture, or scope of work already in flight.
+- **P1 (Important)** — Affects an upcoming phase. Required before that phase starts.
+- **P2 (Nice-to-know)** — Improves accuracy of artefacts; no immediate blocker.
 
-2. **Admin Features**
-   - Document mentions "admin dashboard" without details
-   - **Assumption:** Basic product/user management
-   - **Question for client:** What specific admin features are required?
-
-3. **Mobile App**
-   - Document briefly mentions "mobile support"
-   - **Assumption:** Responsive web app (not native mobile)
-   - **Question for client:** Native app required or responsive web sufficient?
+**Schema (emit one block per ambiguity):**
+```yaml
+- id: Q-001
+  category: payments               # 1–12 chars, kebab-case
+  priority: P0                     # P0 / P1 / P2
+  question: "Payment gateway — Stripe or alternative?"
+  default: "Stripe"                # recommended fallback
+  impact: "Affects Phase 2 (US-012, US-013); changes integration story estimates"
+  options:                         # 2–3 concrete answers; the loop adds Skip as 4th
+    - label: "Stripe"
+      description: "Industry standard; document mentions 'payment processing' without specifying."
+    - label: "Other gateway"
+      description: "Client to specify (Adyen, Braintree, local provider …)."
+  applies_to:                      # files the answer should be written into
+    - input/technologies.md
+    - input/backlog/phase-2-core.md
+  notes: "Document mentions 'payment processing' but does not specify gateway."
 ```
+
+**Marker in target files:** when writing the artefact (scope.md, backlog phase files, technologies.md, constraints.md), insert `<!-- TBD: Q-NNN -->` at the exact location the answer will replace. The interactive loop (STEP F) finds these markers to apply chosen answers.
 
 ---
 
