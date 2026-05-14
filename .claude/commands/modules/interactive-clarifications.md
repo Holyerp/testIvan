@@ -2,7 +2,7 @@
 
 **Purpose:** Reusable interactive Q&A loop for any PM command that generates open clarification questions. Drives the user through questions one-by-one via `AskUserQuestion`, with an explicit **Skip** option. Skipped questions persist to `.project-management/input/open-questions.md` for later resolution via `/resolve-questions`.
 
-**Invoked by:** `/process-client-docs` (STEP 5). Documented integration targets: `/init-project`, `/add-scope`, `/execute-work`, `/add-bug` (deferred — apply same invocation pattern).
+**Invoked by:** `/process-client-docs` (STEP 5), `/init-project` (STEP 6 post-generation gate). Documented integration targets: `/add-scope`, `/execute-work`, `/add-bug` (deferred — apply same invocation pattern).
 
 ---
 
@@ -159,7 +159,6 @@ Documented for the deferred extension wave:
 
 | Command | Insertion point | Question source |
 |---------|------------------|-----------------|
-| `/init-project` | After STEP 1 (stack selection), before sprint scaffolding | Stack ambiguities, i18n gaps, missing constraints |
 | `/add-scope` | After STEP 6 (story drafted), before STEP 7 (docs update) | Story acceptance criteria gaps, dependency ambiguities |
 | `/execute-work` | On `Blocked` status during STEP 3-B implementation loop | Architecture decision required mid-implementation |
 | `/add-bug` | After STEP 1 intake, before STEP 4 phase assignment | Severity / reproduction-step ambiguities |
