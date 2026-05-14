@@ -57,30 +57,9 @@ When executing bug fixes via `/execute-work bug BUG-XXX`, follow:
    - Where bug will be added in roadmap
    - Story points estimate (if provided or suggested)
 
-5. **Present plan:**
-   ```
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   📋 ADD BUG - PLAN
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5. **Present plan** with: bug ID, title, severity, story points, affected component, target section in `bug-roadmap.md`, and phase-assignment intent. End with `Proceed? [Yes / No / Revise]`.
 
-   BUG ID: BUG-006
-   TITLE: {{Bug title}}
-   SEVERITY: {{Critical/High/Medium/Low}}
-   STORY POINTS: {{1-13}}
-   AFFECTED: {{Component/File}}
-
-   WILL ADD TO:
-   - bug-roadmap.md ({{Severity}} section)
-
-   ASSIGN TO PHASE NOW? [Yes/No]
-   {{If Yes, ask which phase}}
-
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   Proceed? [Yes / No / Revise]
-   ```
-
-6. **Wait for approval**
-7. **Only proceed to STEP 1 after approval**
+6. **Wait for approval**, then proceed to STEP 1.
 
 ---
 
@@ -206,24 +185,63 @@ Most fields are free-text intake (title, component, description, reproduction st
 
 ### STEP 4: ASK ABOUT PHASE ASSIGNMENT
 
-**Claude asks:**
+**Ask via AskUserQuestion** (`skippable: true` — Skip leaves the bug in Backlog):
+
 ```
-Do you want to assign this bug to a phase now?
-
-[1] Yes - Assign to phase (prioritize for fixing)
-[2] No - Keep in backlog (triage later)
+question: "Assign this bug to a phase now?"
+header: "phase"
+skippable: true
+default: "No — keep in Backlog"
+options:
+  - label: "Yes — assign to phase"
+    description: "Prioritize for fixing in a specific phase. You'll pick which one next."
+  - label: "No — keep in Backlog (Recommended)"
+    description: "Triage later. The bug is reachable via /resolve-questions or manual review."
 ```
 
-**If user selects [1] Yes:**
-1. Show available phases
-2. Ask which phase
-3. Add bug to selected `phase-N.md` file under "Bugs" section
-4. Update bug-roadmap.md: "Assigned to Phase: Phase N"
-5. Update phase story points total
+**Skip handling:** if the user picks `Skip — answer later`, persist the question per `modules/interactive-clarifications.md` STEP D (renders the canonical schema from `.project-management/templates/open-questions-template.md`). Pass these field values:
 
-**If user selects [2] No:**
-- Keep in bug-roadmap.md only
-- "Assigned to Phase: Backlog"
+- `category`: `bug-triage`
+- `priority`: `P2`
+- `question`: `"Assign {{bug_id}} ({{bug_title}}, severity {{severity}}) to a phase?"`
+- `default`: `"Backlog (no phase)"`
+- `impact`: `"Bug remains in Backlog until triaged; not scheduled into any phase"`
+- `applies_to`: `[output/bugs/bug-roadmap.md]`
+- `notes`: `"Created on {{date}}; severity {{severity}}"`
+
+(Placeholders: `{{bug_id}}` = BUG-XXX assigned in STEP 2; `{{bug_title}}` = from Q1; `{{severity}}` = from Q2; `{{date}}` = today.)
+
+**If user picks "Yes — assign to phase":**
+
+1. Discover available phases — list `phase-*.md` files in `.project-management/output/<active>/`. Count them.
+
+2. **If 4 or fewer phases exist**, ask via a second AskUserQuestion (gating):
+
+   ```
+   question: "Which phase?"
+   header: "phase-pick"
+   skippable: false
+   options:                              # one option per discovered phase, in order
+     - label: "Phase 1 — Foundation"
+       description: "{{phase_1_summary_first_line}}"
+     - label: "Phase 2 — Core"
+       description: "{{phase_2_summary_first_line}}"
+     - ...                               # up to 4
+   ```
+
+3. **If more than 4 phases exist**, fall back to numeric input:
+
+   ```
+   Available phases (>4): list as a numbered menu (1..N).
+   "Pick a phase number [1-N]:"
+   ```
+
+   Validate the answer is in range; reprompt on invalid input.
+
+4. After phase selection:
+   - Add bug to selected `phase-N.md` file under "Bugs" section
+   - Update `bug-roadmap.md`: `Assigned to Phase: Phase N`
+   - Update phase story points total
 
 ---
 
