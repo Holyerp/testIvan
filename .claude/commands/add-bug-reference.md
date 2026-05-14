@@ -55,6 +55,31 @@ Full template lives in `add-bug.md` STEP 4. The skip entry follows the canonical
 
 ---
 
+## Plan-Mode Template (STEP 0)
+
+When entering plan mode (STEP 0), present the plan in this format:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🐛 ADD BUG PLAN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BUG ID:           {{BUG-XXX}}
+TITLE:            {{bug_title}}
+SEVERITY:         {{severity}}
+STORY POINTS:     {{points}} (suggested) | {{user_provided}}
+AFFECTED:         {{component}}
+
+WILL ADD TO:      output/bugs/bug-roadmap.md ({{severity_section}})
+ASSIGN TO PHASE:  {{Yes/No — decided in STEP 4}}
+
+Proceed? [Yes / No / Revise]
+```
+
+The plan is rendered ONCE before STEP 1 intake begins. After approval, STEP 1 collects the field values; STEP 4 finalizes phase assignment.
+
+---
+
 ## Completion Report Template (STEP 5)
 
 ```

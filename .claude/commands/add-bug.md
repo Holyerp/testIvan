@@ -57,7 +57,7 @@ When executing bug fixes via `/execute-work bug BUG-XXX`, follow:
    - Where bug will be added in roadmap
    - Story points estimate (if provided or suggested)
 
-5. **Present plan** with: bug ID, title, severity, story points, affected component, target section in `bug-roadmap.md`, and phase-assignment intent. End with `Proceed? [Yes / No / Revise]`.
+5. **Present plan** using the Plan-Mode Template — see `add-bug-reference.md` → "Plan-Mode Template (STEP 0)". The plan summarizes the eight fields (BUG ID, TITLE, SEVERITY, STORY POINTS, AFFECTED, WILL ADD TO, ASSIGN TO PHASE, plus the `Proceed?` prompt).
 
 6. **Wait for approval**, then proceed to STEP 1.
 
@@ -206,7 +206,7 @@ options:
 - `question`: `"Assign {{bug_id}} ({{bug_title}}, severity {{severity}}) to a phase?"`
 - `default`: `"Backlog (no phase)"`
 - `impact`: `"Bug remains in Backlog until triaged; not scheduled into any phase"`
-- `applies_to`: `[output/bugs/bug-roadmap.md]`
+- `applies_to`: `[]`  *(the bug is already correctly placed in `bug-roadmap.md` Backlog section by STEP 3; no doc actively drifts on Skip — phase assignment is pending, not broken)*
 - `notes`: `"Created on {{date}}; severity {{severity}}"`
 
 (Placeholders: `{{bug_id}}` = BUG-XXX assigned in STEP 2; `{{bug_title}}` = from Q1; `{{severity}}` = from Q2; `{{date}}` = today.)
@@ -229,14 +229,17 @@ options:
      - ...                               # up to 4
    ```
 
-3. **If more than 4 phases exist**, fall back to numeric input:
+3. **If more than 4 phases exist**, fall back to numeric input (AskUserQuestion supports up to 4 options):
 
-   ```
-   Available phases (>4): list as a numbered menu (1..N).
-   "Pick a phase number [1-N]:"
-   ```
-
-   Validate the answer is in range; reprompt on invalid input.
+   - Render the menu as a numbered list, one phase per line:
+     ```
+     [1] Phase 1 — {{phase_1_summary_first_line}}
+     [2] Phase 2 — {{phase_2_summary_first_line}}
+     ...
+     [N] Phase N — {{phase_N_summary_first_line}}
+     ```
+   - Prompt: `"Pick a phase number [1-{{N}}]:"`
+   - Accept an integer in `[1..N]`. Reprompt on non-integer / out-of-range / empty input with the same prompt + a short error message ("Invalid — enter a number between 1 and N.").
 
 4. After phase selection:
    - Add bug to selected `phase-N.md` file under "Bugs" section
