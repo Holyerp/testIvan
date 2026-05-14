@@ -164,22 +164,17 @@ options:
     description: "Skip the docs update for now. Run /generate-docs manually before the next sprint review."
 ```
 
-**Skip handling:** if the user picks `Skip — answer later`, append a new entry to `input/open-questions.md` (created if missing, from `.project-management/templates/open-questions-template.md`):
+**Skip handling:** if the user picks `Skip — answer later`, persist the question per `modules/interactive-clarifications.md` STEP D (which renders the canonical schema from `.project-management/templates/open-questions-template.md`). Pass these field values to the persistence step:
 
-```yaml
-id: Q-NNN                 # sequential after existing entries — single Q-NNN namespace
-category: docs-cascade
-priority: P2
-status: Open
-question: "Update PRD, technical spec, and architecture docs for {{scope_change_summary}}?"
-default: "Yes (auto-cascade)"
-impact: "Documentation drift — docs reference older scope until /generate-docs runs"
-applies_to:
-  - output/docs/prd.md
-  - output/docs/technical-spec.md
-  - output/docs/architecture.md
-notes: "{{action}} {{scope_type}} {{identifier}} on {{date}}; documentation not yet updated"
-```
+- `category`: `docs-cascade`
+- `priority`: `P2`
+- `question`: `"Update PRD, technical spec, and architecture docs for {{scope_change_summary}}?"`
+- `default`: `"Yes (auto-cascade)"`
+- `impact`: `"Documentation drift — docs reference older scope until /generate-docs runs"`
+- `applies_to`: `[output/docs/prd.md, output/docs/technical-spec.md, output/docs/architecture.md]`
+- `notes`: `"{{action}} {{scope_type}} {{identifier}} on {{date}}; documentation not yet updated"`
+
+(Placeholders: `{{action}}` = "add"/"edit" from §0.1 step 1; `{{scope_type}}` = phase/epic/story from §0.1 step 2; `{{identifier}}` = US-XXX or epic/phase name; `{{date}}` = today.)
 
 The user can resume via `/resolve-questions --priority P2` or `/resolve-questions Q-NNN`, or run `/generate-docs` directly when ready.
 
