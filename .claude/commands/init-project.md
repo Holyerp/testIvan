@@ -198,7 +198,30 @@ All documentation generated must follow:
 
 ---
 
-### STEP 6: CREATE PROGRESS TRACKING
+### STEP 6: POST-GENERATION CLARIFICATION GATE
+
+**📖 See:** `modules/interactive-clarifications.md` for the full loop (STEPS B–G — AskUserQuestion call shape, skip handling, anonymized free-text, answer-application to artefacts).
+
+After STEP 4 produces the documentation set (`output/docs/prd.md`, `technical-spec.md`, `architecture.md`) and STEP 5 creates the phase structure, this step runs the same interactive Q&A gate used by `/process-client-docs` STEP 5.
+
+**Sources of questions:**
+
+1. **TBD markers** in generated docs — grep the generated files for `<!-- TBD: Q-NNN -->`. Each marker references a question by ID. If the corresponding question is not already in `input/open-questions.md`, leave the marker in place (the doc indicates an open ambiguity to resolve manually). If the question IS in `open-questions.md`, include it in the loop.
+
+2. **Existing P0/P1 entries in `input/open-questions.md`** — read the file (created earlier by `/process-client-docs` or prior `/init-project` runs). Filter `Status: Open` entries with `priority: P0` or `P1`.
+
+**Behavior:**
+
+- If both sources yield zero questions → emit `✅ No open clarifications.` and skip the loop.
+- Otherwise, build the question list (priority-sorted P0 → P1) and invoke `modules/interactive-clarifications.md` STEPS B–G.
+- Skipped questions remain in `open-questions.md` with incremented `Skipped:` count.
+- Answered questions update `applies_to` artefacts AND move to the Resolved section of `open-questions.md`.
+
+**Resume later:** the user can run `/resolve-questions` at any time to revisit still-Open entries.
+
+---
+
+### STEP 7: CREATE PROGRESS TRACKING
 
 **Create in `.project-management/output/progress/`:**
 
@@ -214,7 +237,7 @@ All documentation generated must follow:
 
 ---
 
-### STEP 6.5: SCREEN INVENTORY (CONDITIONAL — only if project has a UI)
+### STEP 7.5: SCREEN INVENTORY (CONDITIONAL — only if project has a UI)
 
 **Per `.claude/rules/screen-inventory.md`:** scaffold the screen map artifact when the project includes a frontend.
 
@@ -230,11 +253,11 @@ All documentation generated must follow:
 2. Copy `.project-management/templates/screen-map-template.md` to `.project-management/input/screens/screen-map.md`.
 3. Substitute placeholders: `{{PROJECT_NAME}}`, `{{VERSION}}` (= `0.1.0`), `{{DATE}}` (= today), `{{STATUS}}` (= `Draft`).
 4. Leave the screen entries as template placeholders — they will be filled in during `/process-client-docs` (which knows about designs) or hand-curated by the team. The first `/screen-map` run after stories exist will derive the API columns automatically.
-5. Inform the user in the STEP 7 summary that the screen map was scaffolded and where to find it.
+5. Inform the user in the STEP 8 summary that the screen map was scaffolded and where to find it.
 
 ---
 
-### STEP 7: SUMMARY REPORT
+### STEP 8: SUMMARY REPORT
 
 Render the comprehensive summary to the user using the template in `init-project-reference.md`. Substitute actual values for tech stack, i18n status, epic/story/point totals, per-phase breakdown, and next-step commands.
 
@@ -246,6 +269,7 @@ Render the comprehensive summary to the user using the template in `init-project
 - `modules/init-project-structure-setup.md` - STEP 0 (Project structure: monorepo vs single app)
 - `modules/init-project-stack-selection.md` - STEP 1 (Tech stack selection)
 - `modules/init-project-i18n-setup.md` - STEP 2 (i18n configuration)
+- `modules/interactive-clarifications.md` - STEP 6 (Post-generation clarification gate; reusable across PM commands)
 
 ---
 
