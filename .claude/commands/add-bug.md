@@ -152,7 +152,7 @@ Most fields are free-text intake (title, component, description, reproduction st
    skippable: true
    default: "{{severity_suggested_points}}"
    options:
-     - label: "1 — Trivial (Recommended for Low severity)"
+     - label: "1 — Trivial (typical for Low severity)"
        description: "Tiny fix, < 30 min: typo, one-line config, obvious null check."
      - label: "3 — Small"
        description: "Few hours: localized fix, well-understood bug with clear repro."
@@ -160,14 +160,18 @@ Most fields are free-text intake (title, component, description, reproduction st
        description: "Half-day to full-day: needs investigation, touches multiple files."
    ```
 
-   AskUserQuestion's native `Other` lets the user type a Fibonacci value not in the top 3 (`2`, `8`, `13`). On Skip, use the severity-based suggestion below:
+   **Placeholder resolution.** `{{severity_suggested_points}}` is resolved at prompt-render time from the user's prior Severity answer (Q2):
 
-   - Critical: 8–13 points
-   - High: 5–8 points
-   - Medium: 3–5 points
-   - Low: 1–3 points
+   - Critical → `"8"` (matches `Other`; the YAML default is shown but no top-3 option is preselected — the user can accept the default or type a different value via `Other`).
+   - High → `"5 — Medium"` (matches the third visible option, preselected).
+   - Medium → `"3 — Small"` (matches the second visible option, preselected).
+   - Low → `"1 — Trivial (typical for Low severity)"` (matches the first visible option, preselected).
 
-   When a free-text `Other` answer arrives, validate it is a Fibonacci value (`1, 2, 3, 5, 8, 13`). If not, emit a warning to the STEP 5 summary ("Non-Fibonacci value '<x>' rounded to nearest: <y>") and round up to the next valid value.
+   The default acts as a soft prefill: if it matches a visible option label, that option is preselected; if not (Critical case), the user sees the default value pre-populated in the native `Other` field.
+
+   **On Skip:** use the severity-based suggestion above directly (no further prompt).
+
+   **Free-text `Other` validation.** If the user types a value that isn't on the Fibonacci scale (`1, 2, 3, 5, 8, 13`), round up to the next valid value and emit a warning to the STEP 5 summary: `"Non-Fibonacci value '<x>' rounded up to next valid: <y>"`.
 
 9. **Additional Notes** (optional)
    - Screenshots, error logs, environment details
