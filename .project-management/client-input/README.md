@@ -153,7 +153,7 @@ After processing:
 # 4. Initialize project
 /init-project
 
-# Claude generates complete documentation and Sprint 1 plan
+# Claude generates complete documentation and Phase 1 plan
 ```
 
 ---

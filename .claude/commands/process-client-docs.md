@@ -97,6 +97,31 @@ Extract from documents:
 
 ---
 
+### STEP 2.5 — Anonymize personal information (MANDATORY)
+
+**📖 Rule:** `.claude/rules/anonymization.md` (full role-mapping table, source-context substitutions, before/after examples, edge cases).
+
+**TL;DR:** Names extracted from input documents MUST NOT appear in generated artifacts. Before writing any output in STEP 3, do an anonymization pass on the extracted content:
+
+1. **Replace personal names with role labels.** Pick from the project's role inventory: `PM`, `client PM`, `tech lead`, `team lead`, `designer`, `UX lead`, `QA lead`, `DevOps`, `client`, `stakeholder`, `finance stakeholder`, `legal`, `end user`. When the role is unclear, prefer `the stakeholder` over guessing.
+
+   - "Marko said …" → "The PM said …" or "Per our planning call …"
+   - "Ana wants the dashboard to …" → "Per stakeholder feedback, the dashboard should …"
+
+2. **Replace attributions with source channels.** Use phrases like *"Per our call,"* / *"Agreed in the planning meeting:"* / *"Per stakeholder email,"* / *"Decided on the call:"* — preserve provenance without identity.
+
+3. **Drop, do not paraphrase, personal contact details.** Email addresses, phone numbers, personal Slack/GitHub handles → removed entirely or replaced with `the stakeholder`.
+
+4. **Keep:** the client *company* name, generic role titles, product/tool names (Slack, Jira, Stripe …), and placeholder names in clearly-marked examples (`user@example.com`, `Jane Doe` as a sample). Anonymize only *individuals* who are project actors.
+
+5. **Self-check before STEP 3.** Mentally (or with grep on the extraction notes) scan for first names that appeared in input docs. If any survive into the planned output, fix before writing.
+
+If you encounter a quote that loses meaning when anonymized, keep the quote and attribute it to the role (e.g., `the client PM said: "..."`) — never invent a quote, never leak a name.
+
+The summary report (STEP 4) MUST confirm the anonymization pass ran and flag any names that could not be cleanly removed (so the user can decide).
+
+---
+
 ### STEP 3 — Generate input files
 
 **📖 See:** `process-client-docs-reference.md` for the full file-format spec per output file.
@@ -132,8 +157,9 @@ Emit the standard summary (full template in `process-client-docs-reference.md`):
 - Documents read (with page counts)
 - Extracted info — project overview, epic/story totals, priorities breakdown, tech, constraints
 - Files generated (listed with line counts)
+- **Anonymization pass:** confirm ran per `.claude/rules/anonymization.md`. List any personal names found in inputs and the role label each was mapped to. Flag any name that could not be cleanly anonymized (e.g., embedded in a load-bearing quote) for user review.
 - **Ambiguities flagged** for client clarification
-- Next steps (review → clarify → `/init-project`)
+- Next steps (review → clarify → `/estimate-ai-hours` → `/init-project`)
 
 ---
 
@@ -157,7 +183,7 @@ Full checklist + common pitfalls: `process-client-docs-reference.md`.
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Created:** 2026-03-27
 **Updated:** 2026-04-21 (split: templates + summary moved to process-client-docs-reference.md)
 **Command Type:** Requirements Engineering

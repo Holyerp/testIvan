@@ -120,7 +120,7 @@
 - Creates backups before migration
 - Validates content integrity
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 
 ---
 
@@ -141,7 +141,7 @@
 
 **Token Savings:** ~550 tokens (with DASHBOARD) vs ~2,400 tokens (without)
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 
 ---
 
@@ -169,7 +169,7 @@
 - P2 + polish/bugs → `phase-4-polish.md`
 - P3 or future keywords → `future.md`
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 
 ---
 
@@ -201,7 +201,7 @@
 
 **Result:** Real-time project visibility without running commands!
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 
 ---
 

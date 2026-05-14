@@ -233,5 +233,4 @@ A: It automatically accepts all file edit operations without prompting you for a
 
 ---
 
-**Built for Claude Code v3.0**
-**Updated:** 2026-04-01
+**Updated:** 2026-04-27

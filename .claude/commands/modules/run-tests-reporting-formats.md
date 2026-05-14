@@ -257,6 +257,6 @@ Critical E2E:      ✅ all passing
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Created:** 2026-04-21 (split from `run-tests-reporting.md`)
 **Parent:** `run-tests-reporting.md`

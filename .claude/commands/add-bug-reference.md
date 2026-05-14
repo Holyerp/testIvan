@@ -152,6 +152,6 @@ Always confirm before locking in.
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Created:** 2026-04-21 (extracted from `add-bug.md` to meet documentation.md §2.1 soft target)
 **Parent:** `add-bug.md`

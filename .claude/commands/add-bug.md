@@ -86,6 +86,8 @@ When executing bug fixes via `/execute-work bug BUG-XXX`, follow:
 
 ### STEP 1: GATHER BUG INFORMATION
 
+**🔒 Anonymization note:** Bug reports go into the persistent roadmap and may be shared with clients. If the user or input file references a person by name as the reporter or affected user (e.g., "Marko reported this", "happens on Ana's account"), substitute role labels (`the QA lead reported …`, `a user account`) or source-context (`per support channel`). Full rule: `.claude/rules/anonymization.md`. Sample customer names in clearly-marked example data are fine.
+
 **If `--from file.md` provided:**
 - Read and parse file using bug-template.md format
 - Extract: title, severity, component, description, reproduction steps, expected/actual behavior

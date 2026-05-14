@@ -12,7 +12,7 @@
 
 ### Validation Checks
 
-**IF ANY test failed OR coverage < 80% OR i18n missing (when required):**
+**IF ANY test failed OR coverage < 80% OR i18n missing (when required) OR API docs gate failed (when endpoints touched):**
 
 **Display:**
 ```
@@ -22,6 +22,7 @@ Issues:
 - [List failed tests]
 - [Coverage: XX% (need 80%+)]
 - [Missing i18n translations: ...]
+- [API docs gate: missing schema / missing doc block / drift between code and doc]
 
 🔧 Fixing issues...
 ```
@@ -57,7 +58,12 @@ Issues:
    - Check coverage report
    - Verify all status codes tested
 
-6. **REPEAT** until ALL tests pass AND coverage > 80% AND i18n complete
+6. **Verify API documentation gate** (only if story touched any HTTP endpoint)
+   - Per `.claude/rules/api-documentation.md`: schema validation in code, typed response, doc block per `documentation-templates.md` §2.1, drift check
+   - STRICT for public endpoints; SOFT for `@internal`-tagged handlers
+   - Mismatch between schema / response type / docs / tests is a blocker — fix before continuing
+
+7. **REPEAT** until ALL tests pass AND coverage ≥ 80% AND i18n complete AND API docs gate clean
 
 ---
 
@@ -65,9 +71,10 @@ Issues:
 
 **Story is NOT complete until:**
 - ✅ All tests passing (unit, integration, E2E)
-- ✅ Coverage > 80%
+- ✅ Coverage ≥ 80%
 - ✅ All API status codes tested (200/400/401/403/404/500)
 - ✅ i18n translations present (if required)
+- ✅ API documentation gate clean (if endpoints touched) — see `.claude/rules/api-documentation.md`
 - ✅ SOLID & DRY principles followed
 - ✅ No linting errors
 
@@ -86,6 +93,7 @@ All checks completed:
 ✅ Coverage: {{XX}}% (Target: 80%+)
 ✅ API Status Codes: All tested
 {{✅ i18n: All languages present}}
+{{✅ API Docs Gate: schema + typed response + doc block aligned}}
 ✅ Code Quality: SOLID & DRY compliant
 ```
 
@@ -108,7 +116,7 @@ All checks completed:
 
 ### Testing
 - [ ] All tests passing (unit, integration, e2e)
-- [ ] Coverage > 80%
+- [ ] Coverage ≥ 80%
 - [ ] All API codes tested (200/400/401/403/404/500)
 - [ ] Edge cases covered
 - [ ] Error scenarios tested
@@ -121,15 +129,70 @@ All checks completed:
 
 ### Documentation
 - [ ] Tech spec consulted
-- [ ] API docs updated (if API changes)
 - [ ] README updated (if user-facing changes)
 - [ ] Comments added for complex logic
 
-### Security
-- [ ] No secrets committed
-- [ ] No security vulnerabilities
-- [ ] Input validation present
-- [ ] OWASP Top 10 checked
+### Frontend (Web/Mobile) Gate (Conditional — only if story is a frontend story)
+Refs: `.claude/rules/api-first.md`, `.claude/rules/screen-driven-backlog.md`
+
+- [ ] Story scoped to one screen (or wizard with all steps enumerated)
+- [ ] Story title follows `Screen — Action` pattern
+- [ ] **API Endpoints Used** table present (method + path + purpose + doc reference)
+- [ ] Phase A contract verification ✅ — every UI input maps to request schema, every UI output maps to response shape, error states distinguishable, auth matches
+- [ ] If gaps were found at plan time: backend story/bug filed, frontend resumed only after gap closed
+- [ ] No invented response shapes, no stubs masking missing fields
+
+### API Documentation Gate (Conditional — only if HTTP endpoints touched)
+Ref: `.claude/rules/api-documentation.md` + `.claude/rules/api-versioning.md`
+
+**Public / client-facing endpoints (STRICT):**
+- [ ] Endpoint under `/api/v{N}/...` (per `.claude/rules/api-versioning.md` §2)
+- [ ] Request body / params / query validated by schema (Zod/Joi/etc.) at handler boundary
+- [ ] Response shape declared as typed interface
+- [ ] Doc block exists per `.claude/rules/documentation-templates.md` §2.1 (or OpenAPI entry if project uses it)
+- [ ] All status codes from `.claude/rules/testing.md` matrix documented
+- [ ] Allowed enum values listed in doc for any enum-typed field (per `.claude/rules/enums-and-constants.md`)
+- [ ] No drift: field names + status codes match between schema, response type, docs, tests
+
+**If the change modifies an existing endpoint (per `.claude/rules/api-versioning.md` §5):**
+- [ ] Doc updated in the same commit (request/response examples, status codes, "Last Updated")
+- [ ] Zod request + response schemas updated (single source of truth, not duplicated)
+- [ ] **ALL tests touching this endpoint re-run** and pass — not just new tests. Use `grep -rln "<path>\|<handlerName>" tests/` to find them.
+- [ ] No test was "fixed" by mirroring the new shape without confirming the change is non-breaking per §3.2
+- [ ] If breaking change (§3.1) → new major version path (`v{N+1}`), old version doc marked Deprecated with sunset date, `Deprecation: true` + `Sunset` headers emitted on old version
+- [ ] In-repo consumer code (frontend / mobile) updated for new shape
+
+**Internal endpoints (SOFT — handler tagged `@internal`):**
+- [ ] `@internal` JSDoc/TSDoc tag present, explains caller + input/output
+- [ ] Handler guarded against malformed input
+- [ ] Even for internal endpoints, the change-propagation gate (`.claude/rules/api-versioning.md` §5) still applies to internal callers
+
+### Error Handling & Logging Gate (Conditional — only if handler / service / logger config touched)
+Ref: `.claude/rules/error-handling-and-logging.md`
+
+- [ ] All thrown errors are `AppError` subclasses (or known library errors mapped at the single boundary)
+- [ ] Error responses follow the canonical envelope (`success: false`, `error`, `code`)
+- [ ] Every new error `code` is `SCREAMING_SNAKE_CASE` and listed in the endpoint doc (per `.claude/rules/enums-and-constants.md`)
+- [ ] No `catch` block silently swallows; either visible recovery or `log + rethrow`
+- [ ] Structured logger used (no `console.log` in production paths); single log at the boundary, not duplicated across layers
+- [ ] No PII / secrets / full auth/payment bodies logged; redaction config covers any new sensitive keys (per `.claude/rules/anonymization.md`)
+- [ ] `request_id` propagated through async boundaries and returned in `X-Request-Id` response header
+- [ ] Tests cover every error path produced by this change (status, `code`, envelope); redaction config has a test
+
+### Security & Auth Gate
+Ref: `.claude/rules/security-and-auth.md`
+
+- [ ] New route uses `requireAuth` (and `requireRole` if applicable), unless explicitly public-allowlisted (default deny)
+- [ ] Resource-level ownership/role check present where path/body refers to a resource (IDOR prevention)
+- [ ] No plaintext password, token, or session value in logs, error responses, or test fixtures
+- [ ] Zod validates body / params / query at handler boundary
+- [ ] Cookie config: `httpOnly: true`, `secure` in prod, `sameSite` set, `maxAge` set, `secrets: [env.SESSION_SECRET]`
+- [ ] Security headers present (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy)
+- [ ] New env vars validated by Zod env schema and added to `.env.example`
+- [ ] Auth-route changes covered by tests: 401, 403, resource-level (IDOR), rate-limit
+- [ ] Security events emitted to audit log (login success/failure, role change, permission denial) per §7.1
+- [ ] `npm audit` clean — no new `high`/`critical` advisories
+- [ ] No secrets committed; OWASP Top 10 considerations reviewed
 
 ---
 

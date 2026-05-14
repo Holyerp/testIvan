@@ -5,516 +5,146 @@ description: Migrate existing project from monolithic files to modular structure
 
 # Migrate to Modular Structure
 
-⚠️ **DEPRECATED: This command is no longer needed for new projects.**
-
-**For new projects:** Use `/process-client-docs` which now generates modular structure directly.
-
-**Use this command ONLY when:**
-- Migrating existing/legacy projects with monolithic `backlog.md`
-- Converting old project structure to new modular format
-
-**For new projects, use:** `/process-client-docs` → generates modular backlog automatically ✅
-
----
+⚠️ **DEPRECATED for new projects.** `/process-client-docs` and `/init-project` already generate modular structure directly. Use this command **only** to migrate legacy projects with a monolithic `input/backlog.md`.
 
 **What it does:**
-- Splits large `backlog.md` into phase-specific files
-- Creates live `DASHBOARD.md` for progress tracking
+- Splits a single `backlog.md` into per-phase files (`phase-1-foundation.md`, `phase-2-core.md`, ...)
+- Creates a live `DASHBOARD.md` for progress
 - Sets up auto-updating progress files
-- Maintains backward compatibility
+- Preserves backward compatibility with `/add-scope`, `/execute-work`, `/project-status`
+
+**Reference material** (templates, rollback, before/after examples, real-project results, technical notes): `migrate-to-modular-reference.md`.
 
 ---
 
-## What This Migration Does
+## Migration Workflow
 
-### Before (Old Structure):
+### STEP 1 — Backup existing files
 
-```
-.project-management/
-├── input/
-│   ├── backlog.md                  ← 800+ lines, all stories
-│   ├── scope.md
-│   └── ...
-└── output/
-    └── progress/
-        ├── current-status.md       ← Manual update only
-        ├── completed.md
-        └── blockers.md
-```
+Claude will run this automatically before touching anything:
 
-**Problems:**
-- backlog.md is huge (hard to read, token-expensive for AI)
-- No live progress view (must run `/project-status`)
-- Manual updates required
-
----
-
-### After (New Modular Structure):
-
-```
-.project-management/
-├── input/
-│   └── backlog/                    ← NEW: Backlog directory
-│       ├── README.md               ← Master index (< 150 lines)
-│       ├── phase-1-foundation.md   ← Phase 1 stories (< 250 lines)
-│       ├── phase-2-core.md         ← Phase 2 stories (< 250 lines)
-│       ├── phase-3-advanced.md     ← Phase 3 stories (< 250 lines)
-│       ├── phase-4-polish.md       ← Phase 4 stories (< 250 lines)
-│       └── future.md               ← Post-launch features
-│
-└── output/
-    └── progress/
-        ├── DASHBOARD.md            ← NEW: Live auto-updating dashboard
-        ├── daily-summary.md        ← NEW: Today's work summary
-        ├── weekly-report.md        ← NEW: Weekly summary
-        ├── current-status.md       ← Detailed status (auto-updates)
-        ├── completed.md
-        └── blockers.md
-```
-
-**Benefits:**
-- Smaller files (< 200 lines each - best practice)
-- Live dashboard - no command needed
-- Auto-updates during work
-- 70-80% AI token savings
-- Easier to read and maintain
-- Faster AI processing
-
----
-
-## Migration Steps
-
-### STEP 1: BACKUP EXISTING FILES
-
-**Create backups:**
 ```bash
-cp .project-management/input/backlog.md .project-management/input/backlog.md.backup
-cp .project-management/output/progress/current-status.md .project-management/output/progress/current-status.md.backup
+cp .project-management/input/backlog.md \
+   .project-management/input/backlog.md.backup
+cp .project-management/output/progress/current-status.md \
+   .project-management/output/progress/current-status.md.backup
 ```
 
-**Claude will do this automatically**
+Backup naming: `backlog.md.backup-YYYY-MM-DD`. If anything fails downstream, see the rollback procedure in the reference file.
 
 ---
 
-### STEP 2: ANALYZE CURRENT BACKLOG
+### STEP 2 — Analyze current backlog
 
-**Read `backlog.md`:**
-- Count total epics
-- Count total stories
-- Identify priorities (P0/P1/P2)
-- Map stories to phases
+Read `input/backlog.md` and extract:
+- Total epics, total stories, total points
+- Priority labels (P0/P1/P2)
+- Phase mapping per story
 
-**Categorization logic:**
-- **Phase 1 (Foundation):** Infrastructure, auth, setup stories (P0)
-- **Phase 2 (Core):** Main features (P0/P1)
-- **Phase 3 (Advanced):** Secondary features (P1/P2)
-- **Phase 4 (Polish):** Testing, deployment, final touches
-- **Future:** Post-launch features (v2.0+)
+Phase categorization keywords (full version in reference §Categorization Logic):
+- **Phase 1 — Foundation:** P0 + Infrastructure / Auth / Setup / Database / API
+- **Phase 2 — Core:** P0/P1 + Product / Cart / Checkout / Payment / Order
+- **Phase 3 — Advanced:** P1/P2 + Profile / Inventory / Notification / Admin
+- **Phase 4 — Polish:** P2 + Analytics / Report / Dashboard / bugs / polish
+- **Future:** P3 or `v2` / `future` / `post-launch` / `enhancement`
 
 ---
 
-### STEP 3: CREATE BACKLOG DIRECTORY STRUCTURE
+### STEP 3 — Create the backlog directory structure
 
-**Create directory:**
 ```bash
 mkdir -p .project-management/input/backlog/
 ```
 
-**Generate phase backlog files:**
+Generate, using the project's existing templates (`templates/phase-backlog-template.md`, `templates/backlog-readme-template.md`):
 
-**phase-1-foundation.md:**
-- Extract all P0 epics related to infrastructure/auth/setup
-- Extract stories for each epic
-- Format using `phase-backlog-template.md`
+- `backlog/README.md` — master index, summary stats, links to phase files (target ≤ 150 lines)
+- `backlog/phase-1-foundation.md` — Phase 1 epics + stories
+- `backlog/phase-2-core.md` — Phase 2 epics + stories
+- `backlog/phase-3-advanced.md` — Phase 3 epics + stories
+- `backlog/phase-4-polish.md` — Phase 4 stories + testing/deployment
+- `backlog/future.md` — post-launch features
 
-**phase-2-core.md:**
-- Extract P0/P1 main feature epics
-- Extract stories for each epic
-
-**phase-3-advanced.md:**
-- Extract P1/P2 secondary features
-
-**phase-4-polish.md:**
-- Extract remaining stories
-- Add testing/deployment tasks
-
-**future.md:**
-- Extract post-launch features
-- Features marked as "v2.0" or "Future"
-
-**README.md (master index):**
-- Generate summary statistics
-- Link to all phase files
-- Use `backlog-readme-template.md`
+Story ID pattern stays `US-\d{3}` (e.g., `US-001`); tasks `T-\d{3}`; bugs `BUG-\d{3}`. **Do not renumber** — existing references in commits, PRs, and progress files must keep working.
 
 ---
 
-### STEP 4: VERIFY MIGRATION
+### STEP 4 — Verify migration
 
-**Check:**
-- [ ] All stories from old backlog.md present in new structure
+Required checks:
+- [ ] All stories from old `backlog.md` present in new structure
 - [ ] No duplicate stories
-- [ ] Story IDs sequential (US-001, US-002, ...)
+- [ ] Story IDs sequential and unchanged
 - [ ] All epics categorized
-- [ ] **Phase file sizes < 200 lines** (STRICT REQUIREMENT)
-- [ ] README.md < 200 lines
-- [ ] Each file focused and readable
+- [ ] **Each phase file < 200 lines** (target 150–180); README < 200 lines
+- [ ] DASHBOARD target < 250 lines
 
-**Show summary:**
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ BACKLOG MIGRATION COMPLETE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📊 Statistics:
-- Total Epics: 8
-- Total Stories: 45
-- Total Points: 210
-
-📁 Created Files:
-✅ backlog/README.md (120 lines)
-✅ backlog/phase-1-foundation.md (180 lines)
-✅ backlog/phase-2-core.md (220 lines)
-✅ backlog/phase-3-advanced.md (190 lines)
-✅ backlog/phase-4-polish.md (140 lines)
-✅ backlog/future.md (80 lines)
-
-📦 Backup:
-✅ Old backlog.md → backlog.md.backup
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
+Output a concise summary block (line counts per file, total epics/stories/points). Full template: reference file §Migration Summary.
 
 ---
 
-### STEP 5: CREATE LIVE DASHBOARD
+### STEP 5 — Create live dashboard
 
-**Generate `DASHBOARD.md`:**
-- Use `dashboard-template.md`
-- Populate with current project data
-- Calculate current metrics from progress files
+Generate, using `templates/dashboard-template.md`:
 
-**Generate `daily-summary.md`:**
-- Start with empty state
-- Will populate during `/execute-work`
-
-**Generate `weekly-report.md`:**
-- Start with empty state
-- Will populate at end of week
-
-**Location:** `.project-management/output/progress/DASHBOARD.md`
+- `output/progress/DASHBOARD.md` — populated with current metrics (auto-updated by `/execute-work` from this point on)
+- `output/progress/daily-summary.md` — empty state, populates during work
+- `output/progress/weekly-report.md` — empty state, populates end-of-week
 
 ---
 
-### STEP 6: UPDATE PROGRESS FILES
+### STEP 6 — Update progress files
 
-**Update `current-status.md`:**
-- Add auto-update footer
-- Note migration date
-
-**Update `completed.md`:**
-- No changes (historical log)
-
-**Update `blockers.md`:**
-- No changes (active blockers)
+- `output/progress/current-status.md` — add auto-update footer, note migration date
+- `output/progress/completed.md` — no changes (historical log)
+- `output/progress/blockers.md` — no changes (active blockers)
 
 ---
 
-### STEP 7: SUMMARY REPORT
+### STEP 7 — Final summary
 
-**Show user:**
+Show the user:
 
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🎉 MIGRATION TO MODULAR STRUCTURE COMPLETE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✅ BACKLOG SPLIT BY PHASE:
-   - backlog/README.md (master index)
-   - backlog/phase-1-foundation.md ({{P1_STORIES}} stories)
-   - backlog/phase-2-core.md ({{P2_STORIES}} stories)
-   - backlog/phase-3-advanced.md ({{P3_STORIES}} stories)
-   - backlog/phase-4-polish.md ({{P4_STORIES}} stories)
-   - backlog/future.md ({{FUTURE_STORIES}} stories)
+Backlog split:  README + phase-1..4 + future ({{N}} stories total)
+Dashboard:      DASHBOARD.md / daily-summary.md / weekly-report.md ready
+Backup:         input/backlog.md.backup-{{DATE}}
+Token savings:  ~{{X}}% reduction (typical: 70–80%)
 
-✅ LIVE DASHBOARD CREATED:
-   - progress/DASHBOARD.md (auto-updating)
-   - progress/daily-summary.md (today's work)
-   - progress/weekly-report.md (weekly summary)
-
-📊 TOKEN SAVINGS:
-   Old: ~2400 tokens (800 lines)
-   New: ~550 tokens (reading relevant phase only)
-   Savings: 77% reduction! 🚀
-
-🔗 QUICK ACCESS:
-   View dashboard: .project-management/output/progress/DASHBOARD.md
-   View backlog: .project-management/input/backlog/README.md
-
-💡 NEXT STEPS:
-   1. Open DASHBOARD.md to see current status
-   2. Continue work with /execute-work (auto-updates dashboard)
-   3. Old backlog.md saved as backup (can delete if all looks good)
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Next steps:
+  1. Open .project-management/output/progress/DASHBOARD.md
+  2. Continue work with /execute-work (DASHBOARD auto-updates)
+  3. Delete backlog.md.backup once you've verified the new structure
 ```
+
+Full template + real-project numbers: reference file §Real Project Example.
 
 ---
 
-## Backward Compatibility
+## Quality Gate
 
-**Old commands still work:**
-- `/add-scope` - Now updates correct phase backlog file
-- `/execute-work` - Now auto-updates DASHBOARD.md
-- `/project-status` - Still works, also updates current-status.md
+Migration is **NOT complete** until:
+- ✅ All stories present, IDs unchanged, no duplicates
+- ✅ Phase file sizes within target (< 200 lines)
+- ✅ DASHBOARD.md displays current metrics
+- ✅ All internal links in `backlog/README.md` resolve
+- ✅ Backup files created
+- ✅ Old commands (`/add-scope`, `/execute-work`, `/project-status`) still work against the new structure
 
-**Old files:**
-- `backlog.md.backup` - Keep as backup
-- Can delete after verifying new structure works
-
-**Gradual migration:**
-- New projects automatically use modular structure
-- Old projects can migrate anytime with `/migrate-to-modular`
-- No breaking changes
+If any check fails: **rollback** per reference file §Rollback, and report the failure to the user before retrying.
 
 ---
 
-## What If Migration Fails?
+## 📚 Module References
 
-**Rollback procedure:**
-
-```bash
-# Restore old backlog.md
-mv .project-management/input/backlog.md.backup .project-management/input/backlog.md
-
-# Remove new structure
-rm -rf .project-management/input/backlog/
-
-# Restore old progress
-mv .project-management/output/progress/current-status.md.backup .project-management/output/progress/current-status.md
-```
-
-**Claude tracks this automatically** - if migration fails, auto-rollback
+| Reference | Covers |
+|-----------|--------|
+| `migrate-to-modular-reference.md` | Before/after structure, backward compatibility, rollback, examples, technical implementation notes, real-project results |
 
 ---
 
-## Post-Migration Usage
-
-### Reading Backlog
-
-**Before (old way):**
-```
-Open backlog.md → Scroll through 800 lines → Find story
-```
-
-**After (new way):**
-```
-Open backlog/README.md → See summary
-Click phase link → Open phase file (150-250 lines)
-Find story quickly
-```
-
-**For AI:**
-- Reads only relevant phase file
-- 70-80% token savings
-- Faster processing
-
-### Checking Progress
-
-**Before (old way):**
-```bash
-/project-status    # Run command, wait for report
-```
-
-**After (new way):**
-```
-Open progress/DASHBOARD.md → See current status instantly
-```
-
-**Still works:** `/project-status` for detailed report
-
----
-
-## Testing Migration
-
-**Verify checklist:**
-
-- [ ] All stories from old backlog present in new structure
-- [ ] Story IDs unchanged
-- [ ] Epic organization makes sense
-- [ ] Phase file sizes reasonable (< 250 lines)
-- [ ] DASHBOARD.md displays correctly
-- [ ] Links in README.md work
-- [ ] Backup files created
-
-**If issues found:** Report and Claude will fix or rollback
-
----
-
-## Example Before/After
-
-### Before: backlog.md (800 lines)
-
-```markdown
-# Project Backlog
-
-## Epic 1: User Authentication
-- US-001: Backend JWT API (5 pts) P0
-- US-002: Login screen UI (5 pts) P0
-...
-
-## Epic 2: Product Catalog
-- US-008: Products API (8 pts) P0
-- US-009: Product listing (5 pts) P0
-...
-
-## Epic 3: Shopping Cart
-- US-015: Cart backend (8 pts) P0
-...
-
-## Epic 4: Push Notifications
-- US-028: FCM setup (8 pts) P2
-...
-
-## Epic 5: Advanced Analytics
-- US-035: Analytics dashboard (13 pts) Future
-...
-
-(800 lines total)
-```
-
-### After: backlog/README.md (120 lines)
-
-```markdown
-# Project Backlog - Master Index
-
-**Total Stories:** 45
-**Total Points:** 210
-
-## Phase Backlogs
-
-### [Phase 1: Foundation](phase-1-foundation.md)
-- Epics: Auth, Infrastructure
-- Stories: 12, Points: 47
-
-### [Phase 2: Core](phase-2-core.md)
-- Epics: Products, Cart, Checkout
-- Stories: 18, Points: 82
-
-### [Phase 3: Advanced](phase-3-advanced.md)
-- Epics: Push, Analytics
-- Stories: 10, Points: 56
-
-### [Future](future.md)
-- Stories: 5
-```
-
-### After: backlog/phase-1-foundation.md (180 lines)
-
-```markdown
-# Phase 1: Foundation & Setup
-
-## Epic 1: User Authentication
-- US-001: Backend JWT API (5 pts) P0
-- US-002: Login screen UI (5 pts) P0
-...
-
-## Epic 2: Infrastructure
-- US-006: Database setup (3 pts) P0
-...
-
-(Only Phase 1 stories - 180 lines)
-```
-
-**Much easier to read!**
-
----
-
-## Summary
-
-**Migration:**
-- ✅ Automatic with `/migrate-to-modular`
-- ✅ Backward compatible
-- ✅ Rollback on failure
-- ✅ No breaking changes
-
-**Benefits:**
-- 📉 70-80% token reduction for AI
-- 📊 Live dashboard (no commands)
-- 📁 Organized by phase (< 200 lines each - best practice)
-- ⚡ Faster processing
-- 📖 More readable and maintainable
-- 🎯 Focused, single-purpose files
-
-**Safety:**
-- 💾 Automatic backups
-- 🔄 Rollback available
-- ✅ Verification checks
-
----
-
-## 🔧 Technical Implementation Notes
-
-**For Claude:**
-
-When executing this command:
-
-1. **Working Directory:** `.project-management/`
-2. **Backup Date Format:** `backlog.md.backup-YYYY-MM-DD` (e.g., `backlog.md.backup-2026-04-20`)
-3. **Templates to Use:**
-   - `templates/phase-backlog-template.md` - For phase files
-   - `templates/backlog-readme-template.md` - For master README
-   - `templates/dashboard-template.md` - For DASHBOARD.md
-
-4. **File Size Limits (STRICT):**
-   - Phase files: **MUST BE < 200 lines** (target: 150-180 lines)
-   - README.md: **MUST BE < 200 lines** (target: 150 lines)
-   - DASHBOARD.md: Target < 250 lines
-
-   **Best Practice:**
-   - Keep files small and focused for readability
-   - If phase exceeds 200 lines, split into sub-phases or move stories to next phase
-   - Smaller files = faster AI processing, easier human reading
-   - Token efficiency: aim for 150-180 lines per file
-
-5. **Categorization Logic:**
-   ```
-   Phase 1: P0 + (Infrastructure|Auth|Setup|Database|API) keywords
-   Phase 2: P0/P1 + (Product|Cart|Checkout|Payment|Order) keywords
-   Phase 3: P1/P2 + (Profile|Inventory|Review|Notification|Admin) keywords
-   Phase 4: P2 + (Analytics|Report|Dashboard) keywords + bugs/polish
-   Future: P3 or keywords (v2|future|post-launch|enhancement)
-   ```
-
-6. **Story ID Pattern:** `US-\d{3}` (e.g., US-001, US-002)
-7. **Technical Task Pattern:** `T-\d{3}` (e.g., T-001, T-002)
-8. **Bug Pattern:** `BUG-\d{3}` (e.g., BUG-001)
-
----
-
-## ✅ Real Project Example
-
-**This command has been tested on this project:**
-
-**Before Migration:**
-- `input/backlog.md` - 381 lines
-- `input/backlog-future.md` - 112 lines
-
-**After Migration (Actual Results):**
-- `input/backlog/README.md` - 214 lines ✅
-- `input/backlog/phase-1-foundation.md` - 145 lines ✅
-- `input/backlog/phase-2-core.md` - 159 lines ✅
-- `input/backlog/phase-3-advanced.md` - 132 lines ✅
-- `input/backlog/phase-4-polish.md` - 96 lines ✅
-- `input/backlog/future.md` - 120 lines ✅
-- `output/progress/DASHBOARD.md` - 218 lines ✅
-- Plus 5 other progress files
-
-**Migration Date:** 2026-04-20
-
----
-
-**Version:** 3.2.0
-**Created:** 2026-04-14
-**Last Updated:** 2026-04-20
-**Status:** ✅ Tested and Working
+**Version:** 3.3.0
+**Last Updated:** 2026-04-27
+**Status:** ✅ Active (deprecated for new projects)

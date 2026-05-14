@@ -112,6 +112,6 @@ These run **in addition** to the Mode 1 / Mode 2 updates above, not instead of t
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Created:** 2026-04-21 (split from `execute-work-implementation.md`)
 **Parent:** `execute-work-implementation.md`

@@ -109,7 +109,7 @@ Auto-detects modular vs monolithic backlog and DASHBOARD.md presence. No user ac
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Created:** 2026-03-27
 **Updated:** 2026-04-21 (split: template + details moved to project-status-reference.md)
 **Command Type:** Reporting & Analytics

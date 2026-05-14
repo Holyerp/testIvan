@@ -170,5 +170,5 @@ All under the 200-line cap. Token savings confirmed ~60-70% on `/execute-work` r
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Created:** 2026-04-21 (split from `backlog-organization.md`)

@@ -218,7 +218,7 @@ Before reporting success:
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Last Updated:** 2026-04-21 (split: framework-specific commands moved to companion)
 **Related:**
 - Parent: `.claude/commands/run-tests.md`

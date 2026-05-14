@@ -120,6 +120,6 @@ Phase 4: Polish & Launch ({{points_4}} points, {{weeks_4}} weeks)
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Created:** 2026-04-21 (extracted from `init-project.md` to meet documentation.md §2.1 soft target)
 **Parent:** `init-project.md`

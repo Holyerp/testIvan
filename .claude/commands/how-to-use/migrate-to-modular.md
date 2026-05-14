@@ -69,4 +69,4 @@ Deeper guide: [`.project-management/guides/MODULAR-STRUCTURE-GUIDE.md`](../../..
 
 ---
 
-**Part of:** Claude Project Management System v3.2 (legacy command)
+**Part of:** Claude Project Management System v3.3 (legacy command)

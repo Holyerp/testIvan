@@ -89,12 +89,19 @@ The script handles mechanical checks. These need a human + Claude:
 
 #### 3.3 Judge duplicate documents
 
-The script can't tell "duplicate" from "intentional overlap". Review pairs like:
-- `docs/WORKFLOWS.md` vs `guides/WORKFLOWS-BEST-PRACTICES.md`
-- `docs/BEST-PRACTICES.md` vs `guides/WORKFLOWS-BEST-PRACTICES.md`
-- `README.md` vs `.project-management/README.md` vs `SYSTEM-OVERVIEW.md`
+The script can't tell "duplicate" from "intentional overlap". Review pairs whose filenames suggest they might cover the same ground, e.g.:
+- Two files with overlapping topic-words in their names
+- A `README.md` and a `SYSTEM-OVERVIEW.md` in adjacent directories
+- A `*-PRACTICES.md` and a `*-GUIDE.md` covering related material
 
-Ask: does each file have a distinct job, or does one wrap/summarize the other? If the latter, note as 🟡 MEDIUM findings.
+Ask three things before flagging:
+1. Does the file's intro explicitly say it's an index / pointer / TL;DR? If yes, **not a duplicate** — leave it alone.
+2. Do the section headers actually overlap, or are they sibling topics (workflows vs best-practices vs reference)?
+3. Could a reader land on either file and get the same answer? If yes, that's the duplicate; otherwise it's intentional overlap.
+
+Only flag as 🟡 MEDIUM when (3) is true. False positives waste user time.
+
+(The previous version of this guide listed `WORKFLOWS-BEST-PRACTICES.md` as a candidate; that file is a deliberate index/pointer page and is **not** a duplicate. Don't re-flag it.)
 
 #### 3.4 Check auto-generated vs hand-written boundary
 
@@ -221,4 +228,4 @@ Copy `.claude/commands/audit-pm.md` + `.claude/hooks/audit-pm.sh` into any proje
 
 **Version:** 1.0.0
 **Created:** 2026-04-21
-**Part of:** Claude Project Management System v3.2
+**Part of:** Claude Project Management System v3.3

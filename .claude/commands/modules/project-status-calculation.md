@@ -142,7 +142,7 @@ Avg Fix Time = Sum(Fix Date - Created Date for all fixed bugs) / Total Fixed Bug
 ### Test Coverage
 ```
 Coverage % = (Lines Covered / Total Lines) × 100
-Target: > 80%
+Target: ≥ 80%
 ```
 
 ### Test Pass Rate

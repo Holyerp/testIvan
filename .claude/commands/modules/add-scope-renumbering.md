@@ -232,6 +232,6 @@ Five checks: phase-file continuity, story-ID uniqueness, backlog consistency, me
 
 ---
 
-**Version:** 3.2.0
+**Version:** 3.3.0
 **Last Updated:** 2026-04-21 (split: integrity-check procedures moved to companion)
 **Related:** `add-scope-renumbering-checks.md`, `add-scope-input-parsing.md`, `add-scope-readme-update.md`

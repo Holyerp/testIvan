@@ -169,7 +169,7 @@ Claude: Reading project data...
 - Before starting new work
 - After completing stories
 - During stand-ups or check-ins
-- When planning next sprint/phase
+- When planning the next phase
 
 **Automatic updates:**
 - `/execute-work` updates progress automatically (DASHBOARD.md, daily-summary.md, etc.)
