@@ -149,9 +149,39 @@ else if exists(".project-management/input/backlog.md"):
 **If checks fail:** Roll back changes, report errors.
 
 ### STEP 7: Documentation Update
-**Ask user:**
-> Changes complete. Update PRD/tech-spec/architecture now?
-> [Yes - run /generate-docs] / [No - I'll run manually later]
+
+**Ask via AskUserQuestion** (`skippable: true` — Skip logs as deferred decision):
+
+```
+question: "Update PRD, technical spec, and architecture docs now?"
+header: "docs"
+skippable: true
+default: "Yes — update now"
+options:
+  - label: "Yes — update now (Recommended)"
+    description: "Invoke /generate-docs immediately to keep docs in sync with the scope change."
+  - label: "No — I'll cascade later"
+    description: "Skip the docs update for now. Run /generate-docs manually before the next sprint review."
+```
+
+**Skip handling:** if the user picks `Skip — answer later`, append a new entry to `input/open-questions.md` (created if missing, from `.project-management/templates/open-questions-template.md`):
+
+```yaml
+id: Q-NNN                 # sequential after existing entries — single Q-NNN namespace
+category: docs-cascade
+priority: P2
+status: Open
+question: "Update PRD, technical spec, and architecture docs for {{scope_change_summary}}?"
+default: "Yes (auto-cascade)"
+impact: "Documentation drift — docs reference older scope until /generate-docs runs"
+applies_to:
+  - output/docs/prd.md
+  - output/docs/technical-spec.md
+  - output/docs/architecture.md
+notes: "{{action}} {{scope_type}} {{identifier}} on {{date}}; documentation not yet updated"
+```
+
+The user can resume via `/resolve-questions --priority P2` or `/resolve-questions Q-NNN`, or run `/generate-docs` directly when ready.
 
 ### STEP 8: Summary Report
 **Show:**

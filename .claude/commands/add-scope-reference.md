@@ -56,8 +56,8 @@ STEP 6: Integrity Checks
 ✅ Progress metrics: Updated
 
 STEP 7: Documentation
-Update PRD/tech-spec/architecture now?
-[Yes - run /generate-docs] / [No - I'll run manually later]
+AskUserQuestion: "Update PRD, technical spec, and architecture docs now?"
+  → Yes — update now (Recommended) / No — I'll cascade later / Skip — answer later
 
 STEP 8: Summary
 ✅ Added Phase 2: Advanced Analytics
@@ -111,6 +111,17 @@ Triggered when `.project-management/input/backlog.md` exists and no modular `bac
 - All stories written to the single `input/backlog.md`.
 - Fully functional — no breakage for legacy projects.
 - Recommend `/migrate-to-modular` at the user's next convenience.
+
+---
+
+## STEP 7 — Documentation Update
+
+Uses AskUserQuestion with three outcomes:
+- **Yes — update now (Recommended)** → invoke `/generate-docs` immediately.
+- **No — I'll cascade later** → skip the docs update; user runs `/generate-docs` manually.
+- **Skip — answer later** → log a `docs-cascade` P2 entry in `input/open-questions.md` (resume via `/resolve-questions`).
+
+Full template definition lives in `add-scope.md` STEP 7. The skip entry follows the schema from `.project-management/templates/open-questions-template.md`.
 
 ---
 
