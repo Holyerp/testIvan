@@ -17,7 +17,7 @@ If missing/invalid, ask via AskUserQuestion (gating, no Skip):
 
 ```
 question: "What action?"
-header: "Action"
+header: "action"
 skippable: false
 options:
   - label: "Add new (Recommended)"
@@ -31,8 +31,8 @@ options:
 If missing/invalid, ask via AskUserQuestion (gating, no Skip):
 
 ```
-question: "What type of scope to {{action}}?"
-header: "Scope"
+question: "What type of scope?"
+header: "scope"
 skippable: false
 options:
   - label: "Story (Recommended)"
@@ -42,8 +42,6 @@ options:
   - label: "Epic"
     description: "A feature group within a phase."
 ```
-
-(Note: `{{action}}` resolves to "add" or "edit" based on the answer from §0.1 step 1.)
 
 **3. Position / Identifier** (context-dependent):
 
