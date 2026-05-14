@@ -211,6 +211,8 @@ options:
 
 (Placeholders: `{{bug_id}}` = BUG-XXX assigned in STEP 2; `{{bug_title}}` = from Q1; `{{severity}}` = from Q2; `{{date}}` = today.)
 
+The user can resume via `/resolve-questions --priority P2` or `/resolve-questions Q-NNN`, or assign manually by editing `bug-roadmap.md`.
+
 **If user picks "Yes — assign to phase":**
 
 1. Discover available phases — list `phase-*.md` files in `.project-management/output/<active>/`. Count them.

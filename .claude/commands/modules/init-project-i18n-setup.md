@@ -36,7 +36,7 @@ If "Yes" → proceed to Sub-step 2.
 
 ```
 question: "Default (primary) language?"
-header: "Language"
+header: "language"
 skippable: true
 default: "English"
 options:
@@ -46,7 +46,7 @@ options:
     description: "Code: es."
   - label: "German"
     description: "Code: de."
-applies_to: [ input/i18n.md ]
+applies_to: [ .project-management/rules/I18N-RULES.md ]
 ```
 
 The user can pick the AskUserQuestion native `Other` to type any other language (free-text). The free-text passes through the anonymization rule (defensive) before being persisted with its ISO code derived from a lookup table in this file.
@@ -57,7 +57,7 @@ After the default is set, ask iteratively:
 
 ```
 question: "Add another language?"
-header: "More langs"
+header: "more-langs"
 skippable: false
 options:
   - label: "No — I'm done"
@@ -91,7 +91,7 @@ Used to derive a language code from a free-text `Other` answer:
 | Czech     | cs |
 | Slovak    | sk |
 
-If the free-text doesn't match the table, emit a warning to the STEP G summary ("Language '<x>' not recognized; using as-is, may need manual ISO code correction in input/i18n.md") and proceed.
+If the free-text doesn't match the table, emit a warning to the STEP G summary ("Language '<x>' not recognized; using as-is, may need manual ISO code correction in .project-management/rules/I18N-RULES.md") and proceed.
 
 **After user provides languages:**
 

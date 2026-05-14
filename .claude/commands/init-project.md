@@ -30,7 +30,7 @@ All documentation generated must follow:
 
    ```
    question: "What project structure?"
-   header: "Project type"
+   header: "project-type"
    skippable: false
    options:
      - label: "Backend + Mobile (Recommended)"
@@ -67,7 +67,7 @@ All documentation generated must follow:
 
    ```
    question: "Tech stack approach?"
-   header: "Stack"
+   header: "stack"
    skippable: false
    options:
      - label: "Default (Recommended)"

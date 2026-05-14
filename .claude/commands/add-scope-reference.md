@@ -121,7 +121,7 @@ Uses AskUserQuestion with three outcomes:
 - **No — I'll cascade later** → skip the docs update; user runs `/generate-docs` manually.
 - **Skip — answer later** → log a `docs-cascade` P2 entry in `input/open-questions.md` (resume via `/resolve-questions`).
 
-Full template definition lives in `add-scope.md` STEP 7. The skip entry follows the schema from `.project-management/templates/open-questions-template.md`.
+Full template definition lives in `add-scope.md` STEP 7. The skip entry follows the schema from `.project-management/templates/open-questions-template.md` (rendered by `modules/interactive-clarifications.md` STEP D).
 
 ---
 
