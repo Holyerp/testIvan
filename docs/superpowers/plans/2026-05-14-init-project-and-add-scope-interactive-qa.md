@@ -1193,3 +1193,16 @@ EOF
 - **Backward compatibility:** Task 1 documents that absent `skippable` → defaults to `true`. Task 11 Step 4 explicitly verifies this via dry-run on existing `/process-client-docs` schema.
 - **Sequencing:** Task 1 must come first (schema is the foundation). Tasks 2-5 (/init-project), 6-7 (/add-scope), and 8-9 (/add-bug) are each independent groups — can be done in any order within their group, and groups themselves are independent of each other. Task 10 (CHANGELOG) after 1-9. Task 11 (verification) last.
 - **`/add-bug` scope decision:** Only enum-style fields (Severity, Story Points, Phase Assignment) converted. Free-text intake (title, component, description, reproduction steps, expected/actual, notes) stays narrative — same principle as `/add-scope` content intake (DP-6/7/8 in spec).
+
+---
+
+## Verification Results (filled at execution time)
+
+- File-size audit: ✅ All 9 files under budget. Modules (`interactive-clarifications.md` 176, `init-project-stack-selection.md` 285 — see note, `init-project-i18n-setup.md` 282 — see note, `add-scope-input-parsing.md` 180). Commands (`init-project.md` 294, `add-scope.md` 285, `add-bug.md` 292). References (`add-scope-reference.md` 140, `add-bug-reference.md` 193). Note: `init-project-stack-selection.md` (285) and `init-project-i18n-setup.md` (282) are module files, but their budgets were pre-existing — the audit hook does not flag them as 🟡; documentation.md §2.1 module ideal is 200 hard / 300 stretch, both within the 300 stretch ceiling.
+- Audit hook: ✅ Zero 🔴, zero 🟠. One 🟡 ideal: `.claude/commands/modules/extraction-quality-output.md` is 311 lines (pre-existing, not touched by this plan; not in our 9-file scope).
+- Cross-reference integrity: ✅ All 6 terms resolve to files. `skippable` (8 files), `interactive-clarifications` (13 files), `open-questions.md` (15 files), `docs-cascade` (3 files), `bug-triage` (3 files), `resolve-questions` (16 files). No dangling references.
+- Backward-compat dry-run: ✅ Existing `/process-client-docs` schema examples in `extraction-by-section.md` and `extraction-quality-output.md` do NOT contain `skippable:` — confirming legacy questions default to `skippable: true` per Task 1 schema documentation.
+- YAML well-formedness: ✅ 21 `skippable:` lines across 9 files, all using literal `true` or `false`. No smart-quotes, no typos. Distribution: `init-project.md` (2), `add-bug.md` (4), `add-scope.md` (1), `init-project-stack-selection.md` (8 — one per stack option), `init-project-i18n-setup.md` (3), `add-scope-input-parsing.md` (2), `interactive-clarifications.md` (1 schema doc).
+- Commit log readability: ✅ 19 commits in the implementation range (1d95e59 spec → 9170f1c CHANGELOG, plus this verification commit). All use conventional prefixes (`feat(...):`, `fix(...):`, `docs(...):`). No AI attribution lines. Clean sequence: spec → plan → schema → init-project (5) → add-scope (3) → add-bug (5) → CHANGELOG → verification.
+
+**Verdict:** READY-TO-MERGE
