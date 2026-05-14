@@ -6,7 +6,7 @@
 
 ## STEP 2: INTERNATIONALIZATION (i18n) SETUP
 
-## Step 1: Enable i18n?
+#### Sub-step 1: Enable i18n?
 
 **Ask via AskUserQuestion** (gating, no Skip):
 
@@ -22,7 +22,7 @@ options:
 ```
 
 If "No" → exit this module, default to English only.
-If "Yes" → proceed to Step 2.
+If "Yes" → proceed to Sub-step 2.
 
 ---
 
@@ -30,7 +30,7 @@ If "Yes" → proceed to Step 2.
 
 **If user selects "Yes — multiple languages":**
 
-## Step 2: Default language
+#### Sub-step 2: Default language
 
 **Ask via AskUserQuestion** (`skippable: true` — Skip = English):
 
@@ -51,7 +51,7 @@ applies_to: [ input/i18n.md ]
 
 The user can pick the AskUserQuestion native `Other` to type any other language (free-text). The free-text passes through the anonymization rule (defensive) before being persisted with its ISO code derived from a lookup table in this file.
 
-## Step 3: Additional languages (loop)
+#### Sub-step 3: Additional languages (loop)
 
 After the default is set, ask iteratively:
 
@@ -66,11 +66,11 @@ options:
     description: "Pick another language to support."
 ```
 
-If "Yes — add another" → fire the same AskUserQuestion as Step 2 (default language). Loop until user picks "No — I'm done".
+If "Yes — add another" → fire the same AskUserQuestion as Sub-step 2 (default language). Loop until user picks "No — I'm done".
 
 The user can pick the AskUserQuestion native `Other` to type any non-listed language (free-text → anonymized → ISO code lookup → persisted).
 
-## ISO code lookup table
+#### ISO code lookup table
 
 Used to derive a language code from a free-text `Other` answer:
 
