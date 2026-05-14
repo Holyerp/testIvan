@@ -95,17 +95,30 @@ When executing bug fixes via `/execute-work bug BUG-XXX`, follow:
 
 **If interactive mode:**
 
-Ask user for:
+Most fields are free-text intake (title, component, description, reproduction steps, expected/actual behavior, notes — AskUserQuestion is the wrong tool for prose). Two fields use AskUserQuestion: **Severity** (Q2) and **Story Points** (Q8).
 
 1. **Bug Title** (required)
    - Short, descriptive title
    - Example: "User login fails with valid credentials"
 
-2. **Severity** (required)
-   - Critical: System unusable, data loss, security vulnerability
-   - High: Major functionality broken, workaround exists
-   - Medium: Minor functionality affected, easy workaround
-   - Low: Cosmetic issues, nice-to-have fixes
+2. **Severity** (required) — ask via AskUserQuestion (gating, no Skip):
+
+   ```
+   question: "Bug severity?"
+   header: "severity"
+   skippable: false
+   options:
+     - label: "Critical"
+       description: "System unusable, data loss, or security vulnerability. Production-blocking."
+     - label: "High"
+       description: "Major functionality broken; workaround exists but degraded UX."
+     - label: "Medium"
+       description: "Minor functionality affected; easy workaround available."
+     - label: "Low"
+       description: "Cosmetic issue or nice-to-have fix; no functional impact."
+   ```
+
+   The chosen severity routes the bug to the matching section in `bug-roadmap.md` (Critical → 🔴, High → 🟠, Medium → 🟡, Low → 🟢) per STEP 3.
 
 3. **Affected Component/File** (required)
    - Which file, module, or component is affected
@@ -131,13 +144,30 @@ Ask user for:
    - What actually happens
    - Example: "Login form shows 'Invalid credentials' error"
 
-8. **Story Points** (optional)
-   - Fibonacci scale: 1, 2, 3, 5, 8, 13
-   - If not provided, Claude suggests based on severity and description:
-     - Critical: 8-13 points
-     - High: 5-8 points
-     - Medium: 3-5 points
-     - Low: 1-3 points
+8. **Story Points** (optional) — ask via AskUserQuestion (`skippable: true` — Skip uses severity-based suggestion):
+
+   ```
+   question: "Story points estimate?"
+   header: "points"
+   skippable: true
+   default: "{{severity_suggested_points}}"
+   options:
+     - label: "1 — Trivial (Recommended for Low severity)"
+       description: "Tiny fix, < 30 min: typo, one-line config, obvious null check."
+     - label: "3 — Small"
+       description: "Few hours: localized fix, well-understood bug with clear repro."
+     - label: "5 — Medium"
+       description: "Half-day to full-day: needs investigation, touches multiple files."
+   ```
+
+   AskUserQuestion's native `Other` lets the user type a Fibonacci value not in the top 3 (`2`, `8`, `13`). On Skip, use the severity-based suggestion below:
+
+   - Critical: 8–13 points
+   - High: 5–8 points
+   - Medium: 3–5 points
+   - Low: 1–3 points
+
+   When a free-text `Other` answer arrives, validate it is a Fibonacci value (`1, 2, 3, 5, 8, 13`). If not, emit a warning to the STEP 5 summary ("Non-Fibonacci value '<x>' rounded to nearest: <y>") and round up to the next valid value.
 
 9. **Additional Notes** (optional)
    - Screenshots, error logs, environment details
