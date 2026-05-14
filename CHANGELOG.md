@@ -16,6 +16,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`.project-management/templates/open-questions-template.md`** — schema for the new `input/open-questions.md` (per-question block with Status, Priority, Category, Asked During, Skipped count, Question, Default, Impact, Options Presented, Notes). Resolved questions move to a `## Resolved Questions` archive section.
 - **`/resolve-questions` command** (`.claude/commands/resolve-questions.md` + `resolve-questions-reference.md`) — re-runs the interactive loop on still-Open entries in `input/open-questions.md`. Filters: `--priority P0|P1|P2` or single `Q-NNN`. Updates artefacts referenced by `applies_to` paths and moves answered entries to the Resolved archive.
 - **Structured clarification schema** in `modules/extraction-by-section.md` and `modules/extraction-quality-output.md` — replaces free-text bullets with YAML schema (id, category, priority, question, default, impact, options, applies_to, notes) that feeds the interactive loop. `<!-- TBD: Q-NNN -->` markers inserted into target artefacts during STEP 3 are replaced when answers come in.
+- **`/init-project` STEP 0/1/2 → AskUserQuestion** — Project type, stack approach, i18n yes/no are now gating decisions (`skippable: false`) with native UI buttons replacing the numbered narrative menus.
+- **`/init-project` Custom stack flow → AskUserQuestion sequence** — Each layer (backend / database / frontend / styling / testing / build / deploy) asks one AskUserQuestion with top-3 most-common options + native Other for free-text. Skip = use recommended default; free-text passes through the anonymization rule.
+- **`/init-project` STEP 6 — post-generation clarification gate** — After PRD / technical-spec / architecture are generated, scan for `<!-- TBD: Q-NNN -->` markers AND read open P0/P1 entries in `input/open-questions.md`. If found, invoke the interactive Q&A loop. Mirrors `/process-client-docs` STEP 5.
+- **`/init-project` i18n iterative language loop** — Replaces the prior comma-separated text input with AskUserQuestion + "Add another?" loop. ISO code lookup table maps free-text answers.
+- **`/add-scope` action + scope-type → AskUserQuestion** — Two gating decisions (`skippable: false`). Position / target-phase / target-epic remain free-text numeric (dynamic bounds); content intake stays narrative (AskUserQuestion wrong tool for prose).
+- **`/add-scope` STEP 7 docs-cascade → AskUserQuestion** — Three outcomes: Yes (run /generate-docs now), No (manual later), Skip (log P2 docs-cascade entry to `input/open-questions.md`).
+- **`/add-bug` Severity → AskUserQuestion** — Gating (`skippable: false`), 4 fixed options (Critical / High / Medium / Low). Replaces the narrative bullet list; routes the bug into the matching section of `bug-roadmap.md`.
+- **`/add-bug` Story Points → AskUserQuestion** — Deferable (`skippable: true`), top-3 Fibonacci values (1 / 3 / 5) + native Other for 2 / 8 / 13. Skip uses the severity-based suggestion. Non-Fibonacci free-text rounds up with a warning.
+- **`/add-bug` STEP 4 Phase Assignment → AskUserQuestion** — Three outcomes: Yes (chains a second AskUserQuestion for phase pick when ≤ 4 phases, numeric fallback for > 4), No (Backlog, Recommended), Skip (log P2 `bug-triage` entry to `input/open-questions.md`).
+
+### Schema
+
+- **`skippable` flag added to question schema** in `modules/interactive-clarifications.md`. Optional, default `true`. Set `false` for gating questions where the command cannot proceed without a choice. Existing `/process-client-docs` questions without the flag continue to work unchanged.
 
 ### Changed
 
