@@ -1,6 +1,6 @@
 # Integration Guide - How Everything Works Together
 
-**Purpose:** This document explains how `.CLAUDE.MD`, project management system, and all other files work together without conflicts.
+**Purpose:** This document explains how `CLAUDE.md`, project management system, and all other files work together without conflicts.
 
 ---
 
@@ -23,7 +23,7 @@ Claude automatically reads files **in this priority order:**
 
 ### 3️⃣ Coding Standards (while writing code)
 ```
-.CLAUDE.MD                                  ← HOW to write code (standards, patterns)
+CLAUDE.md                                  ← HOW to write code (standards, patterns)
 .project-management/rules/project-rules.md  ← Project-specific overrides
 ```
 
@@ -66,7 +66,7 @@ Claude automatically reads files **in this priority order:**
                               ↓
 ┌────────────────────────────────────────────────────────────────┐
 │                     CODE LEVEL                                  │
-│  .CLAUDE.MD - Coding standards while writing code              │
+│  CLAUDE.md - Coding standards while writing code              │
 │    ├─ Naming conventions (camelCase, PascalCase)               │
 │    ├─ Code organization (src/ structure)                       │
 │    ├─ Security practices (validation, sanitization)            │
@@ -99,7 +99,7 @@ Claude automatically reads files **in this priority order:**
 **What Claude reads:**
 - ✅ Input files (scope, backlog, technologies, constraints)
 - ✅ Templates (to generate output)
-- ❌ NOT .CLAUDE.MD yet (not coding yet)
+- ❌ NOT CLAUDE.md yet (not coding yet)
 
 ---
 
@@ -111,16 +111,16 @@ Claude automatically reads files **in this priority order:**
 ```
 1. Claude reads: output/phases/phase-N.md (find US-005)
 2. Claude reads: output/docs/technical-spec.md (API specs, DB schema)
-3. Claude reads: .CLAUDE.MD (coding standards)
+3. Claude reads: CLAUDE.md (coding standards)
 4. Claude uses: TodoWrite to break down US-005
-5. Claude implements: Following .CLAUDE.MD standards
+5. Claude implements: Following CLAUDE.md standards
 6. Progress tracked: Automatically during /execute-work
 ```
 
 **What Claude reads:**
 - ✅ Current phase file (user story details)
 - ✅ Technical spec (implementation details)
-- ✅ .CLAUDE.MD (coding standards)
+- ✅ CLAUDE.md (coding standards)
 - ✅ Backlog (acceptance criteria)
 - ❌ NOT scope.md (already translated to phase)
 
@@ -164,15 +164,15 @@ Manual adjustments: edit the progress files directly. The `/update-progress` com
 
 3. **`.project-management/rules/project-rules.md`**
    - **Project-specific overrides**
-   - Can override `.CLAUDE.MD` standards
+   - Can override `CLAUDE.md` standards
    - Example: "Use snake_case instead of camelCase"
 
-4. **`.CLAUDE.MD`**
+4. **`CLAUDE.md`**
    - **General coding standards**
    - Applies unless overridden by project-rules.md
 
 **Example Conflict:**
-- `.CLAUDE.MD` says: "Use camelCase for variables"
+- `CLAUDE.md` says: "Use camelCase for variables"
 - `rules/project-rules.md` says: "Use snake_case for variables"
 - **Winner:** `rules/project-rules.md` (project-specific wins)
 
@@ -188,18 +188,18 @@ User request received
 Is this project planning? (keywords: "execute work", "initialize", "status")
     ↓ YES
     Read: input files, output/phases/, output/progress/
-    Skip: .CLAUDE.MD (not coding yet)
+    Skip: CLAUDE.md (not coding yet)
     ↓ NO
     ↓
 Is this feature implementation? (keywords: "implement", "create", "add feature")
     ↓ YES
-    Read: current phase, technical-spec.md, .CLAUDE.MD
+    Read: current phase, technical-spec.md, CLAUDE.md
     Use: TodoWrite for task breakdown
     ↓ NO
     ↓
 Is this code modification? (keywords: "fix", "refactor", "update code")
     ↓ YES
-    Read: existing code, .CLAUDE.MD
+    Read: existing code, CLAUDE.md
     Skip: phase files (ad-hoc change)
     ↓ NO
     ↓
@@ -224,10 +224,10 @@ Is this documentation update? (keywords: "regenerate docs", "update docs")
 → Run: `/execute-work phase N` (automated planning + execution)
 
 **Implementing a feature?**
-→ Read: `output/phases/phase-N.md`, `output/docs/technical-spec.md`, `.CLAUDE.MD`
+→ Read: `output/phases/phase-N.md`, `output/docs/technical-spec.md`, `CLAUDE.md`
 
 **Writing code?**
-→ Read: `.CLAUDE.MD`, `rules/project-rules.md`, existing code
+→ Read: `CLAUDE.md`, `rules/project-rules.md`, existing code
 
 **Updating progress?**
 → Automatic during `/execute-work`. Manual edits: open DASHBOARD.md directly.
@@ -311,7 +311,7 @@ Before Claude acts, verify:
 - [ ] Use `/execute-work phase N` for automated planning + execution
 - [ ] Read current phase plan
 - [ ] Read technical spec for API/architecture details
-- [ ] Read `.CLAUDE.MD` for coding standards
+- [ ] Read `CLAUDE.md` for coding standards
 - [ ] Use TodoWrite to track implementation tasks
 - [ ] Progress tracked automatically
 
@@ -325,7 +325,7 @@ Before Claude acts, verify:
 ## 🚨 Common Mistakes to Avoid
 
 ### ❌ DON'T:
-- Don't read `.CLAUDE.MD` when planning (it's for coding)
+- Don't read `CLAUDE.md` when planning (it's for coding)
 - Don't read all of `input/backlog/` when coding (read the current phase file instead)
 - Don't use `/execute-work` for individual tasks (use TodoWrite)
 - Don't use TodoWrite for phase planning (use `/execute-work phase N`)
@@ -347,8 +347,8 @@ Before Claude acts, verify:
 
 1. **Planning project?** → Use `.project-management/` system with `/init-project`
 2. **Executing phase work?** → Use `/execute-work phase N` (automated planning + execution)
-3. **Implementing feature?** → Use TodoWrite + `.CLAUDE.MD`
-4. **Writing code?** → Follow `.CLAUDE.MD` standards
+3. **Implementing feature?** → Use TodoWrite + `CLAUDE.md`
+4. **Writing code?** → Follow `CLAUDE.md` standards
 5. **Tracking progress?** → Automatic in `/execute-work`; open DASHBOARD.md for the live view
 
 **Everything has its place. No conflicts. No confusion.**
@@ -357,7 +357,7 @@ Before Claude acts, verify:
 
 **Related Files:**
 - [Main README](README.md) - Complete system guide
-- [.CLAUDE.MD](../.CLAUDE.MD) - Coding standards
+- [CLAUDE.md](../CLAUDE.md) - Coding standards
 - [Project Rules](rules/project-rules.md) - Project-specific overrides
 
 ---

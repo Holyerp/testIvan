@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`/execute-work` "CRITICAL RULES" list** expanded from 7 to ~15 entries, grouped by stage (always / endpoint touched / data-model touched / frontend / input-doc consuming). Conditional rules clearly marked.
 - **`/execute-work` Paused-mode workflow** (`execute-work.md` STEP 3-B steps 5, 8, 11) now calls out each gate explicitly instead of pointing generically at `quality-gates.md`. Step 11 invokes `/screen-map` for frontend stories on completion.
 - **`/init-project`** — new STEP 6.5 auto-scaffolds `input/screens/screen-map.md` from the template for project types that include a UI.
-- **`.CLAUDE.MD`** — Specialized Rules section regrouped into "Always" + "Conditional"; rule list expanded from 7 to 20 entries; stale `input/backlog.md` reference corrected to modular `input/backlog/`; RELATED DOCS at the bottom expanded from 6 to 20 grouped links.
+- **`CLAUDE.md`** — Specialized Rules section regrouped into "Always" + "Conditional"; rule list expanded from 7 to 20 entries; stale `input/backlog.md` reference corrected to modular `input/backlog/`; RELATED DOCS at the bottom expanded from 6 to 20 grouped links.
 
 ### Fixed
 
@@ -167,7 +167,7 @@ Complete overhaul from sprint-based to phase-based planning with full automation
 #### Documentation
 - **MIGRATION-GUIDE.md** - Complete guide for v2.0 → v3.0 migration
 - **USER-GUIDE.md** - Completely rewritten (3779→857 lines, 77% reduction)
-- **Plan mode section** in `.CLAUDE.MD`
+- **Plan mode section** in `CLAUDE.md`
 - **Conditional rules pattern** - i18n and testing rules only applied if files exist
 
 #### Files & Structure
@@ -199,7 +199,7 @@ Complete overhaul from sprint-based to phase-based planning with full automation
 
 #### Documentation
 - **README.md** - Updated for v3.0 workflow
-- **.CLAUDE.MD** - Added plan mode section, updated commands
+- **CLAUDE.md** - Added plan mode section, updated commands
 - **.gitignore** - Changed from `sprints/*` to `phases/*`
 - **All documentation in English** - No Serbian text remaining
 

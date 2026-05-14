@@ -200,7 +200,7 @@ With recommended permissions enabled, you get:
 
 ## 📚 Related Documentation
 
-- **Core Standards:** [/.CLAUDE.MD](../.CLAUDE.MD)
+- **Core Standards:** [/CLAUDE.md](../CLAUDE.md)
 - **Project Management:** [/.project-management/README.md](../.project-management/README.md)
 - **Code Quality Rules:** [/rules/code-quality.md](./rules/code-quality.md)
 - **Git Workflow:** [/rules/git.md](./rules/git.md)

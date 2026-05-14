@@ -1,6 +1,6 @@
 # Project-Specific Rules
 
-> This file contains rules and conventions specific to THIS project. These rules complement the global `.CLAUDE.MD` guidelines.
+> This file contains rules and conventions specific to THIS project. These rules complement the global `CLAUDE.md` guidelines.
 
 ---
 

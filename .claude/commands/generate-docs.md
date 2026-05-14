@@ -17,7 +17,7 @@ You are generating or updating project documentation based on current input file
 
 **🔧 DOCUMENTATION RULES:**
 All generated documentation must follow:
-- **`.CLAUDE.MD`** - All documentation in English only
+- **`CLAUDE.md`** - All documentation in English only
 - **`.claude/rules/git.md`** - If committing documentation (NO AI credits, conventional commits: `docs:`)
 
 ---

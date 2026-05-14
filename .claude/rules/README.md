@@ -4,7 +4,7 @@
 **Last Updated:** 2026-05-11
 **Status:** Active
 
-Navigable index of the 20 rule files in `.claude/rules/`. Rules are loaded by Claude during `/execute-work` and other commands; the load list is conditional — only the rules whose trigger fires for a given task are required reading. See `.CLAUDE.MD` §3 for the same grouping in narrative form, and `execute-work.md` "CRITICAL RULES" for which rules each story type pulls.
+Navigable index of the 20 rule files in `.claude/rules/`. Rules are loaded by Claude during `/execute-work` and other commands; the load list is conditional — only the rules whose trigger fires for a given task are required reading. See `CLAUDE.md` §3 for the same grouping in narrative form, and `execute-work.md` "CRITICAL RULES" for which rules each story type pulls.
 
 ---
 
@@ -98,7 +98,7 @@ All rule files are ≤ 200 lines (verified by `.claude/hooks/post-write-validati
 
 ## Related
 
-- [`.CLAUDE.MD`](../../.CLAUDE.MD) §3 — Same grouping in narrative form, with conditional triggers
+- [`CLAUDE.md`](../../CLAUDE.md) §3 — Same grouping in narrative form, with conditional triggers
 - [`.claude/commands/execute-work.md`](../commands/execute-work.md) "CRITICAL RULES" — Per-story reading list grouped by stage
 - [`.claude/commands/modules/execute-work-quality-gates.md`](../commands/modules/execute-work-quality-gates.md) — Where these rules are enforced during `/execute-work`
 - [`CHANGELOG.md`](../../CHANGELOG.md) — Rule additions per version (v3.3.0 added 6 new rules)

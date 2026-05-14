@@ -26,7 +26,7 @@ Reads all documents from `.project-management/client-input/` and generates/updat
 ## 📋 YOUR TASK
 
 **🔧 DOCUMENTATION RULES** — extracted requirements and generated files must follow:
-- `.CLAUDE.MD` — all documentation in English (translate non-English sources)
+- `CLAUDE.md` — all documentation in English (translate non-English sources)
 - `.claude/rules/git.md` — if committing, NO AI credits, conventional commits
 
 ---

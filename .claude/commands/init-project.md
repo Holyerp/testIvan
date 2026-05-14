@@ -15,7 +15,7 @@ You are initializing a new project with the Claude Project Management System.
 
 **🔧 DOCUMENTATION RULES:**
 All documentation generated must follow:
-- **`.CLAUDE.MD`** - All documentation in English only, coding standards
+- **`CLAUDE.md`** - All documentation in English only, coding standards
 - **`.claude/rules/git.md`** - If committing initialization (NO AI credits, conventional commits)
 
 ---
@@ -227,7 +227,7 @@ Render the comprehensive summary to the user using the template in `init-project
 
 - **Use the templates** from `.project-management/templates/` and replace all `{{PLACEHOLDERS}}` with actual data
 - **Be comprehensive** - generate complete documentation, don't leave TODOs
-- **Follow project rules** in `.CLAUDE.MD`
+- **Follow project rules** in `CLAUDE.md`
 - **Prioritize properly** - Organize epics into phases logically
 - **Be realistic** - Consider constraints when planning
 - **Create actionable structure** - Phase 1 should be achievable and foundational

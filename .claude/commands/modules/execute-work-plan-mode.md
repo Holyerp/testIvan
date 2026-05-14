@@ -29,7 +29,7 @@ Analyzing: [Phase N / Epic X / Story US-XXX]
    - Epic details
    - Dependencies
 
-3. `.CLAUDE.MD`
+3. `CLAUDE.md`
    - Core development standards
    - Workflow requirements
    - Quality gates

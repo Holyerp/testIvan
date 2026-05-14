@@ -369,7 +369,7 @@ Migrating from sprint-based v2.0 to phase-based v3.0.
 # Create backup
 cp -r .project-management .project-management.backup
 cp -r .claude .claude.backup
-cp .CLAUDE.MD .CLAUDE.MD.backup
+cp CLAUDE.md CLAUDE.md.backup
 ```
 
 **2. Update system files**
@@ -377,7 +377,7 @@ cp .CLAUDE.MD .CLAUDE.MD.backup
 # Copy new system files
 cp -r /path/to/claude_repo/.project-management .
 cp -r /path/to/claude_repo/.claude .
-cp /path/to/claude_repo/.CLAUDE.MD .
+cp /path/to/claude_repo/CLAUDE.md .
 
 # Keep your input files (scope, backlog, etc.)
 cp .project-management.backup/input/* .project-management/input/
@@ -453,7 +453,7 @@ See [../docs/MIGRATION-GUIDE.md](../docs/MIGRATION-GUIDE.md) (if exists)
 - **Getting Started:** [GETTING-STARTED.md](GETTING-STARTED.md)
 - **Commands Reference:** [COMMANDS-REFERENCE.md](COMMANDS-REFERENCE.md)
 - **Workflows:** [WORKFLOWS-BEST-PRACTICES.md](WORKFLOWS-BEST-PRACTICES.md)
-- **Core Standards:** [../.CLAUDE.MD](../../.CLAUDE.MD)
+- **Core Standards:** [../CLAUDE.md](../../CLAUDE.md)
 - **Integration Guide:** [../INTEGRATION-GUIDE.md](../INTEGRATION-GUIDE.md)
 
 ### Support

@@ -234,7 +234,7 @@
 ## ✅ Code Quality Best Practices
 
 ### 1. Follow Standards
-✅ **Read `.CLAUDE.MD`** - Project coding standards
+✅ **Read `CLAUDE.md`** - Project coding standards
 ✅ **Apply SOLID principles** - Clean, maintainable code
 ✅ **Follow DRY** - Don't repeat yourself
 

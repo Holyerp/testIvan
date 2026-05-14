@@ -18,7 +18,7 @@ Provides: Planning, phases, client doc processing, standards, progress tracking,
    - `output/docs/technical-spec.md`
    - `output/phases/phase-N.md`
 
-2. **Core Standards** (`.CLAUDE.MD` - this file)
+2. **Core Standards** (`CLAUDE.md` - this file)
 
 3. **Specialized Rules** (`.claude/rules/`) - load by category; mandatory always, conditional when the trigger applies
 
@@ -164,7 +164,7 @@ Plan mode is a required pre-implementation phase where Claude analyzes requireme
 Step 1: READ ALL CONTEXT
 ✅ Technical spec
 ✅ Backlog
-✅ Core standards (.CLAUDE.MD)
+✅ Core standards (CLAUDE.md)
 ✅ Code quality rules (SOLID & DRY)
 ✅ Testing requirements
 ✅ Git workflow

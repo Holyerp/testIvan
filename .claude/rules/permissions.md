@@ -168,7 +168,7 @@ For the full response template Claude must use when blocked, see `.claude/rules/
 - `.claude/rules/permissions-examples.md` — Full settings.json templates (broad/granular/recommended), corruption recovery
 - `.claude/settings.example.json` — Template for new projects
 - `.gitignore` — Settings that should be ignored
-- `.CLAUDE.MD` — Main Claude configuration
+- `CLAUDE.md` — Main Claude configuration
 
 ---
 

@@ -189,7 +189,7 @@ else if exists(".project-management/input/backlog.md"):
 - Never skip confirmation
 
 **Language:**
-- English only (per .CLAUDE.MD)
+- English only (per CLAUDE.md)
 - Translate non-English input automatically
 
 ---
@@ -243,7 +243,7 @@ Legacy monolithic projects remain fully supported — suggest `/migrate-to-modul
 ---
 
 **Documentation Rules:**
-- `.CLAUDE.MD` - English only
+- `CLAUDE.md` - English only
 - `.claude/rules/git.md` - Conventional commits, NO AI credits
 
 **Related Commands:**

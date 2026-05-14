@@ -60,7 +60,7 @@ STEP 1 — Read context (do not skip any applicable file):
   - .claude/rules/git.md
   - .claude/rules/stack-specific.md
   - .claude/rules/documentation-templates.md
-  - .CLAUDE.MD
+  - CLAUDE.md
 
   If unit touches an HTTP endpoint (handler / service / route file):
   - .claude/rules/api-documentation.md

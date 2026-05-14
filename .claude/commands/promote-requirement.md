@@ -28,7 +28,7 @@ Moves a requirement from future backlog to active development.
 
 **🔧 DOCUMENTATION RULES:**
 When promoting requirements:
-- **`.CLAUDE.MD`** - All documentation in English only
+- **`CLAUDE.md`** - All documentation in English only
 - **`.claude/rules/git.md`** - If committing changes (NO AI credits, conventional commits)
 
 ---

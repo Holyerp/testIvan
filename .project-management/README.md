@@ -31,14 +31,14 @@
 
 This guide explains:
 - ✅ What Claude should read and when
-- ✅ How `.CLAUDE.MD` and project management system work together
+- ✅ How `CLAUDE.md` and project management system work together
 - ✅ When to use TodoWrite vs /execute-work
 - ✅ Document hierarchy and conflict resolution
 - ✅ No conflicts, no confusion!
 
 **TL;DR:**
 - **Planning?** → Use automated phase planning with `/execute-work phase N`
-- **Coding?** → Follow `.CLAUDE.MD` standards
+- **Coding?** → Follow `CLAUDE.md` standards
 - **Tracking?** → Automatic progress tracking during execution
 
 [📖 Read Full Integration Guide](INTEGRATION-GUIDE.md)
@@ -271,7 +271,7 @@ Before starting your project:
 - [ ] Populated `input/backlog/` with phase files (or let `/init-project` generate them)
 - [ ] Filled `input/technologies.md` with tech stack
 - [ ] Filled `input/constraints.md` with realistic constraints
-- [ ] Reviewed `.CLAUDE.MD` coding standards
+- [ ] Reviewed `CLAUDE.md` coding standards
 - [ ] Customized `rules/project-rules.md` if needed
 - [ ] Ran `/init-project` successfully
 - [ ] Reviewed generated documentation
@@ -326,7 +326,7 @@ This system is **fully reusable**! Copy to any new project:
 # Copy structure
 cp -r .project-management /path/to/new-project/
 cp -r .claude /path/to/new-project/
-cp .CLAUDE.MD /path/to/new-project/
+cp CLAUDE.md /path/to/new-project/
 
 # Clear old data, fill new input files, run /init-project
 ```

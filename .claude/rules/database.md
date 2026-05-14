@@ -138,4 +138,4 @@ Before committing a migration:
 
 ---
 
-**Related:** See main `.CLAUDE.MD` for overall development workflow.
+**Related:** See main `CLAUDE.md` for overall development workflow.

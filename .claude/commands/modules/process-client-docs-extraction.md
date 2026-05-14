@@ -121,7 +121,7 @@ This module is split into focused sub-modules for AI readability:
 - `extraction-quality-output.md`
 
 **Templates:** `.project-management/templates/`
-**Rules:** `.CLAUDE.MD` (English-only policy)
+**Rules:** `CLAUDE.md` (English-only policy)
 
 ---
 

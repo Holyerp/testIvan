@@ -37,7 +37,7 @@ This guide helps you migrate existing projects from the old sprint-based system 
 ```bash
 # Create backup of current state
 cp -r .project-management .project-management.backup
-cp .CLAUDE.MD .CLAUDE.MD.backup
+cp CLAUDE.md CLAUDE.md.backup
 ```
 
 ### Step 2: Update System Files
@@ -48,7 +48,7 @@ git pull origin main
 
 # Or manually copy new files:
 cp -r /path/to/new/system/.project-management/* .project-management/
-cp /path/to/new/system/.CLAUDE.MD .CLAUDE.MD
+cp /path/to/new/system/CLAUDE.md CLAUDE.md
 cp -r /path/to/new/system/.claude/commands/* .claude/commands/
 ```
 
@@ -242,8 +242,8 @@ Update `.project-management/input/backlog.md` to assign epics to phases:
 rm -rf .project-management
 mv .project-management.backup .project-management
 
-rm .CLAUDE.MD
-mv .CLAUDE.MD.backup .CLAUDE.MD
+rm CLAUDE.md
+mv CLAUDE.md.backup CLAUDE.md
 
 # Restore old commands
 git checkout v2.0 -- .claude/commands/
@@ -273,7 +273,7 @@ git checkout v2.0 -- .claude/commands/
 ## Support
 
 **Issues?**
-- Check `.CLAUDE.MD` for updated workflow
+- Check `CLAUDE.md` for updated workflow
 - Read command files in `.claude/commands/`
 - Review this guide
 

@@ -13,7 +13,7 @@
 cd /path/to/your/project
 cp -r /path/to/claude_repo/.project-management .
 cp -r /path/to/claude_repo/.claude .
-cp /path/to/claude_repo/.CLAUDE.MD .
+cp /path/to/claude_repo/CLAUDE.md .
 ```
 
 ### Step 2: Define Your Project
