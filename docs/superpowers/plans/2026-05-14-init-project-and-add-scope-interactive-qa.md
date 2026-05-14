@@ -1,8 +1,8 @@
-# Interactive Q&A Extension to /init-project and /add-scope — Implementation Plan
+# Interactive Q&A Extension to /init-project, /add-scope, /add-bug — Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Extend the interactive `AskUserQuestion` Q&A pattern (currently active in `/process-client-docs` STEP 5) to `/init-project` (5 decision points + new post-generation gate) and `/add-scope` (3 decision points), with a backward-compatible `skippable` schema flag.
+**Goal:** Extend the interactive `AskUserQuestion` Q&A pattern (currently active in `/process-client-docs` STEP 5) to `/init-project` (5 decision points + new post-generation gate), `/add-scope` (3 decision points), and `/add-bug` (3 decision points: Severity, Story Points, Phase Assignment), with a backward-compatible `skippable` schema flag.
 
 **Architecture:** Schema change first (one optional flag), then per-command integration. Each command edits a small set of existing module files — no new files needed. The reusable loop in `modules/interactive-clarifications.md` is the single consumer of `skippable`. Existing `/process-client-docs` continues unchanged (no `skippable` field in extracted questions → treated as `true`).
 
@@ -23,7 +23,9 @@
 | `.claude/commands/modules/add-scope-input-parsing.md` | Modify | §0.1 action + scope-type → AskUserQuestion (Task 6) |
 | `.claude/commands/add-scope.md` | Modify | STEP 7 docs-update → AskUserQuestion + skip handling (Task 7) |
 | `.claude/commands/add-scope-reference.md` | Modify | STEP 7 reference notes new skip semantics (Task 7) |
-| `CHANGELOG.md` | Modify | Append to existing "Unreleased" section (Task 8) |
+| `.claude/commands/add-bug.md` | Modify | STEP 1 Severity + Story Points → AskUserQuestion; STEP 4 Phase Assignment (Tasks 8, 9) |
+| `.claude/commands/add-bug-reference.md` | Modify | Reference notes new severity/phase-assignment patterns (Task 9) |
+| `CHANGELOG.md` | Modify | Append to existing "Unreleased" section (Task 10) |
 
 No new files. No template changes (`open-questions-template.md` already supports the entries produced by these commands).
 
@@ -763,7 +765,275 @@ EOF
 
 ---
 
-## Task 8: Update CHANGELOG
+## Task 8: /add-bug — STEP 1 Severity + Story Points → AskUserQuestion
+
+**Files:**
+- Modify: `.claude/commands/add-bug.md`
+
+**Goal:** Convert two enum-style intake fields in STEP 1 to AskUserQuestion: **Severity** (gating, 4 options) and **Story Points** (deferable, top-3 + Other). Free-text fields (title, component, description, reproduction steps, expected/actual behavior, notes) stay narrative — AskUserQuestion is the wrong tool for prose.
+
+- [ ] **Step 1: Locate STEP 1 interactive intake block**
+
+Run: `sed -n '95,145p' .claude/commands/add-bug.md`
+
+Confirms the 9-question intake at lines 95-145 (Bug Title, Severity, Affected Component, Description, Reproduction Steps, Expected, Actual, Story Points, Notes).
+
+- [ ] **Step 2: Replace the Severity question (Q2)**
+
+Find the block at `**2. Severity** (required)` (around line 104). Replace lines 104-108 with:
+
+```markdown
+2. **Severity** (required) — ask via AskUserQuestion (gating, no Skip):
+
+   ```
+   question: "Bug severity?"
+   header: "Severity"
+   skippable: false
+   options:
+     - label: "Critical"
+       description: "System unusable, data loss, or security vulnerability. Production-blocking."
+     - label: "High"
+       description: "Major functionality broken; workaround exists but degraded UX."
+     - label: "Medium"
+       description: "Minor functionality affected; easy workaround available."
+     - label: "Low"
+       description: "Cosmetic issue or nice-to-have fix; no functional impact."
+   ```
+
+   The chosen severity routes the bug to the matching section in `bug-roadmap.md` (Critical → 🔴, High → 🟠, Medium → 🟡, Low → 🟢) per STEP 3.
+```
+
+- [ ] **Step 3: Replace the Story Points question (Q8)**
+
+Find the block at `**8. Story Points** (optional)` (around line 134). Replace lines 134-140 with:
+
+```markdown
+8. **Story Points** (optional) — ask via AskUserQuestion (`skippable: true` — Skip uses severity-based suggestion):
+
+   ```
+   question: "Story points estimate?"
+   header: "Points"
+   skippable: true
+   default: "{{severity_suggested_points}}"
+   options:
+     - label: "1 — Trivial (Recommended for Low severity)"
+       description: "Tiny fix, < 30 min: typo, one-line config, obvious null check."
+     - label: "3 — Small"
+       description: "Few hours: localized fix, well-understood bug with clear repro."
+     - label: "5 — Medium"
+       description: "Half-day to full-day: needs investigation, touches multiple files."
+   ```
+
+   AskUserQuestion's native `Other` lets the user type a Fibonacci value not in the top 3 (`2`, `8`, `13`). On Skip, use the severity-based suggestion below:
+
+   - Critical: 8–13 points
+   - High: 5–8 points
+   - Medium: 3–5 points
+   - Low: 1–3 points
+
+   When a free-text `Other` answer arrives, validate it is a Fibonacci value (`1, 2, 3, 5, 8, 13`). If not, emit a warning to the STEP 5 summary ("Non-Fibonacci value '<x>' rounded to nearest: <y>") and round up to the next valid value.
+```
+
+- [ ] **Step 4: Update the intro line of STEP 1**
+
+Find the line at `**If interactive mode:**` (around line 96). Replace it with:
+
+```markdown
+**If interactive mode:**
+
+Most fields are free-text intake (title, component, description, reproduction steps, expected/actual behavior, notes — AskUserQuestion is the wrong tool for prose). Two fields use AskUserQuestion: **Severity** (Q2) and **Story Points** (Q8).
+```
+
+- [ ] **Step 5: Verify file size**
+
+Run: `wc -l .claude/commands/add-bug.md`
+
+Expected: under 300 lines (command budget).
+
+- [ ] **Step 6: Verify no `[N]` numbered menus remain for Severity / Story Points**
+
+Run: `sed -n '95,145p' .claude/commands/add-bug.md | grep -cE "^\s*-\s+(Critical|High|Medium|Low):"`
+
+Expected: 0 (the narrative bullet list of severity options is fully replaced by the AskUserQuestion block).
+
+- [ ] **Step 7: Run audit hook**
+
+Run: `bash .claude/hooks/audit-pm.sh 2>&1 | grep -E "🔴|🟠"`
+
+Expected: no output.
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add .claude/commands/add-bug.md
+git commit -m "$(cat <<'EOF'
+feat(add-bug): Severity and Story Points use AskUserQuestion
+
+Severity is gating (`skippable: false`) with 4 fixed options
+(Critical / High / Medium / Low). Routes the bug into the right
+section of bug-roadmap.md.
+
+Story Points is deferable (`skippable: true`) with top-3 Fibonacci
+values (1 / 3 / 5) + native Other for 2 / 8 / 13. Skip uses the
+severity-based suggestion. Non-Fibonacci free-text rounds up with
+a warning.
+
+Free-text intake (title, component, description, reproduction
+steps, expected/actual, notes) stays narrative — AskUserQuestion
+is wrong for prose.
+EOF
+)"
+```
+
+---
+
+## Task 9: /add-bug — STEP 4 Phase Assignment → AskUserQuestion
+
+**Files:**
+- Modify: `.claude/commands/add-bug.md`
+- Modify: `.claude/commands/add-bug-reference.md`
+
+**Goal:** Convert the binary "Assign to phase now?" prompt to AskUserQuestion (`skippable: true`). If user picks Yes AND ≤ 4 phases exist, use AskUserQuestion to pick the phase; if > 4 phases, fall back to numeric input.
+
+- [ ] **Step 1: Locate STEP 4**
+
+Run: `sed -n '173,190p' .claude/commands/add-bug.md`
+
+Confirms STEP 4 at lines 173-189 with the binary Yes/No prompt and the conditional phase selection.
+
+- [ ] **Step 2: Replace STEP 4 with AskUserQuestion + dynamic phase pick**
+
+Replace lines 173-189 with:
+
+```markdown
+### STEP 4: ASK ABOUT PHASE ASSIGNMENT
+
+**Ask via AskUserQuestion** (`skippable: true` — Skip leaves the bug in Backlog):
+
+```
+question: "Assign this bug to a phase now?"
+header: "Phase"
+skippable: true
+default: "No — keep in Backlog"
+options:
+  - label: "Yes — assign to phase"
+    description: "Prioritize for fixing in a specific phase. You'll pick which one next."
+  - label: "No — keep in Backlog (Recommended)"
+    description: "Triage later. The bug is reachable via /resolve-questions or manual review."
+```
+
+**Skip handling:** if the user picks `Skip — answer later`, append an entry to `input/open-questions.md` with:
+
+```yaml
+id: Q-NNN
+category: bug-triage
+priority: P2
+status: Open
+question: "Assign BUG-XXX ({{bug_title}}, severity {{severity}}) to a phase?"
+default: "Backlog (no phase)"
+impact: "Bug remains in Backlog until triaged; not scheduled into any phase"
+applies_to:
+  - output/bugs/bug-roadmap.md
+notes: "Created on {{date}}; severity {{severity}}"
+```
+
+**If user picks "Yes — assign to phase":**
+
+1. Discover available phases — list `phase-*.md` files in `.project-management/output/<active>/`. Count them.
+
+2. **If 4 or fewer phases exist**, ask via a second AskUserQuestion (gating):
+
+   ```
+   question: "Which phase?"
+   header: "Phase pick"
+   skippable: false
+   options:                              # one option per discovered phase, in order
+     - label: "Phase 1 — Foundation"
+       description: "{{phase_1_summary_first_line}}"
+     - label: "Phase 2 — Core"
+       description: "{{phase_2_summary_first_line}}"
+     - ...                               # up to 4
+   ```
+
+3. **If more than 4 phases exist**, fall back to numeric input:
+
+   ```
+   Available phases (>4): list as a numbered menu (1..N).
+   "Pick a phase number [1-N]:"
+   ```
+
+   Validate the answer is in range; reprompt on invalid input.
+
+4. After phase selection:
+   - Add bug to selected `phase-N.md` file under "Bugs" section
+   - Update `bug-roadmap.md`: `Assigned to Phase: Phase N`
+   - Update phase story points total
+```
+
+- [ ] **Step 3: Update add-bug-reference.md**
+
+Run: `cat .claude/commands/add-bug-reference.md`
+
+Find any block that documents STEP 4 (or the phase assignment behavior). If a STEP 4 section exists, replace its phase-assignment description with:
+
+```markdown
+### STEP 4 — Phase Assignment
+
+Uses AskUserQuestion with three outcomes:
+- **Yes — assign to phase** → chains a second AskUserQuestion for phase pick (≤ 4 phases) or falls back to numeric input (> 4 phases).
+- **No — keep in Backlog (Recommended)** → bug stays in Backlog section of `bug-roadmap.md`.
+- **Skip — answer later** → log a `bug-triage` P2 entry in `input/open-questions.md` (resume via `/resolve-questions`).
+
+Full template lives in `add-bug.md` STEP 4. The skip entry follows the schema from `.project-management/templates/open-questions-template.md`.
+```
+
+If no STEP 4 section exists, append the block above before the final `**Status:**` or end-of-file marker.
+
+- [ ] **Step 4: Verify file sizes**
+
+Run: `wc -l .claude/commands/add-bug.md .claude/commands/add-bug-reference.md`
+
+Expected:
+- `add-bug.md`: under 300 lines
+- `add-bug-reference.md`: under 300 lines
+
+- [ ] **Step 5: Verify references**
+
+Run:
+```bash
+grep -nE "open-questions.md|bug-triage|skippable" .claude/commands/add-bug.md .claude/commands/add-bug-reference.md
+```
+
+Expected: matches in both files demonstrating the new skip semantics and `skippable` usage.
+
+- [ ] **Step 6: Run audit hook**
+
+Run: `bash .claude/hooks/audit-pm.sh 2>&1 | tail -25`
+
+Expected: no 🔴 / 🟠 findings.
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add .claude/commands/add-bug.md .claude/commands/add-bug-reference.md
+git commit -m "$(cat <<'EOF'
+feat(add-bug): STEP 4 phase assignment uses AskUserQuestion
+
+Three outcomes: Yes (chains a phase-pick question), No (Backlog,
+recommended), or Skip (log a P2 bug-triage entry to
+input/open-questions.md).
+
+Phase-pick uses AskUserQuestion when ≤ 4 phases exist (the
+common case) and falls back to numeric input for > 4 phases.
+Dynamic behavior keeps the UX clean for typical projects without
+breaking edge cases.
+EOF
+)"
+```
+
+---
+
+## Task 10: Update CHANGELOG
 
 **Files:**
 - Modify: `CHANGELOG.md`
@@ -787,6 +1057,9 @@ Find the existing `### Added` block under `## [Unreleased]`. Append these bullet
 - **`/init-project` i18n iterative language loop** — Replaces the prior comma-separated text input with AskUserQuestion + "Add another?" loop. ISO code lookup table maps free-text answers.
 - **`/add-scope` action + scope-type → AskUserQuestion** — Two gating decisions (`skippable: false`). Position / target-phase / target-epic remain free-text numeric (dynamic bounds); content intake stays narrative (AskUserQuestion wrong tool for prose).
 - **`/add-scope` STEP 7 docs-cascade → AskUserQuestion** — Three outcomes: Yes (run /generate-docs now), No (manual later), Skip (log P2 docs-cascade entry to `input/open-questions.md`).
+- **`/add-bug` Severity → AskUserQuestion** — Gating (`skippable: false`), 4 fixed options (Critical / High / Medium / Low). Replaces the narrative bullet list; routes the bug into the matching section of `bug-roadmap.md`.
+- **`/add-bug` Story Points → AskUserQuestion** — Deferable (`skippable: true`), top-3 Fibonacci values (1 / 3 / 5) + native Other for 2 / 8 / 13. Skip uses the severity-based suggestion. Non-Fibonacci free-text rounds up with a warning.
+- **`/add-bug` STEP 4 Phase Assignment → AskUserQuestion** — Three outcomes: Yes (chains a second AskUserQuestion for phase pick when ≤ 4 phases, numeric fallback for > 4), No (Backlog, Recommended), Skip (log P2 `bug-triage` entry to `input/open-questions.md`).
 
 ### Schema
 
@@ -817,7 +1090,7 @@ EOF
 
 ---
 
-## Task 9: End-to-end verification
+## Task 11: End-to-end verification
 
 **Files:** None modified. Verification-only task.
 
@@ -834,7 +1107,9 @@ wc -l \
   .claude/commands/modules/init-project-i18n-setup.md \
   .claude/commands/modules/add-scope-input-parsing.md \
   .claude/commands/add-scope.md \
-  .claude/commands/add-scope-reference.md
+  .claude/commands/add-scope-reference.md \
+  .claude/commands/add-bug.md \
+  .claude/commands/add-bug-reference.md
 ```
 
 Expected: each file under its respective budget (modules ≤ 200 / commands ≤ 300 / references ≤ 300 per `documentation.md` §2.1). Note benign 🟡 ideal warnings if any.
@@ -849,7 +1124,7 @@ Expected: zero 🔴 (critical) and zero 🟠 (high) findings. Capture 🟡 findi
 
 Run:
 ```bash
-for ref in "skippable" "interactive-clarifications" "open-questions.md" "docs-cascade" "resolve-questions"; do
+for ref in "skippable" "interactive-clarifications" "open-questions.md" "docs-cascade" "bug-triage" "resolve-questions"; do
   echo "--- $ref ---"
   grep -rln "$ref" --include="*.md" .claude/ .project-management/templates/ CLAUDE.md CHANGELOG.md 2>/dev/null
 done
@@ -876,7 +1151,7 @@ Expected: every `skippable:` line uses literal `true` or `false` (no smart-quote
 
 Run: `git log --oneline -15`
 
-Expected: clear sequence of 8 commits (one per task) with conventional commit prefixes (`feat(...):` or `docs(...):`), no AI attribution.
+Expected: clear sequence of 10 commits (one per task 1-10) with conventional commit prefixes (`feat(...):` or `docs(...):`), no AI attribution.
 
 - [ ] **Step 7: Write a verification summary at the end of this plan**
 
@@ -912,8 +1187,9 @@ EOF
 
 ## Self-Review Notes
 
-- **Spec coverage:** All 4 design sections covered. Section 1 (Schema) → Task 1. Section 2 (/init-project, 5 DPs + STEP 6) → Tasks 2, 3, 4, 5. Section 3 (/add-scope, 3 DPs) → Tasks 6, 7. Section 4 (Verification) → Task 9. CHANGELOG → Task 8.
-- **No placeholders:** Every code/markdown block is the literal content the engineer will paste. No "TBD", "TODO", or "similar to Task N" patterns. Top-3 stack option lists in Task 3 are concrete.
-- **Type consistency:** `skippable` flag spelled identically across all tasks. `Q-NNN` namespace used consistently (no `Q-IP-`, `Q-AS-` variants — that decision was locked in during spec self-review). `applies_to` field consistent across all YAML blocks. Category names use kebab-case throughout (`project-type`, `docs-cascade`, `i18n`).
-- **Backward compatibility:** Task 1 documents that absent `skippable` → defaults to `true`. Task 9 Step 4 explicitly verifies this via dry-run on existing `/process-client-docs` schema.
-- **Sequencing:** Task 1 must come first (schema is the foundation). Tasks 2-5 (/init-project) can be done in order. Tasks 6-7 (/add-scope) are independent of /init-project. Task 8 (CHANGELOG) after 1-7. Task 9 (verification) last.
+- **Spec coverage:** All 4 design sections covered. Section 1 (Schema) → Task 1. Section 2 (/init-project, 5 DPs + STEP 6) → Tasks 2, 3, 4, 5. Section 3 (/add-scope, 3 DPs) → Tasks 6, 7. `/add-bug` extension (added after spec sign-off, scope expansion) → Tasks 8, 9. CHANGELOG → Task 10. Verification → Task 11.
+- **No placeholders:** Every code/markdown block is the literal content the engineer will paste. No "TBD", "TODO", or "similar to Task N" patterns. Top-3 stack option lists in Task 3 and Fibonacci top-3 in Task 8 are concrete.
+- **Type consistency:** `skippable` flag spelled identically across all tasks. `Q-NNN` namespace used consistently (no `Q-IP-`, `Q-AS-`, `Q-BUG-` variants — single namespace locked in during spec self-review). `applies_to` field consistent across all YAML blocks. Category names use kebab-case throughout (`project-type`, `docs-cascade`, `i18n`, `bug-triage`).
+- **Backward compatibility:** Task 1 documents that absent `skippable` → defaults to `true`. Task 11 Step 4 explicitly verifies this via dry-run on existing `/process-client-docs` schema.
+- **Sequencing:** Task 1 must come first (schema is the foundation). Tasks 2-5 (/init-project), 6-7 (/add-scope), and 8-9 (/add-bug) are each independent groups — can be done in any order within their group, and groups themselves are independent of each other. Task 10 (CHANGELOG) after 1-9. Task 11 (verification) last.
+- **`/add-bug` scope decision:** Only enum-style fields (Severity, Story Points, Phase Assignment) converted. Free-text intake (title, component, description, reproduction steps, expected/actual, notes) stays narrative — same principle as `/add-scope` content intake (DP-6/7/8 in spec).

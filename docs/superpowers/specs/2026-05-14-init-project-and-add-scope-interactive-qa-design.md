@@ -1,7 +1,7 @@
-# Interactive Q&A Pattern — Extension to `/init-project` and `/add-scope`
+# Interactive Q&A Pattern — Extension to `/init-project`, `/add-scope`, `/add-bug`
 
 **Date:** 2026-05-14
-**Status:** Approved (brainstorming complete; ready for implementation plan)
+**Status:** Approved (brainstorming complete; `/add-bug` scope added post-sign-off, plan updated)
 **Builds on:** commit `232f0dd` (feat: interactive clarification gate for /process-client-docs)
 
 ---
@@ -21,7 +21,8 @@ This spec defines a minimal, focused extension that respects each command's shap
 
 1. **`/init-project`** — Replace narrative numbered menus in STEP 0/1/2 with `AskUserQuestion` for the 5 decision points. Add a post-generation clarification gate (new STEP 6) analogous to `/process-client-docs` STEP 5.
 2. **`/add-scope`** — Convert the 3 fit-for-pattern decisions (action, scope-type, docs-cascade) to `AskUserQuestion`. Leave content intake and dynamic menus untouched.
-3. **Schema evolution** — Add one optional `skippable` flag to the question schema in `modules/interactive-clarifications.md`. Backward compatible: existing `/process-client-docs` questions without the flag default to `skippable: true`.
+3. **`/add-bug`** — Convert 3 enum-style decisions to `AskUserQuestion`: **Severity** (gating, 4 options Critical/High/Medium/Low), **Story Points** (deferable, top-3 Fibonacci + Other for 2/8/13), and **STEP 4 Phase Assignment** (Yes/No + dynamic phase-pick when ≤ 4 phases, numeric fallback otherwise). Free-text intake (title, description, reproduction steps) stays narrative.
+4. **Schema evolution** — Add one optional `skippable` flag to the question schema in `modules/interactive-clarifications.md`. Backward compatible: existing `/process-client-docs` questions without the flag default to `skippable: true`.
 
 ## Non-Goals
 
@@ -138,6 +139,55 @@ Resume via `/resolve-questions Q-NNN` (specific entry) or `/generate-docs` direc
 
 ---
 
+## `/add-bug` Integration
+
+### Decision points (3)
+
+| ID | Location | Question | `skippable` | Options |
+|----|----------|----------|-------------|---------|
+| AB-1 | `add-bug.md` STEP 1 Q2 (Severity) | "Bug severity?" | `false` | 4: Critical / High / Medium / Low |
+| AB-2 | `add-bug.md` STEP 1 Q8 (Story Points) | "Story points estimate?" | `true` | Top 3: **1** *(Trivial — recommended for Low)* / 3 / 5 + native `Other` for 2 / 8 / 13 |
+| AB-3 | `add-bug.md` STEP 4 (Phase Assignment) | "Assign this bug to a phase now?" | `true` | 2: Yes — assign / **No — keep in Backlog** *(Recommended)*. If "Yes" → second AskUserQuestion for phase pick (≤ 4 phases) or numeric fallback (> 4). |
+
+### Out of scope for `/add-bug`
+
+- **Title, Affected Component, Description, Reproduction Steps, Expected/Actual Behavior, Additional Notes** — narrative free-text intake, AskUserQuestion is the wrong tool. Same principle as `/add-scope` content intake (DP-6/7/8).
+- **Bug ID assignment, severity-section routing, summary update** (STEP 2/3/5) — internal logic, no user surface.
+
+### AB-2 (Story Points) free-text validation
+
+When user picks `Other` and types a value, validate it is a Fibonacci value (`1, 2, 3, 5, 8, 13`). If not, round up to the next Fibonacci value and emit a warning to the STEP 5 summary (`"Non-Fibonacci value '<x>' rounded to nearest: <y>"`). This mirrors the existing behavior in `/add-scope` for story-point fields.
+
+### AB-3 (Phase Assignment) skip handling
+
+When the user skips, append to `input/open-questions.md`:
+
+```yaml
+id: Q-NNN
+category: bug-triage
+priority: P2
+status: Open
+question: "Assign BUG-XXX ({{bug_title}}, severity {{severity}}) to a phase?"
+default: "Backlog (no phase)"
+impact: "Bug remains in Backlog until triaged; not scheduled into any phase"
+applies_to:
+  - output/bugs/bug-roadmap.md
+notes: "Created on {{date}}; severity {{severity}}"
+```
+
+Resume via `/resolve-questions --priority P2` (or specific `Q-NNN`).
+
+### AB-3 dynamic phase-pick rationale
+
+Typical projects have 1–4 phases (Foundation / Core / Advanced / Polish per the default templates). For those, AskUserQuestion fits cleanly with one option per phase. For larger projects with > 4 phases, the 4-option ceiling forces a numeric-input fallback — the command discovers `phase-*.md` files at runtime and renders a numbered menu. The user sees a consistent click-based UX in the common case and a fallback only when needed.
+
+### Files modified
+
+- `.claude/commands/add-bug.md` — STEP 1 Severity + Story Points narrative menus → AskUserQuestion (~30 lines); STEP 4 Phase Assignment → AskUserQuestion + skip + dynamic phase-pick (~40 lines)
+- `.claude/commands/add-bug-reference.md` — STEP 4 reference notes new patterns (~10 lines)
+
+---
+
 ## All Files Affected
 
 **Modified (no new files):**
@@ -151,7 +201,9 @@ Resume via `/resolve-questions Q-NNN` (specific entry) or `/generate-docs` direc
 | `.claude/commands/modules/add-scope-input-parsing.md` | §0.1 → AskUserQuestion (~20 lines) |
 | `.claude/commands/add-scope.md` | STEP 7 → AskUserQuestion + AS-3 skip (~10 lines) |
 | `.claude/commands/add-scope-reference.md` | STEP 7 reference update (~5 lines) |
-| `CHANGELOG.md` | New "Unreleased" entry (~10 lines) |
+| `.claude/commands/add-bug.md` | STEP 1 Severity + Story Points → AskUserQuestion; STEP 4 Phase Assignment → AskUserQuestion + skip + dynamic phase-pick (~70 lines) |
+| `.claude/commands/add-bug-reference.md` | STEP 4 reference update (~10 lines) |
+| `CHANGELOG.md` | New "Unreleased" entry (~15 lines) |
 
 ---
 
@@ -185,7 +237,8 @@ End-to-end checks after implementation:
 
 ## Out of Scope (explicitly deferred)
 
-- `/execute-work` and `/add-bug` pattern adoption.
-- `interactive-input-collector` abstraction layer (Approach B from brainstorming — YAGNI at three commands).
+- `/execute-work` pattern adoption (post-sign-off scope expansion brought `/add-bug` in; `/execute-work` remains deferred).
+- `interactive-input-collector` abstraction layer (Approach B from brainstorming — YAGNI at four commands).
 - `/add-scope` edit-mode submenu refactor (DP-9/10/11 — too many options).
-- Replacing free-text content intake in `/add-scope` (DP-6/7/8).
+- Replacing free-text content intake in `/add-scope` (DP-6/7/8) or `/add-bug` (title, description, reproduction steps, expected/actual, notes).
+- Post-creation clarification gate in `/add-bug` — STEP 1 ambiguities (e.g., unclear repro steps) stay free-text; no new gate beyond AB-3 skip.
