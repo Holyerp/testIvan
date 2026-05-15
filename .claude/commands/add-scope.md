@@ -149,9 +149,34 @@ else if exists(".project-management/input/backlog.md"):
 **If checks fail:** Roll back changes, report errors.
 
 ### STEP 7: Documentation Update
-**Ask user:**
-> Changes complete. Update PRD/tech-spec/architecture now?
-> [Yes - run /generate-docs] / [No - I'll run manually later]
+
+**Ask via AskUserQuestion** (`skippable: true` — Skip logs as deferred decision):
+
+```
+question: "Update PRD, technical spec, and architecture docs now?"
+header: "docs"
+skippable: true
+default: "Yes — update now"
+options:
+  - label: "Yes — update now (Recommended)"
+    description: "Invoke /generate-docs immediately to keep docs in sync with the scope change."
+  - label: "No — I'll cascade later"
+    description: "Skip the docs update for now. Run /generate-docs manually before the next sprint review."
+```
+
+**Skip handling:** if the user picks `Skip — answer later`, persist the question per `modules/interactive-clarifications.md` STEP D (which renders the canonical schema from `.project-management/templates/open-questions-template.md`). Pass these field values to the persistence step:
+
+- `category`: `docs-cascade`
+- `priority`: `P2`
+- `question`: `"Update PRD, technical spec, and architecture docs for {{scope_change_summary}}?"`
+- `default`: `"Yes (auto-cascade)"`
+- `impact`: `"Documentation drift — docs reference older scope until /generate-docs runs"`
+- `applies_to`: `[output/docs/prd.md, output/docs/technical-spec.md, output/docs/architecture.md]`
+- `notes`: `"{{action}} {{scope_type}} {{identifier}} on {{date}}; documentation not yet updated"`
+
+(Placeholders: `{{action}}` = "add"/"edit" from §0.1 step 1; `{{scope_type}}` = phase/epic/story from §0.1 step 2; `{{identifier}}` = US-XXX or epic/phase name; `{{date}}` = today.)
+
+The user can resume via `/resolve-questions --priority P2` or `/resolve-questions Q-NNN`, or run `/generate-docs` directly when ready.
 
 ### STEP 8: Summary Report
 **Show:**
@@ -189,7 +214,7 @@ else if exists(".project-management/input/backlog.md"):
 - Never skip confirmation
 
 **Language:**
-- English only (per .CLAUDE.MD)
+- English only (per CLAUDE.md)
 - Translate non-English input automatically
 
 ---
@@ -243,7 +268,7 @@ Legacy monolithic projects remain fully supported — suggest `/migrate-to-modul
 ---
 
 **Documentation Rules:**
-- `.CLAUDE.MD` - English only
+- `CLAUDE.md` - English only
 - `.claude/rules/git.md` - Conventional commits, NO AI credits
 
 **Related Commands:**

@@ -12,20 +12,35 @@
 Arguments are extracted in strict left-to-right order.
 
 **1. Action** (required): `add` or `edit`.
-If missing/invalid:
+
+If missing/invalid, ask via AskUserQuestion (gating, no Skip):
+
 ```
-Which action?
-[1] Add — Add a new phase, epic, or story
-[2] Edit — Modify an existing phase, epic, or story
+question: "What action?"
+header: "action"
+skippable: false
+options:
+  - label: "Add new (Recommended)"
+    description: "Add a new phase, epic, or story."
+  - label: "Edit existing"
+    description: "Modify an existing phase, epic, or story."
 ```
 
 **2. Scope type** (required): `phase`, `epic`, or `story`.
-If missing/invalid:
+
+If missing/invalid, ask via AskUserQuestion (gating, no Skip):
+
 ```
-What do you want to [add/edit]?
-[1] Phase — A complete development phase
-[2] Epic — A feature group within a phase
-[3] Story — A single user story within an epic
+question: "What type of scope?"
+header: "scope"
+skippable: false
+options:
+  - label: "Story (Recommended)"
+    description: "A single user story within an epic."
+  - label: "Phase"
+    description: "A complete development phase."
+  - label: "Epic"
+    description: "A feature group within a phase."
 ```
 
 **3. Position / Identifier** (context-dependent):

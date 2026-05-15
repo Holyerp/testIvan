@@ -46,16 +46,25 @@ A comprehensive system that provides structured planning, phase management, auto
 ```bash
 # Copy the system to your project
 cp -r .project-management /path/to/your/project/
-cp .CLAUDE.MD /path/to/your/project/
+cp CLAUDE.md /path/to/your/project/
 cp -r .claude /path/to/your/project/
 ```
 
 **Also merge these `.gitignore` entries into your project's existing `.gitignore`** (don't overwrite — your project already has language/framework-specific patterns):
 
 ```gitignore
-# Claude settings: keep out of git (use settings.example.json as template)
-.claude/settings.json
+###> editors ###
+/.idea
+.DS_Store
+.vscode
+###< editors ###
+
+###> claude settings ###
+# User-specific Claude permissions (use settings.example.json as template)
 .claude/settings.local.json
+# Ignore main settings.json since it auto-updates (use settings.example.json as template)
+.claude/settings.json
+###< claude settings ###
 
 # Client docs (privacy)
 .project-management/client-input/*
@@ -246,7 +255,7 @@ Use `TodoWrite` tool to break down user stories into tasks and track implementat
 │   └── stack-specific.md
 └── commands/           # Claude Code slash commands
 
-.CLAUDE.MD              # Main AI developer guidelines
+CLAUDE.md              # Main AI developer guidelines
 ```
 
 ## 🔄 Workflow
@@ -300,7 +309,7 @@ Use `TodoWrite` tool to break down user stories into tasks and track implementat
 ## 📖 Key Documents
 
 ### Must Read Before Starting
-1. `.CLAUDE.MD` - Core AI developer guidelines
+1. `CLAUDE.md` - Core AI developer guidelines
 2. `.project-management/output/docs/technical-spec.md` - Technical specification
 3. `.claude/rules/code-quality.md` - SOLID & DRY principles (mandatory)
 

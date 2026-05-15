@@ -4,7 +4,7 @@
 **Last Updated:** 2026-05-11
 **Status:** Active
 
-Navigable index of the 20 rule files in `.claude/rules/`. Rules are loaded by Claude during `/execute-work` and other commands; the load list is conditional — only the rules whose trigger fires for a given task are required reading. See `.CLAUDE.MD` §3 for the same grouping in narrative form, and `execute-work.md` "CRITICAL RULES" for which rules each story type pulls.
+Navigable index of the 20 rule files in `.claude/rules/`. Rules are loaded by Claude during `/execute-work` and other commands; the load list is conditional — only the rules whose trigger fires for a given task are required reading. See `CLAUDE.md` §3 for the same grouping in narrative form, and `execute-work.md` "CRITICAL RULES" for which rules each story type pulls.
 
 ---
 
@@ -75,6 +75,14 @@ Navigable index of the 20 rule files in `.claude/rules/`. Rules are loaded by Cl
 |------|-------|---------|
 | [`anonymization.md`](anonymization.md) | Replace personal names from input docs with role labels (`the PM`, `the client`, `the stakeholder`) and source-context phrases. Drop personal contact details entirely | Any command generating PRD / backlog / spec / status / progress files from client docs |
 
+### When a command produces open clarification questions
+
+This is not a rule file but a reusable module — listed here so it's discoverable next to the rules it works with.
+
+| File | Topic | Trigger |
+|------|-------|---------|
+| [`../commands/modules/interactive-clarifications.md`](../commands/modules/interactive-clarifications.md) | Reusable interactive Q&A loop. For each clarification: `AskUserQuestion` with options + Skip. Skipped questions persist to `input/open-questions.md` for `/resolve-questions`. Free-text answers anonymized per `anonymization.md`. | Any PM command that surfaces clarification questions: `/process-client-docs` (active), `/init-project` / `/add-scope` / `/execute-work` / `/add-bug` (planned integration). |
+
 ---
 
 ## Cross-Reference Map (which rule references which)
@@ -98,7 +106,7 @@ All rule files are ≤ 200 lines (verified by `.claude/hooks/post-write-validati
 
 ## Related
 
-- [`.CLAUDE.MD`](../../.CLAUDE.MD) §3 — Same grouping in narrative form, with conditional triggers
+- [`CLAUDE.md`](../../CLAUDE.md) §3 — Same grouping in narrative form, with conditional triggers
 - [`.claude/commands/execute-work.md`](../commands/execute-work.md) "CRITICAL RULES" — Per-story reading list grouped by stage
 - [`.claude/commands/modules/execute-work-quality-gates.md`](../commands/modules/execute-work-quality-gates.md) — Where these rules are enforced during `/execute-work`
 - [`CHANGELOG.md`](../../CHANGELOG.md) — Rule additions per version (v3.3.0 added 6 new rules)

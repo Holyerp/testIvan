@@ -12,7 +12,7 @@
 project-root/
 │
 ├── README.md                                   # Project-level intro + quick start
-├── .CLAUDE.MD                                  # Core coding standards
+├── CLAUDE.md                                  # Core coding standards
 ├── CHANGELOG.md                                # Version history
 │
 ├── .claude/

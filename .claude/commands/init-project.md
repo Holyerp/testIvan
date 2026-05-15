@@ -15,7 +15,7 @@ You are initializing a new project with the Claude Project Management System.
 
 **🔧 DOCUMENTATION RULES:**
 All documentation generated must follow:
-- **`.CLAUDE.MD`** - All documentation in English only, coding standards
+- **`CLAUDE.md`** - All documentation in English only, coding standards
 - **`.claude/rules/git.md`** - If committing initialization (NO AI credits, conventional commits)
 
 ---
@@ -25,20 +25,35 @@ All documentation generated must follow:
 **📖 See:** `modules/init-project-structure-setup.md` for detailed structure configuration
 
 **Summary:**
-1. Ask user to choose project type:
-   - [1] Backend Only
-   - [2] Backend + Mobile App (Monorepo) ⭐ RECOMMENDED
-   - [3] Backend + Web + Mobile (Full Monorepo)
-   - [4] Web Only
-2. Based on selection, create appropriate folder structure
-3. For monorepo (options 2-3):
-   - Create `apps/` directory with backend/mobile/web
+
+1. **Ask via AskUserQuestion** (gating, no Skip):
+
+   ```
+   question: "What project structure?"
+   header: "project-type"
+   skippable: false
+   options:
+     - label: "Backend + Mobile (Recommended)"
+       description: "Monorepo with apps/backend + apps/mobile. Best for SaaS with iOS/Android client."
+     - label: "Backend Only"
+       description: "API-only service. No frontend code in this repo."
+     - label: "Backend + Web + Mobile"
+       description: "Full monorepo: apps/backend + apps/web + apps/mobile."
+     - label: "Web Only"
+       description: "Single web app (SPA / SSR). No backend in this repo."
+   ```
+
+2. Based on selection, create appropriate folder structure (see `modules/init-project-structure-setup.md` for monorepo scaffolding).
+
+3. For monorepo selections (Backend + Mobile, Backend + Web + Mobile):
+   - Create `apps/` directory with backend/mobile/web subdirectories
    - Create `packages/` for shared code (types, utils, api-client)
    - Setup pnpm workspace + Turborepo
    - Create package.json files for each app/package
-4. Update `.gitignore` for monorepo structure
 
-**Output:** Project structure created, ready for tech stack configuration
+4. Update `.gitignore` for monorepo structure.
+
+**Output:** Project structure created, ready for tech stack configuration.
 
 ---
 
@@ -47,12 +62,23 @@ All documentation generated must follow:
 **📖 See:** `modules/init-project-stack-selection.md` for detailed stack configuration
 
 **Summary:**
-1. Ask user to choose configuration method ([1] Default / [2] AI / [3] Custom)
-2. Process selection:
-   - **Default:** Copy default-stack.md to technologies.md
-   - **AI:** Analyze project needs, generate recommendation
-   - **Custom:** Interactive questions, generate custom stack
-3. Display stack summary
+
+1. **Ask via AskUserQuestion** (gating, no Skip):
+
+   ```
+   question: "Tech stack approach?"
+   header: "stack"
+   skippable: false
+   options:
+     - label: "Default (Recommended)"
+       description: "React Router 7 + Prisma + Postgres + Zod. Battle-tested defaults from .claude/rules/stack-specific.md."
+     - label: "AI suggests"
+       description: "Claude proposes a stack based on input/scope.md and constraints.md. You approve or revise."
+     - label: "Custom"
+       description: "You pick each layer (backend / database / frontend / styling / testing / build / deploy)."
+   ```
+
+2. Based on selection, configure stack files (see `modules/init-project-stack-selection.md`). Custom flow invokes a sequence of layer-by-layer AskUserQuestion calls.
 
 **Output:** `technologies.md` configured with chosen tech stack
 
@@ -172,7 +198,30 @@ All documentation generated must follow:
 
 ---
 
-### STEP 6: CREATE PROGRESS TRACKING
+### STEP 6: POST-GENERATION CLARIFICATION GATE
+
+**📖 See:** `modules/interactive-clarifications.md` for the full loop (STEPS B–G — AskUserQuestion call shape, skip handling, anonymized free-text, answer-application to artefacts).
+
+After STEP 4 produces the documentation set (`output/docs/prd.md`, `technical-spec.md`, `architecture.md`) and STEP 5 creates the phase structure, this step runs the same interactive Q&A gate used by `/process-client-docs` STEP 5.
+
+**Sources of questions:**
+
+1. **TBD markers** in generated docs — grep the generated files for `<!-- TBD: Q-NNN -->`. Each marker references a question by ID. If the corresponding question is not already in `input/open-questions.md`, leave the marker in place (the doc indicates an open ambiguity to resolve manually). If the question IS in `open-questions.md`, include it in the loop.
+
+2. **Existing P0/P1 entries in `input/open-questions.md`** — read the file (created earlier by `/process-client-docs` or prior `/init-project` runs). Filter `Status: Open` entries with `priority: P0` or `P1`.
+
+**Behavior:**
+
+- If both sources yield zero questions → emit `✅ No open clarifications.` and skip the loop.
+- Otherwise, build the question list (priority-sorted P0 → P1) and invoke `modules/interactive-clarifications.md` STEPS B–G.
+- Skipped questions remain in `open-questions.md` with incremented `Skipped:` count.
+- Answered questions update `applies_to` artefacts AND move to the Resolved section of `open-questions.md`.
+
+**Resume later:** the user can run `/resolve-questions` at any time to revisit still-Open entries.
+
+---
+
+### STEP 7: CREATE PROGRESS TRACKING
 
 **Create in `.project-management/output/progress/`:**
 
@@ -188,7 +237,7 @@ All documentation generated must follow:
 
 ---
 
-### STEP 6.5: SCREEN INVENTORY (CONDITIONAL — only if project has a UI)
+### STEP 7.5: SCREEN INVENTORY (CONDITIONAL — only if project has a UI)
 
 **Per `.claude/rules/screen-inventory.md`:** scaffold the screen map artifact when the project includes a frontend.
 
@@ -204,11 +253,11 @@ All documentation generated must follow:
 2. Copy `.project-management/templates/screen-map-template.md` to `.project-management/input/screens/screen-map.md`.
 3. Substitute placeholders: `{{PROJECT_NAME}}`, `{{VERSION}}` (= `0.1.0`), `{{DATE}}` (= today), `{{STATUS}}` (= `Draft`).
 4. Leave the screen entries as template placeholders — they will be filled in during `/process-client-docs` (which knows about designs) or hand-curated by the team. The first `/screen-map` run after stories exist will derive the API columns automatically.
-5. Inform the user in the STEP 7 summary that the screen map was scaffolded and where to find it.
+5. Inform the user in the STEP 8 summary that the screen map was scaffolded and where to find it.
 
 ---
 
-### STEP 7: SUMMARY REPORT
+### STEP 8: SUMMARY REPORT
 
 Render the comprehensive summary to the user using the template in `init-project-reference.md`. Substitute actual values for tech stack, i18n status, epic/story/point totals, per-phase breakdown, and next-step commands.
 
@@ -220,6 +269,7 @@ Render the comprehensive summary to the user using the template in `init-project
 - `modules/init-project-structure-setup.md` - STEP 0 (Project structure: monorepo vs single app)
 - `modules/init-project-stack-selection.md` - STEP 1 (Tech stack selection)
 - `modules/init-project-i18n-setup.md` - STEP 2 (i18n configuration)
+- `modules/interactive-clarifications.md` - STEP 6 (Post-generation clarification gate; reusable across PM commands)
 
 ---
 
@@ -227,7 +277,7 @@ Render the comprehensive summary to the user using the template in `init-project
 
 - **Use the templates** from `.project-management/templates/` and replace all `{{PLACEHOLDERS}}` with actual data
 - **Be comprehensive** - generate complete documentation, don't leave TODOs
-- **Follow project rules** in `.CLAUDE.MD`
+- **Follow project rules** in `CLAUDE.md`
 - **Prioritize properly** - Organize epics into phases logically
 - **Be realistic** - Consider constraints when planning
 - **Create actionable structure** - Phase 1 should be achievable and foundational

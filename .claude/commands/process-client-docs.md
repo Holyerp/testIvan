@@ -26,7 +26,7 @@ Reads all documents from `.project-management/client-input/` and generates/updat
 ## 📋 YOUR TASK
 
 **🔧 DOCUMENTATION RULES** — extracted requirements and generated files must follow:
-- `.CLAUDE.MD` — all documentation in English (translate non-English sources)
+- `CLAUDE.md` — all documentation in English (translate non-English sources)
 - `.claude/rules/git.md` — if committing, NO AI credits, conventional commits
 
 ---
@@ -158,8 +158,41 @@ Emit the standard summary (full template in `process-client-docs-reference.md`):
 - Extracted info — project overview, epic/story totals, priorities breakdown, tech, constraints
 - Files generated (listed with line counts)
 - **Anonymization pass:** confirm ran per `.claude/rules/anonymization.md`. List any personal names found in inputs and the role label each was mapped to. Flag any name that could not be cleanly anonymized (e.g., embedded in a load-bearing quote) for user review.
-- **Ambiguities flagged** for client clarification
-- Next steps (review → clarify → `/estimate-ai-hours` → `/init-project`)
+- **Clarification questions identified** (count by priority — P0 / P1 / P2 — full text emitted in STEP 5)
+- Files generated, anonymization summary, then forward to STEP 5
+
+---
+
+### STEP 5 — Interactive clarification gate (MANDATORY when questions exist)
+
+**📖 See:** `modules/interactive-clarifications.md` for the full loop (STEPS A–G — schema, AskUserQuestion call, skip handling, anonymized free-text, answer-application to artefacts).
+
+After the STEP 4 summary, if the extraction emitted any clarification questions (structured schema per `modules/extraction-by-section.md` § "Handling Ambiguities"):
+
+1. Sort questions by priority (P0 → P1 → P2).
+2. For each, call `AskUserQuestion` with the schema options + a `Skip — answer later` option.
+3. Skipped questions land in `.project-management/input/open-questions.md` (created on first skip from `.project-management/templates/open-questions-template.md`).
+4. Answered questions update the affected artefacts (`scope.md`, `technologies.md`, backlog phase files, `constraints.md`) by replacing `<!-- TBD: Q-NNN -->` markers inserted during STEP 3.
+5. Free-text "Other" answers pass through `.claude/rules/anonymization.md` §3–4 before being persisted.
+6. Emit the STEP G loop summary (Answered / Skipped / files modified).
+
+**Resume later:** `/resolve-questions` re-runs the loop on still-Open entries from `input/open-questions.md`.
+
+**If no questions:** skip STEP 5 entirely, emit `✅ No open clarifications.`
+
+---
+
+### STEP 6 — Final next steps
+
+After the clarification gate, emit:
+
+```
+NEXT STEPS:
+1. Review files in .project-management/input/
+2. If any P0 questions remain Open → /resolve-questions --priority P0
+3. /estimate-ai-hours for an immediate AI rapid-dev hours estimate
+4. /init-project to generate PRD, technical spec, and sprint structure
+```
 
 ---
 
@@ -169,6 +202,7 @@ Emit the standard summary (full template in `process-client-docs-reference.md`):
 |--------|--------|
 | `modules/process-client-docs-reading.md` | STEP 1 reading per format |
 | `modules/process-client-docs-extraction.md` | STEP 2 extraction patterns |
+| `modules/interactive-clarifications.md` | STEP 5 — interactive Q&A loop (reusable across PM commands) |
 | `process-client-docs-reference.md` | STEP 3 file specs + STEP 4 template + quality checks + example |
 
 ---

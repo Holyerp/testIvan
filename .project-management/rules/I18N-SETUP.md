@@ -291,4 +291,4 @@ Simply **delete the entire i18n section** from `project-rules.md`:
 
 **Related Files:**
 - Configuration: `.project-management/rules/project-rules.md`
-- Quality gates: `.CLAUDE.MD` (checks for translations if i18n enabled)
+- Quality gates: `CLAUDE.md` (checks for translations if i18n enabled)

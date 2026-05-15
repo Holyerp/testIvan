@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- **Interactive clarification gate (`/process-client-docs` STEP 5)** — after extraction, the command no longer dumps a flat "Items Needing Clarification" list. It runs `AskUserQuestion` for each open question one-by-one with concrete option buttons + an explicit `Skip — answer later` option. The previous Blocker/Important/Nice-to-know taxonomy is now formalized as P0/P1/P2 priorities.
+- **`.claude/commands/modules/interactive-clarifications.md`** — reusable Q&A loop (STEPS A–G: schema, AskUserQuestion call shape, skip handling, free-text anonymization, answer-application to artefacts). Documented integration targets: `/init-project`, `/add-scope`, `/execute-work`, `/add-bug` (deferred).
+- **`.project-management/templates/open-questions-template.md`** — schema for the new `input/open-questions.md` (per-question block with Status, Priority, Category, Asked During, Skipped count, Question, Default, Impact, Options Presented, Notes). Resolved questions move to a `## Resolved Questions` archive section.
+- **`/resolve-questions` command** (`.claude/commands/resolve-questions.md` + `resolve-questions-reference.md`) — re-runs the interactive loop on still-Open entries in `input/open-questions.md`. Filters: `--priority P0|P1|P2` or single `Q-NNN`. Updates artefacts referenced by `applies_to` paths and moves answered entries to the Resolved archive.
+- **Structured clarification schema** in `modules/extraction-by-section.md` and `modules/extraction-quality-output.md` — replaces free-text bullets with YAML schema (id, category, priority, question, default, impact, options, applies_to, notes) that feeds the interactive loop. `<!-- TBD: Q-NNN -->` markers inserted into target artefacts during STEP 3 are replaced when answers come in.
+- **`/init-project` STEP 0/1/2 → AskUserQuestion** — Project type, stack approach, i18n yes/no are now gating decisions (`skippable: false`) with native UI buttons replacing the numbered narrative menus.
+- **`/init-project` Custom stack flow → AskUserQuestion sequence** — Each layer (backend / database / frontend / styling / testing / build / deploy) asks one AskUserQuestion with top-3 most-common options + native Other for free-text. Skip = use recommended default; free-text passes through the anonymization rule.
+- **`/init-project` STEP 6 — post-generation clarification gate** — After PRD / technical-spec / architecture are generated, scan for `<!-- TBD: Q-NNN -->` markers AND read open P0/P1 entries in `input/open-questions.md`. If found, invoke the interactive Q&A loop. Mirrors `/process-client-docs` STEP 5.
+- **`/init-project` i18n iterative language loop** — Replaces the prior comma-separated text input with AskUserQuestion + "Add another?" loop. ISO code lookup table maps free-text answers.
+- **`/add-scope` action + scope-type → AskUserQuestion** — Two gating decisions (`skippable: false`). Position / target-phase / target-epic remain free-text numeric (dynamic bounds); content intake stays narrative (AskUserQuestion wrong tool for prose).
+- **`/add-scope` STEP 7 docs-cascade → AskUserQuestion** — Three outcomes: Yes (run /generate-docs now), No (manual later), Skip (log P2 docs-cascade entry to `input/open-questions.md`).
+- **`/add-bug` Severity → AskUserQuestion** — Gating (`skippable: false`), 4 fixed options (Critical / High / Medium / Low). Replaces the narrative bullet list; routes the bug into the matching section of `bug-roadmap.md`.
+- **`/add-bug` Story Points → AskUserQuestion** — Deferable (`skippable: true`), top-3 Fibonacci values (1 / 3 / 5) + native Other for 2 / 8 / 13. Skip uses the severity-based suggestion. Non-Fibonacci free-text rounds up with a warning.
+- **`/add-bug` STEP 4 Phase Assignment → AskUserQuestion** — Three outcomes: Yes (chains a second AskUserQuestion for phase pick when ≤ 4 phases, numeric fallback for > 4), No (Backlog, Recommended), Skip (log P2 `bug-triage` entry to `input/open-questions.md`).
+
+### Schema
+
+- **`skippable` flag added to question schema** in `modules/interactive-clarifications.md`. Optional, default `true`. Set `false` for gating questions where the command cannot proceed without a choice. Existing `/process-client-docs` questions without the flag continue to work unchanged.
+
+### Changed
+
+- **`process-client-docs.md` STEP 4 summary** — clarification section now shows counts by priority (P0/P1/P2) and forwards to STEP 5 (the interactive gate) rather than printing the full list. Final next-steps (STEP 6) updated to suggest `/resolve-questions --priority P0` if blockers remain.
+- **Free-text answer handling** — `Other` answers in the interactive loop pass through `.claude/rules/anonymization.md` §3–4 before being persisted to `open-questions.md` or downstream artefacts.
+
+---
+
 ## [3.3.0] - 2026-05-11
 
 ### Added
@@ -29,7 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`/execute-work` "CRITICAL RULES" list** expanded from 7 to ~15 entries, grouped by stage (always / endpoint touched / data-model touched / frontend / input-doc consuming). Conditional rules clearly marked.
 - **`/execute-work` Paused-mode workflow** (`execute-work.md` STEP 3-B steps 5, 8, 11) now calls out each gate explicitly instead of pointing generically at `quality-gates.md`. Step 11 invokes `/screen-map` for frontend stories on completion.
 - **`/init-project`** — new STEP 6.5 auto-scaffolds `input/screens/screen-map.md` from the template for project types that include a UI.
-- **`.CLAUDE.MD`** — Specialized Rules section regrouped into "Always" + "Conditional"; rule list expanded from 7 to 20 entries; stale `input/backlog.md` reference corrected to modular `input/backlog/`; RELATED DOCS at the bottom expanded from 6 to 20 grouped links.
+- **`CLAUDE.md`** — Specialized Rules section regrouped into "Always" + "Conditional"; rule list expanded from 7 to 20 entries; stale `input/backlog.md` reference corrected to modular `input/backlog/`; RELATED DOCS at the bottom expanded from 6 to 20 grouped links.
 
 ### Fixed
 
@@ -167,7 +197,7 @@ Complete overhaul from sprint-based to phase-based planning with full automation
 #### Documentation
 - **MIGRATION-GUIDE.md** - Complete guide for v2.0 → v3.0 migration
 - **USER-GUIDE.md** - Completely rewritten (3779→857 lines, 77% reduction)
-- **Plan mode section** in `.CLAUDE.MD`
+- **Plan mode section** in `CLAUDE.md`
 - **Conditional rules pattern** - i18n and testing rules only applied if files exist
 
 #### Files & Structure
@@ -199,7 +229,7 @@ Complete overhaul from sprint-based to phase-based planning with full automation
 
 #### Documentation
 - **README.md** - Updated for v3.0 workflow
-- **.CLAUDE.MD** - Added plan mode section, updated commands
+- **CLAUDE.md** - Added plan mode section, updated commands
 - **.gitignore** - Changed from `sprints/*` to `phases/*`
 - **All documentation in English** - No Serbian text remaining
 

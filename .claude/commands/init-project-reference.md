@@ -1,10 +1,10 @@
 # Init Project — Reference
 
-Companion to `init-project.md`. Holds the STEP 7 summary-report template and the full file-generation manifest.
+Companion to `init-project.md`. Holds the STEP 8 summary-report template and the full file-generation manifest.
 
 ---
 
-## STEP 7 Summary Report Template
+## STEP 8 Summary Report Template
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

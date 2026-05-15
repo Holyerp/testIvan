@@ -40,7 +40,7 @@ Execute implementation of a phase, epic, or individual story with full automatio
 - `.claude/rules/git.md` — Commit format (NO AI credits), conventional commits
 - `.claude/rules/stack-specific.md` — Middleware, response envelope, Zod env schema, performance patterns
 - `.claude/rules/documentation-templates.md` — Templates for user stories, tasks, bugs, endpoint docs
-- `.CLAUDE.MD` — Core standards and workflow
+- `CLAUDE.md` — Core standards and workflow
 
 **For any handler / service / API change** (HTTP endpoint touched):
 - `.claude/rules/api-documentation.md` — Schema validation in code + matching docs (STRICT public, SOFT `@internal`)

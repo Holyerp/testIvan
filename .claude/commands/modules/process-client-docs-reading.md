@@ -149,7 +149,7 @@ Launch: Q2 2026
 
 ## Language Detection and Translation
 
-**CRITICAL per `.CLAUDE.MD`:**
+**CRITICAL per `CLAUDE.md`:**
 - ALL output MUST be in English
 - Translate non-English sources during extraction
 - Preserve meaning, not literal translation
@@ -241,4 +241,4 @@ US-045: Product Search with filters and real-time results
 **Related:**
 - Parent: `.claude/commands/process-client-docs.md`
 - Sibling: `process-client-docs-extraction.md`
-- Rules: `.CLAUDE.MD` (English-only documentation)
+- Rules: `CLAUDE.md` (English-only documentation)

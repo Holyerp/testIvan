@@ -226,18 +226,52 @@
 - Phase 3: 25 points (2 months)
 - Phase 4: 10 points (1 month)
 
-## Questions for Clarification
+## Clarification Questions (structured — drives interactive Q&A)
 
-1. **Payment Gateway:** Confirm Stripe or specify alternative?
-2. **Admin Features:** What specific admin capabilities needed?
-3. **Mobile App:** Native app or responsive web sufficient?
+Emitted in schema defined by `extraction-by-section.md` § "Handling Ambiguities". Sorted by priority for the interactive loop in STEP 5.
+
+```yaml
+- id: Q-001
+  category: payments
+  priority: P0
+  question: "Payment gateway — Stripe or alternative?"
+  default: "Stripe"
+  impact: "Affects Phase 2 (US-012, US-013)"
+  options:
+    - { label: "Stripe", description: "Industry standard. Drop-in REST API." }
+    - { label: "Other gateway", description: "Client to specify (Adyen, Braintree, …)." }
+  applies_to: [ input/technologies.md, input/backlog/phase-2-core.md ]
+
+- id: Q-002
+  category: admin-scope
+  priority: P1
+  question: "Admin capabilities — basic CRUD or full audit/roles?"
+  default: "basic product/user management"
+  impact: "Affects Phase 3 (US-022, US-023, US-024); changes RBAC story estimates"
+  options:
+    - { label: "Basic", description: "Product + user CRUD. Minimal RBAC." }
+    - { label: "Full audit + roles", description: "Granular permissions, audit log, role admin UI." }
+  applies_to: [ input/backlog/phase-3-advanced.md ]
+
+- id: Q-003
+  category: platform
+  priority: P1
+  question: "Native mobile app required, or responsive web sufficient?"
+  default: "responsive web"
+  impact: "Affects Phase 4 (mobile build stories) — adds ~3 weeks if native"
+  options:
+    - { label: "Responsive web", description: "Single codebase, faster to ship." }
+    - { label: "Native mobile", description: "iOS + Android. Adds dedicated phase." }
+  applies_to: [ input/scope.md, input/constraints.md ]
+```
 
 ## Next Steps
 
 1. Review generated files in `.project-management/input/`
-2. Answer clarification questions
-3. Make any necessary edits
-4. Run `/init-project` when ready
+2. Run the interactive clarification gate (STEP 5 of `/process-client-docs` — fires automatically)
+3. Skipped questions land in `input/open-questions.md` — resolve later with `/resolve-questions`
+4. Make any necessary manual edits
+5. Run `/init-project` when ready
 ```
 
 ---

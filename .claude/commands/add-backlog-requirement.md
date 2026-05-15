@@ -42,7 +42,7 @@ Add stories and epics to future backlog for post-launch versions without assigni
 
 **🔧 DOCUMENTATION RULES:**
 All requirements must follow:
-- **`.CLAUDE.MD`** - All documentation in English only
+- **`CLAUDE.md`** - All documentation in English only
 - **`.claude/rules/git.md`** - If committing changes (NO AI credits, conventional commits)
 
 ---

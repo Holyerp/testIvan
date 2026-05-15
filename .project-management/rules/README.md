@@ -1,6 +1,6 @@
 # Project Rules - Modular System
 
-This folder contains **project-specific rules** that extend the core `.CLAUDE.MD` guidelines.
+This folder contains **project-specific rules** that extend the core `CLAUDE.md` guidelines.
 
 ---
 
@@ -105,7 +105,7 @@ These files follow the **"enable by configuration"** pattern:
    ├── input/scope.md, input/backlog/
    └── output/docs/technical-spec.md
 
-2. Core Standards (.CLAUDE.MD)
+2. Core Standards (CLAUDE.md)
 
 3. Specialized Rules (.claude/rules/) - ALWAYS READ
    ├── code-quality.md (SOLID & DRY)
@@ -150,7 +150,7 @@ Claude checks:
 
 | File | Lines | Status |
 |------|-------|--------|
-| `.CLAUDE.MD` | 179 | ✅ Under 200 |
+| `CLAUDE.md` | 179 | ✅ Under 200 |
 | `.claude/rules/code-quality.md` | 199 | ✅ Under 200 |
 | `.claude/rules/documentation.md` | ~400 | ℹ️ Reference guide |
 | `.claude/rules/testing.md` | 87 | ✅ Under 200 |
@@ -238,7 +238,7 @@ Add a short section:
 - ❌ **If missing:** No specific performance requirements
 ```
 
-### 4. Update `.CLAUDE.MD` hierarchy
+### 4. Update `CLAUDE.md` hierarchy
 
 Add to the conditional rules list:
 

@@ -30,7 +30,7 @@ This entire project management system is **fully reusable**! Use it for any proj
 # Copy entire project management system
 cp -r .project-management /path/to/new-project/
 cp -r .claude /path/to/new-project/
-cp .CLAUDE.MD /path/to/new-project/
+cp CLAUDE.md /path/to/new-project/
 
 # Navigate to new project
 cd /path/to/new-project
@@ -88,7 +88,7 @@ rm .project-management/input/*
 - ✅ `.project-management/defaults/` - Default configurations
 - ✅ `.claude/commands/` - All slash commands
 - ✅ `.claude/rules/` - Code quality rules
-- ✅ `.CLAUDE.MD` - Coding standards
+- ✅ `CLAUDE.md` - Coding standards
 
 **Data (project-specific, clear or replace):**
 - ❌ `.project-management/input/*` - Replace with new project data
@@ -110,7 +110,7 @@ mkdir ~/project-management-template
 # Copy complete structure
 cp -r .project-management ~/project-management-template/
 cp -r .claude ~/project-management-template/
-cp .CLAUDE.MD ~/project-management-template/
+cp CLAUDE.md ~/project-management-template/
 
 # =====================================
 # Clean Output Files in Template
@@ -171,7 +171,7 @@ cd /path/to/new-project
 # STEP 2: Push Template
 # =====================================
 git init
-git add .project-management .claude .CLAUDE.MD
+git add .project-management .claude CLAUDE.md
 git commit -m "Initial template"
 git remote add origin git@github.com:yourusername/project-management-template.git
 git push -u origin main
@@ -225,7 +225,7 @@ git push -u origin main
 - ✅ Keep - universal best practices
 - Only modify for team-specific standards
 
-**Coding Standards** (`.CLAUDE.MD`)
+**Coding Standards** (`CLAUDE.md`)
 - ✅ Keep unless team has different standards
 - Customize for company/team conventions
 
@@ -315,7 +315,7 @@ cp -r ~/project-management-template/.project-management/templates/* \
 ### Pre-Setup
 - [ ] Copied `.project-management/` folder
 - [ ] Copied `.claude/` folder
-- [ ] Copied `.CLAUDE.MD` file
+- [ ] Copied `CLAUDE.md` file
 - [ ] Cleared `output/docs/*`
 - [ ] Cleared `output/phases/*`
 - [ ] Cleared `output/progress/*`
@@ -331,7 +331,7 @@ cp -r ~/project-management-template/.project-management/templates/* \
 
 ### Customization (if needed)
 - [ ] Updated `rules/project-rules.md` if unique rules
-- [ ] Updated `.CLAUDE.MD` if different standards
+- [ ] Updated `CLAUDE.md` if different standards
 - [ ] Updated `defaults/default-stack.md` if applicable
 - [ ] Removed `rules/I18N-*.md` if not needed
 
@@ -388,7 +388,7 @@ cp custom-diagram-template.md .project-management/templates/
 ### Scenario 4: Company-Specific Standards
 
 ```markdown
-# In .CLAUDE.MD, add section:
+# In CLAUDE.md, add section:
 ## Company Standards
 
 ### Naming Conventions
@@ -423,7 +423,7 @@ cp custom-diagram-template.md .project-management/templates/
 
 ### Team Standards
 
-**Document in `.CLAUDE.MD`:**
+**Document in `CLAUDE.md`:**
 - Coding conventions
 - Testing requirements
 - Git workflow

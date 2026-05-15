@@ -196,4 +196,4 @@ const getFullName = (p) => `${p.firstName} ${p.lastName}`;
 
 ---
 
-**Related:** `.claude/rules/enums-and-constants.md` (cross-layer enum naming) — `.CLAUDE.MD` (overall standards)
+**Related:** `.claude/rules/enums-and-constants.md` (cross-layer enum naming) — `CLAUDE.md` (overall standards)

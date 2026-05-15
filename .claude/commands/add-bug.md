@@ -57,30 +57,9 @@ When executing bug fixes via `/execute-work bug BUG-XXX`, follow:
    - Where bug will be added in roadmap
    - Story points estimate (if provided or suggested)
 
-5. **Present plan:**
-   ```
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   📋 ADD BUG - PLAN
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5. **Present plan** using the Plan-Mode Template — see `add-bug-reference.md` → "Plan-Mode Template (STEP 0)". The plan summarizes the eight fields (BUG ID, TITLE, SEVERITY, STORY POINTS, AFFECTED, WILL ADD TO, ASSIGN TO PHASE, plus the `Proceed?` prompt).
 
-   BUG ID: BUG-006
-   TITLE: {{Bug title}}
-   SEVERITY: {{Critical/High/Medium/Low}}
-   STORY POINTS: {{1-13}}
-   AFFECTED: {{Component/File}}
-
-   WILL ADD TO:
-   - bug-roadmap.md ({{Severity}} section)
-
-   ASSIGN TO PHASE NOW? [Yes/No]
-   {{If Yes, ask which phase}}
-
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   Proceed? [Yes / No / Revise]
-   ```
-
-6. **Wait for approval**
-7. **Only proceed to STEP 1 after approval**
+6. **Wait for approval**, then proceed to STEP 1.
 
 ---
 
@@ -95,17 +74,30 @@ When executing bug fixes via `/execute-work bug BUG-XXX`, follow:
 
 **If interactive mode:**
 
-Ask user for:
+Most fields are free-text intake (title, component, description, reproduction steps, expected/actual behavior, notes — AskUserQuestion is the wrong tool for prose). Two fields use AskUserQuestion: **Severity** (Q2) and **Story Points** (Q8).
 
 1. **Bug Title** (required)
    - Short, descriptive title
    - Example: "User login fails with valid credentials"
 
-2. **Severity** (required)
-   - Critical: System unusable, data loss, security vulnerability
-   - High: Major functionality broken, workaround exists
-   - Medium: Minor functionality affected, easy workaround
-   - Low: Cosmetic issues, nice-to-have fixes
+2. **Severity** (required) — ask via AskUserQuestion (gating, no Skip):
+
+   ```
+   question: "Bug severity?"
+   header: "severity"
+   skippable: false
+   options:
+     - label: "Critical"
+       description: "System unusable, data loss, or security vulnerability. Production-blocking."
+     - label: "High"
+       description: "Major functionality broken; workaround exists but degraded UX."
+     - label: "Medium"
+       description: "Minor functionality affected; easy workaround available."
+     - label: "Low"
+       description: "Cosmetic issue or nice-to-have fix; no functional impact."
+   ```
+
+   The chosen severity routes the bug to the matching section in `bug-roadmap.md` (Critical → 🔴, High → 🟠, Medium → 🟡, Low → 🟢) per STEP 3.
 
 3. **Affected Component/File** (required)
    - Which file, module, or component is affected
@@ -131,13 +123,34 @@ Ask user for:
    - What actually happens
    - Example: "Login form shows 'Invalid credentials' error"
 
-8. **Story Points** (optional)
-   - Fibonacci scale: 1, 2, 3, 5, 8, 13
-   - If not provided, Claude suggests based on severity and description:
-     - Critical: 8-13 points
-     - High: 5-8 points
-     - Medium: 3-5 points
-     - Low: 1-3 points
+8. **Story Points** (optional) — ask via AskUserQuestion (`skippable: true` — Skip uses severity-based suggestion):
+
+   ```
+   question: "Story points estimate?"
+   header: "points"
+   skippable: true
+   default: "{{severity_suggested_points}}"
+   options:
+     - label: "1 — Trivial (typical for Low severity)"
+       description: "Tiny fix, < 30 min: typo, one-line config, obvious null check."
+     - label: "3 — Small"
+       description: "Few hours: localized fix, well-understood bug with clear repro."
+     - label: "5 — Medium"
+       description: "Half-day to full-day: needs investigation, touches multiple files."
+   ```
+
+   **Placeholder resolution.** `{{severity_suggested_points}}` is resolved at prompt-render time from the user's prior Severity answer (Q2):
+
+   - Critical → `"8"` (matches `Other`; the YAML default is shown but no top-3 option is preselected — the user can accept the default or type a different value via `Other`).
+   - High → `"5 — Medium"` (matches the third visible option, preselected).
+   - Medium → `"3 — Small"` (matches the second visible option, preselected).
+   - Low → `"1 — Trivial (typical for Low severity)"` (matches the first visible option, preselected).
+
+   The default acts as a soft prefill: if it matches a visible option label, that option is preselected; if not (Critical case), the user sees the default value pre-populated in the native `Other` field.
+
+   **On Skip:** use the severity-based suggestion above directly (no further prompt).
+
+   **Free-text `Other` validation.** If the user types a value that isn't on the Fibonacci scale (`1, 2, 3, 5, 8, 13`), round up to the next valid value and emit a warning to the STEP 5 summary: `"Non-Fibonacci value '<x>' rounded up to next valid: <y>"`.
 
 9. **Additional Notes** (optional)
    - Screenshots, error logs, environment details
@@ -172,24 +185,68 @@ Ask user for:
 
 ### STEP 4: ASK ABOUT PHASE ASSIGNMENT
 
-**Claude asks:**
+**Ask via AskUserQuestion** (`skippable: true` — Skip leaves the bug in Backlog):
+
 ```
-Do you want to assign this bug to a phase now?
-
-[1] Yes - Assign to phase (prioritize for fixing)
-[2] No - Keep in backlog (triage later)
+question: "Assign this bug to a phase now?"
+header: "phase"
+skippable: true
+default: "No — keep in Backlog"
+options:
+  - label: "Yes — assign to phase"
+    description: "Prioritize for fixing in a specific phase. You'll pick which one next."
+  - label: "No — keep in Backlog (Recommended)"
+    description: "Triage later. The bug is reachable via /resolve-questions or manual review."
 ```
 
-**If user selects [1] Yes:**
-1. Show available phases
-2. Ask which phase
-3. Add bug to selected `phase-N.md` file under "Bugs" section
-4. Update bug-roadmap.md: "Assigned to Phase: Phase N"
-5. Update phase story points total
+**Skip handling:** if the user picks `Skip — answer later`, persist the question per `modules/interactive-clarifications.md` STEP D (renders the canonical schema from `.project-management/templates/open-questions-template.md`). Pass these field values:
 
-**If user selects [2] No:**
-- Keep in bug-roadmap.md only
-- "Assigned to Phase: Backlog"
+- `category`: `bug-triage`
+- `priority`: `P2`
+- `question`: `"Assign {{bug_id}} ({{bug_title}}, severity {{severity}}) to a phase?"`
+- `default`: `"Backlog (no phase)"`
+- `impact`: `"Bug remains in Backlog until triaged; not scheduled into any phase"`
+- `applies_to`: `[]`  *(the bug is already correctly placed in `bug-roadmap.md` Backlog section by STEP 3; no doc actively drifts on Skip — phase assignment is pending, not broken)*
+- `notes`: `"Created on {{date}}; severity {{severity}}"`
+
+(Placeholders: `{{bug_id}}` = BUG-XXX assigned in STEP 2; `{{bug_title}}` = from Q1; `{{severity}}` = from Q2; `{{date}}` = today.)
+
+The user can resume via `/resolve-questions --priority P2` or `/resolve-questions Q-NNN`, or assign manually by editing `bug-roadmap.md`.
+
+**If user picks "Yes — assign to phase":**
+
+1. Discover available phases — list `phase-*.md` files in `.project-management/output/<active>/`. Count them.
+
+2. **If 4 or fewer phases exist**, ask via a second AskUserQuestion (gating):
+
+   ```
+   question: "Which phase?"
+   header: "phase-pick"
+   skippable: false
+   options:                              # one option per discovered phase, in order
+     - label: "Phase 1 — Foundation"
+       description: "{{phase_1_summary_first_line}}"
+     - label: "Phase 2 — Core"
+       description: "{{phase_2_summary_first_line}}"
+     - ...                               # up to 4
+   ```
+
+3. **If more than 4 phases exist**, fall back to numeric input (AskUserQuestion supports up to 4 options):
+
+   - Render the menu as a numbered list, one phase per line:
+     ```
+     [1] Phase 1 — {{phase_1_summary_first_line}}
+     [2] Phase 2 — {{phase_2_summary_first_line}}
+     ...
+     [N] Phase N — {{phase_N_summary_first_line}}
+     ```
+   - Prompt: `"Pick a phase number [1-{{N}}]:"`
+   - Accept an integer in `[1..N]`. Reprompt on non-integer / out-of-range / empty input with the same prompt + a short error message ("Invalid — enter a number between 1 and N.").
+
+4. After phase selection:
+   - Add bug to selected `phase-N.md` file under "Bugs" section
+   - Update `bug-roadmap.md`: `Assigned to Phase: Phase N`
+   - Update phase story points total
 
 ---
 

@@ -44,6 +44,42 @@ Companion to `add-bug.md`. Holds the bug-entry template, the completion-report t
 
 ---
 
+## STEP 4 — Phase Assignment
+
+Uses AskUserQuestion with three outcomes:
+- **Yes — assign to phase** → chains a second AskUserQuestion for phase pick (≤ 4 phases) or falls back to numeric input (> 4 phases).
+- **No — keep in Backlog (Recommended)** → bug stays in Backlog section of `bug-roadmap.md`.
+- **Skip — answer later** → log a `bug-triage` P2 entry in `input/open-questions.md` (resume via `/resolve-questions`).
+
+Full template lives in `add-bug.md` STEP 4. The skip entry follows the canonical schema from `.project-management/templates/open-questions-template.md` (rendered by `modules/interactive-clarifications.md` STEP D).
+
+---
+
+## Plan-Mode Template (STEP 0)
+
+When entering plan mode (STEP 0), present the plan in this format:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🐛 ADD BUG PLAN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BUG ID:           {{BUG-XXX}}
+TITLE:            {{bug_title}}
+SEVERITY:         {{severity}}
+STORY POINTS:     {{points}} (suggested) | {{user_provided}}
+AFFECTED:         {{component}}
+
+WILL ADD TO:      output/bugs/bug-roadmap.md ({{severity_section}})
+ASSIGN TO PHASE:  {{Yes/No — decided in STEP 4}}
+
+Proceed? [Yes / No / Revise]
+```
+
+The plan is rendered ONCE before STEP 1 intake begins. After approval, STEP 1 collects the field values; STEP 4 finalizes phase assignment.
+
+---
+
 ## Completion Report Template (STEP 5)
 
 ```

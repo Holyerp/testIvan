@@ -148,7 +148,7 @@ cd /path/to/your/project
 # 2. Copy the system
 cp -r /path/to/claude_repo/.project-management .
 cp -r /path/to/claude_repo/.claude .
-cp /path/to/claude_repo/.CLAUDE.MD .
+cp /path/to/claude_repo/CLAUDE.md .
 
 # 3. Verify structure
 ls -la .project-management/
@@ -422,7 +422,7 @@ Output (generated):
     └── progress/           (current status, completed, blockers)
 
 Rules (standards):
-  .CLAUDE.MD                (core coding standards)
+  CLAUDE.md                (core coding standards)
   .claude/rules/*.md        (specialized rules)
   .project-management/rules/*.md (project rules)
 ```

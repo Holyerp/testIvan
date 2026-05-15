@@ -130,87 +130,152 @@ Approve this stack? [Yes/Modify/Start Over]
 
 **Use `.project-management/defaults/stack-questions.md` as a guide.**
 
-**Ask questions sequentially:**
+> **Custom stack flow:** the user answers a sequence of single-layer AskUserQuestion calls. Top-3 most-common options per layer cover ~90% of choices; AskUserQuestion's native `Other` handles the rest with free-text + anonymization. Skip on any layer = use the recommended default.
 
-**Project Type:**
-```
-What type of project are you building?
-[1] Web Application (Full-stack)
-[2] API Backend (REST/GraphQL)
-[3] Frontend Only (SPA)
-[4] Mobile App
-[5] Desktop App
-[6] CLI Tool
-[7] Library/Package
-```
+#### Layer: project-type
 
-**Backend Framework** (if applicable):
 ```
-Which backend framework?
-[1] Express.js
-[2] Fastify
-[3] NestJS
-[4] React Router 7 (full-stack)
-[5] Other (specify)
+question: "Project type?"
+header: "project-type"
+skippable: true
+default: "Web Application (Full-stack)"
+options:
+  - label: "Web Application (Full-stack) (Recommended)"
+    description: "SSR or hybrid web app with backend + frontend in one codebase"
+  - label: "API Backend (REST/GraphQL)"
+    description: "Backend-only service exposing HTTP/RPC APIs"
+  - label: "Frontend Only (SPA)"
+    description: "Client-side single-page app consuming an external API"
+applies_to: [ input/technologies.md ]
 ```
 
-**Database:**
+#### Layer: backend
+
 ```
-Which database?
-[1] PostgreSQL
-[2] MySQL
-[3] MongoDB
-[4] SQLite
-[5] Other (specify)
+question: "Backend framework?"
+header: "backend"
+skippable: true
+default: "Node.js + Express"
+options:
+  - label: "Node.js + Express (Recommended)"
+    description: "Mature, minimal, widely understood — safe default for REST APIs"
+  - label: "NestJS"
+    description: "Opinionated, DI-driven, TypeScript-first — suits larger teams"
+  - label: "Fastify"
+    description: "High-performance Node.js framework with schema-based validation"
+applies_to: [ input/technologies.md ]
 ```
 
-**Frontend Framework:**
+#### Layer: database
+
 ```
-Which frontend framework?
-[1] React
-[2] Vue.js
-[3] Svelte
-[4] Angular
-[5] Other (specify)
+question: "Database choice?"
+header: "database"
+skippable: true
+default: "PostgreSQL"
+options:
+  - label: "PostgreSQL (Recommended)"
+    description: "Battle-tested relational DB; pairs cleanly with Prisma"
+  - label: "MySQL"
+    description: "Widely supported relational DB; common in legacy stacks"
+  - label: "MongoDB"
+    description: "Document store; suits flexible/unstructured data"
+applies_to: [ input/technologies.md ]
 ```
 
-**Styling:**
+#### Layer: frontend
+
 ```
-How will you style the application?
-[1] Tailwind CSS
-[2] CSS Modules
-[3] Styled Components
-[4] Sass/SCSS
-[5] Other (specify)
+question: "Frontend framework?"
+header: "frontend"
+skippable: true
+default: "React Router 7"
+options:
+  - label: "React Router 7 (Recommended)"
+    description: "Full-stack React with SSR — matches the project's default stack"
+  - label: "Next.js"
+    description: "React meta-framework with SSR/ISR/RSC — strong ecosystem"
+  - label: "Vite + React SPA"
+    description: "Client-only SPA with fast dev server; no SSR"
+applies_to: [ input/technologies.md ]
 ```
 
-**Testing:**
+#### Layer: styling
+
 ```
-Which testing frameworks?
-Unit: [1] Vitest  [2] Jest  [3] Mocha
-E2E:  [1] Playwright  [2] Cypress  [3] Puppeteer
+question: "Styling approach?"
+header: "styling"
+skippable: true
+default: "Tailwind CSS"
+options:
+  - label: "Tailwind CSS (Recommended)"
+    description: "Utility-first CSS; fast iteration, small bundle"
+  - label: "CSS Modules"
+    description: "Scoped class names per component; no runtime overhead"
+  - label: "shadcn/ui (Tailwind preset)"
+    description: "Tailwind + copy-paste accessible components"
+applies_to: [ input/technologies.md ]
 ```
 
-**Build Tool:**
+#### Layer: testing
+
 ```
-Which build tool?
-[1] Vite
-[2] Webpack
-[3] Turbopack
-[4] Other (specify)
+question: "Testing frameworks?"
+header: "testing"
+skippable: true
+default: "Vitest + Playwright"
+options:
+  - label: "Vitest + Playwright (Recommended)"
+    description: "Fast unit tests (Vitest) + reliable cross-browser E2E (Playwright)"
+  - label: "Jest + Cypress"
+    description: "Established unit (Jest) + interactive E2E (Cypress) combo"
+  - label: "Vitest only (unit)"
+    description: "Unit/integration only; defer E2E to a later phase"
+applies_to: [ input/technologies.md ]
 ```
 
-**Deployment:**
+#### Layer: build
+
 ```
-Where will you deploy?
-[1] Railway
-[2] Vercel
-[3] AWS
-[4] DigitalOcean
-[5] Other (specify)
+question: "Build tool?"
+header: "build"
+skippable: true
+default: "Vite"
+options:
+  - label: "Vite (Recommended)"
+    description: "Fast dev server + Rollup-based production build"
+  - label: "Turbopack"
+    description: "Next.js's incremental bundler (alpha-quality outside Next)"
+  - label: "Webpack"
+    description: "Mature, configurable bundler — heavier and slower than Vite"
+applies_to: [ input/technologies.md ]
 ```
 
-**After all questions answered:**
+#### Layer: deploy
+
+```
+question: "Deployment target?"
+header: "deploy"
+skippable: true
+default: "Railway"
+options:
+  - label: "Railway (Recommended)"
+    description: "Zero-config PaaS with Postgres add-ons; matches default stack"
+  - label: "Vercel"
+    description: "Best-in-class for Next.js + static + serverless edge"
+  - label: "AWS"
+    description: "Full control + scale; highest ops complexity"
+applies_to: [ input/technologies.md ]
+```
+
+**Per-layer behavior:**
+
+- AskUserQuestion's native `Other` option lets the user type a custom value.
+- On Skip, the loop uses `default:` and logs to `input/open-questions.md` per the standard module flow.
+- On any free-text `Other` answer, run through `.claude/rules/anonymization.md` §3–4 (defensive — stack names usually have no PII but the rule is the boundary).
+- Write the chosen value into `input/technologies.md` under the corresponding `## <Layer>` heading.
+
+**After all layers answered:**
 - Generate `technologies.md` with all selections
 - Display summary
 - Continue to i18n setup

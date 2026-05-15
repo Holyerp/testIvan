@@ -19,7 +19,7 @@ make_clean_repo() {
            "$d"/.claude/commands
 
   echo '**Version:** 1.0.0' > "$d/README.md"
-  echo '**Version:** 1.0.0' > "$d/.CLAUDE.MD"
+  echo '**Version:** 1.0.0' > "$d/CLAUDE.md"
 
   cat > "$d/CHANGELOG.md" <<'EOF'
 # Changelog

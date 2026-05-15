@@ -212,7 +212,7 @@ Before marking task complete:
 
 **Related Files:**
 - Setup guide: `.project-management/rules/I18N-SETUP.md`
-- Quality gates: `.CLAUDE.MD` (checks for translations if i18n enabled)
+- Quality gates: `CLAUDE.md` (checks for translations if i18n enabled)
 - Project rules: `.project-management/rules/project-rules.md`
 
 ---

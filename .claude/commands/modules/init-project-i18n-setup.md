@@ -6,50 +6,92 @@
 
 ## STEP 2: INTERNATIONALIZATION (i18n) SETUP
 
-**Ask user about i18n requirements:**
+#### Sub-step 1: Enable i18n?
+
+**Ask via AskUserQuestion** (gating, no Skip):
 
 ```
-🌐 Internationalization (i18n)
-
-Does your project need multi-language support?
-
-[1] Yes - Configure i18n
-[2] No - Skip i18n
+question: "Enable internationalization (i18n)?"
+header: "i18n"
+skippable: false
+options:
+  - label: "No (Recommended)"
+    description: "English only. Add i18n later if needed via /add-scope."
+  - label: "Yes — multiple languages"
+    description: "Set up i18next + locale files. You'll pick the default + additional languages next."
 ```
 
-**Wait for user selection: 1 or 2**
+If "No" → exit this module, default to English only.
+If "Yes" → proceed to Sub-step 2.
 
 ---
 
 ### Option 1: Configure i18n
 
-**If user selects [1] Yes - Configure i18n:**
+**If user selects "Yes — multiple languages":**
 
-**Ask which languages to support:**
+#### Sub-step 2: Default language
+
+**Ask via AskUserQuestion** (`skippable: true` — Skip = English):
 
 ```
-Which languages do you want to support?
-
-Select all that apply (multi-select):
-
-[✓] English (en) - Default (required)
-[ ] German (de)
-[ ] French (fr)
-[ ] Spanish (es)
-[ ] Italian (it)
-[ ] Portuguese (pt)
-[ ] Dutch (nl)
-[ ] Polish (pl)
-[ ] Russian (ru)
-[ ] Chinese (zh)
-[ ] Japanese (ja)
-[ ] Korean (ko)
-[ ] Serbian (sr)
-[ ] Croatian (hr)
-[ ] Other (specify)
-
-Type language codes separated by commas: en,de,sr
+question: "Default (primary) language?"
+header: "language"
+skippable: true
+default: "English"
+options:
+  - label: "English (Recommended)"
+    description: "Code: en. Most common default."
+  - label: "Spanish"
+    description: "Code: es."
+  - label: "German"
+    description: "Code: de."
+applies_to: [ .project-management/rules/I18N-RULES.md ]
 ```
+
+The user can pick the AskUserQuestion native `Other` to type any other language (free-text). The free-text passes through the anonymization rule (defensive) before being persisted with its ISO code derived from a lookup table in this file.
+
+#### Sub-step 3: Additional languages (loop)
+
+After the default is set, ask iteratively:
+
+```
+question: "Add another language?"
+header: "more-langs"
+skippable: false
+options:
+  - label: "No — I'm done"
+    description: "Finalize i18n config with the languages chosen so far."
+  - label: "Yes — add another"
+    description: "Pick another language to support."
+```
+
+If "Yes — add another" → fire the same AskUserQuestion as Sub-step 2 (default language). Loop until user picks "No — I'm done".
+
+The user can pick the AskUserQuestion native `Other` to type any non-listed language (free-text → anonymized → ISO code lookup → persisted).
+
+#### ISO code lookup table
+
+Used to derive a language code from a free-text `Other` answer:
+
+| Free-text | ISO 639-1 |
+|-----------|-----------|
+| English   | en |
+| Spanish   | es |
+| German    | de |
+| French    | fr |
+| Italian   | it |
+| Portuguese| pt |
+| Dutch     | nl |
+| Polish    | pl |
+| Russian   | ru |
+| Serbian   | sr |
+| Croatian  | hr |
+| Slovenian | sl |
+| Czech     | cs |
+| Slovak    | sk |
+
+If the free-text doesn't match the table, emit a warning to the STEP G summary ("Language '<x>' not recognized; using as-is, may need manual ISO code correction in .project-management/rules/I18N-RULES.md") and proceed.
 
 **After user provides languages:**
 
@@ -221,7 +263,7 @@ See rules: .project-management/rules/I18N-RULES.md
 
 ### Option 2: Skip i18n
 
-**If user selects [2] No - Skip i18n:**
+**If user selects "No (Recommended)":**
 
 **Display:**
 ```

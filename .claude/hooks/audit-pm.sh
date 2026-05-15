@@ -62,7 +62,7 @@ printf '**Backlog structure:** %s\n' "$STRUCTURE"
 section "A. Structure health"
 
 # Required top-level files
-for f in .CLAUDE.MD README.md CHANGELOG.md; do
+for f in CLAUDE.md README.md CHANGELOG.md; do
   if hasfile "$f"; then ok "$f exists"; else finding "🔴 CRITICAL" "Required file missing: $f"; fi
 done
 
@@ -138,7 +138,7 @@ section "C. Version consistency"
 version_report=$(
   {
     grep -rhE '^\*\*Version:\*\*[[:space:]]+[0-9]+\.[0-9]+\.[0-9]+' \
-      README.md CHANGELOG.md .CLAUDE.MD \
+      README.md CHANGELOG.md CLAUDE.md \
       .project-management/*.md \
       .project-management/docs/*.md \
       .project-management/guides/*.md 2>/dev/null
