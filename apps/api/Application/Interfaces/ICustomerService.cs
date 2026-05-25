@@ -11,4 +11,8 @@ public interface ICustomerService
         string? sortBy,
         string? sortDir,
         CancellationToken cancellationToken = default);
+
+    Task<CustomerDetailDto?> GetCustomerByIdAsync(
+        string id,
+        CancellationToken cancellationToken = default);
 }

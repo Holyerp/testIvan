@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatRsd, totalPages } from '@/lib/format';
+import { formatRsd, totalPages, invoiceStatusKey } from '@/lib/format';
 
 describe('formatRsd', () => {
   it('formats a number as RSD currency', () => {
@@ -20,5 +20,17 @@ describe('totalPages', () => {
   });
   it('exact multiple', () => {
     expect(totalPages(40, 20)).toBe(2);
+  });
+});
+
+describe('invoiceStatusKey', () => {
+  it('maps Paid to statusPaid', () => {
+    expect(invoiceStatusKey('Paid')).toBe('statusPaid');
+  });
+  it('maps Open to statusOpen', () => {
+    expect(invoiceStatusKey('Open')).toBe('statusOpen');
+  });
+  it('defaults unknown to statusOpen', () => {
+    expect(invoiceStatusKey('Whatever')).toBe('statusOpen');
   });
 });

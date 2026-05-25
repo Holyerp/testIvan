@@ -66,6 +66,21 @@
     "next": "Sledeća",
     "pageOf": "Strana {page} od {total}"
   },
+  "customerDetail": {
+    "back": "Nazad na kupce",
+    "notFound": "Kupac nije pronađen",
+    "balance": "Stanje",
+    "balanceDue": "Dospelo za naplatu",
+    "recentInvoices": "Nedavne fakture",
+    "invoiceNumber": "Broj fakture",
+    "postingDate": "Datum knjiženja",
+    "amount": "Iznos",
+    "status": "Status",
+    "noInvoices": "Nema faktura",
+    "loadError": "Greška pri učitavanju kupca",
+    "statusOpen": "Otvorena",
+    "statusPaid": "Plaćena"
+  },
   "common": {
     "loading": "Učitavanje...",
     "error": "Greška",

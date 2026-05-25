@@ -66,6 +66,21 @@
     "next": "Next",
     "pageOf": "Page {page} of {total}"
   },
+  "customerDetail": {
+    "back": "Back to customers",
+    "notFound": "Customer not found",
+    "balance": "Balance",
+    "balanceDue": "Balance Due",
+    "recentInvoices": "Recent Invoices",
+    "invoiceNumber": "Invoice Number",
+    "postingDate": "Posting Date",
+    "amount": "Amount",
+    "status": "Status",
+    "noInvoices": "No invoices",
+    "loadError": "Error loading customer",
+    "statusOpen": "Open",
+    "statusPaid": "Paid"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",

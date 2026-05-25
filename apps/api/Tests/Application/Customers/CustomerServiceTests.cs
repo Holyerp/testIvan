@@ -56,4 +56,27 @@ public class CustomerServiceTests
         Assert.False(string.IsNullOrEmpty(first.Number));
         Assert.False(string.IsNullOrEmpty(first.DisplayName));
     }
+
+    [Fact]
+    public async Task GetCustomerByIdAsync_KnownId_ReturnsCustomer()
+    {
+        var result = await CreateService().GetCustomerByIdAsync("c001");
+        Assert.NotNull(result);
+        Assert.False(string.IsNullOrEmpty(result!.Customer.DisplayName));
+    }
+
+    [Fact]
+    public async Task GetCustomerByIdAsync_UnknownId_ReturnsNull()
+    {
+        var result = await CreateService().GetCustomerByIdAsync("does-not-exist");
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task GetCustomerByIdAsync_IncludesInvoicesList()
+    {
+        var result = await CreateService().GetCustomerByIdAsync("c001");
+        Assert.NotNull(result);
+        Assert.NotNull(result!.Invoices);
+    }
 }

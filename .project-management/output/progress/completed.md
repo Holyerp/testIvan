@@ -5,6 +5,8 @@
 
 ---
 
+**Phase 1 — Foundation & MVP: COMPLETE** (47 / 47 pts, 100% — 5 user stories + 2 technical tasks)
+
 ---
 
 ## Completed Stories
@@ -79,6 +81,21 @@
 - lib/format.ts helpers (formatRsd, totalPages)
 - i18n: customers section (sr + en)
 - Tests: 6 backend (CustomerService) + 5 frontend (format helpers)
+
+### US-005: Customers — Detail View
+**Completed:** 2026-05-25
+**Phase:** 1 — Foundation
+**Story Points:** 5
+**Commit:** See git log
+
+**Summary:**
+- GET /api/v1/customers/{id} (RequireFinancial; WAREHOUSE 403); 404 NOT_FOUND_CUSTOMER; 502 on BC failure
+- CustomerService.GetCustomerByIdAsync: profile + last 10 invoices (filtered by customerName, ordered postingDate desc)
+- CustomerDetailDto / CustomerProfileDto / CustomerInvoiceDto
+- MockBcHttpClient.GetByIdAsync returns real customer for known id, null for unknown; customer mock data refactored to single GetMockCustomerData() source; salesInvoices mock now honors customerName eq filter
+- Frontend: detail page (profile header, balance/balanceDue cards, recent invoices table, status badges), 404 + loading + error states, back link; list rows link to detail
+- i18n: customerDetail section (sr + en)
+- Tests: 3 backend (GetCustomerByIdAsync) + 3 frontend (invoiceStatusKey); MockBcHttpClientTests GetByIdAsync reconciled (known id non-null, unknown id/entityset null)
 
 ---
 

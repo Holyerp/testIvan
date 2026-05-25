@@ -63,4 +63,45 @@ public class CustomerService : ICustomerService
             PageSize = pageSize,
         };
     }
+
+    public async Task<CustomerDetailDto?> GetCustomerByIdAsync(
+        string id,
+        CancellationToken cancellationToken = default)
+    {
+        var customer = await _bc.GetByIdAsync<BcCustomer>("customers", id, cancellationToken);
+        if (customer == null || string.IsNullOrEmpty(customer.Id)) return null;
+
+        // Escape single quotes per OData string-literal rules to avoid filter injection.
+        var safeName = customer.DisplayName.Replace("'", "''");
+        var invoicesResult = await _bc.GetCollectionAsync<BcSalesInvoice>(
+            "salesInvoices",
+            new BcQueryOptions
+            {
+                Filter = $"customerName eq '{safeName}'",
+                OrderBy = "postingDate desc",
+                Top = 10,
+            },
+            cancellationToken);
+
+        return new CustomerDetailDto
+        {
+            Customer = new CustomerProfileDto
+            {
+                Id = customer.Id,
+                Number = customer.Number,
+                DisplayName = customer.DisplayName,
+                City = customer.City,
+                Balance = customer.Balance,
+                BalanceDue = customer.BalanceDue,
+            },
+            Invoices = invoicesResult.Value.Select(i => new CustomerInvoiceDto
+            {
+                Id = i.Id,
+                Number = i.Number,
+                PostingDate = i.PostingDate,
+                TotalAmountIncludingTax = i.TotalAmountIncludingTax,
+                Status = i.Status,
+            }).ToList(),
+        };
+    }
 }

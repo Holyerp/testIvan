@@ -2,13 +2,13 @@
 
 **Project:** Pinoles — Internal Business Portal
 **Initialized:** 2026-05-25
-**Status:** Ready for Phase 1
+**Status:** Phase 1 complete — ready for Phase 2
 
 ---
 
 ## Currently Working On
 
-**US-005: Customers — Detail View** (5 pts) — Phase 1
+Phase 1 complete ✅ — ready for Phase 2 (no active story)
 
 ---
 
@@ -16,11 +16,11 @@
 
 | Phase | Status | Points | Progress |
 |-------|--------|--------|----------|
-| Phase 1 — Foundation | 🔄 In Progress | 39 / 47 | 83% |
+| Phase 1 — Foundation | ✅ Complete | 47 / 47 | 100% |
 | Phase 2 — Core Documents | ⏸️ Pending | 0 / 52 | 0% |
 | Phase 3 — Extended Modules | ⏸️ Pending | 0 / 42 | 0% |
 | Phase 4 — Analytics & Polish | ⏸️ Pending | 0 / 27 | 0% |
-| **TOTAL** | | **39 / 168** | **23%** |
+| **TOTAL** | | **47 / 168** | **28%** |
 
 ---
 
@@ -28,10 +28,10 @@
 
 | Metric | Current | Target |
 |--------|---------|--------|
-| Test coverage | ≥ 80% (BC + auth + RBAC layers) | ≥ 80% |
-| Stories completed | 4 / 23 | 23 |
+| Test coverage | ≥ 80% (BC + auth + RBAC + customer layers) | ≥ 80% |
+| Stories completed | 5 / 23 | 23 |
 | Technical tasks | 2 / 5 | 5 |
-| Tests passing | 51 | — |
+| Tests passing | 57 | — |
 
 ---
 

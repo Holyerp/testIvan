@@ -42,9 +42,25 @@ public class MockBcHttpClientTests
     }
 
     [Fact]
-    public async Task GetByIdAsync_ReturnsNull()
+    public async Task GetByIdAsync_KnownCustomerId_ReturnsCustomer()
     {
         var result = await _client.GetByIdAsync<Dictionary<string, JsonElement>>("customers", "c001");
+
+        Assert.NotNull(result);
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_UnknownCustomerId_ReturnsNull()
+    {
+        var result = await _client.GetByIdAsync<Dictionary<string, JsonElement>>("customers", "does-not-exist");
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_UnknownEntitySet_ReturnsNull()
+    {
+        var result = await _client.GetByIdAsync<Dictionary<string, JsonElement>>("unknownEntity", "c001");
 
         Assert.Null(result);
     }

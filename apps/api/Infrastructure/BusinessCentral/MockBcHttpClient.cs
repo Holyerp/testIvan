@@ -34,12 +34,25 @@ public class MockBcHttpClient : IBcHttpClient
         CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("MOCK BC GET {EntitySet}({Id})", entitySet, id);
+
+        if (entitySet == "customers")
+        {
+            var match = GetMockCustomerData().FirstOrDefault(c => (string)c["id"] == id);
+            if (match == null) return Task.FromResult<T?>(default);
+
+            var json = JsonSerializer.Serialize(match);
+            var typed = JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return Task.FromResult(typed);
+        }
+
         return Task.FromResult<T?>(default);
     }
 
-    private static BcCollectionResponse<T> CreateMockCustomers<T>(BcQueryOptions? options)
+    // Single source of truth for mock customer records — used by both
+    // GetCollectionAsync (customers branch) and GetByIdAsync.
+    private static List<Dictionary<string, object>> GetMockCustomerData()
     {
-        var customers = new List<Dictionary<string, object>>
+        return new List<Dictionary<string, object>>
         {
             new() { ["id"] = "c001", ["number"] = "C001", ["displayName"] = "Acme d.o.o.",        ["city"] = "Beograd",   ["balance"] = 150000.00m, ["balanceDue"] = 45000.00m  },
             new() { ["id"] = "c002", ["number"] = "C002", ["displayName"] = "Delta Corp",         ["city"] = "Novi Sad",  ["balance"] = 280000.00m, ["balanceDue"] = 0m         },
@@ -54,6 +67,11 @@ public class MockBcHttpClient : IBcHttpClient
             new() { ["id"] = "c011", ["number"] = "C011", ["displayName"] = "Kappa Distribucija", ["city"] = "Zrenjanin", ["balance"] = 198000.00m, ["balanceDue"] = 0m         },
             new() { ["id"] = "c012", ["number"] = "C012", ["displayName"] = "Theta Komerc",       ["city"] = "Pančevo",   ["balance"] = 76000.00m,  ["balanceDue"] = 25000.00m  },
         };
+    }
+
+    private static BcCollectionResponse<T> CreateMockCustomers<T>(BcQueryOptions? options)
+    {
+        var customers = GetMockCustomerData();
 
         // Simple in-memory filter that mimics OData contains(displayName,'x') or contains(number,'x').
         // We extract the search term from the generated filter string rather than reimplementing OData parsing.
@@ -93,7 +111,7 @@ public class MockBcHttpClient : IBcHttpClient
 
     private static BcCollectionResponse<T> CreateMockSalesInvoices<T>(BcQueryOptions? options)
     {
-        var invoices = GetMockInvoiceData();
+        var invoices = ApplyInvoiceFilter(GetMockInvoiceData(), options?.Filter);
         var top = options?.Top ?? invoices.Count;
         var skip = options?.Skip ?? 0;
         var paged = invoices.Skip(skip).Take(top).ToList();
@@ -104,6 +122,25 @@ public class MockBcHttpClient : IBcHttpClient
             Value = typed,
             Count = options?.Count == true ? invoices.Count : null
         };
+    }
+
+    // Mimics OData "customerName eq 'X'" equality filter used by the customer detail view.
+    private static List<Dictionary<string, object>> ApplyInvoiceFilter(
+        List<Dictionary<string, object>> invoices, string? filter)
+    {
+        if (string.IsNullOrWhiteSpace(filter)) return invoices;
+
+        // Extract the term between the first pair of single quotes in the eq expression.
+        var firstQuote = filter.IndexOf('\'');
+        if (firstQuote < 0) return invoices;
+        var secondQuote = filter.IndexOf('\'', firstQuote + 1);
+        if (secondQuote < 0) return invoices;
+
+        var term = filter.Substring(firstQuote + 1, secondQuote - firstQuote - 1)
+            .Replace("''", "'");
+
+        return invoices.Where(i =>
+            string.Equals(i["customerName"].ToString(), term, StringComparison.OrdinalIgnoreCase)).ToList();
     }
 
     // Invoices spread across the last 6 months so the dashboard trend chart always

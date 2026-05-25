@@ -9,3 +9,7 @@ export function formatRsd(amount: number): string {
 export function totalPages(total: number, pageSize: number): number {
   return Math.max(1, Math.ceil(total / pageSize));
 }
+
+export function invoiceStatusKey(status: string): string {
+  return status === 'Paid' ? 'statusPaid' : 'statusOpen';
+}

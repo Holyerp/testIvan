@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useRequireAuth } from '@/lib/hooks/use-require-auth';
 import { useAuthStore } from '@/lib/stores/auth-store';
@@ -195,8 +196,16 @@ export default function CustomersPage() {
             ) : (
               items.map((c) => (
                 <tr key={c.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium text-pine-navy">{c.number}</td>
-                  <td className="px-4 py-3 text-gray-700">{c.displayName}</td>
+                  <td className="px-4 py-3 font-medium text-pine-navy">
+                    <Link href={`/customers/${c.id}`} className="hover:text-pine-green hover:underline">
+                      {c.number}
+                    </Link>
+                  </td>
+                  <td className="px-4 py-3 text-gray-700">
+                    <Link href={`/customers/${c.id}`} className="hover:text-pine-green hover:underline">
+                      {c.displayName}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3 text-gray-500">{c.city}</td>
                   <td className="px-4 py-3 text-right tabular-nums text-gray-700">
                     {formatRsd(c.balance)}

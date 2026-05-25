@@ -1,7 +1,7 @@
 # Phase 1 — Foundation & MVP
 
 **Duration:** TBD (estimated 4–6 weeks)
-**Status:** Planning
+**Status:** Complete
 **Target Completion:** TBD
 
 ---
@@ -47,7 +47,7 @@ Deliver a working authentication system, BC middleware connectivity, and the fir
 - Paginated customer table, search, sort
 
 ### US-005: Customers — Detail View (5 pts) — P0
-**Status:** Todo
+**Status:** Completed
 - Customer profile + invoice history
 
 ---
@@ -61,10 +61,10 @@ Deliver a working authentication system, BC middleware connectivity, and the fir
 - **Risk Level:** High (BC API connectivity unknown until T-002)
 
 ### Progress Tracking
-- **Completed Story Points:** 39 / 47 (83%)
-- **Completed Stories:** 6 / 7 (T-001, T-002, US-001, US-002, US-003, US-004)
-- **Tests Passing:** 6 backend (CustomerService) + 5 frontend (format helpers) added this story; suite green
-- **Code Coverage:** ≥ 80% on BC middleware, auth, and dashboard layers
+- **Completed Story Points:** 47 / 47 (100%)
+- **Completed Stories:** 5 / 5 user stories + 2 / 2 technical tasks (T-001, T-002, US-001, US-002, US-003, US-004, US-005)
+- **Tests Passing:** 3 backend (GetCustomerByIdAsync) + 3 frontend (invoiceStatusKey) added this story; full suite green (frontend 27/27)
+- **Code Coverage:** ≥ 80% on BC middleware, auth, dashboard, and customer layers
 
 ---
 
@@ -100,4 +100,4 @@ Deliver a working authentication system, BC middleware connectivity, and the fir
 ---
 
 **Created:** 2026-05-25
-**Phase Status:** Planning
+**Phase Status:** Complete (47/47 pts, 100%)
