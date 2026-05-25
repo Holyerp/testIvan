@@ -108,6 +108,27 @@
     "statusOpen": "Open",
     "statusPaid": "Paid"
   },
+  "salesDetail": {
+    "back": "Back to invoices",
+    "notFound": "Invoice not found",
+    "customer": "Customer",
+    "billTo": "Bill-to Address",
+    "postingDate": "Posting Date",
+    "dueDate": "Due Date",
+    "paymentTerms": "Payment Terms",
+    "overdue": "Overdue",
+    "lineItems": "Line Items",
+    "lineDescription": "Description",
+    "quantity": "Quantity",
+    "unitPrice": "Unit Price",
+    "vatPercent": "VAT %",
+    "lineTotal": "Line Total",
+    "noLines": "No line items",
+    "subtotal": "Subtotal",
+    "vat": "VAT",
+    "total": "Total",
+    "loadError": "Error loading invoice"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",
@@ -128,6 +149,7 @@
     "AUTH_INVALID_REFRESH_TOKEN": "Invalid session. Please sign in again.",
     "FORBIDDEN_INSUFFICIENT_ROLE": "You do not have permission to access this resource.",
     "NOT_FOUND_CUSTOMER": "Customer not found.",
+    "NOT_FOUND_SALES_INVOICE": "Invoice not found.",
     "INTERNAL_ERROR": "Server error. Please try again.",
     "GENERIC": "Something went wrong. Please try again."
   }

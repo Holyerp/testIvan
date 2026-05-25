@@ -12,5 +12,6 @@ public interface IBcHttpClient
     Task<T?> GetByIdAsync<T>(
         string entitySet,
         string id,
+        BcQueryOptions? options = null,
         CancellationToken cancellationToken = default);
 }

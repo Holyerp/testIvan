@@ -108,6 +108,27 @@
     "statusOpen": "Otvorena",
     "statusPaid": "Plaćena"
   },
+  "salesDetail": {
+    "back": "Nazad na fakture",
+    "notFound": "Faktura nije pronađena",
+    "customer": "Kupac",
+    "billTo": "Adresa za naplatu",
+    "postingDate": "Datum knjiženja",
+    "dueDate": "Valuta",
+    "paymentTerms": "Uslovi plaćanja",
+    "overdue": "Dospela",
+    "lineItems": "Stavke",
+    "lineDescription": "Opis",
+    "quantity": "Količina",
+    "unitPrice": "Jedinična cena",
+    "vatPercent": "PDV %",
+    "lineTotal": "Iznos stavke",
+    "noLines": "Nema stavki",
+    "subtotal": "Osnovica",
+    "vat": "PDV",
+    "total": "Ukupno",
+    "loadError": "Greška pri učitavanju fakture"
+  },
   "common": {
     "loading": "Učitavanje...",
     "error": "Greška",
@@ -128,6 +149,7 @@
     "AUTH_INVALID_REFRESH_TOKEN": "Sesija je nevažeća. Prijavite se ponovo.",
     "FORBIDDEN_INSUFFICIENT_ROLE": "Nemate dozvolu za pristup ovom resursu.",
     "NOT_FOUND_CUSTOMER": "Klijent nije pronađen.",
+    "NOT_FOUND_SALES_INVOICE": "Faktura nije pronađena.",
     "INTERNAL_ERROR": "Greška servera. Pokušajte ponovo.",
     "GENERIC": "Nešto je pošlo po krivu. Pokušajte ponovo."
   }

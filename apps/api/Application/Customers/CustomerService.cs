@@ -60,7 +60,7 @@ public class CustomerService : ICustomerService
         string id,
         CancellationToken cancellationToken = default)
     {
-        var customer = await _bc.GetByIdAsync<BcCustomer>("customers", id, cancellationToken);
+        var customer = await _bc.GetByIdAsync<BcCustomer>("customers", id, cancellationToken: cancellationToken);
         if (customer == null || string.IsNullOrEmpty(customer.Id)) return null;
 
         // Escape single quotes per OData string-literal rules to avoid filter injection.

@@ -92,4 +92,39 @@ public class MockBcHttpClientTests
         Assert.NotNull(result);
         Assert.NotEmpty(result.Value);
     }
+
+    [Fact]
+    public async Task GetByIdAsync_KnownSalesInvoiceId_ReturnsInvoiceWithLines()
+    {
+        var result = await _client.GetByIdAsync<Dictionary<string, JsonElement>>("salesInvoices", "inv001");
+
+        Assert.NotNull(result);
+        Assert.True(result!.ContainsKey("salesInvoiceLines"));
+        Assert.NotEqual(JsonValueKind.Null, result["salesInvoiceLines"].ValueKind);
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_UnknownSalesInvoiceId_ReturnsNull()
+    {
+        var result = await _client.GetByIdAsync<Dictionary<string, JsonElement>>("salesInvoices", "does-not-exist");
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_KnownPostedInvoiceId_ReturnsInvoice()
+    {
+        var result = await _client.GetByIdAsync<Dictionary<string, JsonElement>>("salesInvoicesPosted", "psi001");
+
+        Assert.NotNull(result);
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_WithExpandOption_StillReturnsInvoice()
+    {
+        var options = new BcQueryOptions { Expand = "salesInvoiceLines" };
+        var result = await _client.GetByIdAsync<Dictionary<string, JsonElement>>("salesInvoices", "inv001", options);
+
+        Assert.NotNull(result);
+    }
 }

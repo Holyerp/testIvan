@@ -5,6 +5,7 @@ import {
   invoiceStatusKey,
   isOverdue,
   statusBadgeClass,
+  computeInvoiceTotals,
 } from '@/lib/format';
 
 describe('formatRsd', () => {
@@ -58,6 +59,40 @@ describe('isOverdue', () => {
   });
   it('missing due date is not overdue', () => {
     expect(isOverdue('OPEN', '', today)).toBe(false);
+  });
+});
+
+describe('computeInvoiceTotals', () => {
+  it('sums line totals into subtotal and applies VAT per line', () => {
+    const result = computeInvoiceTotals([
+      { vatPercent: 20, lineTotal: 2000 },
+      { vatPercent: 20, lineTotal: 3000 },
+    ]);
+    expect(result.subtotal).toBe(5000);
+    expect(result.vatAmount).toBe(1000);
+    expect(result.total).toBe(6000);
+  });
+
+  it('handles mixed VAT rates', () => {
+    const result = computeInvoiceTotals([
+      { vatPercent: 20, lineTotal: 1000 },
+      { vatPercent: 10, lineTotal: 1000 },
+    ]);
+    expect(result.subtotal).toBe(2000);
+    expect(result.vatAmount).toBe(300);
+    expect(result.total).toBe(2300);
+  });
+
+  it('returns zeros for an empty line list', () => {
+    const result = computeInvoiceTotals([]);
+    expect(result.subtotal).toBe(0);
+    expect(result.vatAmount).toBe(0);
+    expect(result.total).toBe(0);
+  });
+
+  it('total always equals subtotal plus vat', () => {
+    const result = computeInvoiceTotals([{ vatPercent: 18, lineTotal: 1234.5 }]);
+    expect(result.total).toBeCloseTo(result.subtotal + result.vatAmount, 5);
   });
 });
 

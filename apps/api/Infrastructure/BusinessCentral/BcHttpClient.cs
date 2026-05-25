@@ -51,10 +51,12 @@ public class BcHttpClient : IBcHttpClient
     public async Task<T?> GetByIdAsync<T>(
         string entitySet,
         string id,
+        BcQueryOptions? options = null,
         CancellationToken cancellationToken = default)
     {
         var token = await _auth.GetAccessTokenAsync(cancellationToken);
-        var url = $"{_options.BaseUrl}/v2.0/{_options.TenantId}/{_options.CompanyId}/api/v2.0/{entitySet}({id})";
+        var qs = options?.ToQueryString() ?? string.Empty;
+        var url = $"{_options.BaseUrl}/v2.0/{_options.TenantId}/{_options.CompanyId}/api/v2.0/{entitySet}({id}){qs}";
 
         using var request = new HttpRequestMessage(HttpMethod.Get, url);
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);

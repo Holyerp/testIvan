@@ -17,15 +17,21 @@ public class SalesService : ISalesService
     // BC field names the BcListQuery allow-list validates against (first entry is the default).
     private static readonly string[] AllowedSortFields = { "postingDate", "dueDate", "totalAmountIncludingTax" };
 
+    // Navigation property expanded for the detail view to pull line items in one call.
+    private const string LinesExpand = "salesInvoiceLines";
+
     private readonly IBcHttpClient _bc;
     private readonly IBcMapper<BcSalesInvoice, SalesInvoiceListItemDto> _mapper;
+    private readonly IBcMapper<BcSalesInvoice, SalesInvoiceDetailDto> _detailMapper;
 
     public SalesService(
         IBcHttpClient bc,
-        IBcMapper<BcSalesInvoice, SalesInvoiceListItemDto> mapper)
+        IBcMapper<BcSalesInvoice, SalesInvoiceListItemDto> mapper,
+        IBcMapper<BcSalesInvoice, SalesInvoiceDetailDto> detailMapper)
     {
         _bc = bc;
         _mapper = mapper;
+        _detailMapper = detailMapper;
     }
 
     public async Task<PagedResultDto<SalesInvoiceListItemDto>> GetInvoicesAsync(
@@ -70,6 +76,20 @@ public class SalesService : ISalesService
             Page = effectivePage,
             PageSize = effectivePageSize,
         };
+    }
+
+    public async Task<SalesInvoiceDetailDto?> GetInvoiceByIdAsync(
+        string entitySet,
+        string id,
+        CancellationToken ct = default)
+    {
+        // $expand the line items so header + lines arrive in a single BC request.
+        var invoice = await _bc.GetByIdAsync<BcSalesInvoice>(
+            entitySet, id, new BcQueryOptions { Expand = LinesExpand }, ct);
+
+        if (invoice == null || string.IsNullOrEmpty(invoice.Id)) return null;
+
+        return _detailMapper.Map(invoice);
     }
 
     private static string? MapSortField(string? uiSortBy) => uiSortBy switch

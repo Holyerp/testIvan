@@ -15,4 +15,9 @@ public interface ISalesService
         string? fromDate,
         string? toDate,
         CancellationToken ct = default);
+
+    Task<SalesInvoiceDetailDto?> GetInvoiceByIdAsync(
+        string entitySet,
+        string id,
+        CancellationToken ct = default);
 }

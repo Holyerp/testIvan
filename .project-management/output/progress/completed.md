@@ -7,7 +7,7 @@
 
 **Phase 1 — Foundation & MVP: COMPLETE** (47 / 47 pts, 100% — 5 user stories + 2 technical tasks)
 
-**Phase 2 — Core Documents: IN PROGRESS** (10 / 52 pts, 19% — 1 user story + 1 technical task complete)
+**Phase 2 — Core Documents: IN PROGRESS** (15 / 52 pts, 29% — 2 user stories + 1 technical task complete)
 
 ---
 
@@ -114,6 +114,24 @@
 - `lib/format.ts`: pure `isOverdue(status, dueDate, today)` + `statusBadgeClass(status)`. `EntityTable` extended with optional `rowClassName` prop (backward-compatible; existing tests green).
 - API doc: `docs/api/sales.md` (query params, success example, 401/403/502, OPEN|PARTIAL|PAID enum). i18n: `sales` section + `nav.salesInvoices` (sr + en). Sidebar nav entry added.
 - Tests: backend +17 (SalesService ×12, SalesInvoiceMapper ×5 methods incl. theory); frontend +9 (isOverdue ×5, statusBadgeClass ×4). Combined: 87 backend + 50 frontend passing.
+
+### US-007: Sales Invoice — Detail View
+**Completed:** 2026-05-25
+**Phase:** 2 — Core Documents
+**Story Points:** 5
+**Commit:** See git log
+
+**Summary:**
+- Two BC-backed detail endpoints under `/api/v1/sales` (RequireFinancial — ADMIN/MANAGER/ACCOUNTING; WAREHOUSE 403): GET `/invoices/{id}`, GET `/posted-invoices/{id}`. Canonical envelope `{ success, data }`; 404 `NOT_FOUND_SALES_INVOICE` for unknown id; 502 `INTEGRATION_BC_UNAVAILABLE` on BC failure.
+- First use of BC `$expand` for line items. `IBcHttpClient.GetByIdAsync` extended with an optional `BcQueryOptions` param (models real BC `$expand=salesInvoiceLines`); both `BcHttpClient` (appends query string) and `MockBcHttpClient` updated; existing `customers` call site reconciled. The mock ignores the literal `$expand` string but always populates lines.
+- `SalesInvoiceDetailDto` (Header + Lines + Totals) + `BcSalesInvoiceLine`; `BcSalesInvoice` extended with `BillToAddress`, `PaymentTerms`, `SalesInvoiceLines` (list fields preserved — US-006 tests green).
+- `SalesInvoiceDetailMapper` (IBcMapper): reuses `SalesInvoiceMapper.NormalizeStatus` (DRY); computes totals from lines — subtotal = Σ lineAmount, vatAmount = Σ(lineAmount × vatPercent/100), total = subtotal + vatAmount.
+- `SalesService.GetInvoiceByIdAsync(entitySet, id)`: $expand lines, returns null when not found (→ 404). Detail mapper injected + registered in Program.cs.
+- MockBcHttpClient: `GetByIdAsync` for salesInvoices/salesInvoicesPosted/salesCreditMemos returns populated header (billToAddress, paymentTerms) + 3 realistic line items (VAT 20%) for known ids, null for unknown; clones the shared list source so it is never mutated. Customer GetByIdAsync behavior preserved.
+- Frontend `app/(protected)/sales/invoices/[id]/page.tsx` (SalesInvoiceDetailScreen): header card (number, customer, bill-to, dates, payment terms), status badge + overdue hint, line-items table (description/qty/unit price/VAT%/line total), right-aligned totals block; 404 "Invoice not found", loading skeleton, error banner, back link; RBAC guard.
+- `lib/format.ts`: pure `computeInvoiceTotals(lines)` helper (client-side reconciliation/fallback). i18n: `salesDetail` section + `errors.NOT_FOUND_SALES_INVOICE` (sr + en); reuses `sales.status.*`.
+- API doc: `docs/api/sales.md` detail endpoints (path param, success example with header/lines/totals, 401/403/404 NOT_FOUND_SALES_INVOICE/502).
+- Tests: backend +17 (SalesService detail ×7, SalesInvoiceDetailMapper ×6, MockBcHttpClient ×4); frontend +4 (computeInvoiceTotals). Combined: 104 backend + 54 frontend passing; lint clean.
 
 ---
 

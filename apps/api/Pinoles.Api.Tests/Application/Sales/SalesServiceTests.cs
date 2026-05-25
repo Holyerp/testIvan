@@ -11,7 +11,7 @@ public class SalesServiceTests
     private static SalesService CreateService()
     {
         var bc = new MockBcHttpClient(NullLogger<MockBcHttpClient>.Instance);
-        return new SalesService(bc, new SalesInvoiceMapper());
+        return new SalesService(bc, new SalesInvoiceMapper(), new SalesInvoiceDetailMapper());
     }
 
     [Fact]
@@ -127,5 +127,68 @@ public class SalesServiceTests
         Assert.False(string.IsNullOrEmpty(first.CustomerName));
         Assert.False(string.IsNullOrEmpty(first.PostingDate));
         Assert.False(string.IsNullOrEmpty(first.DueDate));
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_KnownId_ReturnsDetailWithLines()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("salesInvoices", "inv001");
+        Assert.NotNull(detail);
+        Assert.Equal("SI-001", detail!.Header.Number);
+        Assert.False(string.IsNullOrEmpty(detail.Header.CustomerName));
+        Assert.NotEmpty(detail.Lines);
+        Assert.All(detail.Lines, l => Assert.False(string.IsNullOrEmpty(l.Description)));
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_UnknownId_ReturnsNull()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("salesInvoices", "does-not-exist");
+        Assert.Null(detail);
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_ComputesTotals()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("salesInvoices", "inv001");
+        Assert.NotNull(detail);
+        var totals = detail!.Totals;
+        Assert.True(totals.Subtotal > 0);
+        Assert.True(totals.VatAmount > 0);
+        Assert.True(totals.Total > 0);
+        Assert.Equal(totals.Subtotal + totals.VatAmount, totals.Total);
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_SubtotalEqualsSumOfLineTotals()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("salesInvoices", "inv002");
+        Assert.NotNull(detail);
+        var expectedSubtotal = detail!.Lines.Sum(l => l.LineTotal);
+        Assert.Equal(expectedSubtotal, detail.Totals.Subtotal);
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_NormalizesStatusToWireValue()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("salesInvoices", "inv001");
+        Assert.NotNull(detail);
+        Assert.Contains(detail!.Header.Status, new[] { "OPEN", "PARTIAL", "PAID" });
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_PostedInvoices_KnownId_ReturnsDetail()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("salesInvoicesPosted", "psi001");
+        Assert.NotNull(detail);
+        Assert.Equal("PSI-001", detail!.Header.Number);
+        Assert.NotEmpty(detail.Lines);
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_PostedInvoices_UnknownId_ReturnsNull()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("salesInvoicesPosted", "inv001");
+        Assert.Null(detail);
     }
 }

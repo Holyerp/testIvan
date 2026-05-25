@@ -30,24 +30,69 @@ public class MockBcHttpClient : IBcHttpClient
         return Task.FromResult(result);
     }
 
+    // Mock ignores the actual $expand string in `options` but always populates line
+    // items for the sales-invoice family, mimicking a BC GET with $expand=salesInvoiceLines.
     public Task<T?> GetByIdAsync<T>(
         string entitySet,
         string id,
+        BcQueryOptions? options = null,
         CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("MOCK BC GET {EntitySet}({Id})", entitySet, id);
 
-        if (entitySet == "customers")
+        var match = entitySet switch
         {
-            var match = GetMockCustomerData().FirstOrDefault(c => (string)c["id"] == id);
-            if (match == null) return Task.FromResult<T?>(default);
+            "customers"           => GetMockCustomerData().FirstOrDefault(c => (string)c["id"] == id),
+            "salesInvoices"       => FindInvoiceWithLines(GetMockInvoiceData(), id),
+            "salesInvoicesPosted" => FindInvoiceWithLines(GetMockPostedInvoiceData(), id),
+            "salesCreditMemos"    => FindInvoiceWithLines(GetMockCreditMemoData(), id),
+            _                     => null,
+        };
 
-            var json = JsonSerializer.Serialize(match);
-            var typed = JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            return Task.FromResult(typed);
-        }
+        if (match == null) return Task.FromResult<T?>(default);
 
-        return Task.FromResult<T?>(default);
+        var json = JsonSerializer.Serialize(match);
+        var typed = JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        return Task.FromResult(typed);
+    }
+
+    // Find an invoice in the given list-view source by id and attach mock line items
+    // so the detail mapper can compute non-trivial totals. Returns null for unknown ids.
+    private static Dictionary<string, object>? FindInvoiceWithLines(
+        List<Dictionary<string, object>> source, string id)
+    {
+        var match = source.FirstOrDefault(i => (string)i["id"] == id);
+        if (match == null) return null;
+
+        // Clone so the shared mock list-view source is never mutated across calls.
+        var record = new Dictionary<string, object>(match)
+        {
+            ["billToAddress"] = $"{match["customerName"]}, Bulevar Oslobođenja 12, Beograd",
+            ["paymentTerms"] = "30 dana",
+            ["salesInvoiceLines"] = GetMockInvoiceLines(id),
+        };
+        return record;
+    }
+
+    // 2–4 realistic line items per invoice; VAT 20%. The set varies by id so different
+    // invoices produce different (non-trivial) totals.
+    private static List<Dictionary<string, object>> GetMockInvoiceLines(string id)
+    {
+        Dictionary<string, object> Line(string description, decimal qty, decimal unitPrice, decimal vat) => new()
+        {
+            ["description"] = description,
+            ["quantity"] = qty,
+            ["unitPrice"] = unitPrice,
+            ["vatPercent"] = vat,
+            ["lineAmount"] = qty * unitPrice,
+        };
+
+        return new List<Dictionary<string, object>>
+        {
+            Line("Konsultantske usluge", 10m, 5000.00m, 20m),
+            Line("Licenca softvera (godišnja)", 1m, 18000.00m, 20m),
+            Line("Implementacija i podešavanje", 4m, 3500.00m, 20m),
+        };
     }
 
     // Single source of truth for mock customer records — used by both

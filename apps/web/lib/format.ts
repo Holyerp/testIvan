@@ -24,6 +24,30 @@ export function isOverdue(status: string, dueDate: string, today: string): boole
   return dueDate < today;
 }
 
+/** A sales-invoice line as rendered on the detail screen. */
+export interface InvoiceLine {
+  vatPercent: number;
+  lineTotal: number;
+}
+
+/** Computed invoice totals (subtotal excl. VAT, VAT amount, grand total). */
+export interface InvoiceTotals {
+  subtotal: number;
+  vatAmount: number;
+  total: number;
+}
+
+/**
+ * Derive invoice totals from its line items (subtotal = Σ lineTotal,
+ * vatAmount = Σ lineTotal × vatPercent / 100, total = subtotal + vatAmount).
+ * Pure function — mirrors the backend computation so the UI can reconcile / fall back.
+ */
+export function computeInvoiceTotals(lines: InvoiceLine[]): InvoiceTotals {
+  const subtotal = lines.reduce((sum, l) => sum + l.lineTotal, 0);
+  const vatAmount = lines.reduce((sum, l) => sum + (l.lineTotal * l.vatPercent) / 100, 0);
+  return { subtotal, vatAmount, total: subtotal + vatAmount };
+}
+
 /** Tailwind classes for the status badge, keyed by the SCREAMING_SNAKE wire value. */
 export function statusBadgeClass(status: string): string {
   switch (status) {
