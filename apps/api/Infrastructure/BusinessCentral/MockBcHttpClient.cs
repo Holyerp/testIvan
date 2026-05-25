@@ -32,6 +32,7 @@ public class MockBcHttpClient : IBcHttpClient
             "purchaseAdvanceInvoices" => CreateMockDocumentCollection<T>(GetMockPurchaseAdvanceInvoiceData(), options, "vendorName"),
             "creditDocuments"     => CreateMockDocumentCollection<T>(GetMockCreditDocumentData(), options, "partyName"),
             "vendors"             => CreateMockVendors<T>(options),
+            "items"               => CreateMockItems<T>(options),
             _                     => new BcCollectionResponse<T>()
         };
         return Task.FromResult(result);
@@ -700,6 +701,133 @@ public class MockBcHttpClient : IBcHttpClient
                 ? vendors.OrderByDescending(v => (decimal)v["balance"])
                 : vendors.OrderBy(v => (decimal)v["balance"])).ToList(),
             _ => vendors,
+        };
+    }
+
+    // ----- Warehouse items (US-017) -----
+    // First WAREHOUSE-module mock collection. Each item carries the stock fields the
+    // item list renders: number, description, category, location, unit of measure,
+    // quantity on hand, minimum stock, unit cost, unit price. Several items sit below
+    // their minimum stock (qtyOnHand < minimumStock) so the low-stock badge has data.
+    private static Dictionary<string, object> Item(
+        string id, string number, string description, string category, string location,
+        string uom, decimal qtyOnHand, decimal minimumStock, decimal unitCost, decimal unitPrice) => new()
+    {
+        ["id"] = id,
+        ["number"] = number,
+        ["description"] = description,
+        ["category"] = category,
+        ["location"] = location,
+        ["unitOfMeasure"] = uom,
+        ["quantityOnHand"] = qtyOnHand,
+        ["minimumStock"] = minimumStock,
+        ["unitCost"] = unitCost,
+        ["unitPrice"] = unitPrice,
+    };
+
+    private static List<Dictionary<string, object>> GetMockItemData()
+    {
+        return new List<Dictionary<string, object>>
+        {
+            Item("itm001", "ITM-001", "Cement 25kg",          "GRAĐEVINA", "MAGACIN-1", "KG",  120m, 50m,  650.00m,   780.00m),
+            Item("itm002", "ITM-002", "Čelična šipka 12mm",   "GRAĐEVINA", "MAGACIN-1", "M",   30m,  100m, 320.00m,   410.00m),  // low stock
+            Item("itm003", "ITM-003", "Crep keramički",        "GRAĐEVINA", "MAGACIN-2", "KOM", 4500m, 2000m, 95.00m,  130.00m),
+            Item("itm004", "ITM-004", "Blok opeka",            "GRAĐEVINA", "MAGACIN-2", "KOM", 800m, 1000m, 48.00m,   62.00m),  // low stock
+            Item("itm005", "ITM-005", "Bušilica udarna 800W",  "ALATI",     "MAGACIN-1", "KOM", 15m,  8m,   8900.00m,  11500.00m),
+            Item("itm006", "ITM-006", "Brusilica ugaona 125mm","ALATI",     "MAGACIN-1", "KOM", 5m,   10m,  6200.00m,  7900.00m), // low stock
+            Item("itm007", "ITM-007", "Set odvijača 32 dela",  "ALATI",     "MAGACIN-2", "KOM", 42m,  20m,  2400.00m,  3100.00m),
+            Item("itm008", "ITM-008", "Lepak za pločice 25kg",  "GRAĐEVINA", "MAGACIN-1", "KG",  210m, 80m,  540.00m,   690.00m),
+            Item("itm009", "ITM-009", "Izolaciona traka",       "ELEKTRO",   "MAGACIN-2", "KOM", 6m,   25m,  120.00m,   180.00m), // low stock
+            Item("itm010", "ITM-010", "Kabl PP-Y 3x1.5",        "ELEKTRO",   "MAGACIN-2", "M",   1200m, 500m, 85.00m,   115.00m),
+            Item("itm011", "ITM-011", "Prekidač jednopolni",    "ELEKTRO",   "MAGACIN-1", "KOM", 340m, 100m,  150.00m,  210.00m),
+            Item("itm012", "ITM-012", "Boja za zidove 15L",     "FARBE",     "MAGACIN-1", "KOM", 60m,  30m,  1850.00m,  2400.00m),
+        };
+    }
+
+    // Build the items collection: in-memory contains-search on number/description plus
+    // category/location equality filters, then $orderby, then Skip/Top — mirroring what
+    // a real BC OData call would return for ItemService's query.
+    private static BcCollectionResponse<T> CreateMockItems<T>(BcQueryOptions? options)
+    {
+        var items = ApplyItemFilter(GetMockItemData(), options?.Filter);
+        var sorted = ApplyItemSort(items, options?.OrderBy);
+
+        var top = options?.Top ?? sorted.Count;
+        var skip = options?.Skip ?? 0;
+        var paged = sorted.Skip(skip).Take(top).ToList();
+        var json = JsonSerializer.Serialize(paged);
+        var typed = JsonSerializer.Deserialize<List<T>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+        return new BcCollectionResponse<T>
+        {
+            Value = typed,
+            Count = options?.Count == true ? sorted.Count : null
+        };
+    }
+
+    // Honor the filter shapes ItemService produces:
+    //  - contains(number,'t') or contains(description,'t')   (list search)
+    //  - category eq 'X'                                      (category filter)
+    //  - location eq 'X'                                      (location filter)
+    // Predicates are ANDed when several are present (search + category + location).
+    private static List<Dictionary<string, object>> ApplyItemFilter(
+        List<Dictionary<string, object>> items, string? filter)
+    {
+        if (string.IsNullOrWhiteSpace(filter)) return items;
+
+        var result = items;
+
+        if (filter.Contains("contains("))
+        {
+            var term = ExtractQuoted(filter, "contains(");
+            if (!string.IsNullOrWhiteSpace(term))
+                result = result.Where(i =>
+                    i["number"].ToString()!.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                    i["description"].ToString()!.Contains(term, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        if (filter.Contains("category eq '"))
+        {
+            var category = ExtractQuoted(filter, "category eq '");
+            if (category != null)
+                result = result.Where(i =>
+                    string.Equals(i["category"].ToString(), category, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        if (filter.Contains("location eq '"))
+        {
+            var location = ExtractQuoted(filter, "location eq '");
+            if (location != null)
+                result = result.Where(i =>
+                    string.Equals(i["location"].ToString(), location, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        return result;
+    }
+
+    // Order the item list by the OData $orderby clause. Only the allow-listed BC fields
+    // ItemService emits (description / quantityOnHand / unitCost) are handled; anything
+    // else leaves the source order untouched.
+    private static List<Dictionary<string, object>> ApplyItemSort(
+        List<Dictionary<string, object>> items, string? orderBy)
+    {
+        if (string.IsNullOrWhiteSpace(orderBy)) return items;
+
+        var parts = orderBy.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var field = parts.Length > 0 ? parts[0] : null;
+        var descending = parts.Length > 1 && string.Equals(parts[1], "desc", StringComparison.OrdinalIgnoreCase);
+
+        return field switch
+        {
+            "description" => (descending
+                ? items.OrderByDescending(i => i["description"].ToString(), StringComparer.OrdinalIgnoreCase)
+                : items.OrderBy(i => i["description"].ToString(), StringComparer.OrdinalIgnoreCase)).ToList(),
+            "quantityOnHand" => (descending
+                ? items.OrderByDescending(i => (decimal)i["quantityOnHand"])
+                : items.OrderBy(i => (decimal)i["quantityOnHand"])).ToList(),
+            "unitCost" => (descending
+                ? items.OrderByDescending(i => (decimal)i["unitCost"])
+                : items.OrderBy(i => (decimal)i["unitCost"])).ToList(),
+            _ => items,
         };
     }
 }

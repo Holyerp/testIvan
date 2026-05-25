@@ -183,6 +183,27 @@
     "next": "Next",
     "pageOf": "Page {page} of {total}"
   },
+  "items": {
+    "title": "Items",
+    "subtitle": "Items and stock levels overview",
+    "search": "Search by number or description...",
+    "number": "Number",
+    "description": "Description",
+    "unit": "Unit",
+    "quantityOnHand": "Qty on Hand",
+    "unitCost": "Unit Cost",
+    "lowStock": "Low stock",
+    "category": "Category",
+    "location": "Location",
+    "filterCategory": "Category",
+    "filterLocation": "Location",
+    "filterAll": "All",
+    "noResults": "No items found",
+    "loadError": "Error loading items",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}"
+  },
   "vendorDetail": {
     "back": "Back to vendors",
     "notFound": "Vendor not found",

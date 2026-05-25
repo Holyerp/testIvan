@@ -35,13 +35,15 @@ describe('Sidebar', () => {
     expect(screen.getByText('Vendors')).toBeDefined();
     expect(screen.getByText('Sales Invoices')).toBeDefined();
     expect(screen.getByText('Purchase Invoices')).toBeDefined();
+    expect(screen.getByText('Items')).toBeDefined();
   });
 
-  it('shows only Dashboard for a WAREHOUSE user', () => {
+  it('shows Dashboard and Items (warehouse) but no financial items for a WAREHOUSE user', () => {
     setUser({ id: '2', username: 'wh', role: 'WAREHOUSE' });
     render(<Sidebar />);
 
     expect(screen.getByText('Dashboard')).toBeDefined();
+    expect(screen.getByText('Items')).toBeDefined();
     expect(screen.queryByText('Customers')).toBeNull();
     expect(screen.queryByText('Vendors')).toBeNull();
     expect(screen.queryByText('Sales Invoices')).toBeNull();

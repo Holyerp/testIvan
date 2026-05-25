@@ -8,6 +8,7 @@ import {
   creditMemoStatusBadgeClass,
   creditDocumentTypeBadgeClass,
   computeInvoiceTotals,
+  lowStockRowClass,
 } from '@/lib/format';
 
 describe('formatRsd', () => {
@@ -137,5 +138,14 @@ describe('creditDocumentTypeBadgeClass', () => {
   });
   it('unknown defaults to gray', () => {
     expect(creditDocumentTypeBadgeClass('WHATEVER')).toContain('gray');
+  });
+});
+
+describe('lowStockRowClass', () => {
+  it('returns an amber tint when low stock', () => {
+    expect(lowStockRowClass(true)).toContain('amber');
+  });
+  it('returns no extra classes when not low stock', () => {
+    expect(lowStockRowClass(false)).toBe('');
   });
 });

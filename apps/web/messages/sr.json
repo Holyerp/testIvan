@@ -183,6 +183,27 @@
     "next": "Sledeća",
     "pageOf": "Strana {page} od {total}"
   },
+  "items": {
+    "title": "Artikli",
+    "subtitle": "Pregled artikala i stanja zaliha",
+    "search": "Pretraga po broju ili opisu...",
+    "number": "Broj",
+    "description": "Opis",
+    "unit": "JM",
+    "quantityOnHand": "Stanje zaliha",
+    "unitCost": "Nabavna cena",
+    "lowStock": "Niske zalihe",
+    "category": "Kategorija",
+    "location": "Lokacija",
+    "filterCategory": "Kategorija",
+    "filterLocation": "Lokacija",
+    "filterAll": "Sve",
+    "noResults": "Nema pronađenih artikala",
+    "loadError": "Greška pri učitavanju artikala",
+    "previous": "Prethodna",
+    "next": "Sledeća",
+    "pageOf": "Strana {page} od {total}"
+  },
   "vendorDetail": {
     "back": "Nazad na dobavljače",
     "notFound": "Dobavljač nije pronađen",

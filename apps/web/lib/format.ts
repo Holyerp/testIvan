@@ -48,6 +48,15 @@ export function computeInvoiceTotals(lines: InvoiceLine[]): InvoiceTotals {
   return { subtotal, vatAmount, total: subtotal + vatAmount };
 }
 
+/**
+ * Tailwind classes for the warehouse low-stock row highlight (US-017). Items whose
+ * quantity on hand is below their minimum stock get an amber tint; everything else
+ * gets no extra row classes. Pure function — extracted so it can be unit-tested.
+ */
+export function lowStockRowClass(isLowStock: boolean): string {
+  return isLowStock ? 'bg-amber-50' : '';
+}
+
 /** Tailwind classes for the status badge, keyed by the SCREAMING_SNAKE wire value. */
 export function statusBadgeClass(status: string): string {
   switch (status) {

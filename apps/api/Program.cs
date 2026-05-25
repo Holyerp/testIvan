@@ -8,6 +8,7 @@ using Pinoles.Api.Application.Customers;
 using Pinoles.Api.Application.Dashboard;
 using Pinoles.Api.Application.DTOs;
 using Pinoles.Api.Application.Interfaces;
+using Pinoles.Api.Application.Items;
 using Pinoles.Api.Application.Mapping;
 using Pinoles.Api.Application.Purchase;
 using Pinoles.Api.Application.Sales;
@@ -151,6 +152,7 @@ try
     builder.Services.AddSingleton<IBcMapper<BcPurchaseInvoice, PurchaseAdvanceInvoiceDetailDto>, PurchaseAdvanceInvoiceDetailMapper>();
     builder.Services.AddSingleton<IBcMapper<BcCreditDocument, CreditDocumentListItemDto>, CreditDocumentMapper>();
     builder.Services.AddSingleton<IBcMapper<BcCreditDocument, CreditDocumentDetailDto>, CreditDocumentDetailMapper>();
+    builder.Services.AddSingleton<IBcMapper<BcItem, ItemListItemDto>, ItemMapper>();
 
     // Customer service
     builder.Services.AddScoped<ICustomerService, CustomerService>();
@@ -166,6 +168,9 @@ try
 
     // Credit-document service (US-016) — unified credit memos / debit memos / storno
     builder.Services.AddScoped<ICreditDocumentService, CreditDocumentService>();
+
+    // Item service (US-017) — first WAREHOUSE-module list service
+    builder.Services.AddScoped<IItemService, ItemService>();
 
     // Search service — aggregates the four list services above (RBAC-gated)
     builder.Services.AddScoped<ISearchService, SearchService>();
@@ -197,6 +202,7 @@ try
     app.MapPurchaseEndpoints();
     app.MapVendorsEndpoints();
     app.MapCreditDocumentsEndpoints();
+    app.MapItemsEndpoints();
     app.MapSearchEndpoints();
 
     // Health check
