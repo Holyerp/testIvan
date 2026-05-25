@@ -8,20 +8,28 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: pushMock }),
 }));
 
-vi.mock('@/lib/stores/auth-store', () => ({
-  useAuthStore: vi.fn(),
-}));
+vi.mock('@/lib/stores/auth-store', () => {
+  const fn = vi.fn() as unknown as ReturnType<typeof vi.fn> & { getState: ReturnType<typeof vi.fn> };
+  fn.getState = vi.fn();
+  return { useAuthStore: fn };
+});
 
 import { useAuthStore } from '@/lib/stores/auth-store';
 
 const initFromSession = vi.fn();
 
 function setStore(state: { isAuthenticated: boolean; user: AuthUser | null }) {
-  vi.mocked(useAuthStore).mockReturnValue({
+  const value = {
     isAuthenticated: state.isAuthenticated,
     user: state.user,
     initFromSession,
-  } as unknown as ReturnType<typeof useAuthStore>);
+  };
+  // The hook reads render-time state via useAuthStore() (for its return value)
+  // and the fresh state via useAuthStore.getState() (for the redirect decision).
+  vi.mocked(useAuthStore).mockReturnValue(value as unknown as ReturnType<typeof useAuthStore>);
+  (useAuthStore as unknown as { getState: ReturnType<typeof vi.fn> }).getState.mockReturnValue(
+    value as unknown as ReturnType<typeof useAuthStore.getState>,
+  );
 }
 
 describe('useRequireAuth', () => {

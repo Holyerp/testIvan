@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/lib/stores/auth-store';
 
 const loginSchema = z.object({
   username: z.string().min(1, 'Korisničko ime je obavezno'),
@@ -53,6 +54,7 @@ export default function LoginPage() {
         sessionStorage.setItem('access_token', json.data.accessToken);
         sessionStorage.setItem('token_expires_at', json.data.expiresAt);
         sessionStorage.setItem('user', JSON.stringify(json.data.user));
+        useAuthStore.getState().setAuth(json.data.accessToken, json.data.expiresAt, json.data.user);
         router.push('/dashboard');
       }
     } catch {
