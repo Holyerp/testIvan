@@ -547,6 +547,32 @@
       "notFound": "User not found."
     }
   },
+  "auditLog": {
+    "title": "Audit Log",
+    "subtitle": "Security and administrative activity across the portal",
+    "timestamp": "Timestamp",
+    "user": "User",
+    "action": "Action",
+    "categoryColumn": "Category",
+    "entityType": "Entity Type",
+    "entityId": "Entity ID",
+    "filterCategory": "Category",
+    "filterUser": "Search by user",
+    "dateRange": "Date range",
+    "all": "All",
+    "exportExcel": "Export to Excel",
+    "noResults": "No audit entries found",
+    "loadError": "Error loading audit log",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}",
+    "category": {
+      "LOGIN": "Login",
+      "VIEW": "View",
+      "EXPORT": "Export",
+      "ADMIN": "Admin"
+    }
+  },
   "settings": {
     "title": "Settings",
     "subtitle": "View the Business Central connection configuration",

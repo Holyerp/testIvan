@@ -84,6 +84,9 @@ try
     // Admin user-management service (US-021) — first WRITE-ops service (local users table only)
     builder.Services.AddScoped<IUserAdminService, UserAdminService>();
 
+    // Audit-log view service (US-023) — read-only paginated view over the local audit_logs table
+    builder.Services.AddScoped<IAuditLogService, AuditLogService>();
+
     // JWT Bearer authentication
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
@@ -230,6 +233,7 @@ try
     app.MapAuthEndpoints();
     app.MapUsersEndpoints();
     app.MapAdminUsersEndpoints();
+    app.MapAuditLogEndpoints();
     app.MapDashboardEndpoints();
     app.MapCustomersEndpoints();
     app.MapSalesEndpoints();

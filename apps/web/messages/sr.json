@@ -547,6 +547,32 @@
       "notFound": "Korisnik nije pronađen."
     }
   },
+  "auditLog": {
+    "title": "Dnevnik aktivnosti",
+    "subtitle": "Bezbednosne i administrativne aktivnosti na portalu",
+    "timestamp": "Vreme",
+    "user": "Korisnik",
+    "action": "Akcija",
+    "categoryColumn": "Kategorija",
+    "entityType": "Tip entiteta",
+    "entityId": "ID entiteta",
+    "filterCategory": "Kategorija",
+    "filterUser": "Pretraga po korisniku",
+    "dateRange": "Period",
+    "all": "Sve",
+    "exportExcel": "Izvoz u Excel",
+    "noResults": "Nema zapisa u dnevniku",
+    "loadError": "Greška pri učitavanju dnevnika",
+    "previous": "Prethodna",
+    "next": "Sledeća",
+    "pageOf": "Strana {page} od {total}",
+    "category": {
+      "LOGIN": "Prijava",
+      "VIEW": "Pregled",
+      "EXPORT": "Izvoz",
+      "ADMIN": "Administracija"
+    }
+  },
   "settings": {
     "title": "Podešavanja",
     "subtitle": "Pregled konfiguracije veze sa Business Central sistemom",

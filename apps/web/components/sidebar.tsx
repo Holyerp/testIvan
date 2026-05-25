@@ -26,6 +26,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/inventory', label: 'Inventory', module: 'warehouse' },
   { href: '/analytics', label: 'Analytics', module: 'financial' },
   { href: '/admin/users', label: 'User Management', module: 'admin' },
+  { href: '/admin/audit-log', label: 'Audit Log', module: 'admin' },
   { href: '/settings', label: 'Settings', module: 'admin' },
 ];
 
