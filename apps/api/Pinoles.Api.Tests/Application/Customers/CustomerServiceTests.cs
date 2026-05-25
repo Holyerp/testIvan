@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using Pinoles.Api.Application.Customers;
+using Pinoles.Api.Application.Mapping;
 using Pinoles.Api.Infrastructure.BusinessCentral;
 using Xunit;
 
@@ -10,7 +11,7 @@ public class CustomerServiceTests
     private static CustomerService CreateService()
     {
         var bc = new MockBcHttpClient(NullLogger<MockBcHttpClient>.Instance);
-        return new CustomerService(bc);
+        return new CustomerService(bc, new CustomerMapper());
     }
 
     [Fact]

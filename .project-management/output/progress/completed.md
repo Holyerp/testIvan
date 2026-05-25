@@ -7,6 +7,8 @@
 
 **Phase 1 — Foundation & MVP: COMPLETE** (47 / 47 pts, 100% — 5 user stories + 2 technical tasks)
 
+**Phase 2 — Core Documents: IN PROGRESS** (5 / 52 pts, 10% — 1 technical task complete)
+
 ---
 
 ## Completed Stories
@@ -132,3 +134,21 @@
 - EF Core entities: User, RefreshToken, AuditLog with PinolesDbContext
 - InitialCreate migration (manually crafted — dotnet ef not installed)
 - 10 unit tests (MockBcHttpClient ×7, BcQueryOptions ×3, MemoryCacheService ×4 — see Tests/Infrastructure/)
+
+### T-003: Document List Infrastructure
+**Completed:** 2026-05-25
+**Phase:** 2 — Core Documents
+**Story Points:** 5
+**Commit:** See git log
+
+**Summary:**
+- Shared frontend list/detail foundation so US-006–US-013 do not reinvent tables, pagination, filtering, and BC mapping.
+- `components/entity-table.tsx` — generic `EntityTable<T>`: controlled sort + pagination, skeleton/empty/error states, optional row click, right-aligned numeric columns, Pinoles palette. Purely presentational (no fetching).
+- `components/filter-panel.tsx` — generic `FilterPanel` supporting search (internally debounced ~400ms), select, dateRange, amountRange fields via a small config.
+- `lib/hooks/use-paginated-query.ts` — `usePaginatedQuery<T>` encapsulating the list-fetch pattern (page/sort/filter state, Bearer token from auth store, canonical envelope, totalPages from lib/format). Built on useState/useEffect to match Phase 1 (no new dependency added).
+- `lib/query.ts` — pure `buildListQueryString()` helper (extracted for unit testing the query-string building).
+- Customers list page refactored onto EntityTable + FilterPanel + usePaginatedQuery (DRY proof) — all existing behavior preserved (debounced search, sort by number/name, pagination, row→detail, RBAC guard).
+- Backend BC mapper pattern: `Application/Mapping/IBcMapper<TSource,TTarget>` + reference `CustomerMapper` (BcCustomer → CustomerListItemDto), injected into CustomerService and registered in Program.cs.
+- `Application/Common/BcListQuery` — shared static helper building BcQueryOptions (page/pageSize clamping, sort allow-list, OData filter via injected builder, single-quote escaping); CustomerService now uses it.
+- Tests: backend +11 (CustomerMapper ×3, BcListQuery ×8); frontend +14 (EntityTable ×9, buildListQueryString ×5). Existing CustomerServiceTests updated for new constructor and still green.
+- Combined suites: 66 backend + 41 frontend passing; lint clean.

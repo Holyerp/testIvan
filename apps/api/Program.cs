@@ -5,7 +5,9 @@ using Microsoft.IdentityModel.Tokens;
 using Pinoles.Api.Application.Auth;
 using Pinoles.Api.Application.Customers;
 using Pinoles.Api.Application.Dashboard;
+using Pinoles.Api.Application.DTOs;
 using Pinoles.Api.Application.Interfaces;
+using Pinoles.Api.Application.Mapping;
 using Pinoles.Api.Domain.Constants;
 using Pinoles.Api.Infrastructure.Auth;
 using Pinoles.Api.Infrastructure.BusinessCentral;
@@ -130,6 +132,9 @@ try
 
     // Dashboard service
     builder.Services.AddScoped<IDashboardService, DashboardService>();
+
+    // BC mappers
+    builder.Services.AddSingleton<IBcMapper<BcCustomer, CustomerListItemDto>, CustomerMapper>();
 
     // Customer service
     builder.Services.AddScoped<ICustomerService, CustomerService>();

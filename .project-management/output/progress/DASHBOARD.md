@@ -2,13 +2,14 @@
 
 **Project:** Pinoles — Internal Business Portal
 **Initialized:** 2026-05-25
-**Status:** Phase 1 complete — ready for Phase 2
+**Status:** Phase 2 in progress
 
 ---
 
 ## Currently Working On
 
-Phase 1 complete ✅ — ready for Phase 2 (no active story)
+**US-006: Sales Invoices — List View** (5 pts) — Phase 2
+⏭️ Next up (T-003 infrastructure complete)
 
 ---
 
@@ -17,10 +18,10 @@ Phase 1 complete ✅ — ready for Phase 2 (no active story)
 | Phase | Status | Points | Progress |
 |-------|--------|--------|----------|
 | Phase 1 — Foundation | ✅ Complete | 47 / 47 | 100% |
-| Phase 2 — Core Documents | ⏸️ Pending | 0 / 52 | 0% |
+| Phase 2 — Core Documents | 🔄 In Progress | 5 / 52 | 10% |
 | Phase 3 — Extended Modules | ⏸️ Pending | 0 / 42 | 0% |
 | Phase 4 — Analytics & Polish | ⏸️ Pending | 0 / 27 | 0% |
-| **TOTAL** | | **47 / 168** | **28%** |
+| **TOTAL** | | **52 / 168** | **31%** |
 
 ---
 
@@ -28,10 +29,10 @@ Phase 1 complete ✅ — ready for Phase 2 (no active story)
 
 | Metric | Current | Target |
 |--------|---------|--------|
-| Test coverage | ≥ 80% (BC + auth + RBAC + customer layers) | ≥ 80% |
+| Test coverage | ≥ 80% (BC + auth + RBAC + customer + shared list layers) | ≥ 80% |
 | Stories completed | 5 / 23 | 23 |
-| Technical tasks | 2 / 5 | 5 |
-| Tests passing | 57 | — |
+| Technical tasks | 3 / 5 | 5 |
+| Tests passing | 107 (66 backend + 41 frontend) | — |
 
 ---
 
