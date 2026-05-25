@@ -9,6 +9,8 @@ import {
   creditDocumentTypeBadgeClass,
   computeInvoiceTotals,
   lowStockRowClass,
+  ledgerTypeKey,
+  formatSignedQuantity,
 } from '@/lib/format';
 
 describe('formatRsd', () => {
@@ -147,5 +149,29 @@ describe('lowStockRowClass', () => {
   });
   it('returns no extra classes when not low stock', () => {
     expect(lowStockRowClass(false)).toBe('');
+  });
+});
+
+describe('ledgerTypeKey', () => {
+  it('passes known wire values through', () => {
+    expect(ledgerTypeKey('PURCHASE')).toBe('PURCHASE');
+    expect(ledgerTypeKey('SALE')).toBe('SALE');
+    expect(ledgerTypeKey('TRANSFER')).toBe('TRANSFER');
+    expect(ledgerTypeKey('ADJUSTMENT')).toBe('ADJUSTMENT');
+  });
+  it('falls back to ADJUSTMENT for unknown values', () => {
+    expect(ledgerTypeKey('WHATEVER')).toBe('ADJUSTMENT');
+  });
+});
+
+describe('formatSignedQuantity', () => {
+  it('prefixes positive quantities with +', () => {
+    expect(formatSignedQuantity(20)).toBe('+20');
+  });
+  it('keeps the minus sign for negatives', () => {
+    expect(formatSignedQuantity(-5)).toBe('-5');
+  });
+  it('renders zero without a sign', () => {
+    expect(formatSignedQuantity(0)).toBe('0');
   });
 });

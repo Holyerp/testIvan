@@ -11,7 +11,12 @@ public class ItemServiceTests
     private static ItemService CreateService()
     {
         var bc = new MockBcHttpClient(NullLogger<MockBcHttpClient>.Instance);
-        return new ItemService(bc, new ItemMapper());
+        return new ItemService(
+            bc,
+            new ItemMapper(),
+            new ItemDetailMapper(),
+            new StockByLocationMapper(),
+            new ItemLedgerEntryMapper());
     }
 
     [Fact]
@@ -145,5 +150,113 @@ public class ItemServiceTests
         var costs = result.Items.Select(i => i.UnitCost).ToList();
         var ordered = costs.OrderBy(c => c).ToList();
         Assert.Equal(ordered, costs);
+    }
+
+    // ----- US-018: Item detail -----
+
+    [Fact]
+    public async Task GetItemByIdAsync_KnownId_ReturnsProfile()
+    {
+        var result = await CreateService().GetItemByIdAsync("itm001");
+
+        Assert.NotNull(result);
+        Assert.Equal("itm001", result!.Item.Id);
+        Assert.Equal("ITM-001", result.Item.Number);
+        Assert.False(string.IsNullOrEmpty(result.Item.Description));
+        Assert.False(string.IsNullOrEmpty(result.Item.Category));
+        Assert.False(string.IsNullOrEmpty(result.Item.UnitOfMeasure));
+        Assert.True(result.Item.UnitCost > 0);
+        Assert.True(result.Item.UnitPrice > 0);
+    }
+
+    [Fact]
+    public async Task GetItemByIdAsync_UnknownId_ReturnsNull()
+    {
+        var result = await CreateService().GetItemByIdAsync("does-not-exist");
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task GetItemByIdAsync_ComputesIsLowStock()
+    {
+        // ITM-002 (Čelična šipka) is below minimum stock (30 < 100) → IsLowStock true.
+        var low = await CreateService().GetItemByIdAsync("itm002");
+        Assert.NotNull(low);
+        Assert.True(low!.Item.IsLowStock);
+
+        // ITM-001 (Cement) is at/above minimum stock (120 >= 50) → IsLowStock false.
+        var ok = await CreateService().GetItemByIdAsync("itm001");
+        Assert.NotNull(ok);
+        Assert.False(ok!.Item.IsLowStock);
+    }
+
+    [Fact]
+    public async Task GetItemByIdAsync_StockByLocation_PresentAndSumsToTotal()
+    {
+        var result = await CreateService().GetItemByIdAsync("itm001");
+
+        Assert.NotNull(result);
+        Assert.NotEmpty(result!.StockByLocation);
+
+        // The per-location quantity on hand reconciles with the item profile total.
+        var sum = result.StockByLocation.Sum(s => s.QuantityOnHand);
+        Assert.Equal(result.Item.QuantityOnHand, sum);
+
+        // Reserved quantity is never negative.
+        Assert.All(result.StockByLocation, s => Assert.True(s.QuantityReserved >= 0));
+    }
+
+    [Fact]
+    public async Task GetItemByIdAsync_RecentLedgerEntries_PresentCappedAndNormalized()
+    {
+        var result = await CreateService().GetItemByIdAsync("itm001");
+
+        Assert.NotNull(result);
+        Assert.NotEmpty(result!.RecentLedgerEntries);
+        Assert.True(result.RecentLedgerEntries.Count <= 20);
+
+        // Entry types are normalized to the SCREAMING_SNAKE wire value.
+        Assert.All(result.RecentLedgerEntries, e =>
+            Assert.Contains(e.EntryType, new[] { "PURCHASE", "SALE", "ADJUSTMENT", "TRANSFER" }));
+    }
+
+    [Fact]
+    public async Task GetItemByIdAsync_NewestLedgerEntry_RemainingEqualsQuantityOnHand()
+    {
+        var result = await CreateService().GetItemByIdAsync("itm001");
+
+        Assert.NotNull(result);
+        Assert.NotEmpty(result!.RecentLedgerEntries);
+        // The mock builds the running balance so the newest entry's remaining equals the
+        // current quantity on hand (entries are newest-first).
+        Assert.Equal(result.Item.QuantityOnHand, result.RecentLedgerEntries[0].Remaining);
+    }
+
+    [Fact]
+    public async Task GetItemLedgerEntriesAsync_KnownId_ReturnsList()
+    {
+        var entries = await CreateService().GetItemLedgerEntriesAsync("itm001");
+
+        Assert.NotNull(entries);
+        Assert.NotEmpty(entries!);
+        Assert.True(entries!.Count <= 20);
+        Assert.All(entries, e =>
+            Assert.Contains(e.EntryType, new[] { "PURCHASE", "SALE", "ADJUSTMENT", "TRANSFER" }));
+    }
+
+    [Fact]
+    public async Task GetItemLedgerEntriesAsync_UnknownId_ReturnsNull()
+    {
+        var entries = await CreateService().GetItemLedgerEntriesAsync("does-not-exist");
+        Assert.Null(entries);
+    }
+
+    [Fact]
+    public async Task GetItemLedgerEntriesAsync_RespectsTopCap()
+    {
+        var entries = await CreateService().GetItemLedgerEntriesAsync("itm001", 3);
+
+        Assert.NotNull(entries);
+        Assert.True(entries!.Count <= 3);
     }
 }

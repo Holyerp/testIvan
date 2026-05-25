@@ -202,7 +202,33 @@
     "loadError": "Greška pri učitavanju artikala",
     "previous": "Prethodna",
     "next": "Sledeća",
-    "pageOf": "Strana {page} od {total}"
+    "pageOf": "Strana {page} od {total}",
+    "ledgerType": {
+      "PURCHASE": "Nabavka",
+      "SALE": "Prodaja",
+      "ADJUSTMENT": "Korekcija",
+      "TRANSFER": "Prenos"
+    }
+  },
+  "itemDetail": {
+    "back": "Nazad na artikle",
+    "notFound": "Artikal nije pronađen",
+    "category": "Kategorija",
+    "unitOfMeasure": "Jedinica mere",
+    "unitCost": "Nabavna cena",
+    "unitPrice": "Prodajna cena",
+    "stockByLocation": "Zalihe po lokaciji",
+    "location": "Lokacija",
+    "quantityOnHand": "Stanje zaliha",
+    "quantityReserved": "Rezervisano",
+    "ledgerEntries": "Poslednje promene zaliha",
+    "date": "Datum",
+    "type": "Tip",
+    "quantity": "Količina",
+    "remaining": "Stanje",
+    "noEntries": "Nema promena zaliha",
+    "lowStockAlert": "Zalihe su ispod minimalnog nivoa",
+    "loadError": "Greška pri učitavanju artikla"
   },
   "vendorDetail": {
     "back": "Nazad na dobavljače",

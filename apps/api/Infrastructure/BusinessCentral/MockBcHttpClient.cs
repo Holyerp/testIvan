@@ -33,6 +33,7 @@ public class MockBcHttpClient : IBcHttpClient
             "creditDocuments"     => CreateMockDocumentCollection<T>(GetMockCreditDocumentData(), options, "partyName"),
             "vendors"             => CreateMockVendors<T>(options),
             "items"               => CreateMockItems<T>(options),
+            "itemLedgerEntries"   => CreateMockItemLedgerEntries<T>(options),
             _                     => new BcCollectionResponse<T>()
         };
         return Task.FromResult(result);
@@ -61,6 +62,7 @@ public class MockBcHttpClient : IBcHttpClient
             "purchaseInvoicesPosted" => FindPurchaseInvoiceWithLines(GetMockPostedPurchaseInvoiceData(), id),
             "purchaseAdvanceInvoices" => FindPurchaseInvoiceWithLines(GetMockPurchaseAdvanceInvoiceData(), id),
             "creditDocuments"     => FindCreditDocumentWithLines(GetMockCreditDocumentData(), id),
+            "items"               => FindItemWithStockByLocation(id),
             _                     => null,
         };
 
@@ -799,6 +801,115 @@ public class MockBcHttpClient : IBcHttpClient
             if (location != null)
                 result = result.Where(i =>
                     string.Equals(i["location"].ToString(), location, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        return result;
+    }
+
+    // ----- Item detail: stock by location (US-018) -----
+    // Find a single item by id and attach its stock-by-location breakdown, mimicking a
+    // BC GET items({id})?$expand=stockByLocation. Returns null for unknown ids so the
+    // service maps that to a 404. Mirrors FindInvoiceWithLines (clone + attach navigation).
+    private static Dictionary<string, object>? FindItemWithStockByLocation(string id)
+    {
+        var match = GetMockItemData().FirstOrDefault(i => (string)i["id"] == id);
+        if (match == null) return null;
+
+        // Clone so the shared mock source is never mutated across calls.
+        var record = new Dictionary<string, object>(match)
+        {
+            ["stockByLocation"] = GetMockStockByLocation(
+                (decimal)match["quantityOnHand"], (string)match["location"]),
+        };
+        return record;
+    }
+
+    // Split an item's total quantity on hand across 2 locations so the rows sum back to
+    // the item total (reconciles with the profile). The primary location holds ~60% on
+    // hand; a portion is reserved. Deterministic — no randomness — so tests are stable.
+    private static List<Dictionary<string, object>> GetMockStockByLocation(
+        decimal totalOnHand, string primaryLocation)
+    {
+        var secondary = primaryLocation == "MAGACIN-1" ? "MAGACIN-2" : "MAGACIN-1";
+        var primaryQty = decimal.Round(totalOnHand * 0.6m, 2);
+        var secondaryQty = totalOnHand - primaryQty;
+
+        return new List<Dictionary<string, object>>
+        {
+            new() { ["location"] = primaryLocation,  ["quantityOnHand"] = primaryQty,   ["quantityReserved"] = decimal.Round(primaryQty * 0.1m, 2) },
+            new() { ["location"] = secondary,        ["quantityOnHand"] = secondaryQty, ["quantityReserved"] = 0m },
+        };
+    }
+
+    // ----- Item detail: item ledger entries (US-018) -----
+    // ~12 stock movements per known item, newest first. entryType uses BC casing
+    // (Purchase / Sale / Adjustment / Transfer); the ItemLedgerEntryMapper normalizes to
+    // the SCREAMING_SNAKE wire value. Quantity is signed (+ inbound, − outbound) and
+    // `remaining` is a running balance ending at the item's current quantity on hand.
+    private static BcCollectionResponse<T> CreateMockItemLedgerEntries<T>(BcQueryOptions? options)
+    {
+        // The service filters by `itemId eq 'X'`; extract that id and look up the item.
+        var itemId = ExtractQuoted(options?.Filter ?? string.Empty, "itemId eq '");
+        var entries = string.IsNullOrEmpty(itemId)
+            ? new List<Dictionary<string, object>>()
+            : GetMockItemLedgerEntries(itemId);
+
+        // Already built newest-first; honor Top so the service's last-20 cap works.
+        var top = options?.Top ?? entries.Count;
+        var paged = entries.Take(top).ToList();
+        var json = JsonSerializer.Serialize(paged);
+        var typed = JsonSerializer.Deserialize<List<T>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+        return new BcCollectionResponse<T>
+        {
+            Value = typed,
+            Count = options?.Count == true ? entries.Count : null
+        };
+    }
+
+    private static List<Dictionary<string, object>> GetMockItemLedgerEntries(string itemId)
+    {
+        var item = GetMockItemData().FirstOrDefault(i => (string)i["id"] == itemId);
+        if (item == null) return new List<Dictionary<string, object>>();
+
+        var now = DateTime.UtcNow;
+        var current = (decimal)item["quantityOnHand"];
+
+        // Build a deterministic movement list working BACKWARDS from the current balance
+        // so `remaining` after the newest entry equals the item's quantity on hand.
+        // Movement tuples: (daysAgo, entryType, signedQuantity). Mix of all 4 types.
+        var movements = new (int DaysAgo, string Type, decimal Qty)[]
+        {
+            (2,   "Sale",       -5m),
+            (6,   "Purchase",   20m),
+            (11,  "Transfer",   -3m),
+            (15,  "Sale",       -8m),
+            (21,  "Adjustment", 2m),
+            (28,  "Purchase",   15m),
+            (35,  "Sale",       -10m),
+            (44,  "Transfer",   4m),
+            (52,  "Sale",       -6m),
+            (63,  "Purchase",   25m),
+            (78,  "Adjustment", -1m),
+            (95,  "Purchase",   30m),
+        };
+
+        // movements[0] is the newest. remaining after it = current. Walk forward in time
+        // (older → newer) to compute the running balance, then reverse to newest-first.
+        var ordered = movements.OrderBy(m => m.DaysAgo).ToList(); // newest → oldest already
+        var result = new List<Dictionary<string, object>>();
+        var running = current;
+        foreach (var m in ordered) // newest first
+        {
+            result.Add(new Dictionary<string, object>
+            {
+                ["date"] = Iso(now.AddDays(-m.DaysAgo)),
+                ["entryType"] = m.Type,
+                ["quantity"] = m.Qty,
+                ["remaining"] = running,
+            });
+            // The balance BEFORE this entry (i.e. for the next-older entry) excludes this
+            // entry's signed quantity.
+            running -= m.Qty;
         }
 
         return result;

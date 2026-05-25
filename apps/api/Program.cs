@@ -153,6 +153,9 @@ try
     builder.Services.AddSingleton<IBcMapper<BcCreditDocument, CreditDocumentListItemDto>, CreditDocumentMapper>();
     builder.Services.AddSingleton<IBcMapper<BcCreditDocument, CreditDocumentDetailDto>, CreditDocumentDetailMapper>();
     builder.Services.AddSingleton<IBcMapper<BcItem, ItemListItemDto>, ItemMapper>();
+    builder.Services.AddSingleton<IBcMapper<BcItem, ItemProfileDto>, ItemDetailMapper>();
+    builder.Services.AddSingleton<IBcMapper<BcStockByLocation, StockByLocationDto>, StockByLocationMapper>();
+    builder.Services.AddSingleton<IBcMapper<BcItemLedgerEntry, ItemLedgerEntryDto>, ItemLedgerEntryMapper>();
 
     // Customer service
     builder.Services.AddScoped<ICustomerService, CustomerService>();

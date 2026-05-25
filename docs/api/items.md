@@ -1,6 +1,6 @@
 # Items API
 
-**Version:** 1.0
+**Version:** 1.1
 **Last Updated:** 2026-05-25
 **Status:** Active
 
@@ -80,8 +80,123 @@ Read-only warehouse item (product / inventory) endpoints backed by Microsoft Dyn
 
 ---
 
+## GET /api/v1/items/{id}
+
+**Description:** Full item detail — profile, stock split by warehouse location, and the most recent (up to 20) item ledger entries (stock movements). The item detail screen (US-018). Mirrors the vendor detail endpoint (US-012).
+
+**Authentication:** `RequireWarehouse` (ADMIN / MANAGER / WAREHOUSE)
+
+**Path Parameters:**
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `id` | string | BC item id (e.g. `itm001`) |
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "data": {
+    "item": {
+      "id": "itm001",
+      "number": "ITM-001",
+      "description": "Cement 25kg",
+      "category": "GRAĐEVINA",
+      "unitOfMeasure": "KG",
+      "quantityOnHand": 120,
+      "minimumStock": 50,
+      "unitCost": 650.00,
+      "unitPrice": 780.00,
+      "isLowStock": false
+    },
+    "stockByLocation": [
+      { "location": "MAGACIN-1", "quantityOnHand": 72, "quantityReserved": 7.2 },
+      { "location": "MAGACIN-2", "quantityOnHand": 48, "quantityReserved": 0 }
+    ],
+    "recentLedgerEntries": [
+      { "date": "2026-05-23", "entryType": "SALE", "quantity": -5, "remaining": 120 },
+      { "date": "2026-05-19", "entryType": "PURCHASE", "quantity": 20, "remaining": 125 }
+    ]
+  }
+}
+```
+
+**Response fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `item` | object | Item profile (extends the list shape with `unitPrice`); `isLowStock` computed server-side (`quantityOnHand < minimumStock`) |
+| `stockByLocation[]` | array | Per-location stock; `quantityOnHand` reconciles with `item.quantityOnHand` |
+| `stockByLocation[].location` | string | Warehouse location code (e.g. `MAGACIN-1`) |
+| `stockByLocation[].quantityReserved` | decimal | Quantity reserved at that location |
+| `recentLedgerEntries[]` | array | Up to 20 most recent movements, newest first (same shape as `GET /{id}/ledger-entries`) |
+
+The `recentLedgerEntries[].entryType` field is an enum — see the allowed values under `GET /{id}/ledger-entries` below.
+
+**Error Responses:**
+- `401 Unauthorized` — missing/invalid token (`{ "success": false, "code": "AUTH_REQUIRED" }`)
+- `403 Forbidden` — authenticated but role not in RequireWarehouse, e.g. `ACCOUNTING` (`{ "success": false, "code": "FORBIDDEN_INSUFFICIENT_ROLE" }`)
+- `404 Not Found` — item id does not exist (`{ "success": false, "code": "NOT_FOUND_ITEM" }`)
+- `500 Internal Server Error` — unexpected server error
+- `502 Bad Gateway` — BC upstream unavailable (`{ "success": false, "code": "INTEGRATION_BC_UNAVAILABLE" }`)
+
+---
+
+## GET /api/v1/items/{id}/ledger-entries
+
+**Description:** The most recent (up to 20) item ledger entries (stock movements) for an item, newest first.
+
+**Authentication:** `RequireWarehouse` (ADMIN / MANAGER / WAREHOUSE)
+
+**Path Parameters:**
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `id` | string | BC item id (e.g. `itm001`) |
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "data": [
+    { "date": "2026-05-23", "entryType": "SALE", "quantity": -5, "remaining": 120 },
+    { "date": "2026-05-19", "entryType": "PURCHASE", "quantity": 20, "remaining": 125 },
+    { "date": "2026-05-14", "entryType": "TRANSFER", "quantity": -3, "remaining": 105 }
+  ]
+}
+```
+
+**Response fields (`data[]`):**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `date` | string | Movement date, ISO `yyyy-MM-dd` |
+| `entryType` | string (enum) | Movement type — see allowed values below |
+| `quantity` | decimal | Signed quantity: `+` inbound, `−` outbound |
+| `remaining` | decimal | Running balance after this entry |
+
+**`entryType` allowed values** (SCREAMING_SNAKE_CASE wire format; the frontend maps each to an i18n label under `items.ledgerType.*`):
+
+| Value | Meaning |
+|-------|---------|
+| `PURCHASE` | Inbound from a purchase |
+| `SALE` | Outbound to a sale |
+| `ADJUSTMENT` | Manual stock correction |
+| `TRANSFER` | Movement between locations |
+
+**Error Responses:**
+- `401 Unauthorized` — missing/invalid token (`{ "success": false, "code": "AUTH_REQUIRED" }`)
+- `403 Forbidden` — authenticated but role not in RequireWarehouse, e.g. `ACCOUNTING` (`{ "success": false, "code": "FORBIDDEN_INSUFFICIENT_ROLE" }`)
+- `404 Not Found` — item id does not exist (`{ "success": false, "code": "NOT_FOUND_ITEM" }`)
+- `500 Internal Server Error` — unexpected server error
+- `502 Bad Gateway` — BC upstream unavailable (`{ "success": false, "code": "INTEGRATION_BC_UNAVAILABLE" }`)
+
+---
+
 **Related:**
-- `apps/api/Application/Items/ItemService.cs` — list service (query builder + mapper)
+- `apps/api/Application/Items/ItemService.cs` — list + detail + ledger service
 - `apps/api/Application/Mapping/ItemMapper.cs` — `BcItem` → `ItemListItemDto` projection (computes `isLowStock`)
-- `apps/api/Presentation/Endpoints/ItemsEndpoints.cs` — endpoint definition (`RequireWarehouse`)
-- `docs/api/vendors.md` — the financial-module list analogue this endpoint mirrors
+- `apps/api/Application/Mapping/ItemDetailMapper.cs` — detail profile + stock-by-location + ledger-entry projections
+- `apps/api/Domain/Constants/ItemLedgerEntryType.cs` — `entryType` wire values (PURCHASE / SALE / ADJUSTMENT / TRANSFER)
+- `apps/api/Presentation/Endpoints/ItemsEndpoints.cs` — endpoint definitions (`RequireWarehouse`)
+- `docs/api/vendors.md` — the financial-module detail analogue this endpoint mirrors

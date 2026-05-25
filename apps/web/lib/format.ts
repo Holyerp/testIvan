@@ -86,6 +86,33 @@ export function creditMemoStatusBadgeClass(status: string): string {
 }
 
 /**
+ * i18n key for an item ledger entry type (US-018), keyed by the SCREAMING_SNAKE wire
+ * value (PURCHASE | SALE | ADJUSTMENT | TRANSFER). The UI resolves it under the
+ * `items.ledgerType.*` namespace; unknown values fall back to ADJUSTMENT so an unexpected
+ * wire value still renders a documented label rather than a raw key.
+ */
+export function ledgerTypeKey(type: string): string {
+  switch (type) {
+    case 'PURCHASE':
+    case 'SALE':
+    case 'TRANSFER':
+      return type;
+    case 'ADJUSTMENT':
+    default:
+      return 'ADJUSTMENT';
+  }
+}
+
+/**
+ * Format a signed ledger quantity for display: positive (inbound) movements get a leading
+ * `+`, negatives keep their `-`, and zero renders without a sign. Pure — unit-tested.
+ */
+export function formatSignedQuantity(quantity: number): string {
+  if (quantity > 0) return `+${quantity}`;
+  return `${quantity}`;
+}
+
+/**
  * Tailwind classes for the credit-document type badge (US-016), keyed by the
  * SCREAMING_SNAKE wire value: CREDIT_MEMO (green — a credit to the party),
  * DEBIT_MEMO (amber — an additional charge), STORNO (red — a cancellation).

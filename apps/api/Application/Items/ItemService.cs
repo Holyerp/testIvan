@@ -17,13 +17,26 @@ public class ItemService : IItemService
     // BC field names (what $orderby uses). The first entry is the default sort.
     private static readonly string[] AllowedSortFields = { "description", "quantityOnHand", "unitCost" };
 
+    private const int DefaultLedgerTop = 20;
+
     private readonly IBcHttpClient _bc;
     private readonly IBcMapper<BcItem, ItemListItemDto> _itemMapper;
+    private readonly IBcMapper<BcItem, ItemProfileDto> _itemDetailMapper;
+    private readonly IBcMapper<BcStockByLocation, StockByLocationDto> _stockMapper;
+    private readonly IBcMapper<BcItemLedgerEntry, ItemLedgerEntryDto> _ledgerMapper;
 
-    public ItemService(IBcHttpClient bc, IBcMapper<BcItem, ItemListItemDto> itemMapper)
+    public ItemService(
+        IBcHttpClient bc,
+        IBcMapper<BcItem, ItemListItemDto> itemMapper,
+        IBcMapper<BcItem, ItemProfileDto> itemDetailMapper,
+        IBcMapper<BcStockByLocation, StockByLocationDto> stockMapper,
+        IBcMapper<BcItemLedgerEntry, ItemLedgerEntryDto> ledgerMapper)
     {
         _bc = bc;
         _itemMapper = itemMapper;
+        _itemDetailMapper = itemDetailMapper;
+        _stockMapper = stockMapper;
+        _ledgerMapper = ledgerMapper;
     }
 
     public async Task<PagedResultDto<ItemListItemDto>> GetItemsAsync(
@@ -82,6 +95,63 @@ public class ItemService : IItemService
             Page = effectivePage,
             PageSize = effectivePageSize,
         };
+    }
+
+    public async Task<ItemDetailDto?> GetItemByIdAsync(
+        string id,
+        CancellationToken cancellationToken = default)
+    {
+        // Fetch the item with its stock-by-location expanded (mock attaches it; real BC
+        // uses $expand). Mirrors VendorService.GetVendorByIdAsync's null → 404 contract.
+        var item = await _bc.GetByIdAsync<BcItem>(
+            "items",
+            id,
+            new BcQueryOptions { Expand = "stockByLocation" },
+            cancellationToken);
+        if (item == null || string.IsNullOrEmpty(item.Id)) return null;
+
+        var ledger = await GetLedgerEntriesAsync(id, DefaultLedgerTop, cancellationToken);
+
+        return new ItemDetailDto
+        {
+            Item = _itemDetailMapper.Map(item),
+            StockByLocation = item.StockByLocation.Select(_stockMapper.Map).ToList(),
+            RecentLedgerEntries = ledger,
+        };
+    }
+
+    public async Task<List<ItemLedgerEntryDto>?> GetItemLedgerEntriesAsync(
+        string id,
+        int top = DefaultLedgerTop,
+        CancellationToken cancellationToken = default)
+    {
+        // Confirm the item exists first so unknown ids map to 404 (not an empty list),
+        // matching the vendor /{id}/invoices contract.
+        var item = await _bc.GetByIdAsync<BcItem>("items", id, cancellationToken: cancellationToken);
+        if (item == null || string.IsNullOrEmpty(item.Id)) return null;
+
+        return await GetLedgerEntriesAsync(id, top, cancellationToken);
+    }
+
+    // Fetch + map the last <paramref name="top"/> ledger entries for an item. Escapes the
+    // id per OData string-literal rules to avoid filter injection.
+    private async Task<List<ItemLedgerEntryDto>> GetLedgerEntriesAsync(
+        string id,
+        int top,
+        CancellationToken cancellationToken)
+    {
+        var safeId = id.Replace("'", "''");
+        var result = await _bc.GetCollectionAsync<BcItemLedgerEntry>(
+            "itemLedgerEntries",
+            new BcQueryOptions
+            {
+                Filter = $"itemId eq '{safeId}'",
+                OrderBy = "date desc",
+                Top = top,
+            },
+            cancellationToken);
+
+        return result.Value.Select(_ledgerMapper.Map).ToList();
     }
 
     // UI sort key → BC field name. Unknown values pass through untouched and are then

@@ -202,7 +202,33 @@
     "loadError": "Error loading items",
     "previous": "Previous",
     "next": "Next",
-    "pageOf": "Page {page} of {total}"
+    "pageOf": "Page {page} of {total}",
+    "ledgerType": {
+      "PURCHASE": "Purchase",
+      "SALE": "Sale",
+      "ADJUSTMENT": "Adjustment",
+      "TRANSFER": "Transfer"
+    }
+  },
+  "itemDetail": {
+    "back": "Back to items",
+    "notFound": "Item not found",
+    "category": "Category",
+    "unitOfMeasure": "Unit of Measure",
+    "unitCost": "Unit Cost",
+    "unitPrice": "Unit Price",
+    "stockByLocation": "Stock by Location",
+    "location": "Location",
+    "quantityOnHand": "Qty on Hand",
+    "quantityReserved": "Qty Reserved",
+    "ledgerEntries": "Recent Stock Movements",
+    "date": "Date",
+    "type": "Type",
+    "quantity": "Quantity",
+    "remaining": "Remaining",
+    "noEntries": "No stock movements",
+    "lowStockAlert": "Stock is below the minimum level",
+    "loadError": "Error loading item"
   },
   "vendorDetail": {
     "back": "Back to vendors",
