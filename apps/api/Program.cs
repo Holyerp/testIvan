@@ -11,6 +11,7 @@ using Pinoles.Api.Application.Interfaces;
 using Pinoles.Api.Application.Inventory;
 using Pinoles.Api.Application.Items;
 using Pinoles.Api.Application.Mapping;
+using Pinoles.Api.Application.Notifications;
 using Pinoles.Api.Application.Purchase;
 using Pinoles.Api.Application.Sales;
 using Pinoles.Api.Application.Search;
@@ -19,6 +20,7 @@ using Pinoles.Api.Domain.Constants;
 using Pinoles.Api.Infrastructure.Auth;
 using Pinoles.Api.Infrastructure.BusinessCentral;
 using Pinoles.Api.Infrastructure.Caching;
+using Pinoles.Api.Infrastructure.Email;
 using Pinoles.Api.Infrastructure.Persistence;
 using Pinoles.Api.Presentation.Endpoints;
 using Serilog;
@@ -182,6 +184,13 @@ try
     // Search service — aggregates the four list services above (RBAC-gated)
     builder.Services.AddScoped<ISearchService, SearchService>();
 
+    // Notification service (T-005) — aggregates overdue invoices + low-stock items, role-filtered
+    builder.Services.AddScoped<INotificationService, NotificationService>();
+
+    // Email service (T-005) — dev no-op logging impl; production wires a real MailKit SMTP
+    // implementation via config. US-021 (password reset) depends on IEmailService.
+    builder.Services.AddScoped<IEmailService, LoggingEmailService>();
+
     var app = builder.Build();
 
     if (app.Environment.IsDevelopment())
@@ -212,6 +221,7 @@ try
     app.MapItemsEndpoints();
     app.MapInventoryEndpoints();
     app.MapSearchEndpoints();
+    app.MapNotificationsEndpoints();
 
     // Health check
     app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }))

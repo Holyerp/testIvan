@@ -44,6 +44,21 @@
       "PURCHASE_INVOICE": "Ulazne fakture"
     }
   },
+  "notifications": {
+    "label": "Obaveštenja",
+    "title": "Obaveštenja",
+    "loading": "Učitavanje...",
+    "empty": "Nema obaveštenja",
+    "type": {
+      "OVERDUE_INVOICE": "Dospela faktura",
+      "LOW_STOCK": "Nizak nivo zaliha"
+    },
+    "severity": {
+      "INFO": "Informacija",
+      "WARNING": "Upozorenje",
+      "CRITICAL": "Kritično"
+    }
+  },
   "dashboard": {
     "title": "Kontrolna tabla",
     "subtitle": "Pregled ključnih pokazatelja",

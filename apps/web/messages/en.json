@@ -44,6 +44,21 @@
       "PURCHASE_INVOICE": "Purchase Invoices"
     }
   },
+  "notifications": {
+    "label": "Notifications",
+    "title": "Notifications",
+    "loading": "Loading...",
+    "empty": "No notifications",
+    "type": {
+      "OVERDUE_INVOICE": "Overdue invoice",
+      "LOW_STOCK": "Low stock"
+    },
+    "severity": {
+      "INFO": "Info",
+      "WARNING": "Warning",
+      "CRITICAL": "Critical"
+    }
+  },
   "dashboard": {
     "title": "Dashboard",
     "subtitle": "Key business metrics overview",
