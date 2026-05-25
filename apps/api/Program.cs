@@ -113,6 +113,8 @@ try
             policy.RequireRole(UserRoles.Admin, UserRoles.Manager, UserRoles.Accounting));
         options.AddPolicy("RequireDashboard", policy =>
             policy.RequireRole(UserRoles.Admin, UserRoles.Manager, UserRoles.Accounting, UserRoles.Warehouse));
+        options.AddPolicy("RequireWarehouse", policy =>
+            policy.RequireRole(UserRoles.Admin, UserRoles.Manager, UserRoles.Warehouse));
     });
 
     // BC options

@@ -3,49 +3,22 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuthStore } from '@/lib/stores/auth-store';
+import { canAccessModule, type Module } from '@/lib/auth/module-access';
 
 interface NavItem {
   href: string;
   label: string;
-  roles: string[];
+  module: Module;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  {
-    href: '/dashboard',
-    label: 'Dashboard',
-    roles: ['ADMIN', 'MANAGER', 'ACCOUNTING', 'WAREHOUSE'],
-  },
-  {
-    href: '/customers',
-    label: 'Customers',
-    roles: ['ADMIN', 'MANAGER', 'ACCOUNTING'],
-  },
-  {
-    href: '/invoices',
-    label: 'Invoices',
-    roles: ['ADMIN', 'MANAGER', 'ACCOUNTING'],
-  },
-  {
-    href: '/sales/invoices',
-    label: 'Sales Invoices',
-    roles: ['ADMIN', 'MANAGER', 'ACCOUNTING'],
-  },
-  {
-    href: '/sales/credit-memos',
-    label: 'Credit Memos',
-    roles: ['ADMIN', 'MANAGER', 'ACCOUNTING'],
-  },
-  {
-    href: '/purchase/invoices',
-    label: 'Purchase Invoices',
-    roles: ['ADMIN', 'MANAGER', 'ACCOUNTING'],
-  },
-  {
-    href: '/vendors',
-    label: 'Vendors',
-    roles: ['ADMIN', 'MANAGER', 'ACCOUNTING'],
-  },
+  { href: '/dashboard', label: 'Dashboard', module: 'dashboard' },
+  { href: '/customers', label: 'Customers', module: 'financial' },
+  { href: '/invoices', label: 'Invoices', module: 'financial' },
+  { href: '/sales/invoices', label: 'Sales Invoices', module: 'financial' },
+  { href: '/sales/credit-memos', label: 'Credit Memos', module: 'financial' },
+  { href: '/purchase/invoices', label: 'Purchase Invoices', module: 'financial' },
+  { href: '/vendors', label: 'Vendors', module: 'financial' },
 ];
 
 export function Sidebar() {
@@ -54,7 +27,7 @@ export function Sidebar() {
   const clearAuth = useAuthStore((s) => s.clearAuth);
 
   const visibleItems = NAV_ITEMS.filter(
-    (item) => !user || item.roles.includes(user.role)
+    (item) => !user || canAccessModule(item.module, user.role)
   );
 
   const handleLogout = () => {
