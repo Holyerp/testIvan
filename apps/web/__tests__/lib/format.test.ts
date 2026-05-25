@@ -6,6 +6,7 @@ import {
   isOverdue,
   statusBadgeClass,
   creditMemoStatusBadgeClass,
+  creditDocumentTypeBadgeClass,
   computeInvoiceTotals,
 } from '@/lib/format';
 
@@ -121,5 +122,20 @@ describe('creditMemoStatusBadgeClass', () => {
   });
   it('unknown defaults to blue', () => {
     expect(creditMemoStatusBadgeClass('WHATEVER')).toContain('blue');
+  });
+});
+
+describe('creditDocumentTypeBadgeClass', () => {
+  it('CREDIT_MEMO is green', () => {
+    expect(creditDocumentTypeBadgeClass('CREDIT_MEMO')).toContain('green');
+  });
+  it('DEBIT_MEMO is amber', () => {
+    expect(creditDocumentTypeBadgeClass('DEBIT_MEMO')).toContain('amber');
+  });
+  it('STORNO is red', () => {
+    expect(creditDocumentTypeBadgeClass('STORNO')).toContain('red');
+  });
+  it('unknown defaults to gray', () => {
+    expect(creditDocumentTypeBadgeClass('WHATEVER')).toContain('gray');
   });
 });

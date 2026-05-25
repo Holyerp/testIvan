@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Pinoles.Api.Application.Auth;
+using Pinoles.Api.Application.CreditDocuments;
 using Pinoles.Api.Application.Customers;
 using Pinoles.Api.Application.Dashboard;
 using Pinoles.Api.Application.DTOs;
@@ -148,6 +149,8 @@ try
     builder.Services.AddSingleton<IBcMapper<BcPurchaseInvoice, PurchaseInvoiceListItemDto>, PurchaseInvoiceMapper>();
     builder.Services.AddSingleton<IBcMapper<BcPurchaseInvoice, PurchaseInvoiceDetailDto>, PurchaseInvoiceDetailMapper>();
     builder.Services.AddSingleton<IBcMapper<BcPurchaseInvoice, PurchaseAdvanceInvoiceDetailDto>, PurchaseAdvanceInvoiceDetailMapper>();
+    builder.Services.AddSingleton<IBcMapper<BcCreditDocument, CreditDocumentListItemDto>, CreditDocumentMapper>();
+    builder.Services.AddSingleton<IBcMapper<BcCreditDocument, CreditDocumentDetailDto>, CreditDocumentDetailMapper>();
 
     // Customer service
     builder.Services.AddScoped<ICustomerService, CustomerService>();
@@ -160,6 +163,9 @@ try
 
     // Vendor service
     builder.Services.AddScoped<IVendorService, VendorService>();
+
+    // Credit-document service (US-016) — unified credit memos / debit memos / storno
+    builder.Services.AddScoped<ICreditDocumentService, CreditDocumentService>();
 
     // Search service — aggregates the four list services above (RBAC-gated)
     builder.Services.AddScoped<ISearchService, SearchService>();
@@ -190,6 +196,7 @@ try
     app.MapSalesEndpoints();
     app.MapPurchaseEndpoints();
     app.MapVendorsEndpoints();
+    app.MapCreditDocumentsEndpoints();
     app.MapSearchEndpoints();
 
     // Health check

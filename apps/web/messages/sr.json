@@ -243,6 +243,54 @@
     "total": "Ukupno",
     "loadError": "Greška pri učitavanju knjižnog odobrenja"
   },
+  "creditDocuments": {
+    "title": "Korektivni dokumenti",
+    "subtitle": "Knjižna odobrenja, knjižna zaduženja i storno fakture",
+    "number": "Broj",
+    "typeLabel": "Tip",
+    "party": "Partner",
+    "date": "Datum",
+    "originalInvoice": "Originalna faktura",
+    "amount": "Iznos",
+    "statusLabel": "Status",
+    "noResults": "Nema korektivnih dokumenata",
+    "loadError": "Greška pri učitavanju korektivnih dokumenata",
+    "filterType": "Tip",
+    "filterAll": "Svi",
+    "search": "Pretraga po broju ili partneru...",
+    "previous": "Prethodna",
+    "next": "Sledeća",
+    "pageOf": "Strana {page} od {total}",
+    "type": {
+      "CREDIT_MEMO": "Knjižno odobrenje",
+      "DEBIT_MEMO": "Knjižno zaduženje",
+      "STORNO": "Storno"
+    },
+    "status": {
+      "OPEN": "Otvoreno",
+      "POSTED": "Knjiženo"
+    }
+  },
+  "creditDocumentDetail": {
+    "back": "Nazad na korektivne dokumente",
+    "notFound": "Korektivni dokument nije pronađen",
+    "type": "Tip",
+    "party": "Partner",
+    "postingDate": "Datum knjiženja",
+    "status": "Status",
+    "originalInvoice": "Originalna faktura",
+    "lineItems": "Stavke",
+    "lineDescription": "Opis",
+    "quantity": "Količina",
+    "unitPrice": "Jedinična cena",
+    "vatPercent": "PDV %",
+    "lineTotal": "Iznos stavke",
+    "noLines": "Nema stavki",
+    "subtotal": "Osnovica",
+    "vat": "PDV",
+    "total": "Ukupno",
+    "loadError": "Greška pri učitavanju korektivnog dokumenta"
+  },
   "customerDetail": {
     "back": "Nazad na kupce",
     "notFound": "Kupac nije pronađen",

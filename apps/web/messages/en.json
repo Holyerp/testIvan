@@ -243,6 +243,54 @@
     "total": "Total",
     "loadError": "Error loading credit memo"
   },
+  "creditDocuments": {
+    "title": "Credit Documents",
+    "subtitle": "Credit memos, debit memos and storno invoices",
+    "number": "Number",
+    "typeLabel": "Type",
+    "party": "Party",
+    "date": "Date",
+    "originalInvoice": "Original Invoice",
+    "amount": "Amount",
+    "statusLabel": "Status",
+    "noResults": "No credit documents found",
+    "loadError": "Error loading credit documents",
+    "filterType": "Type",
+    "filterAll": "All",
+    "search": "Search by number or party...",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}",
+    "type": {
+      "CREDIT_MEMO": "Credit Memo",
+      "DEBIT_MEMO": "Debit Memo",
+      "STORNO": "Storno"
+    },
+    "status": {
+      "OPEN": "Open",
+      "POSTED": "Posted"
+    }
+  },
+  "creditDocumentDetail": {
+    "back": "Back to credit documents",
+    "notFound": "Credit document not found",
+    "type": "Type",
+    "party": "Party",
+    "postingDate": "Posting Date",
+    "status": "Status",
+    "originalInvoice": "Original Invoice",
+    "lineItems": "Line Items",
+    "lineDescription": "Description",
+    "quantity": "Quantity",
+    "unitPrice": "Unit Price",
+    "vatPercent": "VAT %",
+    "lineTotal": "Line Total",
+    "noLines": "No line items",
+    "subtotal": "Subtotal",
+    "vat": "VAT",
+    "total": "Total",
+    "loadError": "Error loading credit document"
+  },
   "customerDetail": {
     "back": "Back to customers",
     "notFound": "Customer not found",

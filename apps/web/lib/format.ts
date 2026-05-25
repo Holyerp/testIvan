@@ -75,3 +75,22 @@ export function creditMemoStatusBadgeClass(status: string): string {
       return 'bg-blue-100 text-blue-700';
   }
 }
+
+/**
+ * Tailwind classes for the credit-document type badge (US-016), keyed by the
+ * SCREAMING_SNAKE wire value: CREDIT_MEMO (green — a credit to the party),
+ * DEBIT_MEMO (amber — an additional charge), STORNO (red — a cancellation).
+ * Unknown values default to gray.
+ */
+export function creditDocumentTypeBadgeClass(type: string): string {
+  switch (type) {
+    case 'CREDIT_MEMO':
+      return 'bg-green-100 text-green-700';
+    case 'DEBIT_MEMO':
+      return 'bg-amber-100 text-amber-700';
+    case 'STORNO':
+      return 'bg-red-100 text-red-700';
+    default:
+      return 'bg-gray-100 text-gray-700';
+  }
+}

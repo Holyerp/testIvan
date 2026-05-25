@@ -30,6 +30,7 @@ public class MockBcHttpClient : IBcHttpClient
             "purchaseInvoicesPosted"  => CreateMockDocumentCollection<T>(GetMockPostedPurchaseInvoiceData(), options, "vendorName"),
             "purchaseCreditMemos"     => CreateMockDocumentCollection<T>(GetMockPurchaseCreditMemoData(), options, "vendorName"),
             "purchaseAdvanceInvoices" => CreateMockDocumentCollection<T>(GetMockPurchaseAdvanceInvoiceData(), options, "vendorName"),
+            "creditDocuments"     => CreateMockDocumentCollection<T>(GetMockCreditDocumentData(), options, "partyName"),
             "vendors"             => CreateMockVendors<T>(options),
             _                     => new BcCollectionResponse<T>()
         };
@@ -58,6 +59,7 @@ public class MockBcHttpClient : IBcHttpClient
             "purchaseInvoices"       => FindPurchaseInvoiceWithLines(GetMockPurchaseInvoiceData(), id),
             "purchaseInvoicesPosted" => FindPurchaseInvoiceWithLines(GetMockPostedPurchaseInvoiceData(), id),
             "purchaseAdvanceInvoices" => FindPurchaseInvoiceWithLines(GetMockPurchaseAdvanceInvoiceData(), id),
+            "creditDocuments"     => FindCreditDocumentWithLines(GetMockCreditDocumentData(), id),
             _                     => null,
         };
 
@@ -275,6 +277,17 @@ public class MockBcHttpClient : IBcHttpClient
             if (status != null)
                 result = result.Where(i =>
                     string.Equals(i["status"].ToString(), status, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        // type eq 'CREDIT_MEMO' — exact match on the document-type wire value
+        // (credit documents only; the field is absent for invoice families).
+        if (filter.Contains("type eq '"))
+        {
+            var type = ExtractQuoted(filter, "type eq '");
+            if (type != null)
+                result = result.Where(i =>
+                    i.ContainsKey("type") &&
+                    string.Equals(i["type"].ToString(), type, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         // postingDate ge '...' / le '...' — lexical compare works for ISO yyyy-MM-dd.
@@ -540,6 +553,67 @@ public class MockBcHttpClient : IBcHttpClient
             Purchase("pav007", "PA-2026-007", "Supplier B d.o.o.",   now.AddDays(-9),   49000.00m,  "Open"),
             Purchase("pav008", "PA-2026-008", "Materijal Promet",    now.AddDays(-3),   41000.00m,  "Partially Paid"),
         };
+    }
+
+    // ----- Credit documents (US-016) -----
+    // Unified correction-document collection mixing the three document types
+    // (CREDIT_MEMO / DEBIT_MEMO / STORNO). Each references an original invoice number
+    // (e.g. an existing SI-/PSI- sales invoice) and carries a generic partyName
+    // (customer or vendor). Type is stored as the SCREAMING_SNAKE wire value so the
+    // mock `type eq 'X'` filter matches the value the service forwards directly; status
+    // uses BC-style "Open" / "Posted" which the credit-memo normalizer maps to OPEN/POSTED.
+    private static Dictionary<string, object> CreditDoc(
+        string id, string number, string type, string party, DateTime posting,
+        decimal amount, string originalInvoiceNumber, string status) => new()
+    {
+        ["id"] = id,
+        ["number"] = number,
+        ["type"] = type,
+        ["partyName"] = party,
+        ["postingDate"] = Iso(posting),
+        ["totalAmountIncludingTax"] = amount,
+        ["originalInvoiceNumber"] = originalInvoiceNumber,
+        ["status"] = status,
+    };
+
+    // ~12 correction documents spread over recent months, evenly mixing the three types
+    // so the type filter narrows to a non-empty subset for each value.
+    private static List<Dictionary<string, object>> GetMockCreditDocumentData()
+    {
+        var now = DateTime.UtcNow;
+        return new List<Dictionary<string, object>>
+        {
+            CreditDoc("cd001", "CN-2026-001", "CREDIT_MEMO", "Acme d.o.o.",     now.AddMonths(-5), 12000.00m, "SI-001", "Posted"),
+            CreditDoc("cd002", "CN-2026-002", "CREDIT_MEMO", "Delta Corp",      now.AddMonths(-4), 8500.00m,  "SI-002", "Open"),
+            CreditDoc("cd003", "CN-2026-003", "CREDIT_MEMO", "Sigma Trade",     now.AddMonths(-3), 15000.00m, "SI-003", "Posted"),
+            CreditDoc("cd004", "CN-2026-004", "CREDIT_MEMO", "Omega Logistika", now.AddMonths(-2), 6200.00m,  "PSI-004", "Open"),
+            CreditDoc("cd005", "DN-2026-001", "DEBIT_MEMO",  "Gama Petrol",     now.AddMonths(-4), 4300.00m,  "SI-005", "Posted"),
+            CreditDoc("cd006", "DN-2026-002", "DEBIT_MEMO",  "Acme d.o.o.",     now.AddMonths(-2), 9800.00m,  "SI-007", "Open"),
+            CreditDoc("cd007", "DN-2026-003", "DEBIT_MEMO",  "Delta Corp",      now.AddDays(-25),  5600.00m,  "SI-008", "Posted"),
+            CreditDoc("cd008", "DN-2026-004", "DEBIT_MEMO",  "Sigma Trade",     now.AddDays(-12),  7100.00m,  "PSI-003", "Open"),
+            CreditDoc("cd009", "ST-2026-001", "STORNO",      "Acme d.o.o.",     now.AddMonths(-3), 45000.00m, "SI-001", "Posted"),
+            CreditDoc("cd010", "ST-2026-002", "STORNO",      "Omega Logistika", now.AddMonths(-1), 110000.00m, "PSI-004", "Posted"),
+            CreditDoc("cd011", "ST-2026-003", "STORNO",      "Delta Corp",      now.AddDays(-20),  78000.00m, "SI-002", "Open"),
+            CreditDoc("cd012", "ST-2026-004", "STORNO",      "Gama Petrol",     now.AddDays(-6),   33000.00m, "SI-006", "Posted"),
+        };
+    }
+
+    // Find a correction document in the list-view source by id and attach mock line
+    // items + a bill-to address so the detail mapper can compute non-trivial totals.
+    // Returns null for unknown ids. Mirrors FindInvoiceWithLines but carries partyName,
+    // the document type, and the original-invoice reference.
+    private static Dictionary<string, object>? FindCreditDocumentWithLines(
+        List<Dictionary<string, object>> source, string id)
+    {
+        var match = source.FirstOrDefault(i => (string)i["id"] == id);
+        if (match == null) return null;
+
+        // Clone so the shared mock list-view source is never mutated across calls.
+        var record = new Dictionary<string, object>(match)
+        {
+            ["salesInvoiceLines"] = GetMockInvoiceLines(id),
+        };
+        return record;
     }
 
     // Single source of truth for mock vendor records. Carries city, balance and phone
