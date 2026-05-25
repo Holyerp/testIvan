@@ -359,6 +359,13 @@ public class MockBcHttpClient : IBcHttpClient
             Inv("inv010", "SI-010", "Acme d.o.o.", now.AddDays(-65),   71000.00m,  "Open"),            // overdue
             Inv("inv011", "SI-011", "Delta Corp",  now.AddDays(-2),    18500.00m,  "Open"),
             Inv("inv012", "SI-012", "Sigma Trade", now.AddDays(-90),   135000.00m, "Paid"),
+            // Older sales spread into the prior 12-month window so the analytics period
+            // comparison (current vs prior equal-length window) has a non-trivial prior.
+            Inv("inv013", "SI-013", "Acme d.o.o.", now.AddMonths(-8),  52000.00m,  "Paid"),
+            Inv("inv014", "SI-014", "Delta Corp",  now.AddMonths(-10), 61000.00m,  "Paid"),
+            Inv("inv015", "SI-015", "Gama Petrol", now.AddMonths(-14), 84000.00m,  "Paid"),
+            Inv("inv016", "SI-016", "Sigma Trade", now.AddMonths(-18), 47000.00m,  "Paid"),
+            Inv("inv017", "SI-017", "Acme d.o.o.", now.AddMonths(-22), 73000.00m,  "Paid"),
         };
     }
 
@@ -501,6 +508,13 @@ public class MockBcHttpClient : IBcHttpClient
             Purchase("pinv008", "PI-008", "Materijal Promet",    now.AddDays(-12),  95000.00m,  "Paid"),
             Purchase("pinv009", "PI-009", "Energo Snabdevanje",  now.AddDays(-55),  52000.00m,  "Partially Paid"),  // overdue
             Purchase("pinv010", "PI-010", "Supplier A d.o.o.",   now.AddDays(-70),  68000.00m,  "Open"),            // overdue
+            // Older purchases spread into the prior 12-month window so the analytics period
+            // comparison (current vs prior equal-length window) has a non-trivial prior.
+            Purchase("pinv011", "PI-011", "Supplier B d.o.o.",   now.AddMonths(-8),  44000.00m,  "Paid"),
+            Purchase("pinv012", "PI-012", "Materijal Promet",    now.AddMonths(-10), 58000.00m,  "Paid"),
+            Purchase("pinv013", "PI-013", "Energo Snabdevanje",  now.AddMonths(-14), 39000.00m,  "Paid"),
+            Purchase("pinv014", "PI-014", "Supplier A d.o.o.",   now.AddMonths(-18), 51000.00m,  "Paid"),
+            Purchase("pinv015", "PI-015", "Tehno Oprema d.o.o.", now.AddMonths(-22), 62000.00m,  "Paid"),
         };
     }
 
@@ -713,7 +727,8 @@ public class MockBcHttpClient : IBcHttpClient
     // their minimum stock (qtyOnHand < minimumStock) so the low-stock badge has data.
     private static Dictionary<string, object> Item(
         string id, string number, string description, string category, string location,
-        string uom, decimal qtyOnHand, decimal minimumStock, decimal unitCost, decimal unitPrice) => new()
+        string uom, decimal qtyOnHand, decimal minimumStock, decimal unitCost, decimal unitPrice,
+        decimal salesVolume, decimal salesValue) => new()
     {
         ["id"] = id,
         ["number"] = number,
@@ -725,24 +740,27 @@ public class MockBcHttpClient : IBcHttpClient
         ["minimumStock"] = minimumStock,
         ["unitCost"] = unitCost,
         ["unitPrice"] = unitPrice,
+        // Analytics sales-volume basis (US-020). Additive — list / detail mappers ignore it.
+        ["salesVolume"] = salesVolume,
+        ["salesValue"] = salesValue,
     };
 
     private static List<Dictionary<string, object>> GetMockItemData()
     {
         return new List<Dictionary<string, object>>
         {
-            Item("itm001", "ITM-001", "Cement 25kg",          "GRAĐEVINA", "MAGACIN-1", "KG",  120m, 50m,  650.00m,   780.00m),
-            Item("itm002", "ITM-002", "Čelična šipka 12mm",   "GRAĐEVINA", "MAGACIN-1", "M",   30m,  100m, 320.00m,   410.00m),  // low stock
-            Item("itm003", "ITM-003", "Crep keramički",        "GRAĐEVINA", "MAGACIN-2", "KOM", 4500m, 2000m, 95.00m,  130.00m),
-            Item("itm004", "ITM-004", "Blok opeka",            "GRAĐEVINA", "MAGACIN-2", "KOM", 800m, 1000m, 48.00m,   62.00m),  // low stock
-            Item("itm005", "ITM-005", "Bušilica udarna 800W",  "ALATI",     "MAGACIN-1", "KOM", 15m,  8m,   8900.00m,  11500.00m),
-            Item("itm006", "ITM-006", "Brusilica ugaona 125mm","ALATI",     "MAGACIN-1", "KOM", 5m,   10m,  6200.00m,  7900.00m), // low stock
-            Item("itm007", "ITM-007", "Set odvijača 32 dela",  "ALATI",     "MAGACIN-2", "KOM", 42m,  20m,  2400.00m,  3100.00m),
-            Item("itm008", "ITM-008", "Lepak za pločice 25kg",  "GRAĐEVINA", "MAGACIN-1", "KG",  210m, 80m,  540.00m,   690.00m),
-            Item("itm009", "ITM-009", "Izolaciona traka",       "ELEKTRO",   "MAGACIN-2", "KOM", 6m,   25m,  120.00m,   180.00m), // low stock
-            Item("itm010", "ITM-010", "Kabl PP-Y 3x1.5",        "ELEKTRO",   "MAGACIN-2", "M",   1200m, 500m, 85.00m,   115.00m),
-            Item("itm011", "ITM-011", "Prekidač jednopolni",    "ELEKTRO",   "MAGACIN-1", "KOM", 340m, 100m,  150.00m,  210.00m),
-            Item("itm012", "ITM-012", "Boja za zidove 15L",     "FARBE",     "MAGACIN-1", "KOM", 60m,  30m,  1850.00m,  2400.00m),
+            Item("itm001", "ITM-001", "Cement 25kg",          "GRAĐEVINA", "MAGACIN-1", "KG",  120m, 50m,  650.00m,   780.00m,   980m,  764400.00m),
+            Item("itm002", "ITM-002", "Čelična šipka 12mm",   "GRAĐEVINA", "MAGACIN-1", "M",   30m,  100m, 320.00m,   410.00m,   1450m, 594500.00m),  // low stock
+            Item("itm003", "ITM-003", "Crep keramički",        "GRAĐEVINA", "MAGACIN-2", "KOM", 4500m, 2000m, 95.00m,  130.00m,   6200m, 806000.00m),
+            Item("itm004", "ITM-004", "Blok opeka",            "GRAĐEVINA", "MAGACIN-2", "KOM", 800m, 1000m, 48.00m,   62.00m,    9800m, 607600.00m),  // low stock
+            Item("itm005", "ITM-005", "Bušilica udarna 800W",  "ALATI",     "MAGACIN-1", "KOM", 15m,  8m,   8900.00m,  11500.00m, 120m,  1380000.00m),
+            Item("itm006", "ITM-006", "Brusilica ugaona 125mm","ALATI",     "MAGACIN-1", "KOM", 5m,   10m,  6200.00m,  7900.00m,  85m,   671500.00m), // low stock
+            Item("itm007", "ITM-007", "Set odvijača 32 dela",  "ALATI",     "MAGACIN-2", "KOM", 42m,  20m,  2400.00m,  3100.00m,  310m,  961000.00m),
+            Item("itm008", "ITM-008", "Lepak za pločice 25kg",  "GRAĐEVINA", "MAGACIN-1", "KG",  210m, 80m,  540.00m,   690.00m,   1720m, 1186800.00m),
+            Item("itm009", "ITM-009", "Izolaciona traka",       "ELEKTRO",   "MAGACIN-2", "KOM", 6m,   25m,  120.00m,   180.00m,   540m,  97200.00m), // low stock
+            Item("itm010", "ITM-010", "Kabl PP-Y 3x1.5",        "ELEKTRO",   "MAGACIN-2", "M",   1200m, 500m, 85.00m,   115.00m,   8600m, 989000.00m),
+            Item("itm011", "ITM-011", "Prekidač jednopolni",    "ELEKTRO",   "MAGACIN-1", "KOM", 340m, 100m,  150.00m,  210.00m,   2100m, 441000.00m),
+            Item("itm012", "ITM-012", "Boja za zidove 15L",     "FARBE",     "MAGACIN-1", "KOM", 60m,  30m,  1850.00m,  2400.00m,  430m,  1032000.00m),
         };
     }
 

@@ -247,6 +247,35 @@
     "noResults": "Nema podataka",
     "loadError": "Greška pri učitavanju zaliha"
   },
+  "analytics": {
+    "title": "Analitika",
+    "subtitle": "Prihodi i rashodi, najbolji kupci i artikli, poređenje perioda",
+    "revenue": "Prihod",
+    "expense": "Rashod",
+    "profit": "Dobit",
+    "granularity": {
+      "MONTHLY": "Mesečno",
+      "QUARTERLY": "Kvartalno",
+      "YEARLY": "Godišnje"
+    },
+    "topCustomers": "Top 10 kupaca po prihodu",
+    "topItems": "Top 10 artikala po prodaji",
+    "customer": "Kupac",
+    "number": "Broj",
+    "description": "Opis",
+    "salesVolume": "Količina prodaje",
+    "salesValue": "Vrednost prodaje",
+    "invoiceCount": "Broj faktura",
+    "period": "Period",
+    "comparison": "Poređenje perioda",
+    "vsPrior": "U odnosu na prethodni period",
+    "deltaPercent": "Promena %",
+    "exportPdf": "Izvoz u PDF",
+    "exportExcel": "Izvoz u Excel",
+    "dateFrom": "Od datuma",
+    "dateTo": "Do datuma",
+    "loadError": "Greška pri učitavanju analitike"
+  },
   "itemDetail": {
     "back": "Nazad na artikle",
     "notFound": "Artikal nije pronađen",

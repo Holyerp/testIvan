@@ -24,6 +24,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/vendors', label: 'Vendors', module: 'financial' },
   { href: '/items', label: 'Items', module: 'warehouse' },
   { href: '/inventory', label: 'Inventory', module: 'warehouse' },
+  { href: '/analytics', label: 'Analytics', module: 'financial' },
 ];
 
 export function Sidebar() {

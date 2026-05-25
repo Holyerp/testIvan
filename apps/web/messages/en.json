@@ -247,6 +247,35 @@
     "noResults": "No data",
     "loadError": "Error loading inventory"
   },
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "Revenue and expenses, top customers and items, period comparison",
+    "revenue": "Revenue",
+    "expense": "Expense",
+    "profit": "Profit",
+    "granularity": {
+      "MONTHLY": "Monthly",
+      "QUARTERLY": "Quarterly",
+      "YEARLY": "Yearly"
+    },
+    "topCustomers": "Top 10 customers by revenue",
+    "topItems": "Top 10 items by sales volume",
+    "customer": "Customer",
+    "number": "Number",
+    "description": "Description",
+    "salesVolume": "Sales volume",
+    "salesValue": "Sales value",
+    "invoiceCount": "Invoice count",
+    "period": "Period",
+    "comparison": "Period comparison",
+    "vsPrior": "vs prior period",
+    "deltaPercent": "Change %",
+    "exportPdf": "Export to PDF",
+    "exportExcel": "Export to Excel",
+    "dateFrom": "From date",
+    "dateTo": "To date",
+    "loadError": "Error loading analytics"
+  },
   "itemDetail": {
     "back": "Back to items",
     "notFound": "Item not found",

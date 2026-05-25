@@ -18,6 +18,14 @@ public class BcItem
     public decimal UnitCost { get; set; }
     public decimal UnitPrice { get; set; }
 
+    // Analytics sales-volume basis (US-020). Rolling aggregate of units sold and their
+    // monetary value, used by the "top items by sales volume" analytics. Additive and
+    // optional: the list / detail mappers ignore these, so existing screens are unaffected.
+    // In real BC these would be derived from item ledger "Sale" entries; the mock carries
+    // them directly because mock invoice lines are free-text (not item-linked).
+    public decimal SalesVolume { get; set; }
+    public decimal SalesValue { get; set; }
+
     // Detail-only navigation (US-018): populated by GetByIdAsync (mock attaches it,
     // real BC via $expand). Empty for the list query, so the list mapper ignores it.
     public List<BcStockByLocation> StockByLocation { get; set; } = new();

@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Pinoles.Api.Application.Analytics;
 using Pinoles.Api.Application.Auth;
 using Pinoles.Api.Application.CreditDocuments;
 using Pinoles.Api.Application.Customers;
@@ -181,6 +182,9 @@ try
     // Inventory service (US-019) — warehouse stock overview (summary KPIs, by location, low stock)
     builder.Services.AddScoped<IInventoryService, InventoryService>();
 
+    // Analytics service (US-020) — revenue/expense trends, top customers/items, period comparison
+    builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+
     // Search service — aggregates the four list services above (RBAC-gated)
     builder.Services.AddScoped<ISearchService, SearchService>();
 
@@ -220,6 +224,7 @@ try
     app.MapCreditDocumentsEndpoints();
     app.MapItemsEndpoints();
     app.MapInventoryEndpoints();
+    app.MapAnalyticsEndpoints();
     app.MapSearchEndpoints();
     app.MapNotificationsEndpoints();
 
