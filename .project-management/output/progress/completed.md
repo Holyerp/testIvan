@@ -64,6 +64,22 @@
 - i18n: dashboard section (sr + en)
 - Tests: 5 backend (DashboardService) + 3 frontend (KpiCard)
 
+### US-004: Customers — List View
+**Completed:** 2026-05-25
+**Phase:** 1 — Foundation
+**Story Points:** 5
+**Commit:** See git log
+
+**Summary:**
+- GET /api/v1/customers (RequireFinancial — ADMIN/MANAGER/ACCOUNTING; WAREHOUSE 403)
+- ICustomerService/CustomerService: server-side pagination/search($filter)/sort($orderby) via BC OData
+- PagedResultDto<T> + CustomerListItemDto; BcCustomer extended with City
+- Mock: expanded customer set for pagination demo
+- Frontend: searchable (debounced) + sortable paginated table, RSD formatting, skeleton/empty/error states
+- lib/format.ts helpers (formatRsd, totalPages)
+- i18n: customers section (sr + en)
+- Tests: 6 backend (CustomerService) + 5 frontend (format helpers)
+
 ---
 
 ## Completed Technical Tasks

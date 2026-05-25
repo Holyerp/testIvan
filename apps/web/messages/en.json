@@ -52,13 +52,19 @@
   },
   "customers": {
     "title": "Customers",
+    "subtitle": "All customers overview",
     "search": "Search customers...",
     "name": "Name",
     "number": "Number",
     "city": "City",
     "balance": "Balance",
+    "balanceDue": "Balance Due",
     "phone": "Phone",
-    "noResults": "No results found."
+    "noResults": "No customers found",
+    "loadError": "Error loading customers",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}"
   },
   "common": {
     "loading": "Loading...",

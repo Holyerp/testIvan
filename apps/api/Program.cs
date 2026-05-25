@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Pinoles.Api.Application.Auth;
+using Pinoles.Api.Application.Customers;
 using Pinoles.Api.Application.Dashboard;
 using Pinoles.Api.Application.Interfaces;
 using Pinoles.Api.Domain.Constants;
@@ -130,6 +131,9 @@ try
     // Dashboard service
     builder.Services.AddScoped<IDashboardService, DashboardService>();
 
+    // Customer service
+    builder.Services.AddScoped<ICustomerService, CustomerService>();
+
     var app = builder.Build();
 
     if (app.Environment.IsDevelopment())
@@ -152,6 +156,7 @@ try
     app.MapAuthEndpoints();
     app.MapUsersEndpoints();
     app.MapDashboardEndpoints();
+    app.MapCustomersEndpoints();
 
     // Health check
     app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }))

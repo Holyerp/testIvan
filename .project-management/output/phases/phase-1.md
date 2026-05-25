@@ -43,7 +43,7 @@ Deliver a working authentication system, BC middleware connectivity, and the fir
 - KPI cards, invoice trend chart, BC connection status
 
 ### US-004: Customers — List View (5 pts) — P0
-**Status:** Todo
+**Status:** Completed
 - Paginated customer table, search, sort
 
 ### US-005: Customers — Detail View (5 pts) — P0
@@ -61,9 +61,9 @@ Deliver a working authentication system, BC middleware connectivity, and the fir
 - **Risk Level:** High (BC API connectivity unknown until T-002)
 
 ### Progress Tracking
-- **Completed Story Points:** 34 / 47 (72%)
-- **Completed Stories:** 5 / 7 (T-001, T-002, US-001, US-002, US-003)
-- **Tests Passing:** 32 (5 web API/component + 5 dashboard service + 10 BC middleware + 5 auth service + 5 rate limiter + 1 types + others)
+- **Completed Story Points:** 39 / 47 (83%)
+- **Completed Stories:** 6 / 7 (T-001, T-002, US-001, US-002, US-003, US-004)
+- **Tests Passing:** 6 backend (CustomerService) + 5 frontend (format helpers) added this story; suite green
 - **Code Coverage:** ≥ 80% on BC middleware, auth, and dashboard layers
 
 ---

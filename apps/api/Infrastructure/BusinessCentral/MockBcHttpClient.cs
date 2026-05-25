@@ -41,20 +41,54 @@ public class MockBcHttpClient : IBcHttpClient
     {
         var customers = new List<Dictionary<string, object>>
         {
-            new() { ["id"] = "c001", ["number"] = "C001", ["displayName"] = "Acme d.o.o.",   ["city"] = "Beograd",  ["balance"] = 150000.00m, ["balanceDue"] = 45000.00m },
-            new() { ["id"] = "c002", ["number"] = "C002", ["displayName"] = "Delta Corp",    ["city"] = "Novi Sad", ["balance"] = 280000.00m, ["balanceDue"] = 0m        },
-            new() { ["id"] = "c003", ["number"] = "C003", ["displayName"] = "Sigma Trade",   ["city"] = "Niš",      ["balance"] = 95000.00m,  ["balanceDue"] = 95000.00m },
+            new() { ["id"] = "c001", ["number"] = "C001", ["displayName"] = "Acme d.o.o.",        ["city"] = "Beograd",   ["balance"] = 150000.00m, ["balanceDue"] = 45000.00m  },
+            new() { ["id"] = "c002", ["number"] = "C002", ["displayName"] = "Delta Corp",         ["city"] = "Novi Sad",  ["balance"] = 280000.00m, ["balanceDue"] = 0m         },
+            new() { ["id"] = "c003", ["number"] = "C003", ["displayName"] = "Sigma Trade",        ["city"] = "Niš",       ["balance"] = 95000.00m,  ["balanceDue"] = 95000.00m  },
+            new() { ["id"] = "c004", ["number"] = "C004", ["displayName"] = "Omega Logistika",    ["city"] = "Beograd",   ["balance"] = 412000.00m, ["balanceDue"] = 120000.00m },
+            new() { ["id"] = "c005", ["number"] = "C005", ["displayName"] = "Beta Gradnja d.o.o.", ["city"] = "Kragujevac", ["balance"] = 67000.00m, ["balanceDue"] = 0m         },
+            new() { ["id"] = "c006", ["number"] = "C006", ["displayName"] = "Gama Petrol",        ["city"] = "Subotica",  ["balance"] = 530000.00m, ["balanceDue"] = 210000.00m },
+            new() { ["id"] = "c007", ["number"] = "C007", ["displayName"] = "Lambda Tehnika",     ["city"] = "Novi Sad",  ["balance"] = 88000.00m,  ["balanceDue"] = 12000.00m  },
+            new() { ["id"] = "c008", ["number"] = "C008", ["displayName"] = "Zenit Trgovina",     ["city"] = "Niš",       ["balance"] = 145000.00m, ["balanceDue"] = 0m         },
+            new() { ["id"] = "c009", ["number"] = "C009", ["displayName"] = "Vega Mont d.o.o.",   ["city"] = "Čačak",     ["balance"] = 39000.00m,  ["balanceDue"] = 39000.00m  },
+            new() { ["id"] = "c010", ["number"] = "C010", ["displayName"] = "Nova Elektro",       ["city"] = "Beograd",   ["balance"] = 274000.00m, ["balanceDue"] = 60000.00m  },
+            new() { ["id"] = "c011", ["number"] = "C011", ["displayName"] = "Kappa Distribucija", ["city"] = "Zrenjanin", ["balance"] = 198000.00m, ["balanceDue"] = 0m         },
+            new() { ["id"] = "c012", ["number"] = "C012", ["displayName"] = "Theta Komerc",       ["city"] = "Pančevo",   ["balance"] = 76000.00m,  ["balanceDue"] = 25000.00m  },
         };
-        var top = options?.Top ?? customers.Count;
+
+        // Simple in-memory filter that mimics OData contains(displayName,'x') or contains(number,'x').
+        // We extract the search term from the generated filter string rather than reimplementing OData parsing.
+        var filtered = ApplyCustomerFilter(customers, options?.Filter);
+
+        var top = options?.Top ?? filtered.Count;
         var skip = options?.Skip ?? 0;
-        var paged = customers.Skip(skip).Take(top).ToList();
+        var paged = filtered.Skip(skip).Take(top).ToList();
         var json = JsonSerializer.Serialize(paged);
         var typed = JsonSerializer.Deserialize<List<T>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
         return new BcCollectionResponse<T>
         {
             Value = typed,
-            Count = options?.Count == true ? customers.Count : null
+            Count = options?.Count == true ? filtered.Count : null
         };
+    }
+
+    private static List<Dictionary<string, object>> ApplyCustomerFilter(
+        List<Dictionary<string, object>> customers, string? filter)
+    {
+        if (string.IsNullOrWhiteSpace(filter)) return customers;
+
+        // Extract the term between the first pair of single quotes in the contains(...) expression.
+        var firstQuote = filter.IndexOf('\'');
+        if (firstQuote < 0) return customers;
+        var secondQuote = filter.IndexOf('\'', firstQuote + 1);
+        if (secondQuote < 0) return customers;
+
+        var term = filter.Substring(firstQuote + 1, secondQuote - firstQuote - 1)
+            .Replace("''", "'");
+        if (string.IsNullOrWhiteSpace(term)) return customers;
+
+        return customers.Where(c =>
+            c["displayName"].ToString()!.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+            c["number"].ToString()!.Contains(term, StringComparison.OrdinalIgnoreCase)).ToList();
     }
 
     private static BcCollectionResponse<T> CreateMockSalesInvoices<T>(BcQueryOptions? options)

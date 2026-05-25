@@ -51,14 +51,20 @@
     }
   },
   "customers": {
-    "title": "Klijenti",
-    "search": "Pretraga klijenata...",
+    "title": "Kupci",
+    "subtitle": "Pregled svih kupaca",
+    "search": "Pretraži kupce...",
     "name": "Naziv",
     "number": "Broj",
     "city": "Grad",
-    "balance": "Saldo",
+    "balance": "Stanje",
+    "balanceDue": "Dospelo",
     "phone": "Telefon",
-    "noResults": "Nema rezultata."
+    "noResults": "Nema pronađenih kupaca",
+    "loadError": "Greška pri učitavanju kupaca",
+    "previous": "Prethodna",
+    "next": "Sledeća",
+    "pageOf": "Strana {page} od {total}"
   },
   "common": {
     "loading": "Učitavanje...",
