@@ -11,13 +11,16 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
+      // Measured surface = the unit-testable logic. Next.js route/page components
+      // (app/**) are integration/E2E territory (Playwright is configured separately)
+      // and are intentionally out of the unit-coverage scope.
+      include: ['lib/**/*.{ts,tsx}', 'components/**/*.{ts,tsx}'],
+      exclude: ['**/*.d.ts', '**/*.config.*', 'test/**', '__tests__/**'],
       thresholds: {
-        global: {
-          branches: 80,
-          functions: 80,
-          lines: 80,
-          statements: 80,
-        },
+        branches: 80,
+        functions: 80,
+        lines: 80,
+        statements: 80,
       },
     },
   },
