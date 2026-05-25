@@ -20,6 +20,22 @@ public class SalesInvoiceMapperTests
         Assert.Equal(expected, SalesInvoiceMapper.NormalizeStatus(bcStatus));
     }
 
+    // US-008 — credit memos use OPEN | POSTED. The dedicated normalizer must map
+    // those and treat the invoice-only statuses (Paid / Partially Paid) as OPEN,
+    // since they are not part of the credit-memo lifecycle.
+    [Theory]
+    [InlineData("Open", "OPEN")]
+    [InlineData("open", "OPEN")]
+    [InlineData("Posted", "POSTED")]
+    [InlineData("posted", "POSTED")]
+    [InlineData("Paid", "OPEN")]
+    [InlineData("Partially Paid", "OPEN")]
+    [InlineData("", "OPEN")]
+    public void NormalizeCreditMemoStatus_MapsBcStatusToWireValue(string bcStatus, string expected)
+    {
+        Assert.Equal(expected, SalesInvoiceMapper.NormalizeCreditMemoStatus(bcStatus));
+    }
+
     [Fact]
     public void Map_CopiesAllFields_AndNormalizesStatus()
     {

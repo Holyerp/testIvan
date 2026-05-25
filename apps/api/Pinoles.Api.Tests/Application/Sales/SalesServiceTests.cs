@@ -191,4 +191,73 @@ public class SalesServiceTests
         var detail = await CreateService().GetInvoiceByIdAsync("salesInvoicesPosted", "inv001");
         Assert.Null(detail);
     }
+
+    // ----- Credit memos (US-008) -----
+
+    [Fact]
+    public async Task GetInvoicesAsync_CreditMemos_UsesCreditMemoStatusValues()
+    {
+        var result = await CreateService().GetInvoicesAsync(
+            "salesCreditMemos", 1, 50, null, null, null, null, null, null);
+        Assert.NotEmpty(result.Items);
+        // Credit memos only ever surface OPEN | POSTED (never PARTIAL/PAID).
+        Assert.All(result.Items, i => Assert.Contains(i.Status, new[] { "OPEN", "POSTED" }));
+    }
+
+    [Fact]
+    public async Task GetInvoicesAsync_PostedCreditMemos_ReturnsItems()
+    {
+        var result = await CreateService().GetInvoicesAsync(
+            "salesCreditMemosPosted", 1, 20, null, null, null, null, null, null);
+        Assert.NotEmpty(result.Items);
+        Assert.All(result.Items, i => Assert.StartsWith("PSCM-", i.Number));
+        Assert.All(result.Items, i => Assert.Equal("POSTED", i.Status));
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_CreditMemo_KnownId_ReturnsDetailWithLines()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("salesCreditMemos", "scm001");
+        Assert.NotNull(detail);
+        Assert.Equal("SCM-001", detail!.Header.Number);
+        Assert.False(string.IsNullOrEmpty(detail.Header.CustomerName));
+        Assert.NotEmpty(detail.Lines);
+        Assert.All(detail.Lines, l => Assert.False(string.IsNullOrEmpty(l.Description)));
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_CreditMemo_UsesCreditMemoStatus()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("salesCreditMemos", "scm001");
+        Assert.NotNull(detail);
+        Assert.Contains(detail!.Header.Status, new[] { "OPEN", "POSTED" });
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_CreditMemo_ComputesTotals()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("salesCreditMemos", "scm002");
+        Assert.NotNull(detail);
+        var totals = detail!.Totals;
+        Assert.True(totals.Subtotal > 0);
+        Assert.True(totals.VatAmount > 0);
+        Assert.Equal(totals.Subtotal + totals.VatAmount, totals.Total);
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_CreditMemo_UnknownId_ReturnsNull()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("salesCreditMemos", "does-not-exist");
+        Assert.Null(detail);
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_PostedCreditMemo_KnownId_ReturnsDetail()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("salesCreditMemosPosted", "pscm001");
+        Assert.NotNull(detail);
+        Assert.Equal("PSCM-001", detail!.Header.Number);
+        Assert.Equal("POSTED", detail.Header.Status);
+        Assert.NotEmpty(detail.Lines);
+    }
 }

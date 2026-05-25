@@ -1,10 +1,10 @@
 # Sales API
 
-**Version:** 1.0
+**Version:** 1.1
 **Last Updated:** 2026-05-25
 **Status:** Active
 
-Read-only sales-invoice list endpoints backed by Microsoft Dynamics 365 Business Central (BC) via `IBcHttpClient`. All three endpoints share one service (`ISalesService`) and one response shape; they differ only in the BC collection they read.
+Read-only sales-invoice and credit-memo list + detail endpoints backed by Microsoft Dynamics 365 Business Central (BC) via `IBcHttpClient`. All list endpoints share one service (`ISalesService`) and one response shape, as do the detail endpoints; they differ only in the BC collection they read and (for detail) the not-found code returned.
 
 **Base path:** `/api/v1/sales`
 **Authentication:** Bearer JWT. Authorization policy `RequireFinancial` — roles `ADMIN`, `MANAGER`, `ACCOUNTING`. `WAREHOUSE` is denied (403).
@@ -35,6 +35,15 @@ Wire values are `SCREAMING_SNAKE_CASE` (per `.claude/rules/enums-and-constants.m
 | `OPEN` | Open / unpaid | `Open` (and any unknown) |
 | `PARTIAL` | Partially paid | `Partially Paid`, `partial` |
 | `PAID` | Fully paid | `Paid` |
+
+### Credit-memo status enum
+
+Credit memos (`/credit-memos`, `/credit-memos/{id}`, `/posted-credit-memos`) use a distinct lifecycle — `OPEN | POSTED` — not the invoice `OPEN/PARTIAL/PAID` lifecycle. The credit-memo normalizer maps invoice-only BC statuses (`Paid`, `Partially Paid`) to `OPEN`, since they are not part of the credit-memo lifecycle. The frontend maps each value to a localized label via i18next key `creditMemos.status.<VALUE>`.
+
+| Wire value | Meaning | BC source values |
+|------------|---------|------------------|
+| `OPEN` | Draft / unposted | `Open` (and any unknown) |
+| `POSTED` | Booked / posted | `Posted` |
 
 ---
 
@@ -85,7 +94,70 @@ Wire values are `SCREAMING_SNAKE_CASE` (per `.claude/rules/enums-and-constants.m
 
 ## GET /api/v1/sales/credit-memos
 
-**Description:** Paginated, filtered list of sales credit memos. Same query params, response shape, and error responses as `/invoices` (reads the `salesCreditMemos` BC collection).
+**Description:** Paginated, filtered list of open (draft) sales credit memos. Same query params, response shape, and error responses as `/invoices` (reads the `salesCreditMemos` BC collection). The response `status` field uses the [credit-memo status enum](#credit-memo-status-enum) (`OPEN` / `POSTED`).
+
+---
+
+## GET /api/v1/sales/posted-credit-memos
+
+**Description:** Paginated, filtered list of posted sales credit memos. Same query params, response shape, and error responses as `/invoices` (reads the `salesCreditMemosPosted` BC collection). The response `status` field uses the [credit-memo status enum](#credit-memo-status-enum) — posted credit memos are `POSTED`.
+
+---
+
+## GET /api/v1/sales/credit-memos/{id}
+
+**Description:** Sales credit memo detail — header, line items, and computed totals. Same response shape as `/invoices/{id}` (loads line items via the BC `salesInvoiceLines` `$expand` navigation property). `header.status` uses the [credit-memo status enum](#credit-memo-status-enum) (`OPEN` / `POSTED`).
+
+**Authentication:** `RequireFinancial` (ADMIN / MANAGER / ACCOUNTING)
+
+**Path parameter:**
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `id` | string | BC sales-credit-memo id (e.g. `scm001`) |
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "data": {
+    "header": {
+      "id": "scm001",
+      "number": "SCM-001",
+      "customerName": "Acme d.o.o.",
+      "billToAddress": "Acme d.o.o., Bulevar Oslobođenja 12, Beograd",
+      "postingDate": "2026-03-25",
+      "dueDate": "2026-04-24",
+      "paymentTerms": "30 dana",
+      "status": "OPEN"
+    },
+    "lines": [
+      {
+        "description": "Konsultantske usluge",
+        "quantity": 10,
+        "unitPrice": 5000.00,
+        "vatPercent": 20,
+        "lineTotal": 50000.00
+      }
+    ],
+    "totals": {
+      "subtotal": 82000.00,
+      "vatAmount": 16400.00,
+      "total": 98400.00
+    }
+  }
+}
+```
+
+Totals are computed from the lines: `subtotal = Σ lineTotal`, `vatAmount = Σ (lineTotal × vatPercent / 100)`, `total = subtotal + vatAmount`.
+
+**Error Responses:**
+- `400 Bad Request` — malformed path parameter
+- `401 Unauthorized` — missing/invalid token (`{ "success": false, "code": "AUTH_REQUIRED" }`)
+- `403 Forbidden` — authenticated but role not in RequireFinancial (`{ "success": false, "code": "FORBIDDEN_INSUFFICIENT_ROLE" }`)
+- `404 Not Found` — credit-memo id does not exist (`{ "success": false, "code": "NOT_FOUND_SALES_CREDIT_MEMO" }`)
+- `500 Internal Server Error` — unexpected server error
+- `502 Bad Gateway` — BC upstream unavailable (`{ "success": false, "code": "INTEGRATION_BC_UNAVAILABLE" }`)
 
 ---
 
@@ -156,3 +228,5 @@ The `header.status` field uses the same `SCREAMING_SNAKE_CASE` enum (`OPEN` / `P
 
 - Frontend list: `apps/web/app/(protected)/sales/invoices/page.tsx` (US-006, SalesInvoiceListScreen — Open / Posted / Credit Memos tabs).
 - Frontend detail: `apps/web/app/(protected)/sales/invoices/[id]/page.tsx` (US-007, SalesInvoiceDetailScreen — header + line items + totals).
+- Frontend credit-memo list: `apps/web/app/(protected)/sales/credit-memos/page.tsx` (US-008, SalesCreditMemoListScreen — Open / Posted tabs over `/credit-memos` and `/posted-credit-memos`).
+- Frontend credit-memo detail: `apps/web/app/(protected)/sales/credit-memos/[id]/page.tsx` (US-008 — header + line items + totals; 404 → `NOT_FOUND_SALES_CREDIT_MEMO`).

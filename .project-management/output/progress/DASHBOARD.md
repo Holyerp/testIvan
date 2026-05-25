@@ -8,7 +8,7 @@
 
 ## Currently Working On
 
-**US-008: Sales Credit Memos — List & Detail** (5 pts) — Phase 2
+**US-009: Purchase Invoices — List View** (5 pts) — Phase 2
 🔄 Dispatching sub-agent...
 
 ---
@@ -18,10 +18,10 @@
 | Phase | Status | Points | Progress |
 |-------|--------|--------|----------|
 | Phase 1 — Foundation | ✅ Complete | 47 / 47 | 100% |
-| Phase 2 — Core Documents | 🔄 In Progress | 15 / 52 | 29% |
+| Phase 2 — Core Documents | 🔄 In Progress | 20 / 52 | 38% |
 | Phase 3 — Extended Modules | ⏸️ Pending | 0 / 42 | 0% |
 | Phase 4 — Analytics & Polish | ⏸️ Pending | 0 / 27 | 0% |
-| **TOTAL** | | **62 / 168** | **37%** |
+| **TOTAL** | | **67 / 168** | **40%** |
 
 ---
 
@@ -30,9 +30,9 @@
 | Metric | Current | Target |
 |--------|---------|--------|
 | Test coverage | ≥ 80% (BC + auth + RBAC + customer + shared list layers) | ≥ 80% |
-| Stories completed | 7 / 23 | 23 |
+| Stories completed | 8 / 23 | 23 |
 | Technical tasks | 3 / 5 | 5 |
-| Tests passing | 158 (104 backend + 54 frontend) | — |
+| Tests passing | 175 (118 backend + 57 frontend) | — |
 
 ---
 

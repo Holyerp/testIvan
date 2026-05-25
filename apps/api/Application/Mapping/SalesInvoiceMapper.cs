@@ -21,7 +21,12 @@ public class SalesInvoiceMapper : IBcMapper<BcSalesInvoice, SalesInvoiceListItem
         Status = NormalizeStatus(source.Status),
     };
 
-    /// <summary>Normalize a BC status string to the Pinoles wire value.</summary>
+    /// <summary>
+    /// Normalize a BC sales-invoice status string to the Pinoles wire value
+    /// (OPEN | PARTIAL | PAID). Unknown statuses default to OPEN. Additive: also
+    /// recognizes "posted" so credit-memo data passing through here is never lost,
+    /// but credit memos should use <see cref="NormalizeCreditMemoStatus"/>.
+    /// </summary>
     public static string NormalizeStatus(string? bcStatus)
     {
         var normalized = (bcStatus ?? string.Empty).Trim().ToLowerInvariant();
@@ -29,6 +34,23 @@ public class SalesInvoiceMapper : IBcMapper<BcSalesInvoice, SalesInvoiceListItem
         {
             "paid" => "PAID",
             "partial" or "partially paid" => "PARTIAL",
+            "posted" => "POSTED",
+            "open" => "OPEN",
+            _ => "OPEN",
+        };
+    }
+
+    /// <summary>
+    /// Normalize a BC credit-memo status string to the Pinoles wire value.
+    /// Credit memos use OPEN | POSTED (not the PARTIAL/PAID invoice lifecycle).
+    /// Unknown statuses default to OPEN. Per .claude/rules/enums-and-constants.md.
+    /// </summary>
+    public static string NormalizeCreditMemoStatus(string? bcStatus)
+    {
+        var normalized = (bcStatus ?? string.Empty).Trim().ToLowerInvariant();
+        return normalized switch
+        {
+            "posted" => "POSTED",
             "open" => "OPEN",
             _ => "OPEN",
         };

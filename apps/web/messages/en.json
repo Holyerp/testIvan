@@ -21,6 +21,7 @@
     "customers": "Customers",
     "invoices": "Invoices",
     "salesInvoices": "Sales Invoices",
+    "creditMemos": "Credit Memos",
     "vendors": "Vendors",
     "sales": "Sales",
     "purchase": "Purchase",
@@ -93,6 +94,49 @@
       "PAID": "Paid"
     }
   },
+  "creditMemos": {
+    "title": "Credit Memos",
+    "subtitle": "Sales credit memos overview",
+    "tabOpen": "Open",
+    "tabPosted": "Posted",
+    "number": "Number",
+    "customer": "Customer",
+    "date": "Date",
+    "amount": "Amount",
+    "statusLabel": "Status",
+    "noResults": "No credit memos found",
+    "loadError": "Error loading credit memos",
+    "filterStatus": "Status",
+    "filterAll": "All",
+    "search": "Search by number or customer...",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}",
+    "status": {
+      "OPEN": "Open",
+      "POSTED": "Posted"
+    }
+  },
+  "creditMemoDetail": {
+    "back": "Back to credit memos",
+    "notFound": "Credit memo not found",
+    "customer": "Customer",
+    "billTo": "Bill-to Address",
+    "postingDate": "Posting Date",
+    "dueDate": "Due Date",
+    "paymentTerms": "Payment Terms",
+    "lineItems": "Line Items",
+    "lineDescription": "Description",
+    "quantity": "Quantity",
+    "unitPrice": "Unit Price",
+    "vatPercent": "VAT %",
+    "lineTotal": "Line Total",
+    "noLines": "No line items",
+    "subtotal": "Subtotal",
+    "vat": "VAT",
+    "total": "Total",
+    "loadError": "Error loading credit memo"
+  },
   "customerDetail": {
     "back": "Back to customers",
     "notFound": "Customer not found",
@@ -150,6 +194,7 @@
     "FORBIDDEN_INSUFFICIENT_ROLE": "You do not have permission to access this resource.",
     "NOT_FOUND_CUSTOMER": "Customer not found.",
     "NOT_FOUND_SALES_INVOICE": "Invoice not found.",
+    "NOT_FOUND_SALES_CREDIT_MEMO": "Credit memo not found.",
     "INTERNAL_ERROR": "Server error. Please try again.",
     "GENERIC": "Something went wrong. Please try again."
   }

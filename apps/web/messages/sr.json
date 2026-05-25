@@ -21,6 +21,7 @@
     "customers": "Klijenti",
     "invoices": "Fakture",
     "salesInvoices": "Prodajne fakture",
+    "creditMemos": "Knjižna odobrenja",
     "vendors": "Dobavljači",
     "sales": "Prodaja",
     "purchase": "Nabavka",
@@ -93,6 +94,49 @@
       "PAID": "Plaćena"
     }
   },
+  "creditMemos": {
+    "title": "Knjižna odobrenja",
+    "subtitle": "Pregled knjižnih odobrenja",
+    "tabOpen": "Otvorena",
+    "tabPosted": "Knjižena",
+    "number": "Broj",
+    "customer": "Kupac",
+    "date": "Datum",
+    "amount": "Iznos",
+    "statusLabel": "Status",
+    "noResults": "Nema knjižnih odobrenja",
+    "loadError": "Greška pri učitavanju knjižnih odobrenja",
+    "filterStatus": "Status",
+    "filterAll": "Sve",
+    "search": "Pretraga po broju ili kupcu...",
+    "previous": "Prethodna",
+    "next": "Sledeća",
+    "pageOf": "Strana {page} od {total}",
+    "status": {
+      "OPEN": "Otvoreno",
+      "POSTED": "Knjiženo"
+    }
+  },
+  "creditMemoDetail": {
+    "back": "Nazad na knjižna odobrenja",
+    "notFound": "Knjižno odobrenje nije pronađeno",
+    "customer": "Kupac",
+    "billTo": "Adresa za naplatu",
+    "postingDate": "Datum knjiženja",
+    "dueDate": "Valuta",
+    "paymentTerms": "Uslovi plaćanja",
+    "lineItems": "Stavke",
+    "lineDescription": "Opis",
+    "quantity": "Količina",
+    "unitPrice": "Jedinična cena",
+    "vatPercent": "PDV %",
+    "lineTotal": "Iznos stavke",
+    "noLines": "Nema stavki",
+    "subtotal": "Osnovica",
+    "vat": "PDV",
+    "total": "Ukupno",
+    "loadError": "Greška pri učitavanju knjižnog odobrenja"
+  },
   "customerDetail": {
     "back": "Nazad na kupce",
     "notFound": "Kupac nije pronađen",
@@ -150,6 +194,7 @@
     "FORBIDDEN_INSUFFICIENT_ROLE": "Nemate dozvolu za pristup ovom resursu.",
     "NOT_FOUND_CUSTOMER": "Klijent nije pronađen.",
     "NOT_FOUND_SALES_INVOICE": "Faktura nije pronađena.",
+    "NOT_FOUND_SALES_CREDIT_MEMO": "Knjižno odobrenje nije pronađeno.",
     "INTERNAL_ERROR": "Greška servera. Pokušajte ponovo.",
     "GENERIC": "Nešto je pošlo po krivu. Pokušajte ponovo."
   }

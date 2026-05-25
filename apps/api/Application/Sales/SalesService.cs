@@ -20,6 +20,16 @@ public class SalesService : ISalesService
     // Navigation property expanded for the detail view to pull line items in one call.
     private const string LinesExpand = "salesInvoiceLines";
 
+    // BC collections whose records are credit memos. Credit memos share the invoice
+    // shape (header + lines + totals) but use OPEN | POSTED status semantics, so the
+    // status is re-normalized via SalesInvoiceMapper.NormalizeCreditMemoStatus after
+    // the shared mapper runs. Everything else (paging, sort, filter) is identical.
+    private static readonly HashSet<string> CreditMemoEntitySets = new(StringComparer.Ordinal)
+    {
+        "salesCreditMemos",
+        "salesCreditMemosPosted",
+    };
+
     private readonly IBcHttpClient _bc;
     private readonly IBcMapper<BcSalesInvoice, SalesInvoiceListItemDto> _mapper;
     private readonly IBcMapper<BcSalesInvoice, SalesInvoiceDetailDto> _detailMapper;
@@ -66,6 +76,12 @@ public class SalesService : ISalesService
 
         var items = result.Value.Select(_mapper.Map).ToList();
 
+        // Credit memos use OPEN | POSTED semantics; re-normalize the status so a
+        // credit memo can never surface a PARTIAL/PAID invoice status.
+        if (CreditMemoEntitySets.Contains(entitySet))
+            foreach (var item in items)
+                item.Status = SalesInvoiceMapper.NormalizeCreditMemoStatus(item.Status);
+
         var effectivePageSize = options.Top ?? BcListQuery.DefaultPageSize;
         var effectivePage = (options.Skip ?? 0) / effectivePageSize + 1;
 
@@ -89,7 +105,13 @@ public class SalesService : ISalesService
 
         if (invoice == null || string.IsNullOrEmpty(invoice.Id)) return null;
 
-        return _detailMapper.Map(invoice);
+        var detail = _detailMapper.Map(invoice);
+
+        // Credit memos use OPEN | POSTED semantics (see GetInvoicesAsync).
+        if (CreditMemoEntitySets.Contains(entitySet))
+            detail.Header.Status = SalesInvoiceMapper.NormalizeCreditMemoStatus(detail.Header.Status);
+
+        return detail;
     }
 
     private static string? MapSortField(string? uiSortBy) => uiSortBy switch

@@ -24,6 +24,7 @@ public class MockBcHttpClient : IBcHttpClient
             "salesInvoices"       => CreateMockInvoiceCollection<T>(GetMockInvoiceData(), options),
             "salesInvoicesPosted" => CreateMockInvoiceCollection<T>(GetMockPostedInvoiceData(), options),
             "salesCreditMemos"    => CreateMockInvoiceCollection<T>(GetMockCreditMemoData(), options),
+            "salesCreditMemosPosted" => CreateMockInvoiceCollection<T>(GetMockPostedCreditMemoData(), options),
             "vendors"             => CreateMockVendors<T>(options),
             _                     => new BcCollectionResponse<T>()
         };
@@ -46,6 +47,7 @@ public class MockBcHttpClient : IBcHttpClient
             "salesInvoices"       => FindInvoiceWithLines(GetMockInvoiceData(), id),
             "salesInvoicesPosted" => FindInvoiceWithLines(GetMockPostedInvoiceData(), id),
             "salesCreditMemos"    => FindInvoiceWithLines(GetMockCreditMemoData(), id),
+            "salesCreditMemosPosted" => FindInvoiceWithLines(GetMockPostedCreditMemoData(), id),
             _                     => null,
         };
 
@@ -312,30 +314,46 @@ public class MockBcHttpClient : IBcHttpClient
         };
     }
 
-    // Sales credit memos.
+    // Open (draft / unposted) sales credit memos. Credit memos use BC-style status
+    // "Open" / "Posted"; the credit-memo normalizer maps these to the OPEN / POSTED
+    // wire value (not the OPEN/PARTIAL/PAID invoice lifecycle).
     private static List<Dictionary<string, object>> GetMockCreditMemoData()
     {
         var now = DateTime.UtcNow;
-        Dictionary<string, object> Cm(string id, string number, string customer, DateTime posting, decimal amount, string status) => new()
-        {
-            ["id"] = id,
-            ["number"] = number,
-            ["customerName"] = customer,
-            ["postingDate"] = Iso(posting),
-            ["dueDate"] = Iso(posting.AddDays(30)),
-            ["totalAmountIncludingTax"] = amount,
-            ["status"] = status,
-        };
-
         return new List<Dictionary<string, object>>
         {
-            Cm("scm001", "SCM-001", "Acme d.o.o.", now.AddMonths(-2), 12000.00m, "Open"),
-            Cm("scm002", "SCM-002", "Delta Corp",  now.AddMonths(-1), 8500.00m,  "Paid"),
-            Cm("scm003", "SCM-003", "Sigma Trade", now.AddDays(-25),  15000.00m, "Open"),
-            Cm("scm004", "SCM-004", "Omega Logistika", now.AddDays(-12), 6200.00m, "Paid"),
-            Cm("scm005", "SCM-005", "Gama Petrol", now.AddDays(-5),   9800.00m,  "Open"),
+            CreditMemo("scm001", "SCM-001", "Acme d.o.o.",     now.AddMonths(-2), 12000.00m, "Open"),
+            CreditMemo("scm002", "SCM-002", "Delta Corp",      now.AddMonths(-1), 8500.00m,  "Open"),
+            CreditMemo("scm003", "SCM-003", "Sigma Trade",     now.AddDays(-25),  15000.00m, "Open"),
+            CreditMemo("scm004", "SCM-004", "Omega Logistika", now.AddDays(-12),  6200.00m,  "Open"),
+            CreditMemo("scm005", "SCM-005", "Gama Petrol",     now.AddDays(-5),   9800.00m,  "Open"),
         };
     }
+
+    // Posted sales credit memos — already booked. All status "Posted".
+    private static List<Dictionary<string, object>> GetMockPostedCreditMemoData()
+    {
+        var now = DateTime.UtcNow;
+        return new List<Dictionary<string, object>>
+        {
+            CreditMemo("pscm001", "PSCM-001", "Acme d.o.o.",  now.AddMonths(-3), 7400.00m,  "Posted"),
+            CreditMemo("pscm002", "PSCM-002", "Delta Corp",   now.AddMonths(-2), 5200.00m,  "Posted"),
+            CreditMemo("pscm003", "PSCM-003", "Sigma Trade",  now.AddMonths(-1), 11300.00m, "Posted"),
+            CreditMemo("pscm004", "PSCM-004", "Lambda Tehnika", now.AddDays(-9), 3900.00m,  "Posted"),
+        };
+    }
+
+    private static Dictionary<string, object> CreditMemo(
+        string id, string number, string customer, DateTime posting, decimal amount, string status) => new()
+    {
+        ["id"] = id,
+        ["number"] = number,
+        ["customerName"] = customer,
+        ["postingDate"] = Iso(posting),
+        ["dueDate"] = Iso(posting.AddDays(30)),
+        ["totalAmountIncludingTax"] = amount,
+        ["status"] = status,
+    };
 
     private static BcCollectionResponse<T> CreateMockVendors<T>(BcQueryOptions? options)
     {

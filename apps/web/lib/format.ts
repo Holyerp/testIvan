@@ -60,3 +60,18 @@ export function statusBadgeClass(status: string): string {
       return 'bg-blue-100 text-blue-700';
   }
 }
+
+/**
+ * Tailwind classes for the credit-memo status badge. Credit memos use the
+ * OPEN | POSTED lifecycle (not the invoice OPEN/PARTIAL/PAID one): POSTED is
+ * green (booked), OPEN is blue (draft). Unknown values default to blue.
+ */
+export function creditMemoStatusBadgeClass(status: string): string {
+  switch (status) {
+    case 'POSTED':
+      return 'bg-green-100 text-green-700';
+    case 'OPEN':
+    default:
+      return 'bg-blue-100 text-blue-700';
+  }
+}

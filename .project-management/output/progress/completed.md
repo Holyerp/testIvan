@@ -7,7 +7,7 @@
 
 **Phase 1 — Foundation & MVP: COMPLETE** (47 / 47 pts, 100% — 5 user stories + 2 technical tasks)
 
-**Phase 2 — Core Documents: IN PROGRESS** (15 / 52 pts, 29% — 2 user stories + 1 technical task complete)
+**Phase 2 — Core Documents: IN PROGRESS** (20 / 52 pts, 38% — 3 user stories + 1 technical task complete)
 
 ---
 
@@ -132,6 +132,23 @@
 - `lib/format.ts`: pure `computeInvoiceTotals(lines)` helper (client-side reconciliation/fallback). i18n: `salesDetail` section + `errors.NOT_FOUND_SALES_INVOICE` (sr + en); reuses `sales.status.*`.
 - API doc: `docs/api/sales.md` detail endpoints (path param, success example with header/lines/totals, 401/403/404 NOT_FOUND_SALES_INVOICE/502).
 - Tests: backend +17 (SalesService detail ×7, SalesInvoiceDetailMapper ×6, MockBcHttpClient ×4); frontend +4 (computeInvoiceTotals). Combined: 104 backend + 54 frontend passing; lint clean.
+
+### US-008: Sales Credit Memos — List & Detail
+**Completed:** 2026-05-25
+**Phase:** 2 — Core Documents
+**Story Points:** 5
+**Commit:** See git log
+
+**Summary:**
+- Two new BC-backed endpoints under `/api/v1/sales` (RequireFinancial — ADMIN/MANAGER/ACCOUNTING; WAREHOUSE 403): GET `/credit-memos/{id}` (detail, 404 `NOT_FOUND_SALES_CREDIT_MEMO`) and GET `/posted-credit-memos` (list). The `/credit-memos` list already existed (US-006). Canonical envelope; 502 `INTEGRATION_BC_UNAVAILABLE` on BC failure.
+- Maximal reuse: credit memos share `ISalesService`/`SalesService`, the invoice mappers, `SalesInvoiceListItemDto`/`SalesInvoiceDetailDto`, and the `BcSalesInvoice` type — no duplicated list/detail logic. The service re-normalizes status for credit-memo entity sets (`salesCreditMemos`, `salesCreditMemosPosted`) so they surface only OPEN | POSTED.
+- Credit-memo status enum = OPEN | POSTED (SCREAMING_SNAKE wire value). Added `SalesInvoiceMapper.NormalizeCreditMemoStatus` (Open→OPEN, Posted→POSTED, invoice-only Paid/Partial→OPEN); `NormalizeStatus` extended additively with Posted→POSTED so invoice OPEN/PARTIAL/PAID normalization is unchanged.
+- Not-found code parameterized: `SalesEndpoints.Detail` now takes the code + message so invoices keep `NOT_FOUND_SALES_INVOICE` (US-007 behavior + tests unchanged) and credit memos return `NOT_FOUND_SALES_CREDIT_MEMO`.
+- MockBcHttpClient: existing `salesCreditMemos` (5) switched to Open/Posted semantics; new `salesCreditMemosPosted` entity set (4 posted, status "Posted") in both collection + GetById paths; line items reused from the invoice mock. Existing Mock/Dashboard/US-006/US-007 tests preserved.
+- Frontend: dedicated `app/(protected)/sales/credit-memos/page.tsx` (SalesCreditMemoListScreen — Open / Posted tabs over `/credit-memos` and `/posted-credit-memos`, FilterPanel + EntityTable, row→detail) and `[id]/page.tsx` detail (reuses US-007 detail layout by minimal copy — kept US-007 page untouched to protect its tests; no overdue concept for credit memos). Sidebar nav entry "Credit Memos" added (ADMIN/MANAGER/ACCOUNTING).
+- `lib/format.ts`: pure `creditMemoStatusBadgeClass` (POSTED green, OPEN blue). i18n: `creditMemos` + `creditMemoDetail` sections + `nav.creditMemos` + `errors.NOT_FOUND_SALES_CREDIT_MEMO` (sr + en).
+- API doc: `docs/api/sales.md` extended with credit-memo detail + posted-credit-memos endpoints, the OPEN|POSTED credit-memo status enum, and consumer links.
+- Tests: backend +14 (SalesService credit-memo ×7, SalesInvoiceMapper NormalizeCreditMemoStatus theory ×7 cases); frontend +3 (creditMemoStatusBadgeClass). Combined: 118 backend + 57 frontend passing; lint clean.
 
 ---
 
