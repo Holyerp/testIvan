@@ -20,4 +20,13 @@ public interface IPurchaseService
         string entitySet,
         string id,
         CancellationToken ct = default);
+
+    /// <summary>
+    /// Advance (proforma) purchase-invoice detail — header, line items, computed totals,
+    /// plus a payment-tracking block (amount / amount paid / remaining). Reads the
+    /// <c>purchaseAdvanceInvoices</c> BC collection. Returns null when the id is unknown.
+    /// </summary>
+    Task<PurchaseAdvanceInvoiceDetailDto?> GetAdvanceInvoiceByIdAsync(
+        string id,
+        CancellationToken ct = default);
 }

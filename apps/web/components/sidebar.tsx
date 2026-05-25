@@ -19,6 +19,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/sales/advance-invoices', label: 'Advance Invoices', module: 'financial' },
   { href: '/sales/credit-memos', label: 'Credit Memos', module: 'financial' },
   { href: '/purchase/invoices', label: 'Purchase Invoices', module: 'financial' },
+  { href: '/purchase/advance-invoices', label: 'Purchase Advance Invoices', module: 'financial' },
   { href: '/vendors', label: 'Vendors', module: 'financial' },
 ];
 

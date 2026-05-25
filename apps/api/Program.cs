@@ -147,6 +147,7 @@ try
     builder.Services.AddSingleton<IBcMapper<BcSalesInvoice, SalesAdvanceInvoiceDetailDto>, SalesAdvanceInvoiceDetailMapper>();
     builder.Services.AddSingleton<IBcMapper<BcPurchaseInvoice, PurchaseInvoiceListItemDto>, PurchaseInvoiceMapper>();
     builder.Services.AddSingleton<IBcMapper<BcPurchaseInvoice, PurchaseInvoiceDetailDto>, PurchaseInvoiceDetailMapper>();
+    builder.Services.AddSingleton<IBcMapper<BcPurchaseInvoice, PurchaseAdvanceInvoiceDetailDto>, PurchaseAdvanceInvoiceDetailMapper>();
 
     // Customer service
     builder.Services.AddScoped<ICustomerService, CustomerService>();

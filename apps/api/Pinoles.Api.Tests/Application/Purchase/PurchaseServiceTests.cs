@@ -11,7 +11,11 @@ public class PurchaseServiceTests
     private static PurchaseService CreateService()
     {
         var bc = new MockBcHttpClient(NullLogger<MockBcHttpClient>.Instance);
-        return new PurchaseService(bc, new PurchaseInvoiceMapper(), new PurchaseInvoiceDetailMapper());
+        return new PurchaseService(
+            bc,
+            new PurchaseInvoiceMapper(),
+            new PurchaseInvoiceDetailMapper(),
+            new PurchaseAdvanceInvoiceDetailMapper());
     }
 
     [Fact]

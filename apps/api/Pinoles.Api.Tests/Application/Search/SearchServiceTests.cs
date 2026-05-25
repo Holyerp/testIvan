@@ -24,7 +24,7 @@ public class SearchServiceTests
         var customers = new CustomerService(bc, new CustomerMapper());
         var vendors = new VendorService(bc, new VendorMapper(), new PurchaseInvoiceMapper());
         var sales = new SalesService(bc, new SalesInvoiceMapper(), new SalesInvoiceDetailMapper(), new SalesAdvanceInvoiceDetailMapper());
-        var purchase = new PurchaseService(bc, new PurchaseInvoiceMapper(), new PurchaseInvoiceDetailMapper());
+        var purchase = new PurchaseService(bc, new PurchaseInvoiceMapper(), new PurchaseInvoiceDetailMapper(), new PurchaseAdvanceInvoiceDetailMapper());
         return new SearchService(customers, vendors, sales, purchase);
     }
 

@@ -29,18 +29,27 @@ public class PurchaseService : IPurchaseService
         "purchaseCreditMemos",
     };
 
+    // Advance (proforma) purchase invoices (US-015). Share the standard purchase-invoice
+    // list shape (number / vendor / date / amount / status) so the list reuses the regular
+    // GetInvoicesAsync path; only the detail adds a payment-tracking block via a dedicated
+    // mapper. See Q-003 note on PurchaseAdvanceInvoiceDetailDto.
+    private const string AdvanceInvoiceEntitySet = "purchaseAdvanceInvoices";
+
     private readonly IBcHttpClient _bc;
     private readonly IBcMapper<BcPurchaseInvoice, PurchaseInvoiceListItemDto> _mapper;
     private readonly IBcMapper<BcPurchaseInvoice, PurchaseInvoiceDetailDto> _detailMapper;
+    private readonly IBcMapper<BcPurchaseInvoice, PurchaseAdvanceInvoiceDetailDto> _advanceDetailMapper;
 
     public PurchaseService(
         IBcHttpClient bc,
         IBcMapper<BcPurchaseInvoice, PurchaseInvoiceListItemDto> mapper,
-        IBcMapper<BcPurchaseInvoice, PurchaseInvoiceDetailDto> detailMapper)
+        IBcMapper<BcPurchaseInvoice, PurchaseInvoiceDetailDto> detailMapper,
+        IBcMapper<BcPurchaseInvoice, PurchaseAdvanceInvoiceDetailDto> advanceDetailMapper)
     {
         _bc = bc;
         _mapper = mapper;
         _detailMapper = detailMapper;
+        _advanceDetailMapper = advanceDetailMapper;
     }
 
     public async Task<PagedResultDto<PurchaseInvoiceListItemDto>> GetInvoicesAsync(
@@ -105,6 +114,20 @@ public class PurchaseService : IPurchaseService
         if (invoice == null || string.IsNullOrEmpty(invoice.Id)) return null;
 
         return _detailMapper.Map(invoice);
+    }
+
+    public async Task<PurchaseAdvanceInvoiceDetailDto?> GetAdvanceInvoiceByIdAsync(
+        string id,
+        CancellationToken ct = default)
+    {
+        // $expand the line items so header + lines arrive in a single BC request
+        // (same navigation property as the regular purchase invoice — standard schema).
+        var invoice = await _bc.GetByIdAsync<BcPurchaseInvoice>(
+            AdvanceInvoiceEntitySet, id, new BcQueryOptions { Expand = LinesExpand }, ct);
+
+        if (invoice == null || string.IsNullOrEmpty(invoice.Id)) return null;
+
+        return _advanceDetailMapper.Map(invoice);
     }
 
     private static string? MapSortField(string? uiSortBy) => uiSortBy switch

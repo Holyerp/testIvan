@@ -28,6 +28,20 @@ public static class PurchaseEndpoints
             CancellationToken ct) =>
             List(purchase, "purchaseCreditMemos", page, pageSize, search, sortBy, sortDir, status, fromDate, toDate, ct));
 
+        // Advance (proforma) purchase invoices (US-015). The list reuses the shared List
+        // handler over the purchaseAdvanceInvoices collection (same PurchaseInvoiceListItemDto
+        // columns, vendor side); the detail uses a dedicated handler that returns the
+        // payment-tracking block. See Q-003 note in docs/api/purchase-advance.md (standard
+        // BC schema pending client confirmation).
+        group.MapGet("/advance-invoices", (
+            IPurchaseService purchase, int? page, int? pageSize, string? search,
+            string? sortBy, string? sortDir, string? status, string? fromDate, string? toDate,
+            CancellationToken ct) =>
+            List(purchase, "purchaseAdvanceInvoices", page, pageSize, search, sortBy, sortDir, status, fromDate, toDate, ct));
+
+        group.MapGet("/advance-invoices/{id}", (IPurchaseService purchase, string id, CancellationToken ct) =>
+            AdvanceDetail(purchase, id, ct));
+
         group.MapGet("/invoices/{id}", (IPurchaseService purchase, string id, CancellationToken ct) =>
             Detail(purchase, "purchaseInvoices", id, NotFoundPurchaseInvoice, "Purchase invoice not found", ct));
 
@@ -36,6 +50,7 @@ public static class PurchaseEndpoints
     }
 
     private const string NotFoundPurchaseInvoice = "NOT_FOUND_PURCHASE_INVOICE";
+    private const string NotFoundPurchaseAdvanceInvoice = "NOT_FOUND_PURCHASE_ADVANCE_INVOICE";
 
     private static async Task<IResult> List(
         IPurchaseService purchase,
@@ -90,6 +105,31 @@ public static class PurchaseEndpoints
         {
             return Results.Json(
                 new { success = false, error = "Failed to fetch purchase document", code = "INTEGRATION_BC_UNAVAILABLE" },
+                statusCode: 502);
+        }
+    }
+
+    // Advance-invoice detail handler (US-015). Mirrors Detail but calls the
+    // advance-specific service method (which adds the payment-tracking block) and
+    // returns NOT_FOUND_PURCHASE_ADVANCE_INVOICE on an unknown id.
+    private static async Task<IResult> AdvanceDetail(IPurchaseService purchase, string id, CancellationToken ct)
+    {
+        try
+        {
+            var detail = await purchase.GetAdvanceInvoiceByIdAsync(id, ct);
+            if (detail == null)
+            {
+                return Results.Json(
+                    new { success = false, error = "Purchase advance invoice not found", code = NotFoundPurchaseAdvanceInvoice },
+                    statusCode: 404);
+            }
+
+            return Results.Ok(new { success = true, data = detail });
+        }
+        catch
+        {
+            return Results.Json(
+                new { success = false, error = "Failed to fetch purchase advance invoice", code = "INTEGRATION_BC_UNAVAILABLE" },
                 statusCode: 502);
         }
     }

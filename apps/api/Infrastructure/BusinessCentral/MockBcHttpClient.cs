@@ -29,6 +29,7 @@ public class MockBcHttpClient : IBcHttpClient
             "purchaseInvoices"        => CreateMockDocumentCollection<T>(GetMockPurchaseInvoiceData(), options, "vendorName"),
             "purchaseInvoicesPosted"  => CreateMockDocumentCollection<T>(GetMockPostedPurchaseInvoiceData(), options, "vendorName"),
             "purchaseCreditMemos"     => CreateMockDocumentCollection<T>(GetMockPurchaseCreditMemoData(), options, "vendorName"),
+            "purchaseAdvanceInvoices" => CreateMockDocumentCollection<T>(GetMockPurchaseAdvanceInvoiceData(), options, "vendorName"),
             "vendors"             => CreateMockVendors<T>(options),
             _                     => new BcCollectionResponse<T>()
         };
@@ -56,6 +57,7 @@ public class MockBcHttpClient : IBcHttpClient
             "salesAdvanceInvoices" => FindInvoiceWithLines(GetMockAdvanceInvoiceData(), id),
             "purchaseInvoices"       => FindPurchaseInvoiceWithLines(GetMockPurchaseInvoiceData(), id),
             "purchaseInvoicesPosted" => FindPurchaseInvoiceWithLines(GetMockPostedPurchaseInvoiceData(), id),
+            "purchaseAdvanceInvoices" => FindPurchaseInvoiceWithLines(GetMockPurchaseAdvanceInvoiceData(), id),
             _                     => null,
         };
 
@@ -512,6 +514,31 @@ public class MockBcHttpClient : IBcHttpClient
             Purchase("pcm002", "PCM-002", "Materijal Promet",   now.AddMonths(-1), 6200.00m, "Open"),
             Purchase("pcm003", "PCM-003", "Energo Snabdevanje", now.AddDays(-20),  13400.00m, "Posted"),
             Purchase("pcm004", "PCM-004", "Supplier B d.o.o.",  now.AddDays(-8),   4800.00m, "Posted"),
+        };
+    }
+
+    // ----- Purchase advance (proforma) invoices (US-015) -----
+    // Advance invoices track advance-payment requests made to vendors. Implemented
+    // against the STANDARD BC purchase-invoice schema (header + lines + payment status)
+    // pending client confirmation of Q-003 (a BiH/SRB localized format is possible).
+    // They share the regular purchase-invoice mock shape (vendorName side). Payment
+    // tracking (amount / paid / remaining) is derived from the document total and the
+    // payment status by the PurchaseAdvanceInvoiceDetailMapper, so the mock only carries
+    // the status. Mirrors GetMockAdvanceInvoiceData on the vendor side; ~8 records with a
+    // mix of Open / Partially Paid / Paid so payment tracking exercises all three states.
+    private static List<Dictionary<string, object>> GetMockPurchaseAdvanceInvoiceData()
+    {
+        var now = DateTime.UtcNow;
+        return new List<Dictionary<string, object>>
+        {
+            Purchase("pav001", "PA-2026-001", "Supplier A d.o.o.",   now.AddMonths(-5), 50000.00m,  "Open"),
+            Purchase("pav002", "PA-2026-002", "Supplier B d.o.o.",   now.AddMonths(-4), 84000.00m,  "Partially Paid"),
+            Purchase("pav003", "PA-2026-003", "Materijal Promet",    now.AddMonths(-3), 36000.00m,  "Paid"),
+            Purchase("pav004", "PA-2026-004", "Energo Snabdevanje",  now.AddMonths(-2), 110000.00m, "Open"),
+            Purchase("pav005", "PA-2026-005", "Tehno Oprema d.o.o.", now.AddMonths(-1), 67000.00m,  "Partially Paid"),
+            Purchase("pav006", "PA-2026-006", "Supplier A d.o.o.",   now.AddDays(-20),  28000.00m,  "Paid"),
+            Purchase("pav007", "PA-2026-007", "Supplier B d.o.o.",   now.AddDays(-9),   49000.00m,  "Open"),
+            Purchase("pav008", "PA-2026-008", "Materijal Promet",    now.AddDays(-3),   41000.00m,  "Partially Paid"),
         };
     }
 
