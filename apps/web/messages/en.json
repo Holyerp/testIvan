@@ -22,6 +22,7 @@
     "invoices": "Invoices",
     "salesInvoices": "Sales Invoices",
     "creditMemos": "Credit Memos",
+    "purchaseInvoices": "Purchase Invoices",
     "vendors": "Vendors",
     "sales": "Sales",
     "purchase": "Purchase",
@@ -92,6 +93,33 @@
       "OPEN": "Open",
       "PARTIAL": "Partially Paid",
       "PAID": "Paid"
+    }
+  },
+  "purchase": {
+    "title": "Purchase Invoices",
+    "subtitle": "Purchase invoices overview",
+    "tabOpen": "Open Invoices",
+    "tabPosted": "Posted Invoices",
+    "tabCreditMemos": "Credit Memos",
+    "number": "Number",
+    "vendor": "Vendor",
+    "date": "Date",
+    "dueDate": "Due Date",
+    "amount": "Amount",
+    "statusLabel": "Status",
+    "noResults": "No invoices found",
+    "loadError": "Error loading invoices",
+    "filterStatus": "Status",
+    "filterAll": "All",
+    "search": "Search by number or vendor...",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}",
+    "status": {
+      "OPEN": "Open",
+      "PARTIAL": "Partially Paid",
+      "PAID": "Paid",
+      "POSTED": "Posted"
     }
   },
   "creditMemos": {

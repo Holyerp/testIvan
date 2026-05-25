@@ -25,6 +25,9 @@ public class MockBcHttpClient : IBcHttpClient
             "salesInvoicesPosted" => CreateMockInvoiceCollection<T>(GetMockPostedInvoiceData(), options),
             "salesCreditMemos"    => CreateMockInvoiceCollection<T>(GetMockCreditMemoData(), options),
             "salesCreditMemosPosted" => CreateMockInvoiceCollection<T>(GetMockPostedCreditMemoData(), options),
+            "purchaseInvoices"        => CreateMockDocumentCollection<T>(GetMockPurchaseInvoiceData(), options, "vendorName"),
+            "purchaseInvoicesPosted"  => CreateMockDocumentCollection<T>(GetMockPostedPurchaseInvoiceData(), options, "vendorName"),
+            "purchaseCreditMemos"     => CreateMockDocumentCollection<T>(GetMockPurchaseCreditMemoData(), options, "vendorName"),
             "vendors"             => CreateMockVendors<T>(options),
             _                     => new BcCollectionResponse<T>()
         };
@@ -162,50 +165,59 @@ public class MockBcHttpClient : IBcHttpClient
     // Applies the in-memory filter, then Skip/Top, and echoes @odata.count when requested.
     private static BcCollectionResponse<T> CreateMockInvoiceCollection<T>(
         List<Dictionary<string, object>> source, BcQueryOptions? options)
+        => CreateMockDocumentCollection<T>(source, options, "customerName");
+
+    // Generalized collection builder for any invoice-shaped document family. The
+    // <paramref name="nameField"/> selects which party field (customerName / vendorName)
+    // the contains-search and eq-match predicates apply to, so the sales and purchase
+    // families share one filter + paging implementation (DRY).
+    private static BcCollectionResponse<T> CreateMockDocumentCollection<T>(
+        List<Dictionary<string, object>> source, BcQueryOptions? options, string nameField)
     {
-        var invoices = ApplyInvoiceFilter(source, options?.Filter);
-        var top = options?.Top ?? invoices.Count;
+        var documents = ApplyDocumentFilter(source, options?.Filter, nameField);
+        var top = options?.Top ?? documents.Count;
         var skip = options?.Skip ?? 0;
-        var paged = invoices.Skip(skip).Take(top).ToList();
+        var paged = documents.Skip(skip).Take(top).ToList();
         var json = JsonSerializer.Serialize(paged);
         var typed = JsonSerializer.Deserialize<List<T>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
         return new BcCollectionResponse<T>
         {
             Value = typed,
-            Count = options?.Count == true ? invoices.Count : null
+            Count = options?.Count == true ? documents.Count : null
         };
     }
 
     // Lightweight in-memory approximation of the OData filters this mock has to honor:
-    //  - customerName eq 'X'                            (customer detail view)
-    //  - contains(number,'t') or contains(customerName,'t')  (list search)
-    //  - status eq 'Open'                               (status filter)
-    //  - postingDate ge '...' / postingDate le '...'    (date range)
+    //  - <nameField> eq 'X'                                  (detail / party filter)
+    //  - contains(number,'t') or contains(<nameField>,'t')   (list search)
+    //  - status eq 'Open'                                    (status filter)
+    //  - postingDate ge '...' / postingDate le '...'         (date range)
     // We inspect which predicates are present rather than parsing OData fully.
-    private static List<Dictionary<string, object>> ApplyInvoiceFilter(
-        List<Dictionary<string, object>> invoices, string? filter)
+    // <paramref name="nameField"/> is "customerName" for sales, "vendorName" for purchase.
+    private static List<Dictionary<string, object>> ApplyDocumentFilter(
+        List<Dictionary<string, object>> documents, string? filter, string nameField)
     {
-        if (string.IsNullOrWhiteSpace(filter)) return invoices;
+        if (string.IsNullOrWhiteSpace(filter)) return documents;
 
-        var result = invoices;
+        var result = documents;
 
-        // customerName eq 'X' — exact match (customer detail). Only when there's no contains().
-        if (filter.Contains("customerName eq '") && !filter.Contains("contains("))
+        // <nameField> eq 'X' — exact match (party filter). Only when there's no contains().
+        if (filter.Contains($"{nameField} eq '") && !filter.Contains("contains("))
         {
-            var name = ExtractQuoted(filter, "customerName eq '");
+            var name = ExtractQuoted(filter, $"{nameField} eq '");
             if (name != null)
                 result = result.Where(i =>
-                    string.Equals(i["customerName"].ToString(), name, StringComparison.OrdinalIgnoreCase)).ToList();
+                    string.Equals(i[nameField].ToString(), name, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
-        // contains(...) search term — match number OR customerName.
+        // contains(...) search term — match number OR <nameField>.
         if (filter.Contains("contains("))
         {
             var term = ExtractQuoted(filter, "contains(");
             if (!string.IsNullOrWhiteSpace(term))
                 result = result.Where(i =>
                     i["number"].ToString()!.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                    i["customerName"].ToString()!.Contains(term, StringComparison.OrdinalIgnoreCase)).ToList();
+                    i[nameField].ToString()!.Contains(term, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         // status eq 'Open' — exact match on the BC-style status string.
@@ -355,12 +367,80 @@ public class MockBcHttpClient : IBcHttpClient
         ["status"] = status,
     };
 
+    // ----- Purchase documents (US-009) -----
+    // Mirror the sales mock but carry a vendorName instead of customerName. dueDate =
+    // postingDate + 30 days; some records are intentionally overdue. Status uses BC-style
+    // casing ("Open" / "Partially Paid" / "Paid"); the PurchaseInvoiceMapper normalizes
+    // to the OPEN/PARTIAL/PAID wire value.
+    private static Dictionary<string, object> Purchase(
+        string id, string number, string vendor, DateTime posting, decimal amount, string status) => new()
+    {
+        ["id"] = id,
+        ["number"] = number,
+        ["vendorName"] = vendor,
+        ["postingDate"] = Iso(posting),
+        ["dueDate"] = Iso(posting.AddDays(30)),
+        ["totalAmountIncludingTax"] = amount,
+        ["status"] = status,
+    };
+
+    // Open purchase invoices — spread over the last 6 months; a few are overdue.
+    private static List<Dictionary<string, object>> GetMockPurchaseInvoiceData()
+    {
+        var now = DateTime.UtcNow;
+        return new List<Dictionary<string, object>>
+        {
+            Purchase("pinv001", "PI-001", "Supplier A d.o.o.",   now.AddMonths(-5), 38000.00m,  "Open"),
+            Purchase("pinv002", "PI-002", "Supplier B d.o.o.",   now.AddMonths(-4), 64000.00m,  "Open"),
+            Purchase("pinv003", "PI-003", "Materijal Promet",    now.AddMonths(-3), 112000.00m, "Partially Paid"),
+            Purchase("pinv004", "PI-004", "Energo Snabdevanje",  now.AddMonths(-2), 87000.00m,  "Open"),
+            Purchase("pinv005", "PI-005", "Supplier A d.o.o.",   now.AddMonths(-1), 41500.00m,  "Open"),
+            Purchase("pinv006", "PI-006", "Tehno Oprema d.o.o.", now.AddDays(-4),   29000.00m,  "Open"),
+            Purchase("pinv007", "PI-007", "Supplier B d.o.o.",   now.AddDays(-45),  73000.00m,  "Open"),            // overdue
+            Purchase("pinv008", "PI-008", "Materijal Promet",    now.AddDays(-12),  95000.00m,  "Paid"),
+            Purchase("pinv009", "PI-009", "Energo Snabdevanje",  now.AddDays(-55),  52000.00m,  "Partially Paid"),  // overdue
+            Purchase("pinv010", "PI-010", "Supplier A d.o.o.",   now.AddDays(-70),  68000.00m,  "Open"),            // overdue
+        };
+    }
+
+    // Posted purchase invoices — already booked; mostly Paid with a couple still Open.
+    private static List<Dictionary<string, object>> GetMockPostedPurchaseInvoiceData()
+    {
+        var now = DateTime.UtcNow;
+        return new List<Dictionary<string, object>>
+        {
+            Purchase("ppi001", "PPI-001", "Supplier A d.o.o.",   now.AddMonths(-3), 56000.00m,  "Paid"),
+            Purchase("ppi002", "PPI-002", "Supplier B d.o.o.",   now.AddMonths(-2), 48000.00m,  "Paid"),
+            Purchase("ppi003", "PPI-003", "Materijal Promet",    now.AddMonths(-2), 99000.00m,  "Open"),
+            Purchase("ppi004", "PPI-004", "Energo Snabdevanje",  now.AddMonths(-1), 210000.00m, "Paid"),
+            Purchase("ppi005", "PPI-005", "Tehno Oprema d.o.o.", now.AddDays(-18),  37500.00m,  "Open"),
+            Purchase("ppi006", "PPI-006", "Supplier A d.o.o.",   now.AddDays(-6),   62000.00m,  "Paid"),
+        };
+    }
+
+    // Open (draft / unposted) purchase credit memos. Credit memos use BC-style status
+    // "Open" / "Posted"; the credit-memo normalizer maps these to OPEN / POSTED.
+    private static List<Dictionary<string, object>> GetMockPurchaseCreditMemoData()
+    {
+        var now = DateTime.UtcNow;
+        return new List<Dictionary<string, object>>
+        {
+            Purchase("pcm001", "PCM-001", "Supplier A d.o.o.",  now.AddMonths(-2), 9500.00m, "Open"),
+            Purchase("pcm002", "PCM-002", "Materijal Promet",   now.AddMonths(-1), 6200.00m, "Open"),
+            Purchase("pcm003", "PCM-003", "Energo Snabdevanje", now.AddDays(-20),  13400.00m, "Posted"),
+            Purchase("pcm004", "PCM-004", "Supplier B d.o.o.",  now.AddDays(-8),   4800.00m, "Posted"),
+        };
+    }
+
     private static BcCollectionResponse<T> CreateMockVendors<T>(BcQueryOptions? options)
     {
         var vendors = new List<Dictionary<string, object>>
         {
-            new() { ["id"] = "v001", ["number"] = "V001", ["displayName"] = "Supplier A d.o.o.", ["city"] = "Beograd",  ["balance"] = 55000.00m },
-            new() { ["id"] = "v002", ["number"] = "V002", ["displayName"] = "Supplier B d.o.o.", ["city"] = "Novi Sad", ["balance"] = 32000.00m },
+            new() { ["id"] = "v001", ["number"] = "V001", ["displayName"] = "Supplier A d.o.o.",  ["city"] = "Beograd",  ["balance"] = 55000.00m },
+            new() { ["id"] = "v002", ["number"] = "V002", ["displayName"] = "Supplier B d.o.o.",  ["city"] = "Novi Sad", ["balance"] = 32000.00m },
+            new() { ["id"] = "v003", ["number"] = "V003", ["displayName"] = "Materijal Promet",   ["city"] = "Niš",      ["balance"] = 78000.00m },
+            new() { ["id"] = "v004", ["number"] = "V004", ["displayName"] = "Energo Snabdevanje",  ["city"] = "Beograd",  ["balance"] = 144000.00m },
+            new() { ["id"] = "v005", ["number"] = "V005", ["displayName"] = "Tehno Oprema d.o.o.", ["city"] = "Kragujevac", ["balance"] = 26000.00m },
         };
         var top = options?.Top ?? vendors.Count;
         var skip = options?.Skip ?? 0;

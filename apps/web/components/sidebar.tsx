@@ -36,6 +36,11 @@ const NAV_ITEMS: NavItem[] = [
     label: 'Credit Memos',
     roles: ['ADMIN', 'MANAGER', 'ACCOUNTING'],
   },
+  {
+    href: '/purchase/invoices',
+    label: 'Purchase Invoices',
+    roles: ['ADMIN', 'MANAGER', 'ACCOUNTING'],
+  },
 ];
 
 export function Sidebar() {

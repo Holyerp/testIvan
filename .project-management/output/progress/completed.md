@@ -7,7 +7,7 @@
 
 **Phase 1 — Foundation & MVP: COMPLETE** (47 / 47 pts, 100% — 5 user stories + 2 technical tasks)
 
-**Phase 2 — Core Documents: IN PROGRESS** (20 / 52 pts, 38% — 3 user stories + 1 technical task complete)
+**Phase 2 — Core Documents: IN PROGRESS** (25 / 52 pts, 48% — 4 user stories + 1 technical task complete)
 
 ---
 
@@ -149,6 +149,22 @@
 - `lib/format.ts`: pure `creditMemoStatusBadgeClass` (POSTED green, OPEN blue). i18n: `creditMemos` + `creditMemoDetail` sections + `nav.creditMemos` + `errors.NOT_FOUND_SALES_CREDIT_MEMO` (sr + en).
 - API doc: `docs/api/sales.md` extended with credit-memo detail + posted-credit-memos endpoints, the OPEN|POSTED credit-memo status enum, and consumer links.
 - Tests: backend +14 (SalesService credit-memo ×7, SalesInvoiceMapper NormalizeCreditMemoStatus theory ×7 cases); frontend +3 (creditMemoStatusBadgeClass). Combined: 118 backend + 57 frontend passing; lint clean.
+
+### US-009: Purchase Invoices — List View
+**Completed:** 2026-05-25
+**Phase:** 2 — Core Documents
+**Story Points:** 5
+**Commit:** See git log
+
+**Summary:**
+- Three BC-backed endpoints under `/api/v1/purchase` (RequireFinancial — ADMIN/MANAGER/ACCOUNTING; WAREHOUSE 403): GET `/invoices` (open), GET `/posted-invoices`, GET `/credit-memos`. Canonical envelope `{ success, data: PagedResultDto }`; 502 INTEGRATION_BC_UNAVAILABLE on BC failure. Purchase analogue of US-006 with a vendor party instead of a customer.
+- `IPurchaseService`/`PurchaseService`: one service drives all three collections via an `entitySet` param (DRY), mirroring `SalesService`. Uses shared `BcListQuery`; OData filter built from search (number/vendorName contains) + status eq + postingDate ge/le; single quotes escaped. UI sort keys mapped date→postingDate, dueDate→dueDate, amount→totalAmountIncludingTax (allow-listed). Credit-memo entity set re-normalized to OPEN | POSTED.
+- `BcPurchaseInvoice` + `PurchaseInvoiceListItemDto` + `PurchaseInvoiceMapper` (IBcMapper): maps vendorName; normalizes BC status casing to SCREAMING_SNAKE wire value.
+- **Rule of Three refactor:** extracted shared `Application/Mapping/InvoiceStatus.cs` static helper (`Normalize` + `NormalizeCreditMemo`) — now the single source of truth for status normalization used by BOTH sales and purchase mappers. `SalesInvoiceMapper.NormalizeStatus`/`NormalizeCreditMemoStatus` refactored to delegate to it (existing sales tests stay green).
+- MockBcHttpClient: generalized the in-memory invoice filter into `CreateMockDocumentCollection`/`ApplyDocumentFilter` parameterized by the party field name (customerName vs vendorName) — sales path delegates to it (DRY); new entity sets `purchaseInvoices` (10, incl. overdue + partial + paid), `purchaseInvoicesPosted` (6), `purchaseCreditMemos` (4); 3 extra mock vendors added for variety. dueDate = postingDate+30d. All existing sales/customer/dashboard/mock tests preserved.
+- Frontend `app/(protected)/purchase/invoices/page.tsx` (PurchaseInvoiceListScreen): Open/Posted/Credit Memos tabs (remount per tab), FilterPanel (search + status select + date range), EntityTable (Number/Vendor/Date/Due Date/Amount/Status; sortable date/dueDate/amount), overdue amber row highlight (reuses isOverdue), status badges (reuses statusBadgeClass), row→`/purchase/invoices/{id}`, RBAC guard. Reuses all shared infra — no new frontend helper introduced.
+- API doc: `docs/api/purchase.md` (query params, success example, 401/403/404/500/502, OPEN|PARTIAL|PAID + credit-memo OPEN|POSTED enums). i18n: `purchase` section + `nav.purchaseInvoices` (sr + en). Sidebar nav entry "Purchase Invoices" added.
+- Tests: backend +40 (PurchaseService ×14, PurchaseInvoiceMapper ×4 methods incl. theory, InvoiceStatus shared-helper ×17 cases). Frontend unchanged (reused already-tested helpers). Combined: 158 backend + 57 frontend passing; lint clean.
 
 ---
 

@@ -22,6 +22,7 @@
     "invoices": "Fakture",
     "salesInvoices": "Prodajne fakture",
     "creditMemos": "Knjižna odobrenja",
+    "purchaseInvoices": "Ulazne fakture",
     "vendors": "Dobavljači",
     "sales": "Prodaja",
     "purchase": "Nabavka",
@@ -92,6 +93,33 @@
       "OPEN": "Otvorena",
       "PARTIAL": "Delimično plaćena",
       "PAID": "Plaćena"
+    }
+  },
+  "purchase": {
+    "title": "Ulazne fakture",
+    "subtitle": "Pregled ulaznih (nabavnih) faktura",
+    "tabOpen": "Otvorene",
+    "tabPosted": "Knjižene",
+    "tabCreditMemos": "Knjižna zaduženja",
+    "number": "Broj",
+    "vendor": "Dobavljač",
+    "date": "Datum",
+    "dueDate": "Valuta",
+    "amount": "Iznos",
+    "statusLabel": "Status",
+    "noResults": "Nema faktura",
+    "loadError": "Greška pri učitavanju faktura",
+    "filterStatus": "Status",
+    "filterAll": "Sve",
+    "search": "Pretraga po broju ili dobavljaču...",
+    "previous": "Prethodna",
+    "next": "Sledeća",
+    "pageOf": "Strana {page} od {total}",
+    "status": {
+      "OPEN": "Otvorena",
+      "PARTIAL": "Delimično plaćena",
+      "PAID": "Plaćena",
+      "POSTED": "Knjižena"
     }
   },
   "creditMemos": {

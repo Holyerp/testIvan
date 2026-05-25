@@ -8,6 +8,7 @@ using Pinoles.Api.Application.Dashboard;
 using Pinoles.Api.Application.DTOs;
 using Pinoles.Api.Application.Interfaces;
 using Pinoles.Api.Application.Mapping;
+using Pinoles.Api.Application.Purchase;
 using Pinoles.Api.Application.Sales;
 using Pinoles.Api.Domain.Constants;
 using Pinoles.Api.Infrastructure.Auth;
@@ -138,12 +139,16 @@ try
     builder.Services.AddSingleton<IBcMapper<BcCustomer, CustomerListItemDto>, CustomerMapper>();
     builder.Services.AddSingleton<IBcMapper<BcSalesInvoice, SalesInvoiceListItemDto>, SalesInvoiceMapper>();
     builder.Services.AddSingleton<IBcMapper<BcSalesInvoice, SalesInvoiceDetailDto>, SalesInvoiceDetailMapper>();
+    builder.Services.AddSingleton<IBcMapper<BcPurchaseInvoice, PurchaseInvoiceListItemDto>, PurchaseInvoiceMapper>();
 
     // Customer service
     builder.Services.AddScoped<ICustomerService, CustomerService>();
 
     // Sales service
     builder.Services.AddScoped<ISalesService, SalesService>();
+
+    // Purchase service
+    builder.Services.AddScoped<IPurchaseService, PurchaseService>();
 
     var app = builder.Build();
 
@@ -169,6 +174,7 @@ try
     app.MapDashboardEndpoints();
     app.MapCustomersEndpoints();
     app.MapSalesEndpoints();
+    app.MapPurchaseEndpoints();
 
     // Health check
     app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }))
