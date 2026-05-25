@@ -25,6 +25,7 @@ public class MockBcHttpClient : IBcHttpClient
             "salesInvoicesPosted" => CreateMockInvoiceCollection<T>(GetMockPostedInvoiceData(), options),
             "salesCreditMemos"    => CreateMockInvoiceCollection<T>(GetMockCreditMemoData(), options),
             "salesCreditMemosPosted" => CreateMockInvoiceCollection<T>(GetMockPostedCreditMemoData(), options),
+            "salesAdvanceInvoices" => CreateMockInvoiceCollection<T>(GetMockAdvanceInvoiceData(), options),
             "purchaseInvoices"        => CreateMockDocumentCollection<T>(GetMockPurchaseInvoiceData(), options, "vendorName"),
             "purchaseInvoicesPosted"  => CreateMockDocumentCollection<T>(GetMockPostedPurchaseInvoiceData(), options, "vendorName"),
             "purchaseCreditMemos"     => CreateMockDocumentCollection<T>(GetMockPurchaseCreditMemoData(), options, "vendorName"),
@@ -52,6 +53,7 @@ public class MockBcHttpClient : IBcHttpClient
             "salesInvoicesPosted" => FindInvoiceWithLines(GetMockPostedInvoiceData(), id),
             "salesCreditMemos"    => FindInvoiceWithLines(GetMockCreditMemoData(), id),
             "salesCreditMemosPosted" => FindInvoiceWithLines(GetMockPostedCreditMemoData(), id),
+            "salesAdvanceInvoices" => FindInvoiceWithLines(GetMockAdvanceInvoiceData(), id),
             "purchaseInvoices"       => FindPurchaseInvoiceWithLines(GetMockPurchaseInvoiceData(), id),
             "purchaseInvoicesPosted" => FindPurchaseInvoiceWithLines(GetMockPostedPurchaseInvoiceData(), id),
             _                     => null,
@@ -410,6 +412,43 @@ public class MockBcHttpClient : IBcHttpClient
         ["totalAmountIncludingTax"] = amount,
         ["status"] = status,
     };
+
+    // ----- Sales advance (proforma) invoices (US-014) -----
+    // Advance invoices track advance-payment requests sent to customers. Implemented
+    // against the STANDARD BC sales-invoice schema (header + lines + payment status)
+    // pending client confirmation of Q-003 (a BiH/SRB localized format is possible).
+    // They share the regular sales-invoice mock shape. Payment tracking (amount / paid /
+    // remaining) is derived from the document total and the payment status by the
+    // SalesAdvanceInvoiceDetailMapper, so the mock only carries the status.
+    private static Dictionary<string, object> Advance(
+        string id, string number, string customer, DateTime posting, decimal amount, string status) => new()
+    {
+        ["id"] = id,
+        ["number"] = number,
+        ["customerName"] = customer,
+        ["postingDate"] = Iso(posting),
+        ["dueDate"] = Iso(posting.AddDays(30)),
+        ["totalAmountIncludingTax"] = amount,
+        ["status"] = status,
+    };
+
+    // ~8 advance invoices spread over recent months, with a mix of Open / Partially
+    // Paid / Paid statuses so the payment-tracking block exercises all three states.
+    private static List<Dictionary<string, object>> GetMockAdvanceInvoiceData()
+    {
+        var now = DateTime.UtcNow;
+        return new List<Dictionary<string, object>>
+        {
+            Advance("sav001", "SA-2026-001", "Acme d.o.o.",     now.AddMonths(-5), 60000.00m,  "Open"),
+            Advance("sav002", "SA-2026-002", "Delta Corp",      now.AddMonths(-4), 90000.00m,  "Partially Paid"),
+            Advance("sav003", "SA-2026-003", "Sigma Trade",     now.AddMonths(-3), 45000.00m,  "Paid"),
+            Advance("sav004", "SA-2026-004", "Omega Logistika", now.AddMonths(-2), 120000.00m, "Open"),
+            Advance("sav005", "SA-2026-005", "Gama Petrol",     now.AddMonths(-1), 75000.00m,  "Partially Paid"),
+            Advance("sav006", "SA-2026-006", "Acme d.o.o.",     now.AddDays(-20),  30000.00m,  "Paid"),
+            Advance("sav007", "SA-2026-007", "Delta Corp",      now.AddDays(-9),   52000.00m,  "Open"),
+            Advance("sav008", "SA-2026-008", "Sigma Trade",     now.AddDays(-3),   38000.00m,  "Partially Paid"),
+        };
+    }
 
     // ----- Purchase documents (US-009) -----
     // Mirror the sales mock but carry a vendorName instead of customerName. dueDate =

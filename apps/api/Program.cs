@@ -144,6 +144,7 @@ try
     builder.Services.AddSingleton<IBcMapper<BcVendor, VendorListItemDto>, VendorMapper>();
     builder.Services.AddSingleton<IBcMapper<BcSalesInvoice, SalesInvoiceListItemDto>, SalesInvoiceMapper>();
     builder.Services.AddSingleton<IBcMapper<BcSalesInvoice, SalesInvoiceDetailDto>, SalesInvoiceDetailMapper>();
+    builder.Services.AddSingleton<IBcMapper<BcSalesInvoice, SalesAdvanceInvoiceDetailDto>, SalesAdvanceInvoiceDetailMapper>();
     builder.Services.AddSingleton<IBcMapper<BcPurchaseInvoice, PurchaseInvoiceListItemDto>, PurchaseInvoiceMapper>();
     builder.Services.AddSingleton<IBcMapper<BcPurchaseInvoice, PurchaseInvoiceDetailDto>, PurchaseInvoiceDetailMapper>();
 

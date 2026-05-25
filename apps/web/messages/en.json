@@ -21,6 +21,7 @@
     "customers": "Customers",
     "invoices": "Invoices",
     "salesInvoices": "Sales Invoices",
+    "salesAdvanceInvoices": "Advance Invoices",
     "creditMemos": "Credit Memos",
     "purchaseInvoices": "Purchase Invoices",
     "vendors": "Vendors",
@@ -106,6 +107,39 @@
       "PARTIAL": "Partially Paid",
       "PAID": "Paid"
     }
+  },
+  "salesAdvance": {
+    "title": "Advance Invoices",
+    "subtitle": "Sales advance (proforma) invoices overview",
+    "advanceTag": "Advance",
+    "search": "Search by number or customer...",
+    "noResults": "No advance invoices found",
+    "loadError": "Error loading advance invoices"
+  },
+  "salesAdvanceDetail": {
+    "back": "Back to advance invoices",
+    "notFound": "Advance invoice not found",
+    "advanceTag": "Advance",
+    "customer": "Customer",
+    "billTo": "Bill-to Address",
+    "postingDate": "Posting Date",
+    "dueDate": "Due Date",
+    "paymentTerms": "Payment Terms",
+    "paymentTracking": "Payment Tracking",
+    "amount": "Amount",
+    "amountPaid": "Amount Paid",
+    "remaining": "Remaining",
+    "lineItems": "Line Items",
+    "lineDescription": "Description",
+    "quantity": "Quantity",
+    "unitPrice": "Unit Price",
+    "vatPercent": "VAT %",
+    "lineTotal": "Line Total",
+    "noLines": "No line items",
+    "subtotal": "Subtotal",
+    "vat": "VAT",
+    "total": "Total",
+    "loadError": "Error loading advance invoice"
   },
   "purchase": {
     "title": "Purchase Invoices",
@@ -287,6 +321,7 @@
     "FORBIDDEN_INSUFFICIENT_ROLE": "You do not have permission to access this resource.",
     "NOT_FOUND_CUSTOMER": "Customer not found.",
     "NOT_FOUND_SALES_INVOICE": "Invoice not found.",
+    "NOT_FOUND_SALES_ADVANCE_INVOICE": "Advance invoice not found.",
     "NOT_FOUND_SALES_CREDIT_MEMO": "Credit memo not found.",
     "INTERNAL_ERROR": "Server error. Please try again.",
     "GENERIC": "Something went wrong. Please try again."

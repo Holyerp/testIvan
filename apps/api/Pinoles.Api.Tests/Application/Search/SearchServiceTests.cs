@@ -23,7 +23,7 @@ public class SearchServiceTests
         var bc = new MockBcHttpClient(NullLogger<MockBcHttpClient>.Instance);
         var customers = new CustomerService(bc, new CustomerMapper());
         var vendors = new VendorService(bc, new VendorMapper(), new PurchaseInvoiceMapper());
-        var sales = new SalesService(bc, new SalesInvoiceMapper(), new SalesInvoiceDetailMapper());
+        var sales = new SalesService(bc, new SalesInvoiceMapper(), new SalesInvoiceDetailMapper(), new SalesAdvanceInvoiceDetailMapper());
         var purchase = new PurchaseService(bc, new PurchaseInvoiceMapper(), new PurchaseInvoiceDetailMapper());
         return new SearchService(customers, vendors, sales, purchase);
     }

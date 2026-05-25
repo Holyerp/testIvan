@@ -6,6 +6,8 @@
 
 Read-only sales-invoice and credit-memo list + detail endpoints backed by Microsoft Dynamics 365 Business Central (BC) via `IBcHttpClient`. All list endpoints share one service (`ISalesService`) and one response shape, as do the detail endpoints; they differ only in the BC collection they read and (for detail) the not-found code returned.
 
+> Sales **advance (proforma) invoices** also live under `/api/v1/sales` (`/advance-invoices`, `/advance-invoices/{id}`) but carry a payment-tracking block on the detail — they are documented separately in [`sales-advance.md`](sales-advance.md) (US-014).
+
 **Base path:** `/api/v1/sales`
 **Authentication:** Bearer JWT. Authorization policy `RequireFinancial` — roles `ADMIN`, `MANAGER`, `ACCOUNTING`. `WAREHOUSE` is denied (403).
 

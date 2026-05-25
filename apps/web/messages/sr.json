@@ -21,6 +21,7 @@
     "customers": "Klijenti",
     "invoices": "Fakture",
     "salesInvoices": "Prodajne fakture",
+    "salesAdvanceInvoices": "Avansne fakture",
     "creditMemos": "Knjižna odobrenja",
     "purchaseInvoices": "Ulazne fakture",
     "vendors": "Dobavljači",
@@ -106,6 +107,39 @@
       "PARTIAL": "Delimično plaćena",
       "PAID": "Plaćena"
     }
+  },
+  "salesAdvance": {
+    "title": "Avansne fakture",
+    "subtitle": "Pregled prodajnih avansnih (proforma) faktura",
+    "advanceTag": "Avans",
+    "search": "Pretraga po broju ili kupcu...",
+    "noResults": "Nema avansnih faktura",
+    "loadError": "Greška pri učitavanju avansnih faktura"
+  },
+  "salesAdvanceDetail": {
+    "back": "Nazad na avansne fakture",
+    "notFound": "Avansna faktura nije pronađena",
+    "advanceTag": "Avans",
+    "customer": "Kupac",
+    "billTo": "Adresa za naplatu",
+    "postingDate": "Datum knjiženja",
+    "dueDate": "Valuta",
+    "paymentTerms": "Uslovi plaćanja",
+    "paymentTracking": "Praćenje plaćanja",
+    "amount": "Iznos",
+    "amountPaid": "Plaćeno",
+    "remaining": "Preostalo",
+    "lineItems": "Stavke",
+    "lineDescription": "Opis",
+    "quantity": "Količina",
+    "unitPrice": "Jedinična cena",
+    "vatPercent": "PDV %",
+    "lineTotal": "Iznos stavke",
+    "noLines": "Nema stavki",
+    "subtotal": "Osnovica",
+    "vat": "PDV",
+    "total": "Ukupno",
+    "loadError": "Greška pri učitavanju avansne fakture"
   },
   "purchase": {
     "title": "Ulazne fakture",
@@ -287,6 +321,7 @@
     "FORBIDDEN_INSUFFICIENT_ROLE": "Nemate dozvolu za pristup ovom resursu.",
     "NOT_FOUND_CUSTOMER": "Klijent nije pronađen.",
     "NOT_FOUND_SALES_INVOICE": "Faktura nije pronađena.",
+    "NOT_FOUND_SALES_ADVANCE_INVOICE": "Avansna faktura nije pronađena.",
     "NOT_FOUND_SALES_CREDIT_MEMO": "Knjižno odobrenje nije pronađeno.",
     "INTERNAL_ERROR": "Greška servera. Pokušajte ponovo.",
     "GENERIC": "Nešto je pošlo po krivu. Pokušajte ponovo."

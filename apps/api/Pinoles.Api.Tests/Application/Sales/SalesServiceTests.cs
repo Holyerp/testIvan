@@ -11,7 +11,11 @@ public class SalesServiceTests
     private static SalesService CreateService()
     {
         var bc = new MockBcHttpClient(NullLogger<MockBcHttpClient>.Instance);
-        return new SalesService(bc, new SalesInvoiceMapper(), new SalesInvoiceDetailMapper());
+        return new SalesService(
+            bc,
+            new SalesInvoiceMapper(),
+            new SalesInvoiceDetailMapper(),
+            new SalesAdvanceInvoiceDetailMapper());
     }
 
     [Fact]
