@@ -1,13 +1,19 @@
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import { AuthProvider } from '@/components/auth-provider';
 import { Sidebar } from '@/components/sidebar';
 
-export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
+export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
+  const messages = await getMessages();
+
   return (
-    <AuthProvider>
-      <div className="flex h-screen bg-gray-50">
-        <Sidebar />
-        <main className="flex-1 overflow-auto">{children}</main>
-      </div>
-    </AuthProvider>
+    <NextIntlClientProvider messages={messages}>
+      <AuthProvider>
+        <div className="flex h-screen bg-gray-50">
+          <Sidebar />
+          <main className="flex-1 overflow-auto">{children}</main>
+        </div>
+      </AuthProvider>
+    </NextIntlClientProvider>
   );
 }

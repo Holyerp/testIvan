@@ -39,7 +39,7 @@ Deliver a working authentication system, BC middleware connectivity, and the fir
 - ADMIN / MANAGER / ACCOUNTING / WAREHOUSE role enforcement
 
 ### US-003: Dashboard — KPI Overview (8 pts) — P0
-**Status:** Todo
+**Status:** Completed
 - KPI cards, invoice trend chart, BC connection status
 
 ### US-004: Customers — List View (5 pts) — P0
@@ -61,10 +61,10 @@ Deliver a working authentication system, BC middleware connectivity, and the fir
 - **Risk Level:** High (BC API connectivity unknown until T-002)
 
 ### Progress Tracking
-- **Completed Story Points:** 18 / 47 (38%)
-- **Completed Stories:** 3 / 7 (T-001, T-002, US-001)
-- **Tests Passing:** 24 (3 web API client + 10 BC middleware + 5 auth service + 5 rate limiter + 1 types = web 11, .NET 13)
-- **Code Coverage:** ≥ 80% on BC middleware and auth layers
+- **Completed Story Points:** 34 / 47 (72%)
+- **Completed Stories:** 5 / 7 (T-001, T-002, US-001, US-002, US-003)
+- **Tests Passing:** 32 (5 web API/component + 5 dashboard service + 10 BC middleware + 5 auth service + 5 rate limiter + 1 types + others)
+- **Code Coverage:** ≥ 80% on BC middleware, auth, and dashboard layers
 
 ---
 

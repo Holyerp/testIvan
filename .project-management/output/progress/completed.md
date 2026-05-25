@@ -49,6 +49,21 @@
 - i18n: nav.invoices + errors.forbidden* keys (sr + en)
 - Tests: UserRoles (3), UsersEndpoints (3), RoleGuard frontend (5)
 
+### US-003: Dashboard — KPI Overview
+**Completed:** 2026-05-25
+**Phase:** 1 — Foundation
+**Story Points:** 8
+**Commit:** See git log
+
+**Summary:**
+- GET /api/v1/dashboard/kpis (RequireDashboard policy — all roles)
+- IDashboardService/DashboardService: aggregates BC customers, open/overdue invoices, vendors, 6-month trend
+- 5-minute cache via ICacheService; 502 INTEGRATION_BC_UNAVAILABLE on BC failure
+- BcCustomer/BcSalesInvoice/BcVendor DTOs; mock invoices spread across 6 months
+- Frontend: 4 KPI cards (RSD currency formatting), CSS bar-chart trend, BC status badge (mock/connected), loading skeleton, error state
+- i18n: dashboard section (sr + en)
+- Tests: 5 backend (DashboardService) + 3 frontend (KpiCard)
+
 ---
 
 ## Completed Technical Tasks
