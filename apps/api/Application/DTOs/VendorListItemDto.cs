@@ -1,6 +1,6 @@
 namespace Pinoles.Api.Application.DTOs;
 
-public class BcVendor
+public class VendorListItemDto
 {
     public string Id { get; set; } = string.Empty;
     public string Number { get; set; } = string.Empty;

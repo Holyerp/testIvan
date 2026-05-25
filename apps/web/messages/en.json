@@ -122,6 +122,21 @@
       "POSTED": "Posted"
     }
   },
+  "vendors": {
+    "title": "Vendors",
+    "subtitle": "All vendors overview",
+    "search": "Search by name or number...",
+    "name": "Name",
+    "number": "Number",
+    "city": "City",
+    "balance": "Balance",
+    "phone": "Phone",
+    "noResults": "No vendors found",
+    "loadError": "Error loading vendors",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}"
+  },
   "creditMemos": {
     "title": "Credit Memos",
     "subtitle": "Sales credit memos overview",

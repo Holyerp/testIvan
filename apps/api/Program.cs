@@ -10,6 +10,7 @@ using Pinoles.Api.Application.Interfaces;
 using Pinoles.Api.Application.Mapping;
 using Pinoles.Api.Application.Purchase;
 using Pinoles.Api.Application.Sales;
+using Pinoles.Api.Application.Vendors;
 using Pinoles.Api.Domain.Constants;
 using Pinoles.Api.Infrastructure.Auth;
 using Pinoles.Api.Infrastructure.BusinessCentral;
@@ -137,6 +138,7 @@ try
 
     // BC mappers
     builder.Services.AddSingleton<IBcMapper<BcCustomer, CustomerListItemDto>, CustomerMapper>();
+    builder.Services.AddSingleton<IBcMapper<BcVendor, VendorListItemDto>, VendorMapper>();
     builder.Services.AddSingleton<IBcMapper<BcSalesInvoice, SalesInvoiceListItemDto>, SalesInvoiceMapper>();
     builder.Services.AddSingleton<IBcMapper<BcSalesInvoice, SalesInvoiceDetailDto>, SalesInvoiceDetailMapper>();
     builder.Services.AddSingleton<IBcMapper<BcPurchaseInvoice, PurchaseInvoiceListItemDto>, PurchaseInvoiceMapper>();
@@ -150,6 +152,9 @@ try
 
     // Purchase service
     builder.Services.AddScoped<IPurchaseService, PurchaseService>();
+
+    // Vendor service
+    builder.Services.AddScoped<IVendorService, VendorService>();
 
     var app = builder.Build();
 
@@ -176,6 +181,7 @@ try
     app.MapCustomersEndpoints();
     app.MapSalesEndpoints();
     app.MapPurchaseEndpoints();
+    app.MapVendorsEndpoints();
 
     // Health check
     app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }))

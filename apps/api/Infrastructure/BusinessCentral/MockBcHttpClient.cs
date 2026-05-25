@@ -475,25 +475,72 @@ public class MockBcHttpClient : IBcHttpClient
         };
     }
 
+    // Single source of truth for mock vendor records. Carries city, balance and phone
+    // so the vendor list (US-011) can render its columns; the dashboard (Phase 1) only
+    // reads the @odata.count, so the extra fields are additive and harmless there.
+    private static List<Dictionary<string, object>> GetMockVendorData()
+    {
+        return new List<Dictionary<string, object>>
+        {
+            new() { ["id"] = "v001", ["number"] = "V001", ["displayName"] = "Supplier A d.o.o.",   ["city"] = "Beograd",    ["balance"] = 55000.00m,  ["phone"] = "+381 11 2345678" },
+            new() { ["id"] = "v002", ["number"] = "V002", ["displayName"] = "Supplier B d.o.o.",   ["city"] = "Novi Sad",   ["balance"] = 32000.00m,  ["phone"] = "+381 21 3456789" },
+            new() { ["id"] = "v003", ["number"] = "V003", ["displayName"] = "Materijal Promet",    ["city"] = "Niš",        ["balance"] = 78000.00m,  ["phone"] = "+381 18 4567890" },
+            new() { ["id"] = "v004", ["number"] = "V004", ["displayName"] = "Energo Snabdevanje",  ["city"] = "Beograd",    ["balance"] = 144000.00m, ["phone"] = "+381 11 5678901" },
+            new() { ["id"] = "v005", ["number"] = "V005", ["displayName"] = "Tehno Oprema d.o.o.", ["city"] = "Kragujevac", ["balance"] = 26000.00m,  ["phone"] = "+381 34 6789012" },
+            new() { ["id"] = "v006", ["number"] = "V006", ["displayName"] = "Balkan Logistika",    ["city"] = "Subotica",   ["balance"] = 91000.00m,  ["phone"] = "+381 24 7890123" },
+            new() { ["id"] = "v007", ["number"] = "V007", ["displayName"] = "Pannon Trade d.o.o.", ["city"] = "Zrenjanin",  ["balance"] = 47000.00m,  ["phone"] = "+381 23 8901234" },
+            new() { ["id"] = "v008", ["number"] = "V008", ["displayName"] = "Dunav Inženjering",   ["city"] = "Pančevo",    ["balance"] = 163000.00m, ["phone"] = "+381 13 9012345" },
+            new() { ["id"] = "v009", ["number"] = "V009", ["displayName"] = "Morava Komerc",       ["city"] = "Čačak",      ["balance"] = 38500.00m,  ["phone"] = "+381 32 0123456" },
+            new() { ["id"] = "v010", ["number"] = "V010", ["displayName"] = "Sava Distribucija",   ["city"] = "Beograd",    ["balance"] = 122000.00m, ["phone"] = "+381 11 1234567" },
+        };
+    }
+
     private static BcCollectionResponse<T> CreateMockVendors<T>(BcQueryOptions? options)
     {
-        var vendors = new List<Dictionary<string, object>>
-        {
-            new() { ["id"] = "v001", ["number"] = "V001", ["displayName"] = "Supplier A d.o.o.",  ["city"] = "Beograd",  ["balance"] = 55000.00m },
-            new() { ["id"] = "v002", ["number"] = "V002", ["displayName"] = "Supplier B d.o.o.",  ["city"] = "Novi Sad", ["balance"] = 32000.00m },
-            new() { ["id"] = "v003", ["number"] = "V003", ["displayName"] = "Materijal Promet",   ["city"] = "Niš",      ["balance"] = 78000.00m },
-            new() { ["id"] = "v004", ["number"] = "V004", ["displayName"] = "Energo Snabdevanje",  ["city"] = "Beograd",  ["balance"] = 144000.00m },
-            new() { ["id"] = "v005", ["number"] = "V005", ["displayName"] = "Tehno Oprema d.o.o.", ["city"] = "Kragujevac", ["balance"] = 26000.00m },
-        };
-        var top = options?.Top ?? vendors.Count;
+        var vendors = GetMockVendorData();
+
+        // Mimic OData contains(displayName,'x') or contains(number,'x') (same shape the
+        // vendor list service builds), reusing the customer filter — both filter on
+        // displayName/number.
+        var filtered = ApplyCustomerFilter(vendors, options?.Filter);
+
+        // In-memory sort to honor $orderby (displayName / balance, asc / desc) so the
+        // mock matches what a real BC OData call would return for the vendor list.
+        var sorted = ApplyVendorSort(filtered, options?.OrderBy);
+
+        var top = options?.Top ?? sorted.Count;
         var skip = options?.Skip ?? 0;
-        var paged = vendors.Skip(skip).Take(top).ToList();
+        var paged = sorted.Skip(skip).Take(top).ToList();
         var json = JsonSerializer.Serialize(paged);
         var typed = JsonSerializer.Deserialize<List<T>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
         return new BcCollectionResponse<T>
         {
             Value = typed,
-            Count = options?.Count == true ? vendors.Count : null
+            Count = options?.Count == true ? sorted.Count : null
+        };
+    }
+
+    // Order the vendor list by the OData $orderby clause ("displayName asc" / "balance desc").
+    // Only the allow-listed fields produced by VendorService are handled; anything else
+    // leaves the source order untouched.
+    private static List<Dictionary<string, object>> ApplyVendorSort(
+        List<Dictionary<string, object>> vendors, string? orderBy)
+    {
+        if (string.IsNullOrWhiteSpace(orderBy)) return vendors;
+
+        var parts = orderBy.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var field = parts.Length > 0 ? parts[0] : null;
+        var descending = parts.Length > 1 && string.Equals(parts[1], "desc", StringComparison.OrdinalIgnoreCase);
+
+        return field switch
+        {
+            "displayName" => (descending
+                ? vendors.OrderByDescending(v => v["displayName"].ToString(), StringComparer.OrdinalIgnoreCase)
+                : vendors.OrderBy(v => v["displayName"].ToString(), StringComparer.OrdinalIgnoreCase)).ToList(),
+            "balance" => (descending
+                ? vendors.OrderByDescending(v => (decimal)v["balance"])
+                : vendors.OrderBy(v => (decimal)v["balance"])).ToList(),
+            _ => vendors,
         };
     }
 }

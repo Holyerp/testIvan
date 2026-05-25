@@ -41,6 +41,11 @@ const NAV_ITEMS: NavItem[] = [
     label: 'Purchase Invoices',
     roles: ['ADMIN', 'MANAGER', 'ACCOUNTING'],
   },
+  {
+    href: '/vendors',
+    label: 'Vendors',
+    roles: ['ADMIN', 'MANAGER', 'ACCOUNTING'],
+  },
 ];
 
 export function Sidebar() {

@@ -7,7 +7,7 @@
 
 **Phase 1 — Foundation & MVP: COMPLETE** (47 / 47 pts, 100% — 5 user stories + 2 technical tasks)
 
-**Phase 2 — Core Documents: IN PROGRESS** (25 / 52 pts, 48% — 4 user stories + 1 technical task complete)
+**Phase 2 — Core Documents: IN PROGRESS** (35 / 52 pts, 67% — 5 user stories + 1 technical task complete)
 
 ---
 
@@ -182,6 +182,22 @@
 - Frontend `app/(protected)/purchase/invoices/[id]/page.tsx` (PurchaseInvoiceDetailScreen): header card (number, vendor, our reference, dates, payment terms), status badge + overdue hint, line-items table, right-aligned totals block; 404 "Invoice not found", loading skeleton, error banner, back link to `/purchase/invoices`; RBAC guard. Mirrors US-007; reuses formatRsd/isOverdue/statusBadgeClass — no new frontend helper introduced.
 - API doc: `docs/api/purchase.md` v1.1 — two detail endpoints (path param, success example with header/lines/totals, 401/403/404 NOT_FOUND_PURCHASE_INVOICE/500/502). i18n: `purchaseDetail` section (sr + en); reuses `purchase.status.*`.
 - Tests: backend +18 (PurchaseService detail ×8, PurchaseInvoiceDetailMapper ×6, InvoiceTotals ×4); frontend unchanged (reused already-tested helpers). Combined: 176 backend + 57 frontend passing; lint clean.
+
+### US-011: Vendors — List View
+**Completed:** 2026-05-25
+**Phase:** 2 — Core Documents
+**Story Points:** 5
+**Commit:** See git log
+
+**Summary:**
+- BC-backed `GET /api/v1/vendors` (RequireFinancial — ADMIN/MANAGER/ACCOUNTING; WAREHOUSE 403): paginated/searchable/sortable vendor list. Canonical envelope `{ success, data: PagedResultDto }`; 502 `INTEGRATION_BC_UNAVAILABLE` on BC failure. Vendor analogue of US-004 (customers list).
+- `VendorListItemDto` (id, number, displayName, city, balance, phone); `BcVendor` extended with `City` + `Phone` (additive — dashboard vendor count untouched). `VendorMapper` (IBcMapper) mirrors CustomerMapper.
+- `IVendorService` + `VendorService`: reuses shared `BcListQuery` (page/pageSize clamp, sort allow-list `displayName`/`balance`, single-quote-escaped contains-filter on displayName/number). Registered in Program.cs (scoped service + singleton mapper + `MapVendorsEndpoints`).
+- MockBcHttpClient: `vendors` set expanded from 5 → 10 vendors with city + phone; extracted `GetMockVendorData()` single source; added in-memory contains-filter (reuses `ApplyCustomerFilter`) + `$orderby` sort (displayName/balance, asc/desc). Honors Top/Skip/Count. DashboardServiceTests vendor count + MockBcHttpClientTests stay green.
+- Frontend `app/(protected)/vendors/page.tsx` (VendorListScreen): EntityTable columns Name(sortable), Number, City, Balance(formatRsd, right-aligned, sortable), Phone; debounced search (name or number) resets page; row click → `/vendors/{id}` (detail in US-012); loading skeleton / empty / error via EntityTable; RBAC guard `['ADMIN','MANAGER','ACCOUNTING']`. Reuses EntityTable/FilterPanel/usePaginatedQuery/formatRsd — no new helper.
+- Sidebar: added Vendors → `/vendors` (ADMIN/MANAGER/ACCOUNTING). i18n: `vendors` section (sr + en); reuses pagination labels; `nav.vendors` already present.
+- API doc: `docs/api/vendors.md` v1.0 — endpoint, RequireFinancial auth, query params (page/pageSize/search/sortBy/sortDir), success example PagedResultDto, errors 400/401/403/404/500/502.
+- Tests: backend +13 (VendorService ×10, VendorMapper ×3); frontend unchanged (reused already-tested helpers). Combined: 189 backend + 57 frontend passing; lint clean.
 
 ---
 

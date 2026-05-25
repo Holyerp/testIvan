@@ -122,6 +122,21 @@
       "POSTED": "Knjižena"
     }
   },
+  "vendors": {
+    "title": "Dobavljači",
+    "subtitle": "Pregled svih dobavljača",
+    "search": "Pretraga po nazivu ili broju...",
+    "name": "Naziv",
+    "number": "Broj",
+    "city": "Grad",
+    "balance": "Stanje",
+    "phone": "Telefon",
+    "noResults": "Nema pronađenih dobavljača",
+    "loadError": "Greška pri učitavanju dobavljača",
+    "previous": "Prethodna",
+    "next": "Sledeća",
+    "pageOf": "Strana {page} od {total}"
+  },
   "creditMemos": {
     "title": "Knjižna odobrenja",
     "subtitle": "Pregled knjižnih odobrenja",
