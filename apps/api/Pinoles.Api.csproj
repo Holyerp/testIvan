@@ -9,8 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Exclude test files from main project — tests live in Tests/ but share the same root directory -->
-    <Compile Remove="Tests/**/*.cs" />
+    <!-- Allow the test project to exercise internal endpoint handlers directly. -->
+    <InternalsVisibleTo Include="Pinoles.Api.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The test project lives in Pinoles.Api.Tests/ (its own csproj/obj/bin). Detach its
+         entire subtree so this Web SDK project never globs test sources or build artifacts. -->
+    <Compile Remove="Pinoles.Api.Tests/**" />
+    <Content Remove="Pinoles.Api.Tests/**" />
+    <None Remove="Pinoles.Api.Tests/**" />
+    <EmbeddedResource Remove="Pinoles.Api.Tests/**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,7 +35,7 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     <PackageReference Include="Azure.Identity" Version="1.11.4" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
   </ItemGroup>
 
 </Project>
