@@ -15,6 +15,8 @@ public static class DbSeeder
             {
                 Id = Guid.NewGuid(),
                 Username = "admin",
+                Name = "Admin User",
+                Email = "admin@pinoles.local",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!", 12),
                 Role = "ADMIN",
                 IsActive = true,
@@ -25,6 +27,8 @@ public static class DbSeeder
             {
                 Id = Guid.NewGuid(),
                 Username = "manager",
+                Name = "Manager User",
+                Email = "manager@pinoles.local",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Manager123!", 12),
                 Role = "MANAGER",
                 IsActive = true,
@@ -35,6 +39,8 @@ public static class DbSeeder
             {
                 Id = Guid.NewGuid(),
                 Username = "accounting",
+                Name = "Accounting User",
+                Email = "accounting@pinoles.local",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Accounting123!", 12),
                 Role = "ACCOUNTING",
                 IsActive = true,
@@ -45,6 +51,8 @@ public static class DbSeeder
             {
                 Id = Guid.NewGuid(),
                 Username = "warehouse",
+                Name = "Warehouse User",
+                Email = "warehouse@pinoles.local",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Warehouse123!", 12),
                 Role = "WAREHOUSE",
                 IsActive = true,

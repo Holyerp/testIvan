@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using Pinoles.Api.Application.Audit;
 using Pinoles.Api.Application.Auth;
+using Pinoles.Api.Domain.Constants;
 using Pinoles.Api.Domain.Entities;
 using Pinoles.Api.Infrastructure.Auth;
 using Pinoles.Api.Infrastructure.Persistence;
@@ -31,7 +33,8 @@ public class AuthServiceTests
         });
         var tokenService = new TokenService(jwtOpts);
         var logger = NullLogger<AuthService>.Instance;
-        return new AuthService(db, tokenService, jwtOpts, logger);
+        var audit = new AuditWriter(db);
+        return new AuthService(db, tokenService, jwtOpts, audit, logger);
     }
 
     private static async Task<User> SeedUser(PinolesDbContext db, string username = "testuser", string role = "ADMIN")
@@ -66,6 +69,36 @@ public class AuthServiceTests
         Assert.NotNull(result.NewRefreshToken);
         Assert.Equal("ADMIN", result.Role);
         Assert.Equal("testuser", result.Username);
+    }
+
+    [Fact]
+    public async Task LoginAsync_ValidCredentials_WritesAuditRowAndSetsLastLogin()
+    {
+        await using var db = CreateDbContext();
+        var seeded = await SeedUser(db);
+        var service = CreateService(db);
+
+        await service.LoginAsync("testuser", "Password123!");
+
+        var audit = await db.AuditLogs.SingleOrDefaultAsync(a => a.Action == AuditActions.AuthLoginSuccess);
+        Assert.NotNull(audit);
+        Assert.Equal(seeded.Id, audit!.UserId);
+        Assert.Equal("testuser", audit.Username);
+
+        var user = await db.Users.SingleAsync(u => u.Id == seeded.Id);
+        Assert.NotNull(user.LastLoginAt);
+    }
+
+    [Fact]
+    public async Task LoginAsync_FailedLogin_WritesNoAuditRow()
+    {
+        await using var db = CreateDbContext();
+        await SeedUser(db);
+        var service = CreateService(db);
+
+        await service.LoginAsync("testuser", "WrongPassword!");
+
+        Assert.False(await db.AuditLogs.AnyAsync());
     }
 
     [Fact]

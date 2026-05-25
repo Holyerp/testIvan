@@ -2,7 +2,9 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Pinoles.Api.Application.Admin;
 using Pinoles.Api.Application.Analytics;
+using Pinoles.Api.Application.Audit;
 using Pinoles.Api.Application.Auth;
 using Pinoles.Api.Application.CreditDocuments;
 using Pinoles.Api.Application.Customers;
@@ -74,6 +76,12 @@ try
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<ITokenService, TokenService>();
     builder.Services.AddSingleton<LoginRateLimiter>();
+
+    // Audit writer — shared audit-log persistence (auth login + admin actions)
+    builder.Services.AddScoped<IAuditWriter, AuditWriter>();
+
+    // Admin user-management service (US-021) — first WRITE-ops service (local users table only)
+    builder.Services.AddScoped<IUserAdminService, UserAdminService>();
 
     // JWT Bearer authentication
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -216,6 +224,7 @@ try
     app.MapControllers();
     app.MapAuthEndpoints();
     app.MapUsersEndpoints();
+    app.MapAdminUsersEndpoints();
     app.MapDashboardEndpoints();
     app.MapCustomersEndpoints();
     app.MapSalesEndpoints();

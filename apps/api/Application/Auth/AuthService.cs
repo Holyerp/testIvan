@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pinoles.Api.Application.Interfaces;
+using Pinoles.Api.Domain.Constants;
 using Pinoles.Api.Domain.Entities;
 using Pinoles.Api.Infrastructure.Auth;
 using Pinoles.Api.Infrastructure.Persistence;
@@ -13,17 +14,20 @@ public class AuthService : IAuthService
     private readonly PinolesDbContext _db;
     private readonly ITokenService _tokens;
     private readonly JwtOptions _jwt;
+    private readonly IAuditWriter _audit;
     private readonly ILogger<AuthService> _logger;
 
     public AuthService(
         PinolesDbContext db,
         ITokenService tokens,
         IOptions<JwtOptions> jwt,
+        IAuditWriter audit,
         ILogger<AuthService> logger)
     {
         _db = db;
         _tokens = tokens;
         _jwt = jwt.Value;
+        _audit = audit;
         _logger = logger;
     }
 
@@ -51,6 +55,12 @@ public class AuthService : IAuthService
             CreatedAt = DateTime.UtcNow,
         };
         _db.RefreshTokens.Add(rt);
+
+        // Record the login for the audit-log view (US-023) and surface last-login on the
+        // admin user list (US-021). The audit row carries no credentials.
+        user.LastLoginAt = DateTime.UtcNow;
+        _audit.Write(AuditActions.AuthLoginSuccess, user.Id, user.Username, $"role={user.Role}");
+
         await _db.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("auth.login.success userId={UserId} role={Role}", user.Id, user.Role);

@@ -19,6 +19,8 @@ public class PinolesDbContext : DbContext
             e.HasKey(u => u.Id);
             e.HasIndex(u => u.Username).IsUnique();
             e.Property(u => u.Role).HasMaxLength(20).IsRequired();
+            e.Property(u => u.Name).HasMaxLength(200).IsRequired();
+            e.Property(u => u.Email).HasMaxLength(256);
             e.HasMany(u => u.RefreshTokens)
              .WithOne(r => r.User)
              .HasForeignKey(r => r.UserId)
