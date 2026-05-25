@@ -1,350 +1,200 @@
-# Technology Stack
+# Technology Stack — Pinoles
 
-> **Instructions:** Define the technologies you'll use for this project. Be specific about versions where applicable. Claude will use this to generate appropriate code and architecture decisions.
+**Version:** 1.0
+**Last Updated:** 2026-05-25
+**Status:** Active
 
 ---
 
 ## Frontend
 
 ### Core Framework
-- **Framework:** React 18.x
+- **Framework:** Next.js 14+ (App Router)
 - **Language:** TypeScript 5.x
-- **Build Tool:** Vite 5.x / Create React App
-- **Package Manager:** npm / yarn / pnpm
+- **Package Manager:** pnpm
+- **Build Tool:** Next.js built-in (Turbopack / Webpack)
 
-### Routing
-- **Router:** React Router v6
-- **Why:** Client-side routing, nested routes, data loading
+### Styling
+- **CSS Framework:** Tailwind CSS 3.x
+- **Custom Variables:** Pinoles design-system palette (see Design System section)
+- **Component Library:** Custom components aligned to prototype
+- **Icons:** Tabler Icons
+- **Fonts:** DM Sans (300/400/500/600/700), DM Mono (400/500) via Google Fonts / local
 
 ### State Management
-- **Global State:** Redux Toolkit / Zustand / Context API
-- **Server State:** TanStack Query (React Query) / SWR
-- **Form State:** React Hook Form / Formik
-- **Why:** [Explain your choice]
-
-### UI & Styling
-- **CSS Framework:** Tailwind CSS / Material-UI / Chakra UI / Bootstrap
-- **Component Library:** [If any]
-- **Icons:** React Icons / Heroicons / Font Awesome
-- **Animations:** Framer Motion / React Spring
+- **Server State:** Next.js App Router fetch + React Query (TanStack Query)
+- **Form State:** React Hook Form + Zod
+- **Global State:** Zustand (for auth session, UI state)
 
 ### Data Fetching
-- **HTTP Client:** Axios / Fetch API
-- **Real-time:** Socket.io / WebSockets
-- **Why:** [Explain your choice]
+- **HTTP Client:** Fetch API (native) with typed wrappers
+- **API Client:** Auto-generated or hand-written TypeScript types from .NET API
 
-### Additional Frontend Libraries
-- **Date Handling:** date-fns / Day.js / Luxon
-- **Form Validation:** Zod / Yup / Joi
-- **File Upload:** React Dropzone
-- **Rich Text Editor:** [If needed]
-- **Charts/Graphs:** [If needed - Recharts, Chart.js, etc.]
+### Additional Libraries
+- **Date Handling:** date-fns
+- **Charts:** Recharts (Phase 4)
+- **Tables:** TanStack Table
+- **Exports:** jsPDF + xlsx (Phase 4)
+- **Notifications:** react-hot-toast
 
 ---
 
 ## Backend
 
-### Runtime & Framework
-- **Runtime:** Node.js 20.x LTS
-- **Framework:** Express.js / Fastify / NestJS / Koa
-- **Language:** TypeScript / JavaScript
-- **Why:** [Explain your choice]
+### Middleware Web API (.NET 8)
+- **Runtime:** .NET 8 (LTS)
+- **Framework:** ASP.NET Core Web API
+- **Language:** C# 12
+- **Architecture:** Clean Architecture (Controllers → Services → BC Client)
 
-### Database
+### Business Central Integration
+- **Integration:** Microsoft Dynamics 365 Business Central REST API (OData v4)
+- **Authentication toward BC:** OAuth 2.0 Client Credentials (Azure AD service principal)
+- **Client library:** HttpClient with typed BC response models
+- **BC API base:** `https://api.businesscentral.dynamics.com/v2.0/{tenant}/api/v2.0/companies({id})/`
 
-#### Primary Database
-- **Type:** PostgreSQL / MySQL / MongoDB
-- **Version:** [Specify]
-- **ORM/ODM:** Prisma / TypeORM / Sequelize / Mongoose
-- **Why:** [Explain your choice]
+### Database (PostgreSQL)
+- **Engine:** PostgreSQL 16.x
+- **ORM:** Entity Framework Core 8.x (for .NET) with code-first migrations
+- **Use cases:** User accounts, role assignments, session tokens, BC response cache, audit log
 
-#### Caching
-- **Cache:** Redis / Memcached
-- **Use Cases:** Session storage, rate limiting, caching
-- **Why:** [If applicable]
-
-### Authentication & Authorization
-- **Strategy:** JWT / Session-based / OAuth 2.0
-- **Library:** Passport.js / jsonwebtoken / Auth0
-- **Password Hashing:** bcrypt / argon2
-- **Why:** [Explain your choice]
+### Authentication (toward Frontend)
+- **Strategy:** JWT Bearer tokens (issued by .NET API on login)
+- **Password Hashing:** BCrypt.Net (cost factor 12)
+- **Session management:** JWT (access token 8h) + refresh token pattern (7-day rotation)
 
 ### API Design
-- **Architecture:** RESTful / GraphQL / tRPC
-- **Documentation:** Swagger/OpenAPI / GraphQL Playground
-- **Validation:** Zod / Joi / Ajv / class-validator
-- **Why:** [Explain your choice]
-
-### File Storage
-- **Service:** AWS S3 / Cloudinary / Local Storage
-- **Library:** multer / multer-s3
-- **Why:** [Explain your choice]
+- **Architecture:** RESTful
+- **Versioning:** URL path: `/api/v1/`
+- **Validation:** FluentValidation / Data Annotations + Zod on frontend
+- **Documentation:** Swagger / OpenAPI 3.0 (auto-generated from controllers)
 
 ### Email Service
-- **Provider:** SendGrid / AWS SES / Mailgun / Nodemailer
-- **Templates:** Handlebars / EJS / React Email
-- **Why:** [Explain your choice]
-
-### Payment Processing
-- **Provider:** Stripe / PayPal / Square
-- **SDK:** @stripe/stripe-js
-- **Why:** [Explain your choice]
+- **Provider:** SMTP via .NET MailKit (for password reset, notifications)
 
 ---
 
-## DevOps & Infrastructure
+## Infrastructure & DevOps
 
-### Deployment
-- **Hosting:** AWS / Vercel / Netlify / Railway / Heroku / DigitalOcean
-- **Container:** Docker / Docker Compose
-- **Orchestration:** Kubernetes / AWS ECS (if applicable)
+### Hosting
+- **Platform:** Microsoft Azure
+  - Frontend: Azure Static Web Apps or Azure App Service (Node.js)
+  - Backend .NET API: Azure App Service (Linux, .NET 8)
+  - Database: Azure Database for PostgreSQL (Flexible Server)
+  - Cache: Azure Cache for Redis (optional, Phase 2+)
 
 ### CI/CD
-- **Pipeline:** GitHub Actions / GitLab CI / CircleCI / Jenkins
-- **Automated Tests:** On every PR
-- **Automated Deployment:** On merge to main
+- **Pipeline:** GitHub Actions
+- **On PR:** Run tests, linting, type-check
+- **On merge to main:** Build + deploy to Azure
 
 ### Monitoring & Logging
-- **APM:** New Relic / Datadog / Sentry
-- **Logging:** Winston / Pino / Morgan
-- **Error Tracking:** Sentry / Rollbar
-- **Why:** [Explain your choice]
+- **Error Tracking:** Application Insights (Azure) or Sentry
+- **Logging:** Structured logging with Serilog (.NET) + Next.js logging
+- **Uptime:** Azure Monitor
 
 ### Environment Variables
-- **Management:** dotenv / docker secrets / AWS Parameter Store
-- **Validation:** Zod environment schemas
+- **Management:** Azure App Service App Settings (production) / .env.local (development)
+- **Validation:** Zod env schema (frontend) + IOptions pattern (backend)
 
 ---
 
 ## Testing
 
 ### Frontend Testing
-- **Unit Tests:** Vitest / Jest
-- **Component Tests:** React Testing Library
-- **E2E Tests:** Playwright / Cypress
-- **Coverage Tool:** Istanbul / c8
+- **Unit / Component Tests:** Vitest + React Testing Library
+- **E2E Tests:** Playwright
+- **Coverage Tool:** c8 / Istanbul
 
-### Backend Testing
-- **Unit Tests:** Jest / Vitest / Mocha
-- **Integration Tests:** Supertest
-- **Load Testing:** k6 / Apache JMeter
-- **Mocking:** Jest mocks / Sinon
-
-### Testing Strategy
+### Backend Testing (.NET)
+- **Unit Tests:** xUnit + Moq
+- **Integration Tests:** WebApplicationFactory + Testcontainers (PostgreSQL)
 - **Coverage Target:** 80%+
-- **Run Tests:** Pre-commit hook, CI/CD pipeline
-- **Critical Paths:** Authentication, payment, checkout
 
 ---
 
 ## Code Quality
 
 ### Linting & Formatting
-- **Linter:** ESLint
-- **Formatter:** Prettier
-- **Git Hooks:** Husky + lint-staged
-- **Config:** Shared ESLint config
+- **Frontend:** ESLint + Prettier (TypeScript rules)
+- **Backend (.NET):** EditorConfig + StyleCop / Roslyn analyzers
+- **Git Hooks:** Husky + lint-staged (frontend)
 
-### Type Checking
-- **TypeScript:** Strict mode enabled
-- **Type Coverage:** 90%+
-
-### Code Review
-- **Required Reviewers:** 1+
-- **Automated Checks:** Tests, linting, build
+### Type Safety
+- **Frontend:** TypeScript strict mode
+- **Backend:** Nullable reference types enabled (C# `<Nullable>enable</Nullable>`)
 
 ---
 
-## Third-Party Integrations
+## Design System
 
-### APIs & Services
-1. **[Service Name]**
-   - Purpose: [What it's used for]
-   - SDK/Library: [Package name]
-   - Documentation: [Link]
+### Color Palette (from Pinoles prototype)
+```css
+--pine-navy:        #1B3F6B   /* sidebar, primary color */
+--pine-navy-mid:    #254d80
+--pine-green:       #6ab04c   /* accent, active elements */
+--pine-green-light: #7cc95e
+--pine-green-pale:  #e8f5e3   /* badge backgrounds */
+--pine-green-dark:  #4a8a32
+```
 
-2. **Google Maps API** (Example)
-   - Purpose: Location services, address autocomplete
-   - SDK/Library: @googlemaps/js-api-loader
-   - Documentation: https://developers.google.com/maps
-
----
-
-## Development Tools
-
-### Required Software
-- **Node.js:** v20.x LTS
-- **IDE:** VS Code / WebStorm
-- **Database Client:** DBeaver / TablePlus / pgAdmin
-- **API Client:** Postman / Insomnia / Thunder Client
-
-### VS Code Extensions (Recommended)
-- ESLint
-- Prettier
-- TypeScript and JavaScript Language Features
-- GitLens
-- Thunder Client / REST Client
-- Tailwind CSS IntelliSense (if using Tailwind)
-
-### CLI Tools
-- **Version Control:** git
-- **Database Migrations:** Prisma CLI / TypeORM CLI
-- **Package Scripts:** npm-run-all / concurrently
+### Layout
+- Sidebar (200px, dark navy) + Main area (topbar + content)
+- Responsive for desktop (min 1024px)
 
 ---
 
-## Project Structure (Proposed)
+## Project Structure (Monorepo — pnpm workspace)
 
 ```
-project-root/
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── hooks/
-│   │   ├── services/
-│   │   ├── utils/
-│   │   ├── types/
-│   │   └── routes/
-│   ├── public/
-│   ├── package.json
-│   └── vite.config.ts
+pinoles/
+├── apps/
+│   ├── web/                  # Next.js 14 App Router
+│   │   ├── app/              # Routes (App Router)
+│   │   ├── components/       # UI components
+│   │   ├── lib/              # API clients, utilities
+│   │   ├── public/
+│   │   └── package.json
+│   │
+│   ├── api/                  # .NET 8 Web API (middleware)
+│   │   ├── Controllers/
+│   │   ├── Services/
+│   │   ├── Models/
+│   │   ├── Infrastructure/   # EF Core, BC client
+│   │   └── Pinoles.Api.csproj
+│   │
+│   └── mobile/               # React Native (future phase)
 │
-├── backend/
-│   ├── src/
-│   │   ├── routes/
-│   │   ├── controllers/
-│   │   ├── services/
-│   │   ├── models/
-│   │   ├── middleware/
-│   │   ├── utils/
-│   │   └── types/
-│   ├── tests/
-│   ├── package.json
-│   └── tsconfig.json
+├── packages/
+│   ├── types/                # Shared TypeScript types
+│   └── ui/                   # Shared UI components (future)
 │
-├── database/
-│   ├── migrations/
-│   ├── seeds/
-│   └── schema/
-│
-├── docker/
-│   ├── docker-compose.yml
-│   ├── Dockerfile.frontend
-│   └── Dockerfile.backend
-│
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-│
-└── docs/
-    └── api/
+├── pnpm-workspace.yaml
+└── turbo.json
 ```
 
 ---
 
 ## Performance Targets
 
-- **First Contentful Paint:** < 1.5s
-- **Time to Interactive:** < 3.5s
-- **API Response Time (p95):** < 500ms
-- **Database Query Time (p95):** < 100ms
-- **Lighthouse Score:** > 90
+| Metric | Target |
+|--------|--------|
+| First Contentful Paint | < 1.5s |
+| Time to Interactive | < 3.5s |
+| BC API response (p95) | < 2s (includes network + BC processing) |
+| Internal API response (p95) | < 500ms |
+| Database Query (p95) | < 100ms |
 
 ---
 
-## Browser & Platform Support
+## Browser Support
 
-### Browsers
 - Chrome (last 2 versions)
 - Firefox (last 2 versions)
 - Safari (last 2 versions)
 - Edge (last 2 versions)
-
-### Devices
-- Desktop: 1920x1080 and above
-- Tablet: 768px - 1024px
-- Mobile: 375px - 768px
+- Desktop-first (min 1024px width)
 
 ---
 
-## Security Considerations
-
-- **HTTPS Only:** Enforce SSL/TLS
-- **CORS:** Properly configured
-- **Rate Limiting:** API endpoints
-- **Input Validation:** All user inputs
-- **SQL Injection:** Parameterized queries
-- **XSS Prevention:** Output escaping
-- **CSRF Protection:** Tokens for forms
-- **Dependency Scanning:** Snyk / npm audit
-- **Secrets Management:** Never commit secrets
-
----
-
-## Example: Modern Production Stack
-
-> **Reference:** This is a real-world production stack from a deployed application with 848 passing tests on Railway.
-
-### Frontend Stack
-- **React** 19.0.0 - Latest stable with improved performance
-- **React Router** 7.13.0 (SSR framework mode) - Full-stack routing with server-side rendering
-- **TypeScript** 5.7.0 - Type safety across the stack
-- **Vite** 6.1.0 - Lightning-fast build tool and dev server
-- **Tailwind CSS** 4.1.0 (v4 Oxide engine) - Utility-first CSS with new engine
-- **shadcn/ui** + **Radix UI** - Accessible component library
-- **react-hook-form** + **zod** - Type-safe form handling and validation
-
-### Backend Stack
-- **PostgreSQL** 16.x - Production-grade relational database
-- **Prisma** 6.19.0 - Type-safe ORM with excellent DX
-- **React Router** (serve mode) - Unified frontend/backend in single framework
-
-### Testing Stack
-- **Vitest** 4.0.0 - Fast unit testing framework
-- **@testing-library/react** 16.0.0 - User-centric component testing
-- **Playwright** 1.58.0 - Reliable end-to-end testing
-- **MSW** 2.7.0 - Mock Service Worker for API mocking
-
-### Why This Stack?
-
-**React Router 7 (Framework Mode):**
-- Single framework for both frontend and backend
-- Built-in SSR/SSG support
-- Type-safe routing and data loading
-- No need for separate Express/Fastify backend
-
-**Prisma:**
-- Excellent TypeScript integration
-- Auto-generated types from schema
-- Migration system for production safety
-- Great developer experience
-
-**Tailwind CSS v4:**
-- New Oxide engine (Rust-based, 10x faster)
-- Better performance than v3
-- Zero-runtime CSS-in-JS alternative
-
-**Vitest:**
-- Faster than Jest (Vite-powered)
-- Better TypeScript support
-- Compatible with Jest API
-
-**Maturity:** Production-ready (848 tests passing, deployed to Railway)
-
----
-
-## Notes
-
-<!-- Add any additional notes, constraints, or considerations -->
-
-**Example:**
-- We're using TypeScript strict mode throughout
-- All API responses follow a consistent format: `{ success: boolean, data?: any, error?: string }`
-- We prioritize developer experience with hot reloading and fast build times
-- Mobile-first approach for responsive design
-
----
-
-**Last Updated:** [Date]
-**Updated By:** [Your Name]
+**Last Updated:** 2026-05-25

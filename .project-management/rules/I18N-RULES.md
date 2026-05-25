@@ -27,10 +27,8 @@
 
 **MANDATORY**: All user-facing features MUST include translations for:
 
-- ✅ **English** (default) - `en.json` or `en.ts`
-- ✅ **{{LANGUAGE_2}}** - `{{CODE_2}}.json` (e.g., `de.json` for German)
-- ✅ **{{LANGUAGE_3}}** - `{{CODE_3}}.json` (e.g., `fr.json` for French)
-- ✅ **{{LANGUAGE_4}}** - `{{CODE_4}}.json` (e.g., `es.json` for Spanish)
+- ✅ **Serbian** (default / primary) - `sr.json`
+- ✅ **English** (secondary) - `en.json`
 
 **Common language codes:**
 - `de` - German (Deutsch)
@@ -53,9 +51,9 @@
 
 ## Translation System
 
-**Technology:** {{I18N_LIBRARY}} (e.g., `react-i18next`, `next-intl`, `vue-i18n`, `i18next`)
+**Technology:** `next-intl` (Next.js 14 App Router compatible)
 
-**Translation files location:** `{{TRANSLATION_PATH}}` (e.g., `/app/locales/`, `/public/locales/`, `/src/i18n/`)
+**Translation files location:** `apps/web/messages/` — one JSON file per locale
 
 **Popular i18n libraries:**
 - React: `react-i18next`, `react-intl`, `next-intl` (Next.js)

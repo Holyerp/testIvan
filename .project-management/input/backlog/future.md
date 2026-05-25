@@ -1,27 +1,40 @@
-# Future Backlog
+# Future Backlog — Pinoles v2.0+
 
-**Purpose:** Post-launch ideas and features targeted for Version 2.0 / 3.0. Not scheduled for Phases 1-4.
-
-See also: [../backlog-future.md](../backlog-future.md) for the versioned future backlog managed by `/add-backlog-requirement`.
-
----
-
-## Version 2.0 (post-launch)
-
-_No items yet. Use `/add-backlog-requirement story` to add._
+**Purpose:** Post-launch ideas and features targeted for Version 2.0 and beyond. Not scheduled for Phases 1–4.
+**Last Updated:** 2026-05-25
 
 ---
 
-## Version 3.0
+## Potential v2.0 Features
 
-_No items yet._
+### Mobile Native App
+- React Native client for iOS and Android
+- Push notifications (overdue invoices, low stock)
+- Offline cache for recently viewed records
+
+### Write Operations (BC)
+- Create sales orders from portal
+- Approve/reject purchase invoices
+- Post payments directly to BC
+
+### Multi-Tenant Support
+- Support multiple BC tenants per installation
+- Per-tenant branding and configuration
+- Tenant switching for shared portal
+
+### Advanced Reporting
+- Custom report builder (drag-and-drop)
+- Scheduled email reports (daily/weekly digest)
+- Benchmarking against prior year
+
+### Integrations
+- Microsoft Teams notifications
+- Slack integration for alerts
+- Third-party accounting tools export
 
 ---
 
-## Unversioned Ideas
+## See Also
 
-_No items yet._
-
----
-
-**Navigation:** [← Index](README.md) · [Dashboard](../../output/progress/DASHBOARD.md)
+- **Active backlog phases:** [phase-1](phase-1-foundation.md) → [phase-4](phase-4-polish.md)
+- **Project future backlog:** [../backlog-future.md](../backlog-future.md)
