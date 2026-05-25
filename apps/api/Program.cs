@@ -1,3 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using Pinoles.Api.Application.Interfaces;
+using Pinoles.Api.Infrastructure.BusinessCentral;
+using Pinoles.Api.Infrastructure.Caching;
+using Pinoles.Api.Infrastructure.Persistence;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -35,6 +40,29 @@ try
     });
 
     builder.Services.AddMemoryCache();
+
+    // Database
+    builder.Services.AddDbContext<PinolesDbContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+    // BC options
+    builder.Services.Configure<BcOptions>(builder.Configuration.GetSection(BcOptions.SectionName));
+
+    // Cache
+    builder.Services.AddSingleton<ICacheService, MemoryCacheService>();
+
+    // BC services — mock or real based on config
+    var bcOptions = builder.Configuration.GetSection(BcOptions.SectionName).Get<BcOptions>() ?? new BcOptions();
+    if (bcOptions.UseMock)
+    {
+        builder.Services.AddSingleton<IBcHttpClient, MockBcHttpClient>();
+        // No BcAuthService needed in mock mode
+    }
+    else
+    {
+        builder.Services.AddSingleton<IBcAuthService, BcAuthService>();
+        builder.Services.AddHttpClient<IBcHttpClient, BcHttpClient>();
+    }
 
     var app = builder.Build();
 
