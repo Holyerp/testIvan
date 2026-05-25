@@ -137,6 +137,23 @@
     "next": "Sledeća",
     "pageOf": "Strana {page} od {total}"
   },
+  "vendorDetail": {
+    "back": "Nazad na dobavljače",
+    "notFound": "Dobavljač nije pronađen",
+    "address": "Adresa",
+    "phone": "Telefon",
+    "email": "Email",
+    "vatNumber": "PIB",
+    "balance": "Stanje",
+    "paymentTerms": "Uslovi plaćanja",
+    "purchaseHistory": "Istorija nabavki",
+    "invoiceNumber": "Broj fakture",
+    "date": "Datum",
+    "amount": "Iznos",
+    "status": "Status",
+    "noInvoices": "Nema faktura",
+    "loadError": "Greška pri učitavanju dobavljača"
+  },
   "creditMemos": {
     "title": "Knjižna odobrenja",
     "subtitle": "Pregled knjižnih odobrenja",

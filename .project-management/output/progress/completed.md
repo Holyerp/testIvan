@@ -7,7 +7,7 @@
 
 **Phase 1 — Foundation & MVP: COMPLETE** (47 / 47 pts, 100% — 5 user stories + 2 technical tasks)
 
-**Phase 2 — Core Documents: IN PROGRESS** (35 / 52 pts, 67% — 5 user stories + 1 technical task complete)
+**Phase 2 — Core Documents: IN PROGRESS** (40 / 52 pts, 77% — 6 user stories + 1 technical task complete)
 
 ---
 
@@ -198,6 +198,21 @@
 - Sidebar: added Vendors → `/vendors` (ADMIN/MANAGER/ACCOUNTING). i18n: `vendors` section (sr + en); reuses pagination labels; `nav.vendors` already present.
 - API doc: `docs/api/vendors.md` v1.0 — endpoint, RequireFinancial auth, query params (page/pageSize/search/sortBy/sortDir), success example PagedResultDto, errors 400/401/403/404/500/502.
 - Tests: backend +13 (VendorService ×10, VendorMapper ×3); frontend unchanged (reused already-tested helpers). Combined: 189 backend + 57 frontend passing; lint clean.
+
+### US-012: Vendors — Detail View
+**Completed:** 2026-05-25
+**Phase:** 2 — Core Documents
+**Story Points:** 5
+**Commit:** See git log
+
+**Summary:**
+- Two BC-backed detail endpoints under `/api/v1/vendors` (RequireFinancial — ADMIN/MANAGER/ACCOUNTING; WAREHOUSE 403): GET `/{id}` (full detail = profile + purchase history) and GET `/{id}/invoices` (purchase history only). Canonical envelope `{ success, data }`; 404 `NOT_FOUND_VENDOR` for unknown id; 502 `INTEGRATION_BC_UNAVAILABLE` on BC failure. Vendor analogue of US-005 (customer detail), reusing the same not-found + envelope patterns.
+- `VendorDetailDto` (VendorProfileDto + reuses `PurchaseInvoiceListItemDto` for history rows — DRY, no new invoice DTO). `BcVendor` extended additively with `Address`, `Email`, `VatNumber`, `PaymentTerms` (US-011 list + dashboard vendor count untouched — those tests stay green).
+- `VendorService.GetVendorByIdAsync(id)`: `GetByIdAsync<BcVendor>("vendors", id)` → null when not found (→ 404); fetches last 20 posted purchase invoices filtered by `vendorName eq '<displayName>'` (single quotes escaped, OrderBy postingDate desc, Top 20) and maps each via the injected shared `PurchaseInvoiceMapper` (DRY — no duplicated row logic). `GetVendorInvoicesForEndpointAsync(id)` backs the `/{id}/invoices` route (null vendor → 404). Both added to `IVendorService`; mapper injected + already-registered in Program.cs.
+- MockBcHttpClient: `GetMockVendorData()` extended with address/email/vatNumber/paymentTerms via a `Vendor(...)` factory; added `vendors` branch to `GetByIdAsync` (known id → populated record, unknown → null). Posted purchase invoice mock vendorNames already match vendor displayNames (e.g. "Supplier A d.o.o." → ppi001/ppi006), so v001 history is non-empty. All existing vendor-list/purchase/dashboard/customer-detail/mock tests preserved.
+- Frontend `app/(protected)/vendors/[id]/page.tsx` (VendorDetailScreen): profile header (name/number/city) + profile card (address, phone, email, VAT number) + financial summary cards (balance formatRsd, payment terms) + purchase-history table (Number/Date/Amount/Status badge, last 20 posted invoices); 404 "Vendor not found", loading skeleton, error banner, back link to `/vendors`; RBAC guard `['ADMIN','MANAGER','ACCOUNTING']`. Reuses formatRsd + statusBadgeClass + `purchase.status.*` labels — no new frontend helper introduced.
+- API doc: `docs/api/vendors.md` v1.1 — two detail endpoints (path param, success example profile+invoices, errors 401/403/404 NOT_FOUND_VENDOR/500/502) + consumer link. i18n: `vendorDetail` section (sr + en); reuses `purchase.status.*` for status badges.
+- Tests: backend +9 (VendorService detail: known/unknown id, profile field mapping incl. Address/Email/VatNumber, invoices list present + non-empty for known vendor, history capped at 20 + status normalized, `/{id}/invoices` known/unknown). CreateService helper updated for new ctor param. Frontend unchanged (reused already-tested helpers). Combined: 197 backend + 57 frontend passing; lint clean.
 
 ---
 

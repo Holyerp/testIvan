@@ -47,6 +47,7 @@ public class MockBcHttpClient : IBcHttpClient
         var match = entitySet switch
         {
             "customers"           => GetMockCustomerData().FirstOrDefault(c => (string)c["id"] == id),
+            "vendors"             => GetMockVendorData().FirstOrDefault(v => (string)v["id"] == id),
             "salesInvoices"       => FindInvoiceWithLines(GetMockInvoiceData(), id),
             "salesInvoicesPosted" => FindInvoiceWithLines(GetMockPostedInvoiceData(), id),
             "salesCreditMemos"    => FindInvoiceWithLines(GetMockCreditMemoData(), id),
@@ -478,22 +479,40 @@ public class MockBcHttpClient : IBcHttpClient
     // Single source of truth for mock vendor records. Carries city, balance and phone
     // so the vendor list (US-011) can render its columns; the dashboard (Phase 1) only
     // reads the @odata.count, so the extra fields are additive and harmless there.
+    // Detail-view fields (address, email, vatNumber, paymentTerms — US-012) are also
+    // additive: the list mapper and dashboard count ignore them.
     private static List<Dictionary<string, object>> GetMockVendorData()
     {
         return new List<Dictionary<string, object>>
         {
-            new() { ["id"] = "v001", ["number"] = "V001", ["displayName"] = "Supplier A d.o.o.",   ["city"] = "Beograd",    ["balance"] = 55000.00m,  ["phone"] = "+381 11 2345678" },
-            new() { ["id"] = "v002", ["number"] = "V002", ["displayName"] = "Supplier B d.o.o.",   ["city"] = "Novi Sad",   ["balance"] = 32000.00m,  ["phone"] = "+381 21 3456789" },
-            new() { ["id"] = "v003", ["number"] = "V003", ["displayName"] = "Materijal Promet",    ["city"] = "Niš",        ["balance"] = 78000.00m,  ["phone"] = "+381 18 4567890" },
-            new() { ["id"] = "v004", ["number"] = "V004", ["displayName"] = "Energo Snabdevanje",  ["city"] = "Beograd",    ["balance"] = 144000.00m, ["phone"] = "+381 11 5678901" },
-            new() { ["id"] = "v005", ["number"] = "V005", ["displayName"] = "Tehno Oprema d.o.o.", ["city"] = "Kragujevac", ["balance"] = 26000.00m,  ["phone"] = "+381 34 6789012" },
-            new() { ["id"] = "v006", ["number"] = "V006", ["displayName"] = "Balkan Logistika",    ["city"] = "Subotica",   ["balance"] = 91000.00m,  ["phone"] = "+381 24 7890123" },
-            new() { ["id"] = "v007", ["number"] = "V007", ["displayName"] = "Pannon Trade d.o.o.", ["city"] = "Zrenjanin",  ["balance"] = 47000.00m,  ["phone"] = "+381 23 8901234" },
-            new() { ["id"] = "v008", ["number"] = "V008", ["displayName"] = "Dunav Inženjering",   ["city"] = "Pančevo",    ["balance"] = 163000.00m, ["phone"] = "+381 13 9012345" },
-            new() { ["id"] = "v009", ["number"] = "V009", ["displayName"] = "Morava Komerc",       ["city"] = "Čačak",      ["balance"] = 38500.00m,  ["phone"] = "+381 32 0123456" },
-            new() { ["id"] = "v010", ["number"] = "V010", ["displayName"] = "Sava Distribucija",   ["city"] = "Beograd",    ["balance"] = 122000.00m, ["phone"] = "+381 11 1234567" },
+            Vendor("v001", "V001", "Supplier A d.o.o.",   "Beograd",    55000.00m,  "+381 11 2345678", "Bulevar Kralja Aleksandra 73, Beograd", "info@supplier-a.rs",       "RS101234567", "30 dana"),
+            Vendor("v002", "V002", "Supplier B d.o.o.",   "Novi Sad",   32000.00m,  "+381 21 3456789", "Futoška 12, Novi Sad",                  "kontakt@supplier-b.rs",   "RS102345678", "45 dana"),
+            Vendor("v003", "V003", "Materijal Promet",    "Niš",        78000.00m,  "+381 18 4567890", "Vožda Karađorđa 5, Niš",                "prodaja@materijal.rs",    "RS103456789", "30 dana"),
+            Vendor("v004", "V004", "Energo Snabdevanje",  "Beograd",    144000.00m, "+381 11 5678901", "Nemanjina 22, Beograd",                 "office@energo.rs",        "RS104567890", "15 dana"),
+            Vendor("v005", "V005", "Tehno Oprema d.o.o.", "Kragujevac", 26000.00m,  "+381 34 6789012", "Kralja Petra I 18, Kragujevac",         "info@tehno-oprema.rs",    "RS105678901", "30 dana"),
+            Vendor("v006", "V006", "Balkan Logistika",    "Subotica",   91000.00m,  "+381 24 7890123", "Korzo 3, Subotica",                     "logistika@balkan.rs",     "RS106789012", "60 dana"),
+            Vendor("v007", "V007", "Pannon Trade d.o.o.", "Zrenjanin",  47000.00m,  "+381 23 8901234", "Žitni trg 9, Zrenjanin",                "trade@pannon.rs",         "RS107890123", "30 dana"),
+            Vendor("v008", "V008", "Dunav Inženjering",   "Pančevo",    163000.00m, "+381 13 9012345", "Vojvode Radomira Putnika 4, Pančevo",   "kontakt@dunav-ing.rs",    "RS108901234", "45 dana"),
+            Vendor("v009", "V009", "Morava Komerc",       "Čačak",      38500.00m,  "+381 32 0123456", "Gradsko šetalište 11, Čačak",           "komerc@morava.rs",        "RS109012345", "30 dana"),
+            Vendor("v010", "V010", "Sava Distribucija",   "Beograd",    122000.00m, "+381 11 1234567", "Bulevar Mihajla Pupina 10, Beograd",    "distribucija@sava.rs",    "RS110123456", "30 dana"),
         };
     }
+
+    private static Dictionary<string, object> Vendor(
+        string id, string number, string displayName, string city, decimal balance,
+        string phone, string address, string email, string vatNumber, string paymentTerms) => new()
+    {
+        ["id"] = id,
+        ["number"] = number,
+        ["displayName"] = displayName,
+        ["city"] = city,
+        ["balance"] = balance,
+        ["phone"] = phone,
+        ["address"] = address,
+        ["email"] = email,
+        ["vatNumber"] = vatNumber,
+        ["paymentTerms"] = paymentTerms,
+    };
 
     private static BcCollectionResponse<T> CreateMockVendors<T>(BcQueryOptions? options)
     {

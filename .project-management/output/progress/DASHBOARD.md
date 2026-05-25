@@ -8,8 +8,8 @@
 
 ## Currently Working On
 
-**US-012: Vendors — Detail View** (5 pts) — Phase 2
-⏸️ Pending
+**US-013: Universal Search** (8 pts) — Phase 2
+🔄 Up next — topbar search, grouped results, keyboard navigation
 
 ---
 
@@ -18,10 +18,10 @@
 | Phase | Status | Points | Progress |
 |-------|--------|--------|----------|
 | Phase 1 — Foundation | ✅ Complete | 47 / 47 | 100% |
-| Phase 2 — Core Documents | 🔄 In Progress | 35 / 52 | 67% |
+| Phase 2 — Core Documents | 🔄 In Progress | 40 / 52 | 77% |
 | Phase 3 — Extended Modules | ⏸️ Pending | 0 / 42 | 0% |
 | Phase 4 — Analytics & Polish | ⏸️ Pending | 0 / 27 | 0% |
-| **TOTAL** | | **82 / 168** | **49%** |
+| **TOTAL** | | **87 / 168** | **52%** |
 
 ---
 
@@ -29,10 +29,10 @@
 
 | Metric | Current | Target |
 |--------|---------|--------|
-| Test coverage | ≥ 80% (BC + auth + RBAC + customer + shared list + detail layers) | ≥ 80% |
-| Stories completed | 11 / 23 | 23 |
+| Test coverage | ≥ 80% (BC + auth + RBAC + customer + vendor + shared list + detail layers) | ≥ 80% |
+| Stories completed | 12 / 23 | 23 |
 | Technical tasks | 3 / 5 | 5 |
-| Tests passing | 246 (189 backend + 57 frontend) | — |
+| Tests passing | 254 (197 backend + 57 frontend) | — |
 
 ---
 

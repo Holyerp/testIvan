@@ -11,7 +11,7 @@ public class VendorServiceTests
     private static VendorService CreateService()
     {
         var bc = new MockBcHttpClient(NullLogger<MockBcHttpClient>.Instance);
-        return new VendorService(bc, new VendorMapper());
+        return new VendorService(bc, new VendorMapper(), new PurchaseInvoiceMapper());
     }
 
     [Fact]
@@ -99,5 +99,89 @@ public class VendorServiceTests
         var names = result.Items.Select(v => v.DisplayName).ToList();
         var ordered = names.OrderByDescending(n => n, System.StringComparer.OrdinalIgnoreCase).ToList();
         Assert.Equal(ordered, names);
+    }
+
+    // ----- US-012: Vendor detail -----
+
+    [Fact]
+    public async Task GetVendorByIdAsync_KnownId_ReturnsProfile()
+    {
+        var result = await CreateService().GetVendorByIdAsync("v001");
+
+        Assert.NotNull(result);
+        Assert.Equal("v001", result!.Vendor.Id);
+        Assert.Equal("V001", result.Vendor.Number);
+        Assert.False(string.IsNullOrEmpty(result.Vendor.DisplayName));
+        Assert.True(result.Vendor.Balance > 0);
+    }
+
+    [Fact]
+    public async Task GetVendorByIdAsync_UnknownId_ReturnsNull()
+    {
+        var result = await CreateService().GetVendorByIdAsync("does-not-exist");
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task GetVendorByIdAsync_MapsProfileFields_AddressEmailVatPaymentTerms()
+    {
+        var result = await CreateService().GetVendorByIdAsync("v001");
+
+        Assert.NotNull(result);
+        Assert.False(string.IsNullOrEmpty(result!.Vendor.Address));
+        Assert.False(string.IsNullOrEmpty(result.Vendor.City));
+        Assert.False(string.IsNullOrEmpty(result.Vendor.Phone));
+        Assert.False(string.IsNullOrEmpty(result.Vendor.Email));
+        Assert.False(string.IsNullOrEmpty(result.Vendor.VatNumber));
+        Assert.False(string.IsNullOrEmpty(result.Vendor.PaymentTerms));
+    }
+
+    [Fact]
+    public async Task GetVendorByIdAsync_IncludesInvoicesList()
+    {
+        var result = await CreateService().GetVendorByIdAsync("v001");
+
+        Assert.NotNull(result);
+        Assert.NotNull(result!.Invoices);
+    }
+
+    [Fact]
+    public async Task GetVendorByIdAsync_KnownVendorWithPostedInvoices_HasNonEmptyHistory()
+    {
+        // "Supplier A d.o.o." (v001) has posted purchase invoices in the mock (ppi001, ppi006).
+        var result = await CreateService().GetVendorByIdAsync("v001");
+
+        Assert.NotNull(result);
+        Assert.NotEmpty(result!.Invoices);
+        Assert.All(result.Invoices, i =>
+            Assert.Equal("Supplier A d.o.o.", i.VendorName));
+    }
+
+    [Fact]
+    public async Task GetVendorByIdAsync_HistoryCappedAt20AndStatusNormalized()
+    {
+        var result = await CreateService().GetVendorByIdAsync("v001");
+
+        Assert.NotNull(result);
+        Assert.True(result!.Invoices.Count <= 20);
+        // Status is normalized to the SCREAMING_SNAKE wire value by PurchaseInvoiceMapper.
+        Assert.All(result.Invoices, i =>
+            Assert.Contains(i.Status, new[] { "OPEN", "PARTIAL", "PAID" }));
+    }
+
+    [Fact]
+    public async Task GetVendorInvoicesForEndpointAsync_KnownId_ReturnsHistory()
+    {
+        var invoices = await CreateService().GetVendorInvoicesForEndpointAsync("v001");
+
+        Assert.NotNull(invoices);
+        Assert.NotEmpty(invoices!);
+    }
+
+    [Fact]
+    public async Task GetVendorInvoicesForEndpointAsync_UnknownId_ReturnsNull()
+    {
+        var invoices = await CreateService().GetVendorInvoicesForEndpointAsync("does-not-exist");
+        Assert.Null(invoices);
     }
 }

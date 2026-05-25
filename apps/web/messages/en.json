@@ -137,6 +137,23 @@
     "next": "Next",
     "pageOf": "Page {page} of {total}"
   },
+  "vendorDetail": {
+    "back": "Back to vendors",
+    "notFound": "Vendor not found",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "vatNumber": "VAT Number",
+    "balance": "Balance",
+    "paymentTerms": "Payment Terms",
+    "purchaseHistory": "Purchase History",
+    "invoiceNumber": "Invoice Number",
+    "date": "Date",
+    "amount": "Amount",
+    "status": "Status",
+    "noInvoices": "No invoices",
+    "loadError": "Error loading vendor"
+  },
   "creditMemos": {
     "title": "Credit Memos",
     "subtitle": "Sales credit memos overview",
