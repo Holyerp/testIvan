@@ -2,16 +2,19 @@
   "auth": {
     "login": {
       "title": "Prijava",
+      "subtitle": "Interni portal",
       "username": "Korisničko ime",
       "password": "Lozinka",
       "submit": "Prijavi se",
+      "submitting": "Prijavljivanje...",
       "errors": {
         "invalidCredentials": "Neispravno korisničko ime ili lozinka.",
         "rateLimited": "Previše neuspjelih pokušaja. Pokušajte za 15 minuta.",
         "required": "Ovo polje je obavezno.",
         "passwordMinLength": "Lozinka mora imati najmanje 8 karaktera."
       }
-    }
+    },
+    "logout": "Odjava"
   },
   "nav": {
     "dashboard": "Kontrolna tabla",
@@ -59,6 +62,8 @@
     "AUTH_REQUIRED": "Morate biti prijavljeni.",
     "AUTH_INVALID_CREDENTIALS": "Neispravno korisničko ime ili lozinka.",
     "AUTH_RATE_LIMITED": "Previše pokušaja prijave. Pokušajte ponovo za 15 minuta.",
+    "AUTH_REFRESH_TOKEN_MISSING": "Sesija je istekla. Prijavite se ponovo.",
+    "AUTH_INVALID_REFRESH_TOKEN": "Sesija je nevažeća. Prijavite se ponovo.",
     "FORBIDDEN_INSUFFICIENT_ROLE": "Nemate dozvolu za pristup ovom resursu.",
     "NOT_FOUND_CUSTOMER": "Klijent nije pronađen.",
     "INTERNAL_ERROR": "Greška servera. Pokušajte ponovo.",

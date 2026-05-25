@@ -27,11 +27,11 @@ Deliver a working authentication system, BC middleware connectivity, and the fir
 - Monorepo scaffolding, CI/CD, dev environment
 
 ### T-002: BC Middleware Foundation (8 pts) — P0
-**Status:** Todo
+**Status:** Completed
 - Azure AD App Registration, OData client, caching layer
 
 ### US-001: Employee Login (5 pts) — P0
-**Status:** Todo
+**Status:** Completed
 - Login screen, JWT issuance, role-based redirect
 
 ### US-002: Role-Based Access Control (8 pts) — P0
@@ -61,10 +61,10 @@ Deliver a working authentication system, BC middleware connectivity, and the fir
 - **Risk Level:** High (BC API connectivity unknown until T-002)
 
 ### Progress Tracking
-- **Completed Story Points:** 5 / 47 (11%)
-- **Completed Stories:** 1 / 7 (T-001)
-- **Tests Passing:** 3 (API client unit tests)
-- **Code Coverage:** N/A (infrastructure task)
+- **Completed Story Points:** 18 / 47 (38%)
+- **Completed Stories:** 3 / 7 (T-001, T-002, US-001)
+- **Tests Passing:** 24 (3 web API client + 10 BC middleware + 5 auth service + 5 rate limiter + 1 types = web 11, .NET 13)
+- **Code Coverage:** ≥ 80% on BC middleware and auth layers
 
 ---
 

@@ -17,7 +17,7 @@ describe('apiRequest', () => {
   });
 
   it('throws ApiError on non-success response', async () => {
-    global.fetch = vi.fn().mockResolvedValueOnce({
+    global.fetch = vi.fn().mockResolvedValue({
       ok: false,
       status: 401,
       json: async () => ({ success: false, error: 'Unauthorized', code: 'AUTH_REQUIRED' }),

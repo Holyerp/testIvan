@@ -1,8 +1,14 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Pinoles.Api.Application.Auth;
 using Pinoles.Api.Application.Interfaces;
+using Pinoles.Api.Infrastructure.Auth;
 using Pinoles.Api.Infrastructure.BusinessCentral;
 using Pinoles.Api.Infrastructure.Caching;
 using Pinoles.Api.Infrastructure.Persistence;
+using Pinoles.Api.Presentation.Endpoints;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -45,6 +51,35 @@ try
     builder.Services.AddDbContext<PinolesDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+    // JWT options
+    builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
+    var jwtConfig = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? new JwtOptions();
+
+    // Auth services
+    builder.Services.AddScoped<IAuthService, AuthService>();
+    builder.Services.AddScoped<ITokenService, TokenService>();
+    builder.Services.AddSingleton<LoginRateLimiter>();
+
+    // JWT Bearer authentication
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtConfig.Issuer,
+                ValidateAudience = true,
+                ValidAudience = jwtConfig.Audience,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(jwtConfig.Secret ?? "placeholder-key-not-for-production")),
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+            };
+        });
+
+    builder.Services.AddAuthorization();
+
     // BC options
     builder.Services.Configure<BcOptions>(builder.Configuration.GetSection(BcOptions.SectionName));
 
@@ -70,6 +105,11 @@ try
     {
         app.UseSwagger();
         app.UseSwaggerUI();
+
+        using var scope = app.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<PinolesDbContext>();
+        await db.Database.MigrateAsync();
+        await DbSeeder.SeedAsync(db, app.Logger);
     }
 
     app.UseSerilogRequestLogging();
@@ -78,6 +118,7 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
+    app.MapAuthEndpoints();
 
     // Health check
     app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }))

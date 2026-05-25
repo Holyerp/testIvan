@@ -2,16 +2,19 @@
   "auth": {
     "login": {
       "title": "Sign In",
+      "subtitle": "Internal Portal",
       "username": "Username",
       "password": "Password",
       "submit": "Sign In",
+      "submitting": "Signing in...",
       "errors": {
         "invalidCredentials": "Invalid username or password.",
         "rateLimited": "Too many failed attempts. Please try again in 15 minutes.",
         "required": "This field is required.",
         "passwordMinLength": "Password must be at least 8 characters."
       }
-    }
+    },
+    "logout": "Logout"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -59,6 +62,8 @@
     "AUTH_REQUIRED": "You must be signed in.",
     "AUTH_INVALID_CREDENTIALS": "Invalid username or password.",
     "AUTH_RATE_LIMITED": "Too many login attempts. Please try again in 15 minutes.",
+    "AUTH_REFRESH_TOKEN_MISSING": "Session expired. Please sign in again.",
+    "AUTH_INVALID_REFRESH_TOKEN": "Invalid session. Please sign in again.",
     "FORBIDDEN_INSUFFICIENT_ROLE": "You do not have permission to access this resource.",
     "NOT_FOUND_CUSTOMER": "Customer not found.",
     "INTERNAL_ERROR": "Server error. Please try again.",
