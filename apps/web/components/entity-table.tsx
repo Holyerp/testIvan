@@ -26,6 +26,8 @@ export interface EntityTableProps<T> {
   totalPages: number;
   onPageChange: (page: number) => void;
   onRowClick?: (row: T) => void;
+  // Optional per-row class hook (e.g. overdue highlight). Returns extra classes for the <tr>.
+  rowClassName?: (row: T) => string;
   // i18n labels for pagination/empty/error
   labels: { previous: string; next: string; pageOf: string; loadError: string };
 }
@@ -74,6 +76,7 @@ export function EntityTable<T>({
   totalPages,
   onPageChange,
   onRowClick,
+  rowClassName,
   labels,
 }: EntityTableProps<T>) {
   const showEmpty = !isLoading && !error && rows.length === 0;
@@ -132,7 +135,7 @@ export function EntityTable<T>({
                     onClick={onRowClick ? () => onRowClick(row) : undefined}
                     className={`border-b border-gray-50 last:border-0 hover:bg-gray-50 ${
                       onRowClick ? 'cursor-pointer' : ''
-                    }`}
+                    } ${rowClassName ? rowClassName(row) : ''}`}
                   >
                     {columns.map((col) => (
                       <td

@@ -8,8 +8,8 @@
 
 ## Currently Working On
 
-**US-006: Sales Invoices — List View** (5 pts) — Phase 2
-⏭️ Next up (T-003 infrastructure complete)
+**US-007: Sales Invoice — Detail View** (5 pts) — Phase 2
+🔄 Next up
 
 ---
 
@@ -18,10 +18,10 @@
 | Phase | Status | Points | Progress |
 |-------|--------|--------|----------|
 | Phase 1 — Foundation | ✅ Complete | 47 / 47 | 100% |
-| Phase 2 — Core Documents | 🔄 In Progress | 5 / 52 | 10% |
+| Phase 2 — Core Documents | 🔄 In Progress | 10 / 52 | 19% |
 | Phase 3 — Extended Modules | ⏸️ Pending | 0 / 42 | 0% |
 | Phase 4 — Analytics & Polish | ⏸️ Pending | 0 / 27 | 0% |
-| **TOTAL** | | **52 / 168** | **31%** |
+| **TOTAL** | | **57 / 168** | **34%** |
 
 ---
 
@@ -30,9 +30,9 @@
 | Metric | Current | Target |
 |--------|---------|--------|
 | Test coverage | ≥ 80% (BC + auth + RBAC + customer + shared list layers) | ≥ 80% |
-| Stories completed | 5 / 23 | 23 |
+| Stories completed | 6 / 23 | 23 |
 | Technical tasks | 3 / 5 | 5 |
-| Tests passing | 107 (66 backend + 41 frontend) | — |
+| Tests passing | 137 (87 backend + 50 frontend) | — |
 
 ---
 

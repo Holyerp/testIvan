@@ -20,10 +20,12 @@ public class MockBcHttpClient : IBcHttpClient
         _logger.LogDebug("MOCK BC GET {EntitySet}", entitySet);
         var result = entitySet switch
         {
-            "customers"     => CreateMockCustomers<T>(options),
-            "salesInvoices" => CreateMockSalesInvoices<T>(options),
-            "vendors"       => CreateMockVendors<T>(options),
-            _               => new BcCollectionResponse<T>()
+            "customers"           => CreateMockCustomers<T>(options),
+            "salesInvoices"       => CreateMockInvoiceCollection<T>(GetMockInvoiceData(), options),
+            "salesInvoicesPosted" => CreateMockInvoiceCollection<T>(GetMockPostedInvoiceData(), options),
+            "salesCreditMemos"    => CreateMockInvoiceCollection<T>(GetMockCreditMemoData(), options),
+            "vendors"             => CreateMockVendors<T>(options),
+            _                     => new BcCollectionResponse<T>()
         };
         return Task.FromResult(result);
     }
@@ -109,9 +111,12 @@ public class MockBcHttpClient : IBcHttpClient
             c["number"].ToString()!.Contains(term, StringComparison.OrdinalIgnoreCase)).ToList();
     }
 
-    private static BcCollectionResponse<T> CreateMockSalesInvoices<T>(BcQueryOptions? options)
+    // Shared collection builder for the sales-invoice family (open / posted / credit memos).
+    // Applies the in-memory filter, then Skip/Top, and echoes @odata.count when requested.
+    private static BcCollectionResponse<T> CreateMockInvoiceCollection<T>(
+        List<Dictionary<string, object>> source, BcQueryOptions? options)
     {
-        var invoices = ApplyInvoiceFilter(GetMockInvoiceData(), options?.Filter);
+        var invoices = ApplyInvoiceFilter(source, options?.Filter);
         var top = options?.Top ?? invoices.Count;
         var skip = options?.Skip ?? 0;
         var paged = invoices.Skip(skip).Take(top).ToList();
@@ -124,40 +129,166 @@ public class MockBcHttpClient : IBcHttpClient
         };
     }
 
-    // Mimics OData "customerName eq 'X'" equality filter used by the customer detail view.
+    // Lightweight in-memory approximation of the OData filters this mock has to honor:
+    //  - customerName eq 'X'                            (customer detail view)
+    //  - contains(number,'t') or contains(customerName,'t')  (list search)
+    //  - status eq 'Open'                               (status filter)
+    //  - postingDate ge '...' / postingDate le '...'    (date range)
+    // We inspect which predicates are present rather than parsing OData fully.
     private static List<Dictionary<string, object>> ApplyInvoiceFilter(
         List<Dictionary<string, object>> invoices, string? filter)
     {
         if (string.IsNullOrWhiteSpace(filter)) return invoices;
 
-        // Extract the term between the first pair of single quotes in the eq expression.
-        var firstQuote = filter.IndexOf('\'');
-        if (firstQuote < 0) return invoices;
-        var secondQuote = filter.IndexOf('\'', firstQuote + 1);
-        if (secondQuote < 0) return invoices;
+        var result = invoices;
 
-        var term = filter.Substring(firstQuote + 1, secondQuote - firstQuote - 1)
-            .Replace("''", "'");
+        // customerName eq 'X' — exact match (customer detail). Only when there's no contains().
+        if (filter.Contains("customerName eq '") && !filter.Contains("contains("))
+        {
+            var name = ExtractQuoted(filter, "customerName eq '");
+            if (name != null)
+                result = result.Where(i =>
+                    string.Equals(i["customerName"].ToString(), name, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
 
-        return invoices.Where(i =>
-            string.Equals(i["customerName"].ToString(), term, StringComparison.OrdinalIgnoreCase)).ToList();
+        // contains(...) search term — match number OR customerName.
+        if (filter.Contains("contains("))
+        {
+            var term = ExtractQuoted(filter, "contains(");
+            if (!string.IsNullOrWhiteSpace(term))
+                result = result.Where(i =>
+                    i["number"].ToString()!.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                    i["customerName"].ToString()!.Contains(term, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        // status eq 'Open' — exact match on the BC-style status string.
+        if (filter.Contains("status eq '"))
+        {
+            var status = ExtractQuoted(filter, "status eq '");
+            if (status != null)
+                result = result.Where(i =>
+                    string.Equals(i["status"].ToString(), status, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        // postingDate ge '...' / le '...' — lexical compare works for ISO yyyy-MM-dd.
+        if (filter.Contains("postingDate ge '"))
+        {
+            var from = ExtractQuoted(filter, "postingDate ge '");
+            if (from != null)
+                result = result.Where(i =>
+                    string.CompareOrdinal(i["postingDate"].ToString(), from) >= 0).ToList();
+        }
+        if (filter.Contains("postingDate le '"))
+        {
+            var to = ExtractQuoted(filter, "postingDate le '");
+            if (to != null)
+                result = result.Where(i =>
+                    string.CompareOrdinal(i["postingDate"].ToString(), to) <= 0).ToList();
+        }
+
+        return result;
     }
 
-    // Invoices spread across the last 6 months so the dashboard trend chart always
-    // has data within its rolling 6-month window. Dates are computed relative to now.
+    // Extract the first single-quoted literal that appears after the given marker.
+    private static string? ExtractQuoted(string filter, string marker)
+    {
+        var markerIdx = filter.IndexOf(marker, StringComparison.Ordinal);
+        if (markerIdx < 0) return null;
+        var open = filter.IndexOf('\'', markerIdx);
+        if (open < 0) return null;
+        var close = filter.IndexOf('\'', open + 1);
+        if (close < 0) return null;
+        return filter.Substring(open + 1, close - open - 1).Replace("''", "'");
+    }
+
+    private static string Iso(DateTime d) => d.ToString("yyyy-MM-dd");
+
+    // Open sales invoices spread across the last 6 months so the dashboard trend chart
+    // always has data within its rolling 6-month window. Dates are relative to now.
+    // dueDate = postingDate + 30 days; some records are intentionally overdue (due in the
+    // past while status is not Paid). Status uses BC-style casing ("Open" / "Partially
+    // Paid" / "Paid"); the SalesInvoiceMapper normalizes to the OPEN/PARTIAL/PAID wire value.
     private static List<Dictionary<string, object>> GetMockInvoiceData()
     {
         var now = DateTime.UtcNow;
+        Dictionary<string, object> Inv(string id, string number, string customer, DateTime posting, decimal amount, string status) => new()
+        {
+            ["id"] = id,
+            ["number"] = number,
+            ["customerName"] = customer,
+            ["postingDate"] = Iso(posting),
+            ["dueDate"] = Iso(posting.AddDays(30)),
+            ["totalAmountIncludingTax"] = amount,
+            ["status"] = status,
+        };
+
         return new List<Dictionary<string, object>>
         {
-            new() { ["id"] = "inv001", ["number"] = "SI-001", ["customerName"] = "Acme d.o.o.", ["postingDate"] = now.AddMonths(-5).ToString("yyyy-MM-dd"), ["totalAmountIncludingTax"] = 45000.00m,  ["status"] = "Open" },
-            new() { ["id"] = "inv002", ["number"] = "SI-002", ["customerName"] = "Delta Corp",  ["postingDate"] = now.AddMonths(-4).ToString("yyyy-MM-dd"), ["totalAmountIncludingTax"] = 78000.00m,  ["status"] = "Open" },
-            new() { ["id"] = "inv003", ["number"] = "SI-003", ["customerName"] = "Sigma Trade", ["postingDate"] = now.AddMonths(-3).ToString("yyyy-MM-dd"), ["totalAmountIncludingTax"] = 120000.00m, ["status"] = "Open" },
-            new() { ["id"] = "inv004", ["number"] = "SI-004", ["customerName"] = "Acme d.o.o.", ["postingDate"] = now.AddMonths(-2).ToString("yyyy-MM-dd"), ["totalAmountIncludingTax"] = 56000.00m,  ["status"] = "Open" },
-            new() { ["id"] = "inv005", ["number"] = "SI-005", ["customerName"] = "Delta Corp",  ["postingDate"] = now.AddMonths(-1).ToString("yyyy-MM-dd"), ["totalAmountIncludingTax"] = 99000.00m,  ["status"] = "Open" },
-            new() { ["id"] = "inv006", ["number"] = "SI-006", ["customerName"] = "Sigma Trade", ["postingDate"] = now.AddDays(-3).ToString("yyyy-MM-dd"),    ["totalAmountIncludingTax"] = 33000.00m,  ["status"] = "Open" },
-            new() { ["id"] = "inv007", ["number"] = "SI-007", ["customerName"] = "Acme d.o.o.", ["postingDate"] = now.AddDays(-40).ToString("yyyy-MM-dd"),   ["totalAmountIncludingTax"] = 67000.00m,  ["status"] = "Open" },
-            new() { ["id"] = "inv008", ["number"] = "SI-008", ["customerName"] = "Delta Corp",  ["postingDate"] = now.AddDays(-10).ToString("yyyy-MM-dd"),   ["totalAmountIncludingTax"] = 88000.00m,  ["status"] = "Paid" },
+            Inv("inv001", "SI-001", "Acme d.o.o.", now.AddMonths(-5),  45000.00m,  "Open"),
+            Inv("inv002", "SI-002", "Delta Corp",  now.AddMonths(-4),  78000.00m,  "Open"),
+            Inv("inv003", "SI-003", "Sigma Trade", now.AddMonths(-3),  120000.00m, "Partially Paid"),
+            Inv("inv004", "SI-004", "Acme d.o.o.", now.AddMonths(-2),  56000.00m,  "Open"),
+            Inv("inv005", "SI-005", "Delta Corp",  now.AddMonths(-1),  99000.00m,  "Open"),
+            Inv("inv006", "SI-006", "Sigma Trade", now.AddDays(-3),    33000.00m,  "Open"),
+            Inv("inv007", "SI-007", "Acme d.o.o.", now.AddDays(-40),   67000.00m,  "Open"),           // overdue (due ~10 days ago, not paid)
+            Inv("inv008", "SI-008", "Delta Corp",  now.AddDays(-10),   88000.00m,  "Paid"),
+            Inv("inv009", "SI-009", "Sigma Trade", now.AddDays(-50),   42000.00m,  "Partially Paid"),  // overdue
+            Inv("inv010", "SI-010", "Acme d.o.o.", now.AddDays(-65),   71000.00m,  "Open"),            // overdue
+            Inv("inv011", "SI-011", "Delta Corp",  now.AddDays(-2),    18500.00m,  "Open"),
+            Inv("inv012", "SI-012", "Sigma Trade", now.AddDays(-90),   135000.00m, "Paid"),
+        };
+    }
+
+    // Posted sales invoices — already booked; mostly Paid with a few still Open.
+    private static List<Dictionary<string, object>> GetMockPostedInvoiceData()
+    {
+        var now = DateTime.UtcNow;
+        Dictionary<string, object> Inv(string id, string number, string customer, DateTime posting, decimal amount, string status) => new()
+        {
+            ["id"] = id,
+            ["number"] = number,
+            ["customerName"] = customer,
+            ["postingDate"] = Iso(posting),
+            ["dueDate"] = Iso(posting.AddDays(30)),
+            ["totalAmountIncludingTax"] = amount,
+            ["status"] = status,
+        };
+
+        return new List<Dictionary<string, object>>
+        {
+            Inv("psi001", "PSI-001", "Acme d.o.o.", now.AddMonths(-3), 64000.00m,  "Paid"),
+            Inv("psi002", "PSI-002", "Delta Corp",  now.AddMonths(-3), 52000.00m,  "Paid"),
+            Inv("psi003", "PSI-003", "Sigma Trade", now.AddMonths(-2), 89000.00m,  "Paid"),
+            Inv("psi004", "PSI-004", "Omega Logistika", now.AddMonths(-2), 110000.00m, "Open"),
+            Inv("psi005", "PSI-005", "Gama Petrol", now.AddMonths(-1), 230000.00m, "Paid"),
+            Inv("psi006", "PSI-006", "Acme d.o.o.", now.AddDays(-20),  47500.00m,  "Open"),
+            Inv("psi007", "PSI-007", "Delta Corp",  now.AddDays(-15),  61000.00m,  "Paid"),
+            Inv("psi008", "PSI-008", "Sigma Trade", now.AddDays(-7),   28000.00m,  "Paid"),
+        };
+    }
+
+    // Sales credit memos.
+    private static List<Dictionary<string, object>> GetMockCreditMemoData()
+    {
+        var now = DateTime.UtcNow;
+        Dictionary<string, object> Cm(string id, string number, string customer, DateTime posting, decimal amount, string status) => new()
+        {
+            ["id"] = id,
+            ["number"] = number,
+            ["customerName"] = customer,
+            ["postingDate"] = Iso(posting),
+            ["dueDate"] = Iso(posting.AddDays(30)),
+            ["totalAmountIncludingTax"] = amount,
+            ["status"] = status,
+        };
+
+        return new List<Dictionary<string, object>>
+        {
+            Cm("scm001", "SCM-001", "Acme d.o.o.", now.AddMonths(-2), 12000.00m, "Open"),
+            Cm("scm002", "SCM-002", "Delta Corp",  now.AddMonths(-1), 8500.00m,  "Paid"),
+            Cm("scm003", "SCM-003", "Sigma Trade", now.AddDays(-25),  15000.00m, "Open"),
+            Cm("scm004", "SCM-004", "Omega Logistika", now.AddDays(-12), 6200.00m, "Paid"),
+            Cm("scm005", "SCM-005", "Gama Petrol", now.AddDays(-5),   9800.00m,  "Open"),
         };
     }
 

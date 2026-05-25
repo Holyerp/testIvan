@@ -7,7 +7,7 @@
 
 **Phase 1 — Foundation & MVP: COMPLETE** (47 / 47 pts, 100% — 5 user stories + 2 technical tasks)
 
-**Phase 2 — Core Documents: IN PROGRESS** (5 / 52 pts, 10% — 1 technical task complete)
+**Phase 2 — Core Documents: IN PROGRESS** (10 / 52 pts, 19% — 1 user story + 1 technical task complete)
 
 ---
 
@@ -98,6 +98,22 @@
 - Frontend: detail page (profile header, balance/balanceDue cards, recent invoices table, status badges), 404 + loading + error states, back link; list rows link to detail
 - i18n: customerDetail section (sr + en)
 - Tests: 3 backend (GetCustomerByIdAsync) + 3 frontend (invoiceStatusKey); MockBcHttpClientTests GetByIdAsync reconciled (known id non-null, unknown id/entityset null)
+
+### US-006: Sales Invoices — List View
+**Completed:** 2026-05-25
+**Phase:** 2 — Core Documents
+**Story Points:** 5
+**Commit:** See git log
+
+**Summary:**
+- Three BC-backed endpoints under `/api/v1/sales` (RequireFinancial — ADMIN/MANAGER/ACCOUNTING; WAREHOUSE 403): GET `/invoices` (open), GET `/posted-invoices`, GET `/credit-memos`. Canonical envelope `{ success, data: PagedResultDto }`; 502 INTEGRATION_BC_UNAVAILABLE on BC failure.
+- `ISalesService`/`SalesService`: one service drives all three collections via an `entitySet` param (DRY). Uses shared `BcListQuery` for page/sort/filter; OData filter built from search (number/customerName contains) + status eq + postingDate ge/le date range; single quotes escaped. UI sort keys mapped: `date`→postingDate, `dueDate`→dueDate, `amount`→totalAmountIncludingTax (allow-listed).
+- `SalesInvoiceListItemDto` + `SalesInvoiceMapper` (IBcMapper): normalizes BC status casing to SCREAMING_SNAKE wire value (Open→OPEN, Paid→PAID, Partially Paid→PARTIAL, unknown→OPEN). `BcSalesInvoice` extended with `DueDate`.
+- MockBcHttpClient: new entity sets `salesInvoices` (12, incl. overdue + partial + paid), `salesInvoicesPosted` (8), `salesCreditMemos` (5); dueDate = postingDate+30d. Generalized in-memory filter honors contains-search, status eq, date range, plus the existing `customerName eq` path. Dashboard open-invoice reads preserved.
+- Frontend `app/(protected)/sales/invoices/page.tsx` (SalesInvoiceListScreen): Open/Posted/Credit Memos tabs (remount per tab), FilterPanel (search + status select + date range), EntityTable (Number/Customer/Date/Due Date/Amount/Status; sortable date/dueDate/amount), overdue amber row highlight, status badges, row→`/sales/invoices/{id}`, RBAC guard.
+- `lib/format.ts`: pure `isOverdue(status, dueDate, today)` + `statusBadgeClass(status)`. `EntityTable` extended with optional `rowClassName` prop (backward-compatible; existing tests green).
+- API doc: `docs/api/sales.md` (query params, success example, 401/403/502, OPEN|PARTIAL|PAID enum). i18n: `sales` section + `nav.salesInvoices` (sr + en). Sidebar nav entry added.
+- Tests: backend +17 (SalesService ×12, SalesInvoiceMapper ×5 methods incl. theory); frontend +9 (isOverdue ×5, statusBadgeClass ×4). Combined: 87 backend + 50 frontend passing.
 
 ---
 

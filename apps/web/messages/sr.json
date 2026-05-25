@@ -20,6 +20,7 @@
     "dashboard": "Kontrolna tabla",
     "customers": "Klijenti",
     "invoices": "Fakture",
+    "salesInvoices": "Prodajne fakture",
     "vendors": "Dobavljači",
     "sales": "Prodaja",
     "purchase": "Nabavka",
@@ -65,6 +66,32 @@
     "previous": "Prethodna",
     "next": "Sledeća",
     "pageOf": "Strana {page} od {total}"
+  },
+  "sales": {
+    "title": "Prodajne fakture",
+    "subtitle": "Pregled prodajnih faktura",
+    "tabOpen": "Otvorene",
+    "tabPosted": "Knjižene",
+    "tabCreditMemos": "Knjižna odobrenja",
+    "number": "Broj",
+    "customer": "Kupac",
+    "date": "Datum",
+    "dueDate": "Valuta",
+    "amount": "Iznos",
+    "statusLabel": "Status",
+    "noResults": "Nema faktura",
+    "loadError": "Greška pri učitavanju faktura",
+    "filterStatus": "Status",
+    "filterAll": "Sve",
+    "search": "Pretraga po broju ili kupcu...",
+    "previous": "Prethodna",
+    "next": "Sledeća",
+    "pageOf": "Strana {page} od {total}",
+    "status": {
+      "OPEN": "Otvorena",
+      "PARTIAL": "Delimično plaćena",
+      "PAID": "Plaćena"
+    }
   },
   "customerDetail": {
     "back": "Nazad na kupce",

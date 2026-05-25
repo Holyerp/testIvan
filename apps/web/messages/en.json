@@ -20,6 +20,7 @@
     "dashboard": "Dashboard",
     "customers": "Customers",
     "invoices": "Invoices",
+    "salesInvoices": "Sales Invoices",
     "vendors": "Vendors",
     "sales": "Sales",
     "purchase": "Purchase",
@@ -65,6 +66,32 @@
     "previous": "Previous",
     "next": "Next",
     "pageOf": "Page {page} of {total}"
+  },
+  "sales": {
+    "title": "Sales Invoices",
+    "subtitle": "Sales invoices overview",
+    "tabOpen": "Open Invoices",
+    "tabPosted": "Posted Invoices",
+    "tabCreditMemos": "Credit Memos",
+    "number": "Number",
+    "customer": "Customer",
+    "date": "Date",
+    "dueDate": "Due Date",
+    "amount": "Amount",
+    "statusLabel": "Status",
+    "noResults": "No invoices found",
+    "loadError": "Error loading invoices",
+    "filterStatus": "Status",
+    "filterAll": "All",
+    "search": "Search by number or customer...",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}",
+    "status": {
+      "OPEN": "Open",
+      "PARTIAL": "Partially Paid",
+      "PAID": "Paid"
+    }
   },
   "customerDetail": {
     "back": "Back to customers",
