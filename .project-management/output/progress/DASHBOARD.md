@@ -8,7 +8,7 @@
 
 ## Currently Working On
 
-**US-002: Role-Based Access Control** (8 pts) — Phase 1
+**US-003: Dashboard — KPI Overview** (8 pts) — Phase 1
 
 ---
 
@@ -16,11 +16,11 @@
 
 | Phase | Status | Points | Progress |
 |-------|--------|--------|----------|
-| Phase 1 — Foundation | 🔄 In Progress | 18 / 47 | 38% |
+| Phase 1 — Foundation | 🔄 In Progress | 26 / 47 | 55% |
 | Phase 2 — Core Documents | ⏸️ Pending | 0 / 52 | 0% |
 | Phase 3 — Extended Modules | ⏸️ Pending | 0 / 42 | 0% |
 | Phase 4 — Analytics & Polish | ⏸️ Pending | 0 / 27 | 0% |
-| **TOTAL** | | **18 / 168** | **11%** |
+| **TOTAL** | | **26 / 168** | **15%** |
 
 ---
 
@@ -28,10 +28,10 @@
 
 | Metric | Current | Target |
 |--------|---------|--------|
-| Test coverage | ≥ 80% (BC layer) | ≥ 80% |
-| Stories completed | 1 / 23 | 23 |
+| Test coverage | ≥ 80% (BC + auth + RBAC layers) | ≥ 80% |
+| Stories completed | 2 / 23 | 23 |
 | Technical tasks | 2 / 5 | 5 |
-| Tests passing | 24 | — |
+| Tests passing | 32 | — |
 
 ---
 

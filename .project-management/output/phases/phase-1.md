@@ -35,7 +35,7 @@ Deliver a working authentication system, BC middleware connectivity, and the fir
 - Login screen, JWT issuance, role-based redirect
 
 ### US-002: Role-Based Access Control (8 pts) — P0
-**Status:** Todo
+**Status:** Completed
 - ADMIN / MANAGER / ACCOUNTING / WAREHOUSE role enforcement
 
 ### US-003: Dashboard — KPI Overview (8 pts) — P0

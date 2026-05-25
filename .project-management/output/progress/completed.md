@@ -28,6 +28,27 @@
 - Backend tests: AuthServiceTests (7 tests), LoginRateLimiterTests (5 tests)
 - Frontend tests: LoginPage (7 tests) — all pass
 
+### US-002: Role-Based Access Control
+**Completed:** 2026-05-25
+**Phase:** 1 — Foundation
+**Story Points:** 8
+**Commit:** fbbd154
+
+**Summary:**
+- GET /api/v1/users/me — returns current user info (RequireAuthorization)
+- JWT OnChallenge/OnForbidden handlers return JSON envelope (401/403)
+- Authorization policies: RequireAdmin, RequireFinancial, RequireDashboard
+- UserRoles constants (ADMIN/MANAGER/ACCOUNTING/WAREHOUSE)
+- Zustand auth store (sessionStorage-backed, initFromSession)
+- AuthProvider client component
+- RoleGuard component (role array check)
+- useRequireAuth hook (redirects to /login if unauthenticated)
+- Protected layout wraps pages with AuthProvider + Sidebar
+- Sidebar with role-filtered navigation
+- 403 forbidden page
+- i18n: nav.invoices + errors.forbidden* keys (sr + en)
+- Tests: UserRoles (3), UsersEndpoints (3), RoleGuard frontend (5)
+
 ---
 
 ## Completed Technical Tasks
