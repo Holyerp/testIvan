@@ -31,6 +31,18 @@
     "admin": "Administration",
     "logout": "Logout"
   },
+  "search": {
+    "placeholder": "Search... (Ctrl/Cmd+K)",
+    "loading": "Searching...",
+    "noResults": "No results",
+    "viewAll": "View all",
+    "group": {
+      "CUSTOMER": "Customers",
+      "VENDOR": "Vendors",
+      "SALES_INVOICE": "Sales Invoices",
+      "PURCHASE_INVOICE": "Purchase Invoices"
+    }
+  },
   "dashboard": {
     "title": "Dashboard",
     "subtitle": "Key business metrics overview",

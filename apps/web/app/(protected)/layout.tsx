@@ -2,6 +2,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { AuthProvider } from '@/components/auth-provider';
 import { Sidebar } from '@/components/sidebar';
+import { GlobalSearch } from '@/components/global-search';
 
 export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const messages = await getMessages();
@@ -11,7 +12,12 @@ export default async function ProtectedLayout({ children }: { children: React.Re
       <AuthProvider>
         <div className="flex h-screen bg-gray-50">
           <Sidebar />
-          <main className="flex-1 overflow-auto">{children}</main>
+          <div className="flex flex-1 flex-col overflow-hidden">
+            <header className="flex h-16 items-center border-b border-gray-200 bg-white px-8">
+              <GlobalSearch />
+            </header>
+            <main className="flex-1 overflow-auto">{children}</main>
+          </div>
         </div>
       </AuthProvider>
     </NextIntlClientProvider>

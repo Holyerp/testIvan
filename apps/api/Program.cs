@@ -10,6 +10,7 @@ using Pinoles.Api.Application.Interfaces;
 using Pinoles.Api.Application.Mapping;
 using Pinoles.Api.Application.Purchase;
 using Pinoles.Api.Application.Sales;
+using Pinoles.Api.Application.Search;
 using Pinoles.Api.Application.Vendors;
 using Pinoles.Api.Domain.Constants;
 using Pinoles.Api.Infrastructure.Auth;
@@ -156,6 +157,9 @@ try
     // Vendor service
     builder.Services.AddScoped<IVendorService, VendorService>();
 
+    // Search service — aggregates the four list services above (RBAC-gated)
+    builder.Services.AddScoped<ISearchService, SearchService>();
+
     var app = builder.Build();
 
     if (app.Environment.IsDevelopment())
@@ -182,6 +186,7 @@ try
     app.MapSalesEndpoints();
     app.MapPurchaseEndpoints();
     app.MapVendorsEndpoints();
+    app.MapSearchEndpoints();
 
     // Health check
     app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }))

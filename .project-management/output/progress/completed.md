@@ -7,7 +7,7 @@
 
 **Phase 1 — Foundation & MVP: COMPLETE** (47 / 47 pts, 100% — 5 user stories + 2 technical tasks)
 
-**Phase 2 — Core Documents: IN PROGRESS** (40 / 52 pts, 77% — 6 user stories + 1 technical task complete)
+**Phase 2 — Core Documents: COMPLETE** (52 / 52 pts, 100% — 8 user stories + 1 technical task complete)
 
 ---
 
@@ -213,6 +213,23 @@
 - Frontend `app/(protected)/vendors/[id]/page.tsx` (VendorDetailScreen): profile header (name/number/city) + profile card (address, phone, email, VAT number) + financial summary cards (balance formatRsd, payment terms) + purchase-history table (Number/Date/Amount/Status badge, last 20 posted invoices); 404 "Vendor not found", loading skeleton, error banner, back link to `/vendors`; RBAC guard `['ADMIN','MANAGER','ACCOUNTING']`. Reuses formatRsd + statusBadgeClass + `purchase.status.*` labels — no new frontend helper introduced.
 - API doc: `docs/api/vendors.md` v1.1 — two detail endpoints (path param, success example profile+invoices, errors 401/403/404 NOT_FOUND_VENDOR/500/502) + consumer link. i18n: `vendorDetail` section (sr + en); reuses `purchase.status.*` for status badges.
 - Tests: backend +9 (VendorService detail: known/unknown id, profile field mapping incl. Address/Email/VatNumber, invoices list present + non-empty for known vendor, history capped at 20 + status normalized, `/{id}/invoices` known/unknown). CreateService helper updated for new ctor param. Frontend unchanged (reused already-tested helpers). Combined: 197 backend + 57 frontend passing; lint clean.
+
+### US-013: Universal Search
+**Completed:** 2026-05-25
+**Phase:** 2 — Core Documents
+**Story Points:** 8
+**Commit:** See git log
+
+**Summary:**
+- BC-backed `GET /api/v1/search?q={query}&limit={n}` (RequireDashboard — ALL roles incl. WAREHOUSE): cross-entity search returning grouped hits (customers, vendors, sales invoices, purchase invoices), max `limit` per group (default 5, clamped 1..20). Canonical envelope `{ success, data: SearchResultsDto }`; 502 `INTEGRATION_BC_UNAVAILABLE` on BC failure. Short/empty query (< 2 chars) returns 200 with empty groups (simplifies the debounced UI).
+- `ISearchService`/`SearchService`: aggregates the four existing list services (`ICustomerService`, `IVendorService`, `ISalesService`, `IPurchaseService`) — no ad-hoc BC queries (DRY; OData escaping/paging stay in the list services). Sequential awaits (mock-safe). Maps each list item → uniform `SearchHitDto` (Title/Subtitle/Type per type) via small private mappers.
+- **RBAC:** the four entity types are financial data; WAREHOUSE has no access. `SearchAsync` reads the caller's roles (passed from the endpoint via `ClaimsPrincipal`, same "role"/ClaimTypes.Role read as GetMe) and returns all-empty groups when the caller lacks a financial role (ADMIN/MANAGER/ACCOUNTING) — BC is never queried for a WAREHOUSE-only caller. Search itself stays reachable for every role.
+- `SearchResultsDto` + `SearchHitDto`; `Type` is a cross-layer SCREAMING_SNAKE_CASE wire enum: CUSTOMER | VENDOR | SALES_INVOICE | PURCHASE_INVOICE → frontend maps to i18n group labels + detail routes. Documented allowed values.
+- Frontend global topbar search added to the protected layout (`app/(protected)/layout.tsx` gains a header bar) via `components/global-search.tsx`: Cmd/Ctrl+K focuses the input; debounced 300ms, min 2 chars; Bearer-token fetch; grouped dropdown (group shown only if it has hits, header label + up to 5 rows of Title/Subtitle + "View all" link to the list screen with `?search=` prefilled); keyboard nav (Arrow up/down across the flattened ordered hit list with wrap-around, Enter opens highlighted hit, Esc closes/blurs); click-outside + click-to-open; loading + "No results" states; accessible (role=combobox/listbox/option, aria-selected). Pine palette.
+- **Pure FE helpers** extracted into `lib/search.ts` for testability: `flattenHits(results)` (ordered flatten customers→vendors→sales→purchase), `hitHref(hit)` (type→detail route, id URL-encoded), `nextIndex(current,total,delta)` (wrap-around). `SearchResults`/`SearchHit` types mirror the backend wire shape.
+- List-page search seeding: customers + vendors list pages read `?search=` from the URL (`useSearchParams`) and seed the filter (`extraParams` + FilterPanel initial value) so the "View all" link lands on a prefiltered list. Sales/purchase "View all" links target their list screens.
+- API doc: `docs/api/search.md` v1.0 (method, path, RequireDashboard auth, q+limit params, grouped success example, WAREHOUSE-empty-groups RBAC note, 401/403/404/500/502, Type enum + per-type route table). i18n: `search` section (placeholder, loading, noResults, viewAll, group labels keyed by Type) in sr + en.
+- Tests: backend +11 (SearchServiceTests: grouped results for a financial role, all-four-groups for a broad term, per-group limit + clamp, WAREHOUSE-only all-empty, short/empty query empty, hit mapping for each type). Frontend +14 (search.test.ts: flattenHits order/count/empty, hitHref all 4 types + URL-encoding, nextIndex wrap-around incl. -1→0 and total=0). Combined: 208 backend + 71 frontend passing; lint clean.
 
 ---
 

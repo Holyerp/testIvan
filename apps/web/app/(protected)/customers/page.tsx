@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useRequireAuth } from '@/lib/hooks/use-require-auth';
 import { usePaginatedQuery } from '@/lib/hooks/use-paginated-query';
@@ -21,19 +21,25 @@ interface CustomerListItem {
 export default function CustomersPage() {
   const t = useTranslations('customers');
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user } = useRequireAuth(['ADMIN', 'MANAGER', 'ACCOUNTING']);
+
+  // Seed the search filter from the URL so the universal-search "View all" link
+  // (e.g. /customers?search=Acme) lands on a prefiltered list.
+  const initialSearch = searchParams.get('search') ?? '';
 
   const query = usePaginatedQuery<CustomerListItem>({
     path: '/api/v1/customers',
     pageSize: 20,
     initialSortBy: 'displayName',
     initialSortDir: 'asc',
+    extraParams: initialSearch ? { search: initialSearch } : undefined,
   });
 
   if (!user) return null;
 
   const filterFields: FilterField[] = [
-    { type: 'search', key: 'search', placeholder: t('search'), value: '' },
+    { type: 'search', key: 'search', placeholder: t('search'), value: initialSearch },
   ];
 
   const columns: Column<CustomerListItem>[] = [

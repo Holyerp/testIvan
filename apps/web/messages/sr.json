@@ -31,6 +31,18 @@
     "admin": "Administracija",
     "logout": "Odjava"
   },
+  "search": {
+    "placeholder": "Pretraga... (Ctrl/Cmd+K)",
+    "loading": "Pretraga...",
+    "noResults": "Nema rezultata",
+    "viewAll": "Prikaži sve",
+    "group": {
+      "CUSTOMER": "Klijenti",
+      "VENDOR": "Dobavljači",
+      "SALES_INVOICE": "Prodajne fakture",
+      "PURCHASE_INVOICE": "Ulazne fakture"
+    }
+  },
   "dashboard": {
     "title": "Kontrolna tabla",
     "subtitle": "Pregled ključnih pokazatelja",
