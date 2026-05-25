@@ -11,6 +11,8 @@ import {
   lowStockRowClass,
   ledgerTypeKey,
   formatSignedQuantity,
+  sortByQuantityAsc,
+  belowMinimumCardClass,
 } from '@/lib/format';
 
 describe('formatRsd', () => {
@@ -173,5 +175,33 @@ describe('formatSignedQuantity', () => {
   });
   it('renders zero without a sign', () => {
     expect(formatSignedQuantity(0)).toBe('0');
+  });
+});
+
+describe('sortByQuantityAsc', () => {
+  it('orders items by quantity on hand ascending', () => {
+    const result = sortByQuantityAsc([
+      { quantityOnHand: 30 },
+      { quantityOnHand: 5 },
+      { quantityOnHand: 12 },
+    ]);
+    expect(result.map((i) => i.quantityOnHand)).toEqual([5, 12, 30]);
+  });
+  it('does not mutate the input array', () => {
+    const input = [{ quantityOnHand: 3 }, { quantityOnHand: 1 }];
+    sortByQuantityAsc(input);
+    expect(input.map((i) => i.quantityOnHand)).toEqual([3, 1]);
+  });
+  it('handles an empty list', () => {
+    expect(sortByQuantityAsc([])).toEqual([]);
+  });
+});
+
+describe('belowMinimumCardClass', () => {
+  it('uses amber when there are items below minimum', () => {
+    expect(belowMinimumCardClass(4)).toContain('amber');
+  });
+  it('uses the neutral navy color when none are below minimum', () => {
+    expect(belowMinimumCardClass(0)).toContain('pine-navy');
   });
 });

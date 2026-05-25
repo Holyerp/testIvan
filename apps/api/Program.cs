@@ -8,6 +8,7 @@ using Pinoles.Api.Application.Customers;
 using Pinoles.Api.Application.Dashboard;
 using Pinoles.Api.Application.DTOs;
 using Pinoles.Api.Application.Interfaces;
+using Pinoles.Api.Application.Inventory;
 using Pinoles.Api.Application.Items;
 using Pinoles.Api.Application.Mapping;
 using Pinoles.Api.Application.Purchase;
@@ -175,6 +176,9 @@ try
     // Item service (US-017) — first WAREHOUSE-module list service
     builder.Services.AddScoped<IItemService, ItemService>();
 
+    // Inventory service (US-019) — warehouse stock overview (summary KPIs, by location, low stock)
+    builder.Services.AddScoped<IInventoryService, InventoryService>();
+
     // Search service — aggregates the four list services above (RBAC-gated)
     builder.Services.AddScoped<ISearchService, SearchService>();
 
@@ -206,6 +210,7 @@ try
     app.MapVendorsEndpoints();
     app.MapCreditDocumentsEndpoints();
     app.MapItemsEndpoints();
+    app.MapInventoryEndpoints();
     app.MapSearchEndpoints();
 
     // Health check

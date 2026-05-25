@@ -57,6 +57,29 @@ export function lowStockRowClass(isLowStock: boolean): string {
   return isLowStock ? 'bg-amber-50' : '';
 }
 
+/** A low-stock item as rendered on the inventory overview screen (US-019). */
+export interface LowStockItem {
+  quantityOnHand: number;
+  minimumStock: number;
+}
+
+/**
+ * Sort low-stock items by quantity on hand ascending (most depleted first). The backend
+ * already sorts, but the client re-sorts defensively so the list order is guaranteed
+ * regardless of source. Pure — returns a new array; unit-tested.
+ */
+export function sortByQuantityAsc<T extends { quantityOnHand: number }>(items: T[]): T[] {
+  return [...items].sort((a, b) => a.quantityOnHand - b.quantityOnHand);
+}
+
+/**
+ * Tailwind classes for the inventory "items below minimum" KPI card (US-019): amber when
+ * any items are below their minimum stock, neutral when none. Pure — unit-tested.
+ */
+export function belowMinimumCardClass(count: number): string {
+  return count > 0 ? 'text-amber-700' : 'text-pine-navy';
+}
+
 /** Tailwind classes for the status badge, keyed by the SCREAMING_SNAKE wire value. */
 export function statusBadgeClass(status: string): string {
   switch (status) {

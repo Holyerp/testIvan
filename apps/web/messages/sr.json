@@ -210,6 +210,28 @@
       "TRANSFER": "Prenos"
     }
   },
+  "inventory": {
+    "title": "Zalihe",
+    "subtitle": "Pregled zaliha — ključni pokazatelji, stanje po lokaciji i niske zalihe",
+    "totalItems": "Ukupno artikala",
+    "totalStockValue": "Vrednost zaliha",
+    "itemsBelowMinimum": "Ispod minimuma",
+    "stockByLocation": "Zalihe po lokaciji",
+    "location": "Lokacija",
+    "itemCount": "Broj stavki",
+    "totalQuantity": "Ukupna količina",
+    "totalValue": "Ukupna vrednost",
+    "lowStockItems": "Artikli sa niskim zalihama",
+    "number": "Broj",
+    "description": "Opis",
+    "quantityOnHand": "Stanje zaliha",
+    "minimum": "Minimum",
+    "filterLocation": "Lokacija",
+    "filterCategory": "Kategorija",
+    "filterAll": "Sve",
+    "noResults": "Nema podataka",
+    "loadError": "Greška pri učitavanju zaliha"
+  },
   "itemDetail": {
     "back": "Nazad na artikle",
     "notFound": "Artikal nije pronađen",

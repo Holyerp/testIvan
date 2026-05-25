@@ -23,6 +23,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/purchase/advance-invoices', label: 'Purchase Advance Invoices', module: 'financial' },
   { href: '/vendors', label: 'Vendors', module: 'financial' },
   { href: '/items', label: 'Items', module: 'warehouse' },
+  { href: '/inventory', label: 'Inventory', module: 'warehouse' },
 ];
 
 export function Sidebar() {

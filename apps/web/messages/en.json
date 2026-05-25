@@ -210,6 +210,28 @@
       "TRANSFER": "Transfer"
     }
   },
+  "inventory": {
+    "title": "Inventory",
+    "subtitle": "Stock overview — key metrics, stock by location and low-stock items",
+    "totalItems": "Total Items",
+    "totalStockValue": "Total Stock Value",
+    "itemsBelowMinimum": "Below Minimum",
+    "stockByLocation": "Stock by Location",
+    "location": "Location",
+    "itemCount": "Item Count",
+    "totalQuantity": "Total Quantity",
+    "totalValue": "Total Value",
+    "lowStockItems": "Low-Stock Items",
+    "number": "Number",
+    "description": "Description",
+    "quantityOnHand": "Qty on Hand",
+    "minimum": "Minimum",
+    "filterLocation": "Location",
+    "filterCategory": "Category",
+    "filterAll": "All",
+    "noResults": "No data",
+    "loadError": "Error loading inventory"
+  },
   "itemDetail": {
     "back": "Back to items",
     "notFound": "Item not found",
