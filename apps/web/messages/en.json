@@ -1,0 +1,67 @@
+{
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "username": "Username",
+      "password": "Password",
+      "submit": "Sign In",
+      "errors": {
+        "invalidCredentials": "Invalid username or password.",
+        "rateLimited": "Too many failed attempts. Please try again in 15 minutes.",
+        "required": "This field is required.",
+        "passwordMinLength": "Password must be at least 8 characters."
+      }
+    }
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "customers": "Customers",
+    "vendors": "Vendors",
+    "sales": "Sales",
+    "purchase": "Purchase",
+    "inventory": "Inventory",
+    "analytics": "Analytics",
+    "admin": "Administration",
+    "logout": "Logout"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "openInvoices": "Open Invoices",
+    "outstandingAmount": "Outstanding Amount",
+    "advanceBalance": "Advance Balance",
+    "inventoryValue": "Inventory Value",
+    "recentActivity": "Recent Activity",
+    "bcStatus": {
+      "connected": "BC: Connected",
+      "disconnected": "BC: Unavailable"
+    }
+  },
+  "customers": {
+    "title": "Customers",
+    "search": "Search customers...",
+    "name": "Name",
+    "number": "Number",
+    "city": "City",
+    "balance": "Balance",
+    "phone": "Phone",
+    "noResults": "No results found."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "notFound": "Not Found",
+    "back": "Back",
+    "page": "Page",
+    "of": "of",
+    "accessDenied": "You do not have access to this module."
+  },
+  "errors": {
+    "AUTH_REQUIRED": "You must be signed in.",
+    "AUTH_INVALID_CREDENTIALS": "Invalid username or password.",
+    "AUTH_RATE_LIMITED": "Too many login attempts. Please try again in 15 minutes.",
+    "FORBIDDEN_INSUFFICIENT_ROLE": "You do not have permission to access this resource.",
+    "NOT_FOUND_CUSTOMER": "Customer not found.",
+    "INTERNAL_ERROR": "Server error. Please try again.",
+    "GENERIC": "Something went wrong. Please try again."
+  }
+}

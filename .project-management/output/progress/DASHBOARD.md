@@ -1,19 +1,58 @@
-# Live Progress Dashboard
+# Live Progress Dashboard — Pinoles
 
-**Status:** Not yet generated.
+**Project:** Pinoles — Internal Business Portal
+**Initialized:** 2026-05-25
+**Status:** Ready for Phase 1
 
-This file is auto-populated by `/execute-work` the first time you run a phase, epic, or story. It shows live progress, currently active work, recent completions, quality metrics, and phase breakdown.
+---
 
-## How to populate
+## Currently Working On
 
-1. Customize `.project-management/input/` (scope, backlog, technologies, constraints) — see root README §Quick Start.
-2. Run `/init-project` to generate PRD, technical spec, and phase structure.
-3. Run `/execute-work phase 1` (or `epic EPIC-X`, `story US-XXX`).
+**T-002: BC Middleware Foundation** (8 pts) — Phase 1
+⏸️ Not started — awaiting dispatch
 
-After the first execution, this file is rewritten with sections for Currently Working On, Today's Progress, Recently Completed, Quality Metrics, and Phase Breakdown — all auto-updated as you work.
+---
 
-## Manual edits
+## Phase Breakdown
 
-This file is overwritten by `/execute-work`. Do not hand-edit. To adjust progress, edit the underlying phase backlog files in `.project-management/input/backlog/` or the per-phase progress files in `output/phases/`.
+| Phase | Status | Points | Progress |
+|-------|--------|--------|----------|
+| Phase 1 — Foundation | 🔄 In Progress | 5 / 47 | 11% |
+| Phase 2 — Core Documents | ⏸️ Pending | 0 / 52 | 0% |
+| Phase 3 — Extended Modules | ⏸️ Pending | 0 / 42 | 0% |
+| Phase 4 — Analytics & Polish | ⏸️ Pending | 0 / 27 | 0% |
+| **TOTAL** | | **5 / 168** | **3%** |
 
-For a full event mapping (which actions trigger which dashboard updates), see `.claude/commands/modules/execute-work-dashboard-events.md`.
+---
+
+## Quality Metrics
+
+| Metric | Current | Target |
+|--------|---------|--------|
+| Test coverage | — | ≥ 80% |
+| Stories completed | 0 / 23 | 23 |
+| Technical tasks | 1 / 5 | 5 |
+
+---
+
+## Active Blockers
+
+None. ✅
+
+**Resolved during init:**
+- Azure AD App Registration → client team responsibility
+- BC endpoints → standard OData v4 confirmed
+
+---
+
+## Open Questions
+
+2 remaining — see [input/open-questions.md](../../input/open-questions.md)
+- Q-003: Advance invoice BC format (P1 — investigate in Phase 1)
+- Q-005: Offline mode requirement (P2)
+
+Run `/resolve-questions` to address them.
+
+---
+
+*This dashboard is auto-updated by `/execute-work`. Manual edits will be overwritten.*

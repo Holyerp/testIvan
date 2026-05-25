@@ -1,8 +1,42 @@
 ###> editors ###
 /.idea
 .DS_Store
+Thumbs.db
 .vscode
 ###< editors ###
+
+###> monorepo ###
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+.next/
+dist/
+out/
+bin/
+obj/
+
+# Env files
+.env
+.env.local
+.env.*.local
+!.env.example
+!apps/**/.env.example
+
+# .NET
+*.user
+.vs/
+publish/
+
+# Turbo
+.turbo/
+
+# Testing
+coverage/
+playwright-report/
+test-results/
+###< monorepo ###
 
 ###> claude settings ###
 # User-specific Claude permissions (use settings.example.json as template)

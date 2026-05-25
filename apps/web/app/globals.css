@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --pine-navy: #1B3F6B;
+  --pine-navy-mid: #254d80;
+  --pine-green: #6ab04c;
+  --pine-green-light: #7cc95e;
+  --pine-green-pale: #e8f5e3;
+  --pine-green-dark: #4a8a32;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background-color: #f8fafc;
+}

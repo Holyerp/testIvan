@@ -1,0 +1,67 @@
+{
+  "auth": {
+    "login": {
+      "title": "Prijava",
+      "username": "Korisničko ime",
+      "password": "Lozinka",
+      "submit": "Prijavi se",
+      "errors": {
+        "invalidCredentials": "Neispravno korisničko ime ili lozinka.",
+        "rateLimited": "Previše neuspjelih pokušaja. Pokušajte za 15 minuta.",
+        "required": "Ovo polje je obavezno.",
+        "passwordMinLength": "Lozinka mora imati najmanje 8 karaktera."
+      }
+    }
+  },
+  "nav": {
+    "dashboard": "Kontrolna tabla",
+    "customers": "Klijenti",
+    "vendors": "Dobavljači",
+    "sales": "Prodaja",
+    "purchase": "Nabavka",
+    "inventory": "Magacin",
+    "analytics": "Analitika",
+    "admin": "Administracija",
+    "logout": "Odjava"
+  },
+  "dashboard": {
+    "title": "Kontrolna tabla",
+    "openInvoices": "Otvorene fakture",
+    "outstandingAmount": "Dug klijenata",
+    "advanceBalance": "Stanje avansa",
+    "inventoryValue": "Vrijednost zaliha",
+    "recentActivity": "Nedavne aktivnosti",
+    "bcStatus": {
+      "connected": "BC: Povezan",
+      "disconnected": "BC: Nije dostupan"
+    }
+  },
+  "customers": {
+    "title": "Klijenti",
+    "search": "Pretraga klijenata...",
+    "name": "Naziv",
+    "number": "Broj",
+    "city": "Grad",
+    "balance": "Saldo",
+    "phone": "Telefon",
+    "noResults": "Nema rezultata."
+  },
+  "common": {
+    "loading": "Učitavanje...",
+    "error": "Greška",
+    "notFound": "Nije pronađeno",
+    "back": "Nazad",
+    "page": "Stranica",
+    "of": "od",
+    "accessDenied": "Nemate pristup ovom modulu."
+  },
+  "errors": {
+    "AUTH_REQUIRED": "Morate biti prijavljeni.",
+    "AUTH_INVALID_CREDENTIALS": "Neispravno korisničko ime ili lozinka.",
+    "AUTH_RATE_LIMITED": "Previše pokušaja prijave. Pokušajte ponovo za 15 minuta.",
+    "FORBIDDEN_INSUFFICIENT_ROLE": "Nemate dozvolu za pristup ovom resursu.",
+    "NOT_FOUND_CUSTOMER": "Klijent nije pronađen.",
+    "INTERNAL_ERROR": "Greška servera. Pokušajte ponovo.",
+    "GENERIC": "Nešto je pošlo po krivu. Pokušajte ponovo."
+  }
+}
