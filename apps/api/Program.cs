@@ -18,6 +18,7 @@ using Pinoles.Api.Application.Notifications;
 using Pinoles.Api.Application.Purchase;
 using Pinoles.Api.Application.Sales;
 using Pinoles.Api.Application.Search;
+using Pinoles.Api.Application.Settings;
 using Pinoles.Api.Application.Vendors;
 using Pinoles.Api.Domain.Constants;
 using Pinoles.Api.Infrastructure.Auth;
@@ -199,6 +200,10 @@ try
     // Notification service (T-005) — aggregates overdue invoices + low-stock items, role-filtered
     builder.Services.AddScoped<INotificationService, NotificationService>();
 
+    // Settings service (US-022) — admin BC connection config view + connectivity probe.
+    // Surfaces NON-SENSITIVE config only; the BC service-principal credentials never leave config.
+    builder.Services.AddScoped<ISettingsService, SettingsService>();
+
     // Email service (T-005) — dev no-op logging impl; production wires a real MailKit SMTP
     // implementation via config. US-021 (password reset) depends on IEmailService.
     builder.Services.AddScoped<IEmailService, LoggingEmailService>();
@@ -236,6 +241,7 @@ try
     app.MapAnalyticsEndpoints();
     app.MapSearchEndpoints();
     app.MapNotificationsEndpoints();
+    app.MapSettingsEndpoints();
 
     // Health check
     app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }))

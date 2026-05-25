@@ -547,6 +547,28 @@
       "notFound": "User not found."
     }
   },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "View the Business Central connection configuration",
+    "bcConnection": "BC Connection",
+    "tenantId": "Tenant ID",
+    "companyId": "Company ID",
+    "environment": "Environment",
+    "baseUrl": "Base URL",
+    "mode": "Mode",
+    "mock": "Mock",
+    "live": "Live",
+    "testConnection": "Test Connection",
+    "testing": "Testing…",
+    "connected": "Connected in {ms}ms, last sync {time}",
+    "connectionFailed": "Connection failed — BC unavailable",
+    "durationMs": "Duration (ms)",
+    "lastSync": "Last Sync",
+    "entityType": "Entity Type",
+    "lastSyncedAt": "Last Synced",
+    "never": "Never",
+    "loadError": "Failed to load configuration"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",

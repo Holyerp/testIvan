@@ -547,6 +547,28 @@
       "notFound": "Korisnik nije pronađen."
     }
   },
+  "settings": {
+    "title": "Podešavanja",
+    "subtitle": "Pregled konfiguracije veze sa Business Central sistemom",
+    "bcConnection": "BC Konekcija",
+    "tenantId": "ID zakupca",
+    "companyId": "ID kompanije",
+    "environment": "Okruženje",
+    "baseUrl": "Bazni URL",
+    "mode": "Režim",
+    "mock": "Mock režim",
+    "live": "Aktivna veza",
+    "testConnection": "Testiraj konekciju",
+    "testing": "Testiranje…",
+    "connected": "Povezano za {ms}ms, poslednja sinhronizacija {time}",
+    "connectionFailed": "Konekcija nije uspela — BC nije dostupan",
+    "durationMs": "Trajanje (ms)",
+    "lastSync": "Poslednja sinhronizacija",
+    "entityType": "Tip entiteta",
+    "lastSyncedAt": "Sinhronizovano",
+    "never": "Nikad",
+    "loadError": "Greška pri učitavanju konfiguracije"
+  },
   "common": {
     "loading": "Učitavanje...",
     "error": "Greška",
