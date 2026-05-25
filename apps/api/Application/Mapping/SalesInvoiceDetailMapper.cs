@@ -1,3 +1,4 @@
+using Pinoles.Api.Application.Common;
 using Pinoles.Api.Application.DTOs;
 
 namespace Pinoles.Api.Application.Mapping;
@@ -6,12 +7,9 @@ namespace Pinoles.Api.Application.Mapping;
 /// Maps a raw BC sales invoice (with expanded line items) to the detail DTO the UI
 /// consumes — header, line items, and computed totals. Reuses
 /// <see cref="SalesInvoiceMapper.NormalizeStatus"/> for status normalization (DRY)
-/// so the OPEN/PARTIAL/PAID wire value is identical to the list view.
-///
-/// Totals are computed from the lines so they stay consistent with what is rendered:
-///   subtotal  = sum(line.LineAmount)
-///   vatAmount = sum(line.LineAmount * VatPercent / 100)
-///   total     = subtotal + vatAmount
+/// so the OPEN/PARTIAL/PAID wire value is identical to the list view, and
+/// <see cref="InvoiceTotals"/> for the shared money math (also used by the purchase
+/// detail mapper).
 /// </summary>
 public class SalesInvoiceDetailMapper : IBcMapper<BcSalesInvoice, SalesInvoiceDetailDto>
 {
@@ -19,8 +17,8 @@ public class SalesInvoiceDetailMapper : IBcMapper<BcSalesInvoice, SalesInvoiceDe
     {
         var lines = source.SalesInvoiceLines.Select(MapLine).ToList();
 
-        var subtotal = source.SalesInvoiceLines.Sum(l => l.LineAmount);
-        var vatAmount = source.SalesInvoiceLines.Sum(l => l.LineAmount * l.VatPercent / 100m);
+        var totals = InvoiceTotals.Compute(
+            source.SalesInvoiceLines, l => l.LineAmount, l => l.VatPercent);
 
         return new SalesInvoiceDetailDto
         {
@@ -38,9 +36,9 @@ public class SalesInvoiceDetailMapper : IBcMapper<BcSalesInvoice, SalesInvoiceDe
             Lines = lines,
             Totals = new SalesInvoiceTotalsDto
             {
-                Subtotal = subtotal,
-                VatAmount = vatAmount,
-                Total = subtotal + vatAmount,
+                Subtotal = totals.Subtotal,
+                VatAmount = totals.VatAmount,
+                Total = totals.Total,
             },
         };
     }

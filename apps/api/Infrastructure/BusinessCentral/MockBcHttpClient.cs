@@ -51,6 +51,8 @@ public class MockBcHttpClient : IBcHttpClient
             "salesInvoicesPosted" => FindInvoiceWithLines(GetMockPostedInvoiceData(), id),
             "salesCreditMemos"    => FindInvoiceWithLines(GetMockCreditMemoData(), id),
             "salesCreditMemosPosted" => FindInvoiceWithLines(GetMockPostedCreditMemoData(), id),
+            "purchaseInvoices"       => FindPurchaseInvoiceWithLines(GetMockPurchaseInvoiceData(), id),
+            "purchaseInvoicesPosted" => FindPurchaseInvoiceWithLines(GetMockPostedPurchaseInvoiceData(), id),
             _                     => null,
         };
 
@@ -97,6 +99,47 @@ public class MockBcHttpClient : IBcHttpClient
             Line("Konsultantske usluge", 10m, 5000.00m, 20m),
             Line("Licenca softvera (godišnja)", 1m, 18000.00m, 20m),
             Line("Implementacija i podešavanje", 4m, 3500.00m, 20m),
+        };
+    }
+
+    // Find a purchase invoice in the given list-view source by id and attach mock line
+    // items + detail-only fields (payment terms, our reference) so the purchase detail
+    // mapper can compute non-trivial totals. Returns null for unknown ids. Mirrors
+    // FindInvoiceWithLines but carries vendorName + the purchaseInvoiceLines navigation.
+    private static Dictionary<string, object>? FindPurchaseInvoiceWithLines(
+        List<Dictionary<string, object>> source, string id)
+    {
+        var match = source.FirstOrDefault(i => (string)i["id"] == id);
+        if (match == null) return null;
+
+        // Clone so the shared mock list-view source is never mutated across calls.
+        var record = new Dictionary<string, object>(match)
+        {
+            ["paymentTerms"] = "30 dana",
+            ["ourReference"] = $"REF-{match["number"]}",
+            ["purchaseInvoiceLines"] = GetMockPurchaseInvoiceLines(id),
+        };
+        return record;
+    }
+
+    // 3 realistic purchase line items per invoice; VAT 20%. Mirrors the sales line mock
+    // (GetMockInvoiceLines) but describes purchased goods/services.
+    private static List<Dictionary<string, object>> GetMockPurchaseInvoiceLines(string id)
+    {
+        Dictionary<string, object> Line(string description, decimal qty, decimal unitPrice, decimal vat) => new()
+        {
+            ["description"] = description,
+            ["quantity"] = qty,
+            ["unitPrice"] = unitPrice,
+            ["vatPercent"] = vat,
+            ["lineAmount"] = qty * unitPrice,
+        };
+
+        return new List<Dictionary<string, object>>
+        {
+            Line("Sirovine i materijal", 100m, 350.00m, 20m),
+            Line("Transport i logistika", 1m, 12000.00m, 20m),
+            Line("Rezervni delovi", 8m, 2500.00m, 20m),
         };
     }
 

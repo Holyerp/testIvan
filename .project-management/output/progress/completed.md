@@ -166,6 +166,23 @@
 - API doc: `docs/api/purchase.md` (query params, success example, 401/403/404/500/502, OPEN|PARTIAL|PAID + credit-memo OPEN|POSTED enums). i18n: `purchase` section + `nav.purchaseInvoices` (sr + en). Sidebar nav entry "Purchase Invoices" added.
 - Tests: backend +40 (PurchaseService ×14, PurchaseInvoiceMapper ×4 methods incl. theory, InvoiceStatus shared-helper ×17 cases). Frontend unchanged (reused already-tested helpers). Combined: 158 backend + 57 frontend passing; lint clean.
 
+### US-010: Purchase Invoice — Detail View
+**Completed:** 2026-05-25
+**Phase:** 2 — Core Documents
+**Story Points:** 5
+**Commit:** See git log
+
+**Summary:**
+- Two BC-backed detail endpoints under `/api/v1/purchase` (RequireFinancial — ADMIN/MANAGER/ACCOUNTING; WAREHOUSE 403): GET `/invoices/{id}`, GET `/posted-invoices/{id}`. Canonical envelope `{ success, data }`; 404 `NOT_FOUND_PURCHASE_INVOICE` for unknown id; 502 `INTEGRATION_BC_UNAVAILABLE` on BC failure. Purchase analogue of US-007, reusing the parameterized not-found-code Detail handler pattern from US-008.
+- `PurchaseInvoiceDetailDto` (Header + Lines + Totals, vendor-oriented header with `ourReference`) + `BcPurchaseInvoiceLine`; `BcPurchaseInvoice` extended with `PaymentTerms`, `OurReference`, `PurchaseInvoiceLines` (US-009 list fields preserved — those tests stay green).
+- `PurchaseInvoiceDetailMapper` (IBcMapper): reuses shared `InvoiceStatus.Normalize` (DRY) and the newly extracted `InvoiceTotals` helper for the money math.
+- **DRY refactor:** extracted `Application/Common/InvoiceTotals.cs` (generic `Compute<TLine>(lines, amountSelector, vatSelector)`) — single source of truth for subtotal/VAT/total. Sales detail mapper refactored to use it (existing sales detail tests stay green). 2nd consumer of identical totals logic → clean extraction.
+- `PurchaseService.GetInvoiceByIdAsync(entitySet, id)`: `$expand` lines via `BcQueryOptions`, returns null when not found (→ 404). Detail mapper injected + registered in Program.cs.
+- MockBcHttpClient: `GetByIdAsync` for purchaseInvoices/purchaseInvoicesPosted returns populated header (paymentTerms, ourReference) + 3 realistic line items (VAT 20%) for known ids, null for unknown; clones the shared US-009 list source so it is never mutated. Existing customer/sales GetByIdAsync behavior preserved.
+- Frontend `app/(protected)/purchase/invoices/[id]/page.tsx` (PurchaseInvoiceDetailScreen): header card (number, vendor, our reference, dates, payment terms), status badge + overdue hint, line-items table, right-aligned totals block; 404 "Invoice not found", loading skeleton, error banner, back link to `/purchase/invoices`; RBAC guard. Mirrors US-007; reuses formatRsd/isOverdue/statusBadgeClass — no new frontend helper introduced.
+- API doc: `docs/api/purchase.md` v1.1 — two detail endpoints (path param, success example with header/lines/totals, 401/403/404 NOT_FOUND_PURCHASE_INVOICE/500/502). i18n: `purchaseDetail` section (sr + en); reuses `purchase.status.*`.
+- Tests: backend +18 (PurchaseService detail ×8, PurchaseInvoiceDetailMapper ×6, InvoiceTotals ×4); frontend unchanged (reused already-tested helpers). Combined: 176 backend + 57 frontend passing; lint clean.
+
 ---
 
 ## Completed Technical Tasks

@@ -15,4 +15,9 @@ public interface IPurchaseService
         string? fromDate,
         string? toDate,
         CancellationToken ct = default);
+
+    Task<PurchaseInvoiceDetailDto?> GetInvoiceByIdAsync(
+        string entitySet,
+        string id,
+        CancellationToken ct = default);
 }

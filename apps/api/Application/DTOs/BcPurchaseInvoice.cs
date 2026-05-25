@@ -13,4 +13,11 @@ public class BcPurchaseInvoice
     public string DueDate { get; set; } = string.Empty;
     public decimal TotalAmountIncludingTax { get; set; }
     public string Status { get; set; } = string.Empty;
+
+    // Detail-view fields (US-010). Optional in the list response.
+    public string PaymentTerms { get; set; } = string.Empty;
+    public string OurReference { get; set; } = string.Empty;
+
+    // Line items, loaded via the purchaseInvoiceLines $expand navigation property.
+    public List<BcPurchaseInvoiceLine> PurchaseInvoiceLines { get; set; } = new();
 }

@@ -201,6 +201,27 @@
     "total": "Ukupno",
     "loadError": "Greška pri učitavanju fakture"
   },
+  "purchaseDetail": {
+    "back": "Nazad na ulazne fakture",
+    "notFound": "Faktura nije pronađena",
+    "vendor": "Dobavljač",
+    "ourReference": "Naša referenca",
+    "postingDate": "Datum knjiženja",
+    "dueDate": "Valuta",
+    "paymentTerms": "Uslovi plaćanja",
+    "overdue": "Dospela",
+    "lineItems": "Stavke",
+    "lineDescription": "Opis",
+    "quantity": "Količina",
+    "unitPrice": "Jedinična cena",
+    "vatPercent": "PDV %",
+    "lineTotal": "Iznos stavke",
+    "noLines": "Nema stavki",
+    "subtotal": "Osnovica",
+    "vat": "PDV",
+    "total": "Ukupno",
+    "loadError": "Greška pri učitavanju fakture"
+  },
   "common": {
     "loading": "Učitavanje...",
     "error": "Greška",

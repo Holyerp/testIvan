@@ -1,10 +1,10 @@
 # Purchase API
 
-**Version:** 1.0
+**Version:** 1.1
 **Last Updated:** 2026-05-25
 **Status:** Active
 
-Read-only purchase-invoice and purchase-credit-memo list endpoints backed by Microsoft Dynamics 365 Business Central (BC) via `IBcHttpClient`. All list endpoints share one service (`IPurchaseService`) and one response shape; they differ only in the BC collection they read. Mirrors the [Sales API](sales.md) but carries a vendor (`vendorName`) instead of a customer.
+Read-only purchase-invoice and purchase-credit-memo list + detail endpoints backed by Microsoft Dynamics 365 Business Central (BC) via `IBcHttpClient`. All list endpoints share one service (`IPurchaseService`) and one response shape, as do the detail endpoints; they differ only in the BC collection they read. Mirrors the [Sales API](sales.md) but carries a vendor (`vendorName`) instead of a customer.
 
 **Base path:** `/api/v1/purchase`
 **Authentication:** Bearer JWT. Authorization policy `RequireFinancial` — roles `ADMIN`, `MANAGER`, `ACCOUNTING`. `WAREHOUSE` is denied (403).
@@ -98,7 +98,70 @@ Purchase credit memos (`/credit-memos`) use a distinct lifecycle — `OPEN | POS
 
 ---
 
+## GET /api/v1/purchase/invoices/{id}
+
+**Description:** Purchase invoice detail — header, line items, and computed totals. Loads the line items via the BC `purchaseInvoiceLines` `$expand` navigation property.
+
+**Authentication:** `RequireFinancial` (ADMIN / MANAGER / ACCOUNTING)
+
+**Path parameter:**
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `id` | string | BC purchase-invoice id (e.g. `pinv001`) |
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "data": {
+    "header": {
+      "id": "pinv001",
+      "number": "PI-001",
+      "vendorName": "Supplier A d.o.o.",
+      "postingDate": "2026-01-15",
+      "dueDate": "2026-02-14",
+      "paymentTerms": "30 dana",
+      "ourReference": "REF-PI-001",
+      "status": "OPEN"
+    },
+    "lines": [
+      {
+        "description": "Sirovine i materijal",
+        "quantity": 100,
+        "unitPrice": 350.00,
+        "vatPercent": 20,
+        "lineTotal": 35000.00
+      }
+    ],
+    "totals": {
+      "subtotal": 67000.00,
+      "vatAmount": 13400.00,
+      "total": 80400.00
+    }
+  }
+}
+```
+
+The `header.status` field uses the same `SCREAMING_SNAKE_CASE` enum (`OPEN` / `PARTIAL` / `PAID`) documented in [Status enum](#status-enum-response-status-field). Totals are computed from the lines: `subtotal = Σ lineTotal`, `vatAmount = Σ (lineTotal × vatPercent / 100)`, `total = subtotal + vatAmount`.
+
+**Error Responses:**
+- `400 Bad Request` — malformed path parameter
+- `401 Unauthorized` — missing/invalid token (`{ "success": false, "code": "AUTH_REQUIRED" }`)
+- `403 Forbidden` — authenticated but role not in RequireFinancial (`{ "success": false, "code": "FORBIDDEN_INSUFFICIENT_ROLE" }`)
+- `404 Not Found` — invoice id does not exist (`{ "success": false, "code": "NOT_FOUND_PURCHASE_INVOICE" }`)
+- `500 Internal Server Error` — unexpected server error
+- `502 Bad Gateway` — BC upstream unavailable (`{ "success": false, "code": "INTEGRATION_BC_UNAVAILABLE" }`)
+
+---
+
+## GET /api/v1/purchase/posted-invoices/{id}
+
+**Description:** Posted purchase invoice detail. Same path parameter, response shape, and error responses as `/invoices/{id}` (reads the `purchaseInvoicesPosted` BC collection). Unknown id → `404 NOT_FOUND_PURCHASE_INVOICE`.
+
+---
+
 ## Consumers
 
 - Frontend list: `apps/web/app/(protected)/purchase/invoices/page.tsx` (US-009, PurchaseInvoiceListScreen — Open / Posted / Credit Memos tabs).
-- Frontend detail (US-010, forthcoming): `apps/web/app/(protected)/purchase/invoices/[id]/page.tsx`.
+- Frontend detail: `apps/web/app/(protected)/purchase/invoices/[id]/page.tsx` (US-010, PurchaseInvoiceDetailScreen — header + line items + totals; 404 → `NOT_FOUND_PURCHASE_INVOICE`).

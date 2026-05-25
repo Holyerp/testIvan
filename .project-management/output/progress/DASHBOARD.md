@@ -8,8 +8,8 @@
 
 ## Currently Working On
 
-**US-010: Purchase Invoice — Detail View** (5 pts) — Phase 2
-⏭️ Next up
+**US-011: Vendors — List View** (5 pts) — Phase 2
+🔄 Dispatching sub-agent...
 
 ---
 
@@ -18,10 +18,10 @@
 | Phase | Status | Points | Progress |
 |-------|--------|--------|----------|
 | Phase 1 — Foundation | ✅ Complete | 47 / 47 | 100% |
-| Phase 2 — Core Documents | 🔄 In Progress | 25 / 52 | 48% |
+| Phase 2 — Core Documents | 🔄 In Progress | 30 / 52 | 58% |
 | Phase 3 — Extended Modules | ⏸️ Pending | 0 / 42 | 0% |
 | Phase 4 — Analytics & Polish | ⏸️ Pending | 0 / 27 | 0% |
-| **TOTAL** | | **72 / 168** | **43%** |
+| **TOTAL** | | **77 / 168** | **46%** |
 
 ---
 
@@ -29,10 +29,10 @@
 
 | Metric | Current | Target |
 |--------|---------|--------|
-| Test coverage | ≥ 80% (BC + auth + RBAC + customer + shared list layers) | ≥ 80% |
-| Stories completed | 9 / 23 | 23 |
+| Test coverage | ≥ 80% (BC + auth + RBAC + customer + shared list + detail layers) | ≥ 80% |
+| Stories completed | 10 / 23 | 23 |
 | Technical tasks | 3 / 5 | 5 |
-| Tests passing | 215 (158 backend + 57 frontend) | — |
+| Tests passing | 233 (176 backend + 57 frontend) | — |
 
 ---
 

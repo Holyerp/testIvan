@@ -201,6 +201,27 @@
     "total": "Total",
     "loadError": "Error loading invoice"
   },
+  "purchaseDetail": {
+    "back": "Back to purchase invoices",
+    "notFound": "Invoice not found",
+    "vendor": "Vendor",
+    "ourReference": "Our Reference",
+    "postingDate": "Posting Date",
+    "dueDate": "Due Date",
+    "paymentTerms": "Payment Terms",
+    "overdue": "Overdue",
+    "lineItems": "Line Items",
+    "lineDescription": "Description",
+    "quantity": "Quantity",
+    "unitPrice": "Unit Price",
+    "vatPercent": "VAT %",
+    "lineTotal": "Line Total",
+    "noLines": "No line items",
+    "subtotal": "Subtotal",
+    "vat": "VAT",
+    "total": "Total",
+    "loadError": "Error loading invoice"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",

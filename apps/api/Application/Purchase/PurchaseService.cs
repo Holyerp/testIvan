@@ -18,6 +18,9 @@ public class PurchaseService : IPurchaseService
     // BC field names the BcListQuery allow-list validates against (first entry is the default).
     private static readonly string[] AllowedSortFields = { "postingDate", "dueDate", "totalAmountIncludingTax" };
 
+    // Navigation property expanded for the detail view to pull line items in one call.
+    private const string LinesExpand = "purchaseInvoiceLines";
+
     // BC collections whose records are credit memos. Credit memos use OPEN | POSTED
     // status semantics, so the status is re-normalized via InvoiceStatus.NormalizeCreditMemo
     // after the shared mapper runs. Everything else (paging, sort, filter) is identical.
@@ -28,13 +31,16 @@ public class PurchaseService : IPurchaseService
 
     private readonly IBcHttpClient _bc;
     private readonly IBcMapper<BcPurchaseInvoice, PurchaseInvoiceListItemDto> _mapper;
+    private readonly IBcMapper<BcPurchaseInvoice, PurchaseInvoiceDetailDto> _detailMapper;
 
     public PurchaseService(
         IBcHttpClient bc,
-        IBcMapper<BcPurchaseInvoice, PurchaseInvoiceListItemDto> mapper)
+        IBcMapper<BcPurchaseInvoice, PurchaseInvoiceListItemDto> mapper,
+        IBcMapper<BcPurchaseInvoice, PurchaseInvoiceDetailDto> detailMapper)
     {
         _bc = bc;
         _mapper = mapper;
+        _detailMapper = detailMapper;
     }
 
     public async Task<PagedResultDto<PurchaseInvoiceListItemDto>> GetInvoicesAsync(
@@ -85,6 +91,20 @@ public class PurchaseService : IPurchaseService
             Page = effectivePage,
             PageSize = effectivePageSize,
         };
+    }
+
+    public async Task<PurchaseInvoiceDetailDto?> GetInvoiceByIdAsync(
+        string entitySet,
+        string id,
+        CancellationToken ct = default)
+    {
+        // $expand the line items so header + lines arrive in a single BC request.
+        var invoice = await _bc.GetByIdAsync<BcPurchaseInvoice>(
+            entitySet, id, new BcQueryOptions { Expand = LinesExpand }, ct);
+
+        if (invoice == null || string.IsNullOrEmpty(invoice.Id)) return null;
+
+        return _detailMapper.Map(invoice);
     }
 
     private static string? MapSortField(string? uiSortBy) => uiSortBy switch

@@ -11,7 +11,7 @@ public class PurchaseServiceTests
     private static PurchaseService CreateService()
     {
         var bc = new MockBcHttpClient(NullLogger<MockBcHttpClient>.Instance);
-        return new PurchaseService(bc, new PurchaseInvoiceMapper());
+        return new PurchaseService(bc, new PurchaseInvoiceMapper(), new PurchaseInvoiceDetailMapper());
     }
 
     [Fact]
@@ -145,5 +145,82 @@ public class PurchaseServiceTests
         var result = await CreateService().GetInvoicesAsync(
             "doesNotExist", 1, 20, null, null, null, null, null, null);
         Assert.Empty(result.Items);
+    }
+
+    // ----- Detail view (US-010) -----
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_KnownId_ReturnsDetailWithLines()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("purchaseInvoices", "pinv001");
+        Assert.NotNull(detail);
+        Assert.Equal("PI-001", detail!.Header.Number);
+        Assert.False(string.IsNullOrEmpty(detail.Header.VendorName));
+        Assert.NotEmpty(detail.Lines);
+        Assert.All(detail.Lines, l => Assert.False(string.IsNullOrEmpty(l.Description)));
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_KnownId_MapsDetailHeaderFields()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("purchaseInvoices", "pinv001");
+        Assert.NotNull(detail);
+        Assert.False(string.IsNullOrEmpty(detail!.Header.PaymentTerms));
+        Assert.False(string.IsNullOrEmpty(detail.Header.OurReference));
+        Assert.False(string.IsNullOrEmpty(detail.Header.PostingDate));
+        Assert.False(string.IsNullOrEmpty(detail.Header.DueDate));
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_UnknownId_ReturnsNull()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("purchaseInvoices", "does-not-exist");
+        Assert.Null(detail);
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_ComputesTotals()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("purchaseInvoices", "pinv001");
+        Assert.NotNull(detail);
+        var totals = detail!.Totals;
+        Assert.True(totals.Subtotal > 0);
+        Assert.True(totals.VatAmount > 0);
+        Assert.True(totals.Total > 0);
+        Assert.Equal(totals.Subtotal + totals.VatAmount, totals.Total);
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_SubtotalEqualsSumOfLineTotals()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("purchaseInvoices", "pinv003");
+        Assert.NotNull(detail);
+        var expectedSubtotal = detail!.Lines.Sum(l => l.LineTotal);
+        Assert.Equal(expectedSubtotal, detail.Totals.Subtotal);
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_NormalizesStatusToWireValue()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("purchaseInvoices", "pinv001");
+        Assert.NotNull(detail);
+        Assert.Contains(detail!.Header.Status, new[] { "OPEN", "PARTIAL", "PAID" });
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_PostedInvoices_KnownId_ReturnsDetail()
+    {
+        var detail = await CreateService().GetInvoiceByIdAsync("purchaseInvoicesPosted", "ppi001");
+        Assert.NotNull(detail);
+        Assert.Equal("PPI-001", detail!.Header.Number);
+        Assert.NotEmpty(detail.Lines);
+    }
+
+    [Fact]
+    public async Task GetInvoiceByIdAsync_PostedInvoices_UnknownId_ReturnsNull()
+    {
+        // An open-collection id must not resolve against the posted collection.
+        var detail = await CreateService().GetInvoiceByIdAsync("purchaseInvoicesPosted", "pinv001");
+        Assert.Null(detail);
     }
 }
