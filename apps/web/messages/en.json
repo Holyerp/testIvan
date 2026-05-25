@@ -19,6 +19,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "customers": "Customers",
+    "invoices": "Invoices",
     "vendors": "Vendors",
     "sales": "Sales",
     "purchase": "Purchase",
@@ -59,6 +60,9 @@
     "accessDenied": "You do not have access to this module."
   },
   "errors": {
+    "forbiddenTitle": "Access Forbidden",
+    "forbiddenMessage": "You don't have permission to access this page.",
+    "backToDashboard": "Back to Dashboard",
     "AUTH_REQUIRED": "You must be signed in.",
     "AUTH_INVALID_CREDENTIALS": "Invalid username or password.",
     "AUTH_RATE_LIMITED": "Too many login attempts. Please try again in 15 minutes.",

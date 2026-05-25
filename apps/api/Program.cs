@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Pinoles.Api.Application.Auth;
 using Pinoles.Api.Application.Interfaces;
+using Pinoles.Api.Domain.Constants;
 using Pinoles.Api.Infrastructure.Auth;
 using Pinoles.Api.Infrastructure.BusinessCentral;
 using Pinoles.Api.Infrastructure.Caching;
@@ -76,9 +77,35 @@ try
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero,
             };
+            options.Events = new JwtBearerEvents
+            {
+                OnChallenge = context =>
+                {
+                    context.HandleResponse();
+                    context.Response.StatusCode = 401;
+                    context.Response.ContentType = "application/json";
+                    return context.Response.WriteAsync(
+                        """{"success":false,"error":"Unauthorized","code":"AUTH_REQUIRED"}""");
+                },
+                OnForbidden = context =>
+                {
+                    context.Response.StatusCode = 403;
+                    context.Response.ContentType = "application/json";
+                    return context.Response.WriteAsync(
+                        """{"success":false,"error":"Forbidden","code":"FORBIDDEN_INSUFFICIENT_ROLE"}""");
+                },
+            };
         });
 
-    builder.Services.AddAuthorization();
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("RequireAdmin", policy =>
+            policy.RequireRole(UserRoles.Admin));
+        options.AddPolicy("RequireFinancial", policy =>
+            policy.RequireRole(UserRoles.Admin, UserRoles.Manager, UserRoles.Accounting));
+        options.AddPolicy("RequireDashboard", policy =>
+            policy.RequireRole(UserRoles.Admin, UserRoles.Manager, UserRoles.Accounting, UserRoles.Warehouse));
+    });
 
     // BC options
     builder.Services.Configure<BcOptions>(builder.Configuration.GetSection(BcOptions.SectionName));
@@ -119,6 +146,7 @@ try
     app.UseAuthorization();
     app.MapControllers();
     app.MapAuthEndpoints();
+    app.MapUsersEndpoints();
 
     // Health check
     app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }))

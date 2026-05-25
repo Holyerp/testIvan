@@ -19,6 +19,7 @@
   "nav": {
     "dashboard": "Kontrolna tabla",
     "customers": "Klijenti",
+    "invoices": "Fakture",
     "vendors": "Dobavljači",
     "sales": "Prodaja",
     "purchase": "Nabavka",
@@ -59,6 +60,9 @@
     "accessDenied": "Nemate pristup ovom modulu."
   },
   "errors": {
+    "forbiddenTitle": "Pristup zabranjen",
+    "forbiddenMessage": "Nemate dozvolu za pristup ovoj stranici.",
+    "backToDashboard": "Povratak na kontrolnu tablu",
     "AUTH_REQUIRED": "Morate biti prijavljeni.",
     "AUTH_INVALID_CREDENTIALS": "Neispravno korisničko ime ili lozinka.",
     "AUTH_RATE_LIMITED": "Previše pokušaja prijave. Pokušajte ponovo za 15 minuta.",
